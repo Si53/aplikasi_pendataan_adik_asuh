@@ -4,39 +4,73 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Pengawas {
+  id       Int       @id @default(autoincrement())
+  username String    @unique
+  password String // hashed dengan bcrypt
+  name     String
+  wilayah  String // Pati, Jepara, Ampel, Wonosobo, Sukabumi, Bandung
+  students Student[]
+
+  @@map("pengawas")
 }
 
 model Student {
-  id             Int      @id @default(autoincrement())
-  username       String   @unique
-  fullName       String   @map("full_name")
-  dateOfBirth    DateTime @map("date_of_birth")
-  gender         String
-  city           String
-  medicalHistory String   @map("medical_history")
-  schoolName     String   @map("school_name")
-  grade          String
-  tuitionCost    String   @map("tuition_cost")
-  status         String   @default("active")
-  createdAt      DateTime @default(now()) @map("created_at")
+  id              Int      @id @default(autoincrement())
+  username        String   @unique
+  nik             String   @unique // plain text, bukan di-hash
+  fullName        String   @map("full_name")
+  dateOfBirth     DateTime @map("date_of_birth")
+  gender          String
+  citaCita        String   @map("cita_cita")
+  wilayah         String
+  pengawasId      Int      @map("pengawas_id")
+  pengawas        Pengawas @relation(fields: [pengawasId], references: [id])
+  alamatLengkap   String   @map("alamat_lengkap")
+  noHp            String   @map("no_hp")
+  riwayatPenyakit String   @map("riwayat_penyakit")
+  schoolName      String   @map("school_name")
+  gradeLevel      String   @map("grade_level")
+  nilaiRataRata   String   @map("nilai_rata_rata")
+  jumlahSaudara   Int      @map("jumlah_saudara")
 
-  father   Father?
-  mother   Mother?
-  guardian Guardian?
+  father         Father?
+  mother         Mother?
+  guardian       Guardian?
+  educationCosts EducationCost[]
+  documents      Document[]
+
+  createdAt DateTime @default(now()) @map("created_at")
 
   @@map("students")
+}
+
+model EducationCost {
+  id        Int     @id @default(autoincrement())
+  studentId Int     @map("student_id")
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  label     String // contoh: "SPP Bulanan", "Uang Buku"
+  amount    Int // simpan angka murni (integer rupiah), tanpa format
+
+  @@map("education_costs")
 }
 
 model Father {
   id             Int     @id @default(autoincrement())
   studentId      Int     @unique @map("student_id")
-  name           String
-  status         String
-  occupation     String
-  medicalHistory String  @map("medical_history")
   student        Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  name           String
+  status         String // Sehat | Sakit | Meninggal Dunia
+  occupation     String
+  incomePerMonth String  @map("income_per_month")
+  address        String
+  phone          String
+  medicalHistory String  @map("medical_history")
 
   @@map("fathers")
 }
@@ -44,11 +78,14 @@ model Father {
 model Mother {
   id             Int     @id @default(autoincrement())
   studentId      Int     @unique @map("student_id")
+  student        Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
   name           String
   status         String
   occupation     String
+  incomePerMonth String  @map("income_per_month")
+  address        String
+  phone          String
   medicalHistory String  @map("medical_history")
-  student        Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@map("mothers")
 }
@@ -56,11 +93,25 @@ model Mother {
 model Guardian {
   id             Int     @id @default(autoincrement())
   studentId      Int     @unique @map("student_id")
+  student        Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
   name           String
   status         String
   occupation     String
+  incomePerMonth String  @map("income_per_month")
+  address        String
+  phone          String
   medicalHistory String  @map("medical_history")
-  student        Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@map("guardians")
+}
+
+model Document {
+  id         Int      @id @default(autoincrement())
+  studentId  Int      @map("student_id")
+  student    Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  type       String // "KK" | "RAPOR" | "FOTO_ANAK"
+  fileUrl    String   @map("file_url")
+  uploadedAt DateTime @default(now()) @map("uploaded_at")
+
+  @@map("documents")
 }
