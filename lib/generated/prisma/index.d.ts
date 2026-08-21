@@ -14,10 +14,20 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
 
 
 /**
+ * Model Pengawas
+ * 
+ */
+export type Pengawas = $Result.DefaultSelection<Prisma.$PengawasPayload>
+/**
  * Model Student
  * 
  */
 export type Student = $Result.DefaultSelection<Prisma.$StudentPayload>
+/**
+ * Model EducationCost
+ * 
+ */
+export type EducationCost = $Result.DefaultSelection<Prisma.$EducationCostPayload>
 /**
  * Model Father
  * 
@@ -33,6 +43,11 @@ export type Mother = $Result.DefaultSelection<Prisma.$MotherPayload>
  * 
  */
 export type Guardian = $Result.DefaultSelection<Prisma.$GuardianPayload>
+/**
+ * Model Document
+ * 
+ */
+export type Document = $Result.DefaultSelection<Prisma.$DocumentPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -41,8 +56,8 @@ export type Guardian = $Result.DefaultSelection<Prisma.$GuardianPayload>
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more Students
- * const students = await prisma.student.findMany()
+ * // Fetch zero or more Pengawas
+ * const pengawas = await prisma.pengawas.findMany()
  * ```
  *
  *
@@ -62,8 +77,8 @@ export class PrismaClient<
    * @example
    * ```
    * const prisma = new PrismaClient()
-   * // Fetch zero or more Students
-   * const students = await prisma.student.findMany()
+   * // Fetch zero or more Pengawas
+   * const pengawas = await prisma.pengawas.findMany()
    * ```
    *
    *
@@ -153,6 +168,16 @@ export class PrismaClient<
   }>>
 
       /**
+   * `prisma.pengawas`: Exposes CRUD operations for the **Pengawas** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Pengawas
+    * const pengawas = await prisma.pengawas.findMany()
+    * ```
+    */
+  get pengawas(): Prisma.PengawasDelegate<ExtArgs, ClientOptions>;
+
+  /**
    * `prisma.student`: Exposes CRUD operations for the **Student** model.
     * Example usage:
     * ```ts
@@ -161,6 +186,16 @@ export class PrismaClient<
     * ```
     */
   get student(): Prisma.StudentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.educationCost`: Exposes CRUD operations for the **EducationCost** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more EducationCosts
+    * const educationCosts = await prisma.educationCost.findMany()
+    * ```
+    */
+  get educationCost(): Prisma.EducationCostDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.father`: Exposes CRUD operations for the **Father** model.
@@ -191,6 +226,16 @@ export class PrismaClient<
     * ```
     */
   get guardian(): Prisma.GuardianDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.document`: Exposes CRUD operations for the **Document** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Documents
+    * const documents = await prisma.document.findMany()
+    * ```
+    */
+  get document(): Prisma.DocumentDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -632,10 +677,13 @@ export namespace Prisma {
 
 
   export const ModelName: {
+    Pengawas: 'Pengawas',
     Student: 'Student',
+    EducationCost: 'EducationCost',
     Father: 'Father',
     Mother: 'Mother',
-    Guardian: 'Guardian'
+    Guardian: 'Guardian',
+    Document: 'Document'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -654,10 +702,84 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "student" | "father" | "mother" | "guardian"
+      modelProps: "pengawas" | "student" | "educationCost" | "father" | "mother" | "guardian" | "document"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
+      Pengawas: {
+        payload: Prisma.$PengawasPayload<ExtArgs>
+        fields: Prisma.PengawasFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PengawasFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PengawasPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PengawasFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PengawasPayload>
+          }
+          findFirst: {
+            args: Prisma.PengawasFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PengawasPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PengawasFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PengawasPayload>
+          }
+          findMany: {
+            args: Prisma.PengawasFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PengawasPayload>[]
+          }
+          create: {
+            args: Prisma.PengawasCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PengawasPayload>
+          }
+          createMany: {
+            args: Prisma.PengawasCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PengawasCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PengawasPayload>[]
+          }
+          delete: {
+            args: Prisma.PengawasDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PengawasPayload>
+          }
+          update: {
+            args: Prisma.PengawasUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PengawasPayload>
+          }
+          deleteMany: {
+            args: Prisma.PengawasDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PengawasUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PengawasUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PengawasPayload>[]
+          }
+          upsert: {
+            args: Prisma.PengawasUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PengawasPayload>
+          }
+          aggregate: {
+            args: Prisma.PengawasAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePengawas>
+          }
+          groupBy: {
+            args: Prisma.PengawasGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PengawasGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PengawasCountArgs<ExtArgs>
+            result: $Utils.Optional<PengawasCountAggregateOutputType> | number
+          }
+        }
+      }
       Student: {
         payload: Prisma.$StudentPayload<ExtArgs>
         fields: Prisma.StudentFieldRefs
@@ -729,6 +851,80 @@ export namespace Prisma {
           count: {
             args: Prisma.StudentCountArgs<ExtArgs>
             result: $Utils.Optional<StudentCountAggregateOutputType> | number
+          }
+        }
+      }
+      EducationCost: {
+        payload: Prisma.$EducationCostPayload<ExtArgs>
+        fields: Prisma.EducationCostFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.EducationCostFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EducationCostPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.EducationCostFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EducationCostPayload>
+          }
+          findFirst: {
+            args: Prisma.EducationCostFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EducationCostPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.EducationCostFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EducationCostPayload>
+          }
+          findMany: {
+            args: Prisma.EducationCostFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EducationCostPayload>[]
+          }
+          create: {
+            args: Prisma.EducationCostCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EducationCostPayload>
+          }
+          createMany: {
+            args: Prisma.EducationCostCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.EducationCostCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EducationCostPayload>[]
+          }
+          delete: {
+            args: Prisma.EducationCostDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EducationCostPayload>
+          }
+          update: {
+            args: Prisma.EducationCostUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EducationCostPayload>
+          }
+          deleteMany: {
+            args: Prisma.EducationCostDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.EducationCostUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.EducationCostUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EducationCostPayload>[]
+          }
+          upsert: {
+            args: Prisma.EducationCostUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$EducationCostPayload>
+          }
+          aggregate: {
+            args: Prisma.EducationCostAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateEducationCost>
+          }
+          groupBy: {
+            args: Prisma.EducationCostGroupByArgs<ExtArgs>
+            result: $Utils.Optional<EducationCostGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.EducationCostCountArgs<ExtArgs>
+            result: $Utils.Optional<EducationCostCountAggregateOutputType> | number
           }
         }
       }
@@ -954,6 +1150,80 @@ export namespace Prisma {
           }
         }
       }
+      Document: {
+        payload: Prisma.$DocumentPayload<ExtArgs>
+        fields: Prisma.DocumentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.DocumentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.DocumentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentPayload>
+          }
+          findFirst: {
+            args: Prisma.DocumentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.DocumentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentPayload>
+          }
+          findMany: {
+            args: Prisma.DocumentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentPayload>[]
+          }
+          create: {
+            args: Prisma.DocumentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentPayload>
+          }
+          createMany: {
+            args: Prisma.DocumentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.DocumentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentPayload>[]
+          }
+          delete: {
+            args: Prisma.DocumentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentPayload>
+          }
+          update: {
+            args: Prisma.DocumentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentPayload>
+          }
+          deleteMany: {
+            args: Prisma.DocumentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.DocumentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.DocumentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentPayload>[]
+          }
+          upsert: {
+            args: Prisma.DocumentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$DocumentPayload>
+          }
+          aggregate: {
+            args: Prisma.DocumentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateDocument>
+          }
+          groupBy: {
+            args: Prisma.DocumentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<DocumentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.DocumentCountArgs<ExtArgs>
+            result: $Utils.Optional<DocumentCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1050,10 +1320,13 @@ export namespace Prisma {
     omit?: Prisma.GlobalOmitConfig
   }
   export type GlobalOmitConfig = {
+    pengawas?: PengawasOmit
     student?: StudentOmit
+    educationCost?: EducationCostOmit
     father?: FatherOmit
     mother?: MotherOmit
     guardian?: GuardianOmit
+    document?: DocumentOmit
   }
 
   /* Types for Logging */
@@ -1129,10 +1402,1184 @@ export namespace Prisma {
    */
 
 
+  /**
+   * Count Type PengawasCountOutputType
+   */
+
+  export type PengawasCountOutputType = {
+    students: number
+  }
+
+  export type PengawasCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    students?: boolean | PengawasCountOutputTypeCountStudentsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PengawasCountOutputType without action
+   */
+  export type PengawasCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PengawasCountOutputType
+     */
+    select?: PengawasCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PengawasCountOutputType without action
+   */
+  export type PengawasCountOutputTypeCountStudentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StudentWhereInput
+  }
+
+
+  /**
+   * Count Type StudentCountOutputType
+   */
+
+  export type StudentCountOutputType = {
+    educationCosts: number
+    documents: number
+  }
+
+  export type StudentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    educationCosts?: boolean | StudentCountOutputTypeCountEducationCostsArgs
+    documents?: boolean | StudentCountOutputTypeCountDocumentsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * StudentCountOutputType without action
+   */
+  export type StudentCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StudentCountOutputType
+     */
+    select?: StudentCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * StudentCountOutputType without action
+   */
+  export type StudentCountOutputTypeCountEducationCostsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EducationCostWhereInput
+  }
+
+  /**
+   * StudentCountOutputType without action
+   */
+  export type StudentCountOutputTypeCountDocumentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DocumentWhereInput
+  }
+
 
   /**
    * Models
    */
+
+  /**
+   * Model Pengawas
+   */
+
+  export type AggregatePengawas = {
+    _count: PengawasCountAggregateOutputType | null
+    _avg: PengawasAvgAggregateOutputType | null
+    _sum: PengawasSumAggregateOutputType | null
+    _min: PengawasMinAggregateOutputType | null
+    _max: PengawasMaxAggregateOutputType | null
+  }
+
+  export type PengawasAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type PengawasSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type PengawasMinAggregateOutputType = {
+    id: number | null
+    username: string | null
+    password: string | null
+    name: string | null
+    wilayah: string | null
+  }
+
+  export type PengawasMaxAggregateOutputType = {
+    id: number | null
+    username: string | null
+    password: string | null
+    name: string | null
+    wilayah: string | null
+  }
+
+  export type PengawasCountAggregateOutputType = {
+    id: number
+    username: number
+    password: number
+    name: number
+    wilayah: number
+    _all: number
+  }
+
+
+  export type PengawasAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type PengawasSumAggregateInputType = {
+    id?: true
+  }
+
+  export type PengawasMinAggregateInputType = {
+    id?: true
+    username?: true
+    password?: true
+    name?: true
+    wilayah?: true
+  }
+
+  export type PengawasMaxAggregateInputType = {
+    id?: true
+    username?: true
+    password?: true
+    name?: true
+    wilayah?: true
+  }
+
+  export type PengawasCountAggregateInputType = {
+    id?: true
+    username?: true
+    password?: true
+    name?: true
+    wilayah?: true
+    _all?: true
+  }
+
+  export type PengawasAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Pengawas to aggregate.
+     */
+    where?: PengawasWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Pengawas to fetch.
+     */
+    orderBy?: PengawasOrderByWithRelationInput | PengawasOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PengawasWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Pengawas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Pengawas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Pengawas
+    **/
+    _count?: true | PengawasCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PengawasAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PengawasSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PengawasMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PengawasMaxAggregateInputType
+  }
+
+  export type GetPengawasAggregateType<T extends PengawasAggregateArgs> = {
+        [P in keyof T & keyof AggregatePengawas]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePengawas[P]>
+      : GetScalarType<T[P], AggregatePengawas[P]>
+  }
+
+
+
+
+  export type PengawasGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PengawasWhereInput
+    orderBy?: PengawasOrderByWithAggregationInput | PengawasOrderByWithAggregationInput[]
+    by: PengawasScalarFieldEnum[] | PengawasScalarFieldEnum
+    having?: PengawasScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PengawasCountAggregateInputType | true
+    _avg?: PengawasAvgAggregateInputType
+    _sum?: PengawasSumAggregateInputType
+    _min?: PengawasMinAggregateInputType
+    _max?: PengawasMaxAggregateInputType
+  }
+
+  export type PengawasGroupByOutputType = {
+    id: number
+    username: string
+    password: string
+    name: string
+    wilayah: string
+    _count: PengawasCountAggregateOutputType | null
+    _avg: PengawasAvgAggregateOutputType | null
+    _sum: PengawasSumAggregateOutputType | null
+    _min: PengawasMinAggregateOutputType | null
+    _max: PengawasMaxAggregateOutputType | null
+  }
+
+  type GetPengawasGroupByPayload<T extends PengawasGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PengawasGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PengawasGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PengawasGroupByOutputType[P]>
+            : GetScalarType<T[P], PengawasGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PengawasSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    username?: boolean
+    password?: boolean
+    name?: boolean
+    wilayah?: boolean
+    students?: boolean | Pengawas$studentsArgs<ExtArgs>
+    _count?: boolean | PengawasCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["pengawas"]>
+
+  export type PengawasSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    username?: boolean
+    password?: boolean
+    name?: boolean
+    wilayah?: boolean
+  }, ExtArgs["result"]["pengawas"]>
+
+  export type PengawasSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    username?: boolean
+    password?: boolean
+    name?: boolean
+    wilayah?: boolean
+  }, ExtArgs["result"]["pengawas"]>
+
+  export type PengawasSelectScalar = {
+    id?: boolean
+    username?: boolean
+    password?: boolean
+    name?: boolean
+    wilayah?: boolean
+  }
+
+  export type PengawasOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "password" | "name" | "wilayah", ExtArgs["result"]["pengawas"]>
+  export type PengawasInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    students?: boolean | Pengawas$studentsArgs<ExtArgs>
+    _count?: boolean | PengawasCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type PengawasIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type PengawasIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $PengawasPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Pengawas"
+    objects: {
+      students: Prisma.$StudentPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      username: string
+      password: string
+      name: string
+      wilayah: string
+    }, ExtArgs["result"]["pengawas"]>
+    composites: {}
+  }
+
+  type PengawasGetPayload<S extends boolean | null | undefined | PengawasDefaultArgs> = $Result.GetResult<Prisma.$PengawasPayload, S>
+
+  type PengawasCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PengawasFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PengawasCountAggregateInputType | true
+    }
+
+  export interface PengawasDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Pengawas'], meta: { name: 'Pengawas' } }
+    /**
+     * Find zero or one Pengawas that matches the filter.
+     * @param {PengawasFindUniqueArgs} args - Arguments to find a Pengawas
+     * @example
+     * // Get one Pengawas
+     * const pengawas = await prisma.pengawas.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PengawasFindUniqueArgs>(args: SelectSubset<T, PengawasFindUniqueArgs<ExtArgs>>): Prisma__PengawasClient<$Result.GetResult<Prisma.$PengawasPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Pengawas that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PengawasFindUniqueOrThrowArgs} args - Arguments to find a Pengawas
+     * @example
+     * // Get one Pengawas
+     * const pengawas = await prisma.pengawas.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PengawasFindUniqueOrThrowArgs>(args: SelectSubset<T, PengawasFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PengawasClient<$Result.GetResult<Prisma.$PengawasPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Pengawas that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PengawasFindFirstArgs} args - Arguments to find a Pengawas
+     * @example
+     * // Get one Pengawas
+     * const pengawas = await prisma.pengawas.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PengawasFindFirstArgs>(args?: SelectSubset<T, PengawasFindFirstArgs<ExtArgs>>): Prisma__PengawasClient<$Result.GetResult<Prisma.$PengawasPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Pengawas that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PengawasFindFirstOrThrowArgs} args - Arguments to find a Pengawas
+     * @example
+     * // Get one Pengawas
+     * const pengawas = await prisma.pengawas.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PengawasFindFirstOrThrowArgs>(args?: SelectSubset<T, PengawasFindFirstOrThrowArgs<ExtArgs>>): Prisma__PengawasClient<$Result.GetResult<Prisma.$PengawasPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Pengawas that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PengawasFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Pengawas
+     * const pengawas = await prisma.pengawas.findMany()
+     * 
+     * // Get first 10 Pengawas
+     * const pengawas = await prisma.pengawas.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const pengawasWithIdOnly = await prisma.pengawas.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PengawasFindManyArgs>(args?: SelectSubset<T, PengawasFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PengawasPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Pengawas.
+     * @param {PengawasCreateArgs} args - Arguments to create a Pengawas.
+     * @example
+     * // Create one Pengawas
+     * const Pengawas = await prisma.pengawas.create({
+     *   data: {
+     *     // ... data to create a Pengawas
+     *   }
+     * })
+     * 
+     */
+    create<T extends PengawasCreateArgs>(args: SelectSubset<T, PengawasCreateArgs<ExtArgs>>): Prisma__PengawasClient<$Result.GetResult<Prisma.$PengawasPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Pengawas.
+     * @param {PengawasCreateManyArgs} args - Arguments to create many Pengawas.
+     * @example
+     * // Create many Pengawas
+     * const pengawas = await prisma.pengawas.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PengawasCreateManyArgs>(args?: SelectSubset<T, PengawasCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Pengawas and returns the data saved in the database.
+     * @param {PengawasCreateManyAndReturnArgs} args - Arguments to create many Pengawas.
+     * @example
+     * // Create many Pengawas
+     * const pengawas = await prisma.pengawas.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Pengawas and only return the `id`
+     * const pengawasWithIdOnly = await prisma.pengawas.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PengawasCreateManyAndReturnArgs>(args?: SelectSubset<T, PengawasCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PengawasPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Pengawas.
+     * @param {PengawasDeleteArgs} args - Arguments to delete one Pengawas.
+     * @example
+     * // Delete one Pengawas
+     * const Pengawas = await prisma.pengawas.delete({
+     *   where: {
+     *     // ... filter to delete one Pengawas
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PengawasDeleteArgs>(args: SelectSubset<T, PengawasDeleteArgs<ExtArgs>>): Prisma__PengawasClient<$Result.GetResult<Prisma.$PengawasPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Pengawas.
+     * @param {PengawasUpdateArgs} args - Arguments to update one Pengawas.
+     * @example
+     * // Update one Pengawas
+     * const pengawas = await prisma.pengawas.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PengawasUpdateArgs>(args: SelectSubset<T, PengawasUpdateArgs<ExtArgs>>): Prisma__PengawasClient<$Result.GetResult<Prisma.$PengawasPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Pengawas.
+     * @param {PengawasDeleteManyArgs} args - Arguments to filter Pengawas to delete.
+     * @example
+     * // Delete a few Pengawas
+     * const { count } = await prisma.pengawas.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PengawasDeleteManyArgs>(args?: SelectSubset<T, PengawasDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Pengawas.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PengawasUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Pengawas
+     * const pengawas = await prisma.pengawas.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PengawasUpdateManyArgs>(args: SelectSubset<T, PengawasUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Pengawas and returns the data updated in the database.
+     * @param {PengawasUpdateManyAndReturnArgs} args - Arguments to update many Pengawas.
+     * @example
+     * // Update many Pengawas
+     * const pengawas = await prisma.pengawas.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Pengawas and only return the `id`
+     * const pengawasWithIdOnly = await prisma.pengawas.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PengawasUpdateManyAndReturnArgs>(args: SelectSubset<T, PengawasUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PengawasPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Pengawas.
+     * @param {PengawasUpsertArgs} args - Arguments to update or create a Pengawas.
+     * @example
+     * // Update or create a Pengawas
+     * const pengawas = await prisma.pengawas.upsert({
+     *   create: {
+     *     // ... data to create a Pengawas
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Pengawas we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PengawasUpsertArgs>(args: SelectSubset<T, PengawasUpsertArgs<ExtArgs>>): Prisma__PengawasClient<$Result.GetResult<Prisma.$PengawasPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Pengawas.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PengawasCountArgs} args - Arguments to filter Pengawas to count.
+     * @example
+     * // Count the number of Pengawas
+     * const count = await prisma.pengawas.count({
+     *   where: {
+     *     // ... the filter for the Pengawas we want to count
+     *   }
+     * })
+    **/
+    count<T extends PengawasCountArgs>(
+      args?: Subset<T, PengawasCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PengawasCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Pengawas.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PengawasAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PengawasAggregateArgs>(args: Subset<T, PengawasAggregateArgs>): Prisma.PrismaPromise<GetPengawasAggregateType<T>>
+
+    /**
+     * Group by Pengawas.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PengawasGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PengawasGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PengawasGroupByArgs['orderBy'] }
+        : { orderBy?: PengawasGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PengawasGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPengawasGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Pengawas model
+   */
+  readonly fields: PengawasFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Pengawas.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PengawasClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    students<T extends Pengawas$studentsArgs<ExtArgs> = {}>(args?: Subset<T, Pengawas$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Pengawas model
+   */
+  interface PengawasFieldRefs {
+    readonly id: FieldRef<"Pengawas", 'Int'>
+    readonly username: FieldRef<"Pengawas", 'String'>
+    readonly password: FieldRef<"Pengawas", 'String'>
+    readonly name: FieldRef<"Pengawas", 'String'>
+    readonly wilayah: FieldRef<"Pengawas", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Pengawas findUnique
+   */
+  export type PengawasFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pengawas
+     */
+    select?: PengawasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Pengawas
+     */
+    omit?: PengawasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PengawasInclude<ExtArgs> | null
+    /**
+     * Filter, which Pengawas to fetch.
+     */
+    where: PengawasWhereUniqueInput
+  }
+
+  /**
+   * Pengawas findUniqueOrThrow
+   */
+  export type PengawasFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pengawas
+     */
+    select?: PengawasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Pengawas
+     */
+    omit?: PengawasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PengawasInclude<ExtArgs> | null
+    /**
+     * Filter, which Pengawas to fetch.
+     */
+    where: PengawasWhereUniqueInput
+  }
+
+  /**
+   * Pengawas findFirst
+   */
+  export type PengawasFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pengawas
+     */
+    select?: PengawasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Pengawas
+     */
+    omit?: PengawasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PengawasInclude<ExtArgs> | null
+    /**
+     * Filter, which Pengawas to fetch.
+     */
+    where?: PengawasWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Pengawas to fetch.
+     */
+    orderBy?: PengawasOrderByWithRelationInput | PengawasOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Pengawas.
+     */
+    cursor?: PengawasWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Pengawas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Pengawas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Pengawas.
+     */
+    distinct?: PengawasScalarFieldEnum | PengawasScalarFieldEnum[]
+  }
+
+  /**
+   * Pengawas findFirstOrThrow
+   */
+  export type PengawasFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pengawas
+     */
+    select?: PengawasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Pengawas
+     */
+    omit?: PengawasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PengawasInclude<ExtArgs> | null
+    /**
+     * Filter, which Pengawas to fetch.
+     */
+    where?: PengawasWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Pengawas to fetch.
+     */
+    orderBy?: PengawasOrderByWithRelationInput | PengawasOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Pengawas.
+     */
+    cursor?: PengawasWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Pengawas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Pengawas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Pengawas.
+     */
+    distinct?: PengawasScalarFieldEnum | PengawasScalarFieldEnum[]
+  }
+
+  /**
+   * Pengawas findMany
+   */
+  export type PengawasFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pengawas
+     */
+    select?: PengawasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Pengawas
+     */
+    omit?: PengawasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PengawasInclude<ExtArgs> | null
+    /**
+     * Filter, which Pengawas to fetch.
+     */
+    where?: PengawasWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Pengawas to fetch.
+     */
+    orderBy?: PengawasOrderByWithRelationInput | PengawasOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Pengawas.
+     */
+    cursor?: PengawasWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Pengawas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Pengawas.
+     */
+    skip?: number
+    distinct?: PengawasScalarFieldEnum | PengawasScalarFieldEnum[]
+  }
+
+  /**
+   * Pengawas create
+   */
+  export type PengawasCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pengawas
+     */
+    select?: PengawasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Pengawas
+     */
+    omit?: PengawasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PengawasInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Pengawas.
+     */
+    data: XOR<PengawasCreateInput, PengawasUncheckedCreateInput>
+  }
+
+  /**
+   * Pengawas createMany
+   */
+  export type PengawasCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Pengawas.
+     */
+    data: PengawasCreateManyInput | PengawasCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Pengawas createManyAndReturn
+   */
+  export type PengawasCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pengawas
+     */
+    select?: PengawasSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Pengawas
+     */
+    omit?: PengawasOmit<ExtArgs> | null
+    /**
+     * The data used to create many Pengawas.
+     */
+    data: PengawasCreateManyInput | PengawasCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Pengawas update
+   */
+  export type PengawasUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pengawas
+     */
+    select?: PengawasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Pengawas
+     */
+    omit?: PengawasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PengawasInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Pengawas.
+     */
+    data: XOR<PengawasUpdateInput, PengawasUncheckedUpdateInput>
+    /**
+     * Choose, which Pengawas to update.
+     */
+    where: PengawasWhereUniqueInput
+  }
+
+  /**
+   * Pengawas updateMany
+   */
+  export type PengawasUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Pengawas.
+     */
+    data: XOR<PengawasUpdateManyMutationInput, PengawasUncheckedUpdateManyInput>
+    /**
+     * Filter which Pengawas to update
+     */
+    where?: PengawasWhereInput
+    /**
+     * Limit how many Pengawas to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Pengawas updateManyAndReturn
+   */
+  export type PengawasUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pengawas
+     */
+    select?: PengawasSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Pengawas
+     */
+    omit?: PengawasOmit<ExtArgs> | null
+    /**
+     * The data used to update Pengawas.
+     */
+    data: XOR<PengawasUpdateManyMutationInput, PengawasUncheckedUpdateManyInput>
+    /**
+     * Filter which Pengawas to update
+     */
+    where?: PengawasWhereInput
+    /**
+     * Limit how many Pengawas to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Pengawas upsert
+   */
+  export type PengawasUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pengawas
+     */
+    select?: PengawasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Pengawas
+     */
+    omit?: PengawasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PengawasInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Pengawas to update in case it exists.
+     */
+    where: PengawasWhereUniqueInput
+    /**
+     * In case the Pengawas found by the `where` argument doesn't exist, create a new Pengawas with this data.
+     */
+    create: XOR<PengawasCreateInput, PengawasUncheckedCreateInput>
+    /**
+     * In case the Pengawas was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PengawasUpdateInput, PengawasUncheckedUpdateInput>
+  }
+
+  /**
+   * Pengawas delete
+   */
+  export type PengawasDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pengawas
+     */
+    select?: PengawasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Pengawas
+     */
+    omit?: PengawasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PengawasInclude<ExtArgs> | null
+    /**
+     * Filter which Pengawas to delete.
+     */
+    where: PengawasWhereUniqueInput
+  }
+
+  /**
+   * Pengawas deleteMany
+   */
+  export type PengawasDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Pengawas to delete
+     */
+    where?: PengawasWhereInput
+    /**
+     * Limit how many Pengawas to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Pengawas.students
+   */
+  export type Pengawas$studentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Student
+     */
+    select?: StudentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Student
+     */
+    omit?: StudentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentInclude<ExtArgs> | null
+    where?: StudentWhereInput
+    orderBy?: StudentOrderByWithRelationInput | StudentOrderByWithRelationInput[]
+    cursor?: StudentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StudentScalarFieldEnum | StudentScalarFieldEnum[]
+  }
+
+  /**
+   * Pengawas without action
+   */
+  export type PengawasDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pengawas
+     */
+    select?: PengawasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Pengawas
+     */
+    omit?: PengawasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PengawasInclude<ExtArgs> | null
+  }
+
 
   /**
    * Model Student
@@ -1148,54 +2595,73 @@ export namespace Prisma {
 
   export type StudentAvgAggregateOutputType = {
     id: number | null
+    pengawasId: number | null
+    jumlahSaudara: number | null
   }
 
   export type StudentSumAggregateOutputType = {
     id: number | null
+    pengawasId: number | null
+    jumlahSaudara: number | null
   }
 
   export type StudentMinAggregateOutputType = {
     id: number | null
     username: string | null
+    nik: string | null
     fullName: string | null
     dateOfBirth: Date | null
     gender: string | null
-    city: string | null
-    medicalHistory: string | null
+    citaCita: string | null
+    wilayah: string | null
+    pengawasId: number | null
+    alamatLengkap: string | null
+    noHp: string | null
+    riwayatPenyakit: string | null
     schoolName: string | null
-    grade: string | null
-    tuitionCost: string | null
-    status: string | null
+    gradeLevel: string | null
+    nilaiRataRata: string | null
+    jumlahSaudara: number | null
     createdAt: Date | null
   }
 
   export type StudentMaxAggregateOutputType = {
     id: number | null
     username: string | null
+    nik: string | null
     fullName: string | null
     dateOfBirth: Date | null
     gender: string | null
-    city: string | null
-    medicalHistory: string | null
+    citaCita: string | null
+    wilayah: string | null
+    pengawasId: number | null
+    alamatLengkap: string | null
+    noHp: string | null
+    riwayatPenyakit: string | null
     schoolName: string | null
-    grade: string | null
-    tuitionCost: string | null
-    status: string | null
+    gradeLevel: string | null
+    nilaiRataRata: string | null
+    jumlahSaudara: number | null
     createdAt: Date | null
   }
 
   export type StudentCountAggregateOutputType = {
     id: number
     username: number
+    nik: number
     fullName: number
     dateOfBirth: number
     gender: number
-    city: number
-    medicalHistory: number
+    citaCita: number
+    wilayah: number
+    pengawasId: number
+    alamatLengkap: number
+    noHp: number
+    riwayatPenyakit: number
     schoolName: number
-    grade: number
-    tuitionCost: number
-    status: number
+    gradeLevel: number
+    nilaiRataRata: number
+    jumlahSaudara: number
     createdAt: number
     _all: number
   }
@@ -1203,54 +2669,73 @@ export namespace Prisma {
 
   export type StudentAvgAggregateInputType = {
     id?: true
+    pengawasId?: true
+    jumlahSaudara?: true
   }
 
   export type StudentSumAggregateInputType = {
     id?: true
+    pengawasId?: true
+    jumlahSaudara?: true
   }
 
   export type StudentMinAggregateInputType = {
     id?: true
     username?: true
+    nik?: true
     fullName?: true
     dateOfBirth?: true
     gender?: true
-    city?: true
-    medicalHistory?: true
+    citaCita?: true
+    wilayah?: true
+    pengawasId?: true
+    alamatLengkap?: true
+    noHp?: true
+    riwayatPenyakit?: true
     schoolName?: true
-    grade?: true
-    tuitionCost?: true
-    status?: true
+    gradeLevel?: true
+    nilaiRataRata?: true
+    jumlahSaudara?: true
     createdAt?: true
   }
 
   export type StudentMaxAggregateInputType = {
     id?: true
     username?: true
+    nik?: true
     fullName?: true
     dateOfBirth?: true
     gender?: true
-    city?: true
-    medicalHistory?: true
+    citaCita?: true
+    wilayah?: true
+    pengawasId?: true
+    alamatLengkap?: true
+    noHp?: true
+    riwayatPenyakit?: true
     schoolName?: true
-    grade?: true
-    tuitionCost?: true
-    status?: true
+    gradeLevel?: true
+    nilaiRataRata?: true
+    jumlahSaudara?: true
     createdAt?: true
   }
 
   export type StudentCountAggregateInputType = {
     id?: true
     username?: true
+    nik?: true
     fullName?: true
     dateOfBirth?: true
     gender?: true
-    city?: true
-    medicalHistory?: true
+    citaCita?: true
+    wilayah?: true
+    pengawasId?: true
+    alamatLengkap?: true
+    noHp?: true
+    riwayatPenyakit?: true
     schoolName?: true
-    grade?: true
-    tuitionCost?: true
-    status?: true
+    gradeLevel?: true
+    nilaiRataRata?: true
+    jumlahSaudara?: true
     createdAt?: true
     _all?: true
   }
@@ -1344,15 +2829,20 @@ export namespace Prisma {
   export type StudentGroupByOutputType = {
     id: number
     username: string
+    nik: string
     fullName: string
     dateOfBirth: Date
     gender: string
-    city: string
-    medicalHistory: string
+    citaCita: string
+    wilayah: string
+    pengawasId: number
+    alamatLengkap: string
+    noHp: string
+    riwayatPenyakit: string
     schoolName: string
-    grade: string
-    tuitionCost: string
-    status: string
+    gradeLevel: string
+    nilaiRataRata: string
+    jumlahSaudara: number
     createdAt: Date
     _count: StudentCountAggregateOutputType | null
     _avg: StudentAvgAggregateOutputType | null
@@ -1378,94 +2868,136 @@ export namespace Prisma {
   export type StudentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     username?: boolean
+    nik?: boolean
     fullName?: boolean
     dateOfBirth?: boolean
     gender?: boolean
-    city?: boolean
-    medicalHistory?: boolean
+    citaCita?: boolean
+    wilayah?: boolean
+    pengawasId?: boolean
+    alamatLengkap?: boolean
+    noHp?: boolean
+    riwayatPenyakit?: boolean
     schoolName?: boolean
-    grade?: boolean
-    tuitionCost?: boolean
-    status?: boolean
+    gradeLevel?: boolean
+    nilaiRataRata?: boolean
+    jumlahSaudara?: boolean
     createdAt?: boolean
+    pengawas?: boolean | PengawasDefaultArgs<ExtArgs>
     father?: boolean | Student$fatherArgs<ExtArgs>
     mother?: boolean | Student$motherArgs<ExtArgs>
     guardian?: boolean | Student$guardianArgs<ExtArgs>
+    educationCosts?: boolean | Student$educationCostsArgs<ExtArgs>
+    documents?: boolean | Student$documentsArgs<ExtArgs>
+    _count?: boolean | StudentCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["student"]>
 
   export type StudentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     username?: boolean
+    nik?: boolean
     fullName?: boolean
     dateOfBirth?: boolean
     gender?: boolean
-    city?: boolean
-    medicalHistory?: boolean
+    citaCita?: boolean
+    wilayah?: boolean
+    pengawasId?: boolean
+    alamatLengkap?: boolean
+    noHp?: boolean
+    riwayatPenyakit?: boolean
     schoolName?: boolean
-    grade?: boolean
-    tuitionCost?: boolean
-    status?: boolean
+    gradeLevel?: boolean
+    nilaiRataRata?: boolean
+    jumlahSaudara?: boolean
     createdAt?: boolean
+    pengawas?: boolean | PengawasDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["student"]>
 
   export type StudentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     username?: boolean
+    nik?: boolean
     fullName?: boolean
     dateOfBirth?: boolean
     gender?: boolean
-    city?: boolean
-    medicalHistory?: boolean
+    citaCita?: boolean
+    wilayah?: boolean
+    pengawasId?: boolean
+    alamatLengkap?: boolean
+    noHp?: boolean
+    riwayatPenyakit?: boolean
     schoolName?: boolean
-    grade?: boolean
-    tuitionCost?: boolean
-    status?: boolean
+    gradeLevel?: boolean
+    nilaiRataRata?: boolean
+    jumlahSaudara?: boolean
     createdAt?: boolean
+    pengawas?: boolean | PengawasDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["student"]>
 
   export type StudentSelectScalar = {
     id?: boolean
     username?: boolean
+    nik?: boolean
     fullName?: boolean
     dateOfBirth?: boolean
     gender?: boolean
-    city?: boolean
-    medicalHistory?: boolean
+    citaCita?: boolean
+    wilayah?: boolean
+    pengawasId?: boolean
+    alamatLengkap?: boolean
+    noHp?: boolean
+    riwayatPenyakit?: boolean
     schoolName?: boolean
-    grade?: boolean
-    tuitionCost?: boolean
-    status?: boolean
+    gradeLevel?: boolean
+    nilaiRataRata?: boolean
+    jumlahSaudara?: boolean
     createdAt?: boolean
   }
 
-  export type StudentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "fullName" | "dateOfBirth" | "gender" | "city" | "medicalHistory" | "schoolName" | "grade" | "tuitionCost" | "status" | "createdAt", ExtArgs["result"]["student"]>
+  export type StudentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "nik" | "fullName" | "dateOfBirth" | "gender" | "citaCita" | "wilayah" | "pengawasId" | "alamatLengkap" | "noHp" | "riwayatPenyakit" | "schoolName" | "gradeLevel" | "nilaiRataRata" | "jumlahSaudara" | "createdAt", ExtArgs["result"]["student"]>
   export type StudentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    pengawas?: boolean | PengawasDefaultArgs<ExtArgs>
     father?: boolean | Student$fatherArgs<ExtArgs>
     mother?: boolean | Student$motherArgs<ExtArgs>
     guardian?: boolean | Student$guardianArgs<ExtArgs>
+    educationCosts?: boolean | Student$educationCostsArgs<ExtArgs>
+    documents?: boolean | Student$documentsArgs<ExtArgs>
+    _count?: boolean | StudentCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type StudentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type StudentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type StudentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    pengawas?: boolean | PengawasDefaultArgs<ExtArgs>
+  }
+  export type StudentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    pengawas?: boolean | PengawasDefaultArgs<ExtArgs>
+  }
 
   export type $StudentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Student"
     objects: {
+      pengawas: Prisma.$PengawasPayload<ExtArgs>
       father: Prisma.$FatherPayload<ExtArgs> | null
       mother: Prisma.$MotherPayload<ExtArgs> | null
       guardian: Prisma.$GuardianPayload<ExtArgs> | null
+      educationCosts: Prisma.$EducationCostPayload<ExtArgs>[]
+      documents: Prisma.$DocumentPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
       username: string
+      nik: string
       fullName: string
       dateOfBirth: Date
       gender: string
-      city: string
-      medicalHistory: string
+      citaCita: string
+      wilayah: string
+      pengawasId: number
+      alamatLengkap: string
+      noHp: string
+      riwayatPenyakit: string
       schoolName: string
-      grade: string
-      tuitionCost: string
-      status: string
+      gradeLevel: string
+      nilaiRataRata: string
+      jumlahSaudara: number
       createdAt: Date
     }, ExtArgs["result"]["student"]>
     composites: {}
@@ -1861,9 +3393,12 @@ export namespace Prisma {
    */
   export interface Prisma__StudentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    pengawas<T extends PengawasDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PengawasDefaultArgs<ExtArgs>>): Prisma__PengawasClient<$Result.GetResult<Prisma.$PengawasPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     father<T extends Student$fatherArgs<ExtArgs> = {}>(args?: Subset<T, Student$fatherArgs<ExtArgs>>): Prisma__FatherClient<$Result.GetResult<Prisma.$FatherPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     mother<T extends Student$motherArgs<ExtArgs> = {}>(args?: Subset<T, Student$motherArgs<ExtArgs>>): Prisma__MotherClient<$Result.GetResult<Prisma.$MotherPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     guardian<T extends Student$guardianArgs<ExtArgs> = {}>(args?: Subset<T, Student$guardianArgs<ExtArgs>>): Prisma__GuardianClient<$Result.GetResult<Prisma.$GuardianPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    educationCosts<T extends Student$educationCostsArgs<ExtArgs> = {}>(args?: Subset<T, Student$educationCostsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EducationCostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    documents<T extends Student$documentsArgs<ExtArgs> = {}>(args?: Subset<T, Student$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1895,15 +3430,20 @@ export namespace Prisma {
   interface StudentFieldRefs {
     readonly id: FieldRef<"Student", 'Int'>
     readonly username: FieldRef<"Student", 'String'>
+    readonly nik: FieldRef<"Student", 'String'>
     readonly fullName: FieldRef<"Student", 'String'>
     readonly dateOfBirth: FieldRef<"Student", 'DateTime'>
     readonly gender: FieldRef<"Student", 'String'>
-    readonly city: FieldRef<"Student", 'String'>
-    readonly medicalHistory: FieldRef<"Student", 'String'>
+    readonly citaCita: FieldRef<"Student", 'String'>
+    readonly wilayah: FieldRef<"Student", 'String'>
+    readonly pengawasId: FieldRef<"Student", 'Int'>
+    readonly alamatLengkap: FieldRef<"Student", 'String'>
+    readonly noHp: FieldRef<"Student", 'String'>
+    readonly riwayatPenyakit: FieldRef<"Student", 'String'>
     readonly schoolName: FieldRef<"Student", 'String'>
-    readonly grade: FieldRef<"Student", 'String'>
-    readonly tuitionCost: FieldRef<"Student", 'String'>
-    readonly status: FieldRef<"Student", 'String'>
+    readonly gradeLevel: FieldRef<"Student", 'String'>
+    readonly nilaiRataRata: FieldRef<"Student", 'String'>
+    readonly jumlahSaudara: FieldRef<"Student", 'Int'>
     readonly createdAt: FieldRef<"Student", 'DateTime'>
   }
     
@@ -2154,6 +3694,10 @@ export namespace Prisma {
      */
     data: StudentCreateManyInput | StudentCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -2224,6 +3768,10 @@ export namespace Prisma {
      * Limit how many Students to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -2350,6 +3898,54 @@ export namespace Prisma {
   }
 
   /**
+   * Student.educationCosts
+   */
+  export type Student$educationCostsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EducationCost
+     */
+    select?: EducationCostSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EducationCost
+     */
+    omit?: EducationCostOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationCostInclude<ExtArgs> | null
+    where?: EducationCostWhereInput
+    orderBy?: EducationCostOrderByWithRelationInput | EducationCostOrderByWithRelationInput[]
+    cursor?: EducationCostWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: EducationCostScalarFieldEnum | EducationCostScalarFieldEnum[]
+  }
+
+  /**
+   * Student.documents
+   */
+  export type Student$documentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentInclude<ExtArgs> | null
+    where?: DocumentWhereInput
+    orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
+    cursor?: DocumentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: DocumentScalarFieldEnum | DocumentScalarFieldEnum[]
+  }
+
+  /**
    * Student without action
    */
   export type StudentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2365,6 +3961,1093 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: StudentInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model EducationCost
+   */
+
+  export type AggregateEducationCost = {
+    _count: EducationCostCountAggregateOutputType | null
+    _avg: EducationCostAvgAggregateOutputType | null
+    _sum: EducationCostSumAggregateOutputType | null
+    _min: EducationCostMinAggregateOutputType | null
+    _max: EducationCostMaxAggregateOutputType | null
+  }
+
+  export type EducationCostAvgAggregateOutputType = {
+    id: number | null
+    studentId: number | null
+    amount: number | null
+  }
+
+  export type EducationCostSumAggregateOutputType = {
+    id: number | null
+    studentId: number | null
+    amount: number | null
+  }
+
+  export type EducationCostMinAggregateOutputType = {
+    id: number | null
+    studentId: number | null
+    label: string | null
+    amount: number | null
+  }
+
+  export type EducationCostMaxAggregateOutputType = {
+    id: number | null
+    studentId: number | null
+    label: string | null
+    amount: number | null
+  }
+
+  export type EducationCostCountAggregateOutputType = {
+    id: number
+    studentId: number
+    label: number
+    amount: number
+    _all: number
+  }
+
+
+  export type EducationCostAvgAggregateInputType = {
+    id?: true
+    studentId?: true
+    amount?: true
+  }
+
+  export type EducationCostSumAggregateInputType = {
+    id?: true
+    studentId?: true
+    amount?: true
+  }
+
+  export type EducationCostMinAggregateInputType = {
+    id?: true
+    studentId?: true
+    label?: true
+    amount?: true
+  }
+
+  export type EducationCostMaxAggregateInputType = {
+    id?: true
+    studentId?: true
+    label?: true
+    amount?: true
+  }
+
+  export type EducationCostCountAggregateInputType = {
+    id?: true
+    studentId?: true
+    label?: true
+    amount?: true
+    _all?: true
+  }
+
+  export type EducationCostAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EducationCost to aggregate.
+     */
+    where?: EducationCostWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EducationCosts to fetch.
+     */
+    orderBy?: EducationCostOrderByWithRelationInput | EducationCostOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: EducationCostWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EducationCosts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EducationCosts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned EducationCosts
+    **/
+    _count?: true | EducationCostCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: EducationCostAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: EducationCostSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: EducationCostMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: EducationCostMaxAggregateInputType
+  }
+
+  export type GetEducationCostAggregateType<T extends EducationCostAggregateArgs> = {
+        [P in keyof T & keyof AggregateEducationCost]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateEducationCost[P]>
+      : GetScalarType<T[P], AggregateEducationCost[P]>
+  }
+
+
+
+
+  export type EducationCostGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: EducationCostWhereInput
+    orderBy?: EducationCostOrderByWithAggregationInput | EducationCostOrderByWithAggregationInput[]
+    by: EducationCostScalarFieldEnum[] | EducationCostScalarFieldEnum
+    having?: EducationCostScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: EducationCostCountAggregateInputType | true
+    _avg?: EducationCostAvgAggregateInputType
+    _sum?: EducationCostSumAggregateInputType
+    _min?: EducationCostMinAggregateInputType
+    _max?: EducationCostMaxAggregateInputType
+  }
+
+  export type EducationCostGroupByOutputType = {
+    id: number
+    studentId: number
+    label: string
+    amount: number
+    _count: EducationCostCountAggregateOutputType | null
+    _avg: EducationCostAvgAggregateOutputType | null
+    _sum: EducationCostSumAggregateOutputType | null
+    _min: EducationCostMinAggregateOutputType | null
+    _max: EducationCostMaxAggregateOutputType | null
+  }
+
+  type GetEducationCostGroupByPayload<T extends EducationCostGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<EducationCostGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof EducationCostGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], EducationCostGroupByOutputType[P]>
+            : GetScalarType<T[P], EducationCostGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type EducationCostSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    studentId?: boolean
+    label?: boolean
+    amount?: boolean
+    student?: boolean | StudentDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["educationCost"]>
+
+  export type EducationCostSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    studentId?: boolean
+    label?: boolean
+    amount?: boolean
+    student?: boolean | StudentDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["educationCost"]>
+
+  export type EducationCostSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    studentId?: boolean
+    label?: boolean
+    amount?: boolean
+    student?: boolean | StudentDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["educationCost"]>
+
+  export type EducationCostSelectScalar = {
+    id?: boolean
+    studentId?: boolean
+    label?: boolean
+    amount?: boolean
+  }
+
+  export type EducationCostOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "label" | "amount", ExtArgs["result"]["educationCost"]>
+  export type EducationCostInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    student?: boolean | StudentDefaultArgs<ExtArgs>
+  }
+  export type EducationCostIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    student?: boolean | StudentDefaultArgs<ExtArgs>
+  }
+  export type EducationCostIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    student?: boolean | StudentDefaultArgs<ExtArgs>
+  }
+
+  export type $EducationCostPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "EducationCost"
+    objects: {
+      student: Prisma.$StudentPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      studentId: number
+      label: string
+      amount: number
+    }, ExtArgs["result"]["educationCost"]>
+    composites: {}
+  }
+
+  type EducationCostGetPayload<S extends boolean | null | undefined | EducationCostDefaultArgs> = $Result.GetResult<Prisma.$EducationCostPayload, S>
+
+  type EducationCostCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<EducationCostFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: EducationCostCountAggregateInputType | true
+    }
+
+  export interface EducationCostDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['EducationCost'], meta: { name: 'EducationCost' } }
+    /**
+     * Find zero or one EducationCost that matches the filter.
+     * @param {EducationCostFindUniqueArgs} args - Arguments to find a EducationCost
+     * @example
+     * // Get one EducationCost
+     * const educationCost = await prisma.educationCost.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends EducationCostFindUniqueArgs>(args: SelectSubset<T, EducationCostFindUniqueArgs<ExtArgs>>): Prisma__EducationCostClient<$Result.GetResult<Prisma.$EducationCostPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one EducationCost that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {EducationCostFindUniqueOrThrowArgs} args - Arguments to find a EducationCost
+     * @example
+     * // Get one EducationCost
+     * const educationCost = await prisma.educationCost.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends EducationCostFindUniqueOrThrowArgs>(args: SelectSubset<T, EducationCostFindUniqueOrThrowArgs<ExtArgs>>): Prisma__EducationCostClient<$Result.GetResult<Prisma.$EducationCostPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first EducationCost that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EducationCostFindFirstArgs} args - Arguments to find a EducationCost
+     * @example
+     * // Get one EducationCost
+     * const educationCost = await prisma.educationCost.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends EducationCostFindFirstArgs>(args?: SelectSubset<T, EducationCostFindFirstArgs<ExtArgs>>): Prisma__EducationCostClient<$Result.GetResult<Prisma.$EducationCostPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first EducationCost that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EducationCostFindFirstOrThrowArgs} args - Arguments to find a EducationCost
+     * @example
+     * // Get one EducationCost
+     * const educationCost = await prisma.educationCost.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends EducationCostFindFirstOrThrowArgs>(args?: SelectSubset<T, EducationCostFindFirstOrThrowArgs<ExtArgs>>): Prisma__EducationCostClient<$Result.GetResult<Prisma.$EducationCostPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more EducationCosts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EducationCostFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all EducationCosts
+     * const educationCosts = await prisma.educationCost.findMany()
+     * 
+     * // Get first 10 EducationCosts
+     * const educationCosts = await prisma.educationCost.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const educationCostWithIdOnly = await prisma.educationCost.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends EducationCostFindManyArgs>(args?: SelectSubset<T, EducationCostFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EducationCostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a EducationCost.
+     * @param {EducationCostCreateArgs} args - Arguments to create a EducationCost.
+     * @example
+     * // Create one EducationCost
+     * const EducationCost = await prisma.educationCost.create({
+     *   data: {
+     *     // ... data to create a EducationCost
+     *   }
+     * })
+     * 
+     */
+    create<T extends EducationCostCreateArgs>(args: SelectSubset<T, EducationCostCreateArgs<ExtArgs>>): Prisma__EducationCostClient<$Result.GetResult<Prisma.$EducationCostPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many EducationCosts.
+     * @param {EducationCostCreateManyArgs} args - Arguments to create many EducationCosts.
+     * @example
+     * // Create many EducationCosts
+     * const educationCost = await prisma.educationCost.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends EducationCostCreateManyArgs>(args?: SelectSubset<T, EducationCostCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many EducationCosts and returns the data saved in the database.
+     * @param {EducationCostCreateManyAndReturnArgs} args - Arguments to create many EducationCosts.
+     * @example
+     * // Create many EducationCosts
+     * const educationCost = await prisma.educationCost.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many EducationCosts and only return the `id`
+     * const educationCostWithIdOnly = await prisma.educationCost.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends EducationCostCreateManyAndReturnArgs>(args?: SelectSubset<T, EducationCostCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EducationCostPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a EducationCost.
+     * @param {EducationCostDeleteArgs} args - Arguments to delete one EducationCost.
+     * @example
+     * // Delete one EducationCost
+     * const EducationCost = await prisma.educationCost.delete({
+     *   where: {
+     *     // ... filter to delete one EducationCost
+     *   }
+     * })
+     * 
+     */
+    delete<T extends EducationCostDeleteArgs>(args: SelectSubset<T, EducationCostDeleteArgs<ExtArgs>>): Prisma__EducationCostClient<$Result.GetResult<Prisma.$EducationCostPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one EducationCost.
+     * @param {EducationCostUpdateArgs} args - Arguments to update one EducationCost.
+     * @example
+     * // Update one EducationCost
+     * const educationCost = await prisma.educationCost.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends EducationCostUpdateArgs>(args: SelectSubset<T, EducationCostUpdateArgs<ExtArgs>>): Prisma__EducationCostClient<$Result.GetResult<Prisma.$EducationCostPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more EducationCosts.
+     * @param {EducationCostDeleteManyArgs} args - Arguments to filter EducationCosts to delete.
+     * @example
+     * // Delete a few EducationCosts
+     * const { count } = await prisma.educationCost.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends EducationCostDeleteManyArgs>(args?: SelectSubset<T, EducationCostDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more EducationCosts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EducationCostUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many EducationCosts
+     * const educationCost = await prisma.educationCost.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends EducationCostUpdateManyArgs>(args: SelectSubset<T, EducationCostUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more EducationCosts and returns the data updated in the database.
+     * @param {EducationCostUpdateManyAndReturnArgs} args - Arguments to update many EducationCosts.
+     * @example
+     * // Update many EducationCosts
+     * const educationCost = await prisma.educationCost.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more EducationCosts and only return the `id`
+     * const educationCostWithIdOnly = await prisma.educationCost.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends EducationCostUpdateManyAndReturnArgs>(args: SelectSubset<T, EducationCostUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$EducationCostPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one EducationCost.
+     * @param {EducationCostUpsertArgs} args - Arguments to update or create a EducationCost.
+     * @example
+     * // Update or create a EducationCost
+     * const educationCost = await prisma.educationCost.upsert({
+     *   create: {
+     *     // ... data to create a EducationCost
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the EducationCost we want to update
+     *   }
+     * })
+     */
+    upsert<T extends EducationCostUpsertArgs>(args: SelectSubset<T, EducationCostUpsertArgs<ExtArgs>>): Prisma__EducationCostClient<$Result.GetResult<Prisma.$EducationCostPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of EducationCosts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EducationCostCountArgs} args - Arguments to filter EducationCosts to count.
+     * @example
+     * // Count the number of EducationCosts
+     * const count = await prisma.educationCost.count({
+     *   where: {
+     *     // ... the filter for the EducationCosts we want to count
+     *   }
+     * })
+    **/
+    count<T extends EducationCostCountArgs>(
+      args?: Subset<T, EducationCostCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], EducationCostCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a EducationCost.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EducationCostAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends EducationCostAggregateArgs>(args: Subset<T, EducationCostAggregateArgs>): Prisma.PrismaPromise<GetEducationCostAggregateType<T>>
+
+    /**
+     * Group by EducationCost.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {EducationCostGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends EducationCostGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: EducationCostGroupByArgs['orderBy'] }
+        : { orderBy?: EducationCostGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, EducationCostGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetEducationCostGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the EducationCost model
+   */
+  readonly fields: EducationCostFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for EducationCost.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__EducationCostClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    student<T extends StudentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StudentDefaultArgs<ExtArgs>>): Prisma__StudentClient<$Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the EducationCost model
+   */
+  interface EducationCostFieldRefs {
+    readonly id: FieldRef<"EducationCost", 'Int'>
+    readonly studentId: FieldRef<"EducationCost", 'Int'>
+    readonly label: FieldRef<"EducationCost", 'String'>
+    readonly amount: FieldRef<"EducationCost", 'Int'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * EducationCost findUnique
+   */
+  export type EducationCostFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EducationCost
+     */
+    select?: EducationCostSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EducationCost
+     */
+    omit?: EducationCostOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationCostInclude<ExtArgs> | null
+    /**
+     * Filter, which EducationCost to fetch.
+     */
+    where: EducationCostWhereUniqueInput
+  }
+
+  /**
+   * EducationCost findUniqueOrThrow
+   */
+  export type EducationCostFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EducationCost
+     */
+    select?: EducationCostSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EducationCost
+     */
+    omit?: EducationCostOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationCostInclude<ExtArgs> | null
+    /**
+     * Filter, which EducationCost to fetch.
+     */
+    where: EducationCostWhereUniqueInput
+  }
+
+  /**
+   * EducationCost findFirst
+   */
+  export type EducationCostFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EducationCost
+     */
+    select?: EducationCostSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EducationCost
+     */
+    omit?: EducationCostOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationCostInclude<ExtArgs> | null
+    /**
+     * Filter, which EducationCost to fetch.
+     */
+    where?: EducationCostWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EducationCosts to fetch.
+     */
+    orderBy?: EducationCostOrderByWithRelationInput | EducationCostOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EducationCosts.
+     */
+    cursor?: EducationCostWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EducationCosts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EducationCosts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EducationCosts.
+     */
+    distinct?: EducationCostScalarFieldEnum | EducationCostScalarFieldEnum[]
+  }
+
+  /**
+   * EducationCost findFirstOrThrow
+   */
+  export type EducationCostFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EducationCost
+     */
+    select?: EducationCostSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EducationCost
+     */
+    omit?: EducationCostOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationCostInclude<ExtArgs> | null
+    /**
+     * Filter, which EducationCost to fetch.
+     */
+    where?: EducationCostWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EducationCosts to fetch.
+     */
+    orderBy?: EducationCostOrderByWithRelationInput | EducationCostOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for EducationCosts.
+     */
+    cursor?: EducationCostWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EducationCosts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EducationCosts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of EducationCosts.
+     */
+    distinct?: EducationCostScalarFieldEnum | EducationCostScalarFieldEnum[]
+  }
+
+  /**
+   * EducationCost findMany
+   */
+  export type EducationCostFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EducationCost
+     */
+    select?: EducationCostSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EducationCost
+     */
+    omit?: EducationCostOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationCostInclude<ExtArgs> | null
+    /**
+     * Filter, which EducationCosts to fetch.
+     */
+    where?: EducationCostWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of EducationCosts to fetch.
+     */
+    orderBy?: EducationCostOrderByWithRelationInput | EducationCostOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing EducationCosts.
+     */
+    cursor?: EducationCostWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` EducationCosts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` EducationCosts.
+     */
+    skip?: number
+    distinct?: EducationCostScalarFieldEnum | EducationCostScalarFieldEnum[]
+  }
+
+  /**
+   * EducationCost create
+   */
+  export type EducationCostCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EducationCost
+     */
+    select?: EducationCostSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EducationCost
+     */
+    omit?: EducationCostOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationCostInclude<ExtArgs> | null
+    /**
+     * The data needed to create a EducationCost.
+     */
+    data: XOR<EducationCostCreateInput, EducationCostUncheckedCreateInput>
+  }
+
+  /**
+   * EducationCost createMany
+   */
+  export type EducationCostCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many EducationCosts.
+     */
+    data: EducationCostCreateManyInput | EducationCostCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * EducationCost createManyAndReturn
+   */
+  export type EducationCostCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EducationCost
+     */
+    select?: EducationCostSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the EducationCost
+     */
+    omit?: EducationCostOmit<ExtArgs> | null
+    /**
+     * The data used to create many EducationCosts.
+     */
+    data: EducationCostCreateManyInput | EducationCostCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationCostIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * EducationCost update
+   */
+  export type EducationCostUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EducationCost
+     */
+    select?: EducationCostSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EducationCost
+     */
+    omit?: EducationCostOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationCostInclude<ExtArgs> | null
+    /**
+     * The data needed to update a EducationCost.
+     */
+    data: XOR<EducationCostUpdateInput, EducationCostUncheckedUpdateInput>
+    /**
+     * Choose, which EducationCost to update.
+     */
+    where: EducationCostWhereUniqueInput
+  }
+
+  /**
+   * EducationCost updateMany
+   */
+  export type EducationCostUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update EducationCosts.
+     */
+    data: XOR<EducationCostUpdateManyMutationInput, EducationCostUncheckedUpdateManyInput>
+    /**
+     * Filter which EducationCosts to update
+     */
+    where?: EducationCostWhereInput
+    /**
+     * Limit how many EducationCosts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * EducationCost updateManyAndReturn
+   */
+  export type EducationCostUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EducationCost
+     */
+    select?: EducationCostSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the EducationCost
+     */
+    omit?: EducationCostOmit<ExtArgs> | null
+    /**
+     * The data used to update EducationCosts.
+     */
+    data: XOR<EducationCostUpdateManyMutationInput, EducationCostUncheckedUpdateManyInput>
+    /**
+     * Filter which EducationCosts to update
+     */
+    where?: EducationCostWhereInput
+    /**
+     * Limit how many EducationCosts to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationCostIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * EducationCost upsert
+   */
+  export type EducationCostUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EducationCost
+     */
+    select?: EducationCostSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EducationCost
+     */
+    omit?: EducationCostOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationCostInclude<ExtArgs> | null
+    /**
+     * The filter to search for the EducationCost to update in case it exists.
+     */
+    where: EducationCostWhereUniqueInput
+    /**
+     * In case the EducationCost found by the `where` argument doesn't exist, create a new EducationCost with this data.
+     */
+    create: XOR<EducationCostCreateInput, EducationCostUncheckedCreateInput>
+    /**
+     * In case the EducationCost was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<EducationCostUpdateInput, EducationCostUncheckedUpdateInput>
+  }
+
+  /**
+   * EducationCost delete
+   */
+  export type EducationCostDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EducationCost
+     */
+    select?: EducationCostSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EducationCost
+     */
+    omit?: EducationCostOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationCostInclude<ExtArgs> | null
+    /**
+     * Filter which EducationCost to delete.
+     */
+    where: EducationCostWhereUniqueInput
+  }
+
+  /**
+   * EducationCost deleteMany
+   */
+  export type EducationCostDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which EducationCosts to delete
+     */
+    where?: EducationCostWhereInput
+    /**
+     * Limit how many EducationCosts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * EducationCost without action
+   */
+  export type EducationCostDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the EducationCost
+     */
+    select?: EducationCostSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the EducationCost
+     */
+    omit?: EducationCostOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: EducationCostInclude<ExtArgs> | null
   }
 
 
@@ -2396,6 +5079,9 @@ export namespace Prisma {
     name: string | null
     status: string | null
     occupation: string | null
+    incomePerMonth: string | null
+    address: string | null
+    phone: string | null
     medicalHistory: string | null
   }
 
@@ -2405,6 +5091,9 @@ export namespace Prisma {
     name: string | null
     status: string | null
     occupation: string | null
+    incomePerMonth: string | null
+    address: string | null
+    phone: string | null
     medicalHistory: string | null
   }
 
@@ -2414,6 +5103,9 @@ export namespace Prisma {
     name: number
     status: number
     occupation: number
+    incomePerMonth: number
+    address: number
+    phone: number
     medicalHistory: number
     _all: number
   }
@@ -2435,6 +5127,9 @@ export namespace Prisma {
     name?: true
     status?: true
     occupation?: true
+    incomePerMonth?: true
+    address?: true
+    phone?: true
     medicalHistory?: true
   }
 
@@ -2444,6 +5139,9 @@ export namespace Prisma {
     name?: true
     status?: true
     occupation?: true
+    incomePerMonth?: true
+    address?: true
+    phone?: true
     medicalHistory?: true
   }
 
@@ -2453,6 +5151,9 @@ export namespace Prisma {
     name?: true
     status?: true
     occupation?: true
+    incomePerMonth?: true
+    address?: true
+    phone?: true
     medicalHistory?: true
     _all?: true
   }
@@ -2549,6 +5250,9 @@ export namespace Prisma {
     name: string
     status: string
     occupation: string
+    incomePerMonth: string
+    address: string
+    phone: string
     medicalHistory: string
     _count: FatherCountAggregateOutputType | null
     _avg: FatherAvgAggregateOutputType | null
@@ -2577,6 +5281,9 @@ export namespace Prisma {
     name?: boolean
     status?: boolean
     occupation?: boolean
+    incomePerMonth?: boolean
+    address?: boolean
+    phone?: boolean
     medicalHistory?: boolean
     student?: boolean | StudentDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["father"]>
@@ -2587,6 +5294,9 @@ export namespace Prisma {
     name?: boolean
     status?: boolean
     occupation?: boolean
+    incomePerMonth?: boolean
+    address?: boolean
+    phone?: boolean
     medicalHistory?: boolean
     student?: boolean | StudentDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["father"]>
@@ -2597,6 +5307,9 @@ export namespace Prisma {
     name?: boolean
     status?: boolean
     occupation?: boolean
+    incomePerMonth?: boolean
+    address?: boolean
+    phone?: boolean
     medicalHistory?: boolean
     student?: boolean | StudentDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["father"]>
@@ -2607,10 +5320,13 @@ export namespace Prisma {
     name?: boolean
     status?: boolean
     occupation?: boolean
+    incomePerMonth?: boolean
+    address?: boolean
+    phone?: boolean
     medicalHistory?: boolean
   }
 
-  export type FatherOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "name" | "status" | "occupation" | "medicalHistory", ExtArgs["result"]["father"]>
+  export type FatherOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "name" | "status" | "occupation" | "incomePerMonth" | "address" | "phone" | "medicalHistory", ExtArgs["result"]["father"]>
   export type FatherInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     student?: boolean | StudentDefaultArgs<ExtArgs>
   }
@@ -2632,6 +5348,9 @@ export namespace Prisma {
       name: string
       status: string
       occupation: string
+      incomePerMonth: string
+      address: string
+      phone: string
       medicalHistory: string
     }, ExtArgs["result"]["father"]>
     composites: {}
@@ -3062,6 +5781,9 @@ export namespace Prisma {
     readonly name: FieldRef<"Father", 'String'>
     readonly status: FieldRef<"Father", 'String'>
     readonly occupation: FieldRef<"Father", 'String'>
+    readonly incomePerMonth: FieldRef<"Father", 'String'>
+    readonly address: FieldRef<"Father", 'String'>
+    readonly phone: FieldRef<"Father", 'String'>
     readonly medicalHistory: FieldRef<"Father", 'String'>
   }
     
@@ -3505,6 +6227,9 @@ export namespace Prisma {
     name: string | null
     status: string | null
     occupation: string | null
+    incomePerMonth: string | null
+    address: string | null
+    phone: string | null
     medicalHistory: string | null
   }
 
@@ -3514,6 +6239,9 @@ export namespace Prisma {
     name: string | null
     status: string | null
     occupation: string | null
+    incomePerMonth: string | null
+    address: string | null
+    phone: string | null
     medicalHistory: string | null
   }
 
@@ -3523,6 +6251,9 @@ export namespace Prisma {
     name: number
     status: number
     occupation: number
+    incomePerMonth: number
+    address: number
+    phone: number
     medicalHistory: number
     _all: number
   }
@@ -3544,6 +6275,9 @@ export namespace Prisma {
     name?: true
     status?: true
     occupation?: true
+    incomePerMonth?: true
+    address?: true
+    phone?: true
     medicalHistory?: true
   }
 
@@ -3553,6 +6287,9 @@ export namespace Prisma {
     name?: true
     status?: true
     occupation?: true
+    incomePerMonth?: true
+    address?: true
+    phone?: true
     medicalHistory?: true
   }
 
@@ -3562,6 +6299,9 @@ export namespace Prisma {
     name?: true
     status?: true
     occupation?: true
+    incomePerMonth?: true
+    address?: true
+    phone?: true
     medicalHistory?: true
     _all?: true
   }
@@ -3658,6 +6398,9 @@ export namespace Prisma {
     name: string
     status: string
     occupation: string
+    incomePerMonth: string
+    address: string
+    phone: string
     medicalHistory: string
     _count: MotherCountAggregateOutputType | null
     _avg: MotherAvgAggregateOutputType | null
@@ -3686,6 +6429,9 @@ export namespace Prisma {
     name?: boolean
     status?: boolean
     occupation?: boolean
+    incomePerMonth?: boolean
+    address?: boolean
+    phone?: boolean
     medicalHistory?: boolean
     student?: boolean | StudentDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["mother"]>
@@ -3696,6 +6442,9 @@ export namespace Prisma {
     name?: boolean
     status?: boolean
     occupation?: boolean
+    incomePerMonth?: boolean
+    address?: boolean
+    phone?: boolean
     medicalHistory?: boolean
     student?: boolean | StudentDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["mother"]>
@@ -3706,6 +6455,9 @@ export namespace Prisma {
     name?: boolean
     status?: boolean
     occupation?: boolean
+    incomePerMonth?: boolean
+    address?: boolean
+    phone?: boolean
     medicalHistory?: boolean
     student?: boolean | StudentDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["mother"]>
@@ -3716,10 +6468,13 @@ export namespace Prisma {
     name?: boolean
     status?: boolean
     occupation?: boolean
+    incomePerMonth?: boolean
+    address?: boolean
+    phone?: boolean
     medicalHistory?: boolean
   }
 
-  export type MotherOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "name" | "status" | "occupation" | "medicalHistory", ExtArgs["result"]["mother"]>
+  export type MotherOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "name" | "status" | "occupation" | "incomePerMonth" | "address" | "phone" | "medicalHistory", ExtArgs["result"]["mother"]>
   export type MotherInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     student?: boolean | StudentDefaultArgs<ExtArgs>
   }
@@ -3741,6 +6496,9 @@ export namespace Prisma {
       name: string
       status: string
       occupation: string
+      incomePerMonth: string
+      address: string
+      phone: string
       medicalHistory: string
     }, ExtArgs["result"]["mother"]>
     composites: {}
@@ -4171,6 +6929,9 @@ export namespace Prisma {
     readonly name: FieldRef<"Mother", 'String'>
     readonly status: FieldRef<"Mother", 'String'>
     readonly occupation: FieldRef<"Mother", 'String'>
+    readonly incomePerMonth: FieldRef<"Mother", 'String'>
+    readonly address: FieldRef<"Mother", 'String'>
+    readonly phone: FieldRef<"Mother", 'String'>
     readonly medicalHistory: FieldRef<"Mother", 'String'>
   }
     
@@ -4614,6 +7375,9 @@ export namespace Prisma {
     name: string | null
     status: string | null
     occupation: string | null
+    incomePerMonth: string | null
+    address: string | null
+    phone: string | null
     medicalHistory: string | null
   }
 
@@ -4623,6 +7387,9 @@ export namespace Prisma {
     name: string | null
     status: string | null
     occupation: string | null
+    incomePerMonth: string | null
+    address: string | null
+    phone: string | null
     medicalHistory: string | null
   }
 
@@ -4632,6 +7399,9 @@ export namespace Prisma {
     name: number
     status: number
     occupation: number
+    incomePerMonth: number
+    address: number
+    phone: number
     medicalHistory: number
     _all: number
   }
@@ -4653,6 +7423,9 @@ export namespace Prisma {
     name?: true
     status?: true
     occupation?: true
+    incomePerMonth?: true
+    address?: true
+    phone?: true
     medicalHistory?: true
   }
 
@@ -4662,6 +7435,9 @@ export namespace Prisma {
     name?: true
     status?: true
     occupation?: true
+    incomePerMonth?: true
+    address?: true
+    phone?: true
     medicalHistory?: true
   }
 
@@ -4671,6 +7447,9 @@ export namespace Prisma {
     name?: true
     status?: true
     occupation?: true
+    incomePerMonth?: true
+    address?: true
+    phone?: true
     medicalHistory?: true
     _all?: true
   }
@@ -4767,6 +7546,9 @@ export namespace Prisma {
     name: string
     status: string
     occupation: string
+    incomePerMonth: string
+    address: string
+    phone: string
     medicalHistory: string
     _count: GuardianCountAggregateOutputType | null
     _avg: GuardianAvgAggregateOutputType | null
@@ -4795,6 +7577,9 @@ export namespace Prisma {
     name?: boolean
     status?: boolean
     occupation?: boolean
+    incomePerMonth?: boolean
+    address?: boolean
+    phone?: boolean
     medicalHistory?: boolean
     student?: boolean | StudentDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["guardian"]>
@@ -4805,6 +7590,9 @@ export namespace Prisma {
     name?: boolean
     status?: boolean
     occupation?: boolean
+    incomePerMonth?: boolean
+    address?: boolean
+    phone?: boolean
     medicalHistory?: boolean
     student?: boolean | StudentDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["guardian"]>
@@ -4815,6 +7603,9 @@ export namespace Prisma {
     name?: boolean
     status?: boolean
     occupation?: boolean
+    incomePerMonth?: boolean
+    address?: boolean
+    phone?: boolean
     medicalHistory?: boolean
     student?: boolean | StudentDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["guardian"]>
@@ -4825,10 +7616,13 @@ export namespace Prisma {
     name?: boolean
     status?: boolean
     occupation?: boolean
+    incomePerMonth?: boolean
+    address?: boolean
+    phone?: boolean
     medicalHistory?: boolean
   }
 
-  export type GuardianOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "name" | "status" | "occupation" | "medicalHistory", ExtArgs["result"]["guardian"]>
+  export type GuardianOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "name" | "status" | "occupation" | "incomePerMonth" | "address" | "phone" | "medicalHistory", ExtArgs["result"]["guardian"]>
   export type GuardianInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     student?: boolean | StudentDefaultArgs<ExtArgs>
   }
@@ -4850,6 +7644,9 @@ export namespace Prisma {
       name: string
       status: string
       occupation: string
+      incomePerMonth: string
+      address: string
+      phone: string
       medicalHistory: string
     }, ExtArgs["result"]["guardian"]>
     composites: {}
@@ -5280,6 +8077,9 @@ export namespace Prisma {
     readonly name: FieldRef<"Guardian", 'String'>
     readonly status: FieldRef<"Guardian", 'String'>
     readonly occupation: FieldRef<"Guardian", 'String'>
+    readonly incomePerMonth: FieldRef<"Guardian", 'String'>
+    readonly address: FieldRef<"Guardian", 'String'>
+    readonly phone: FieldRef<"Guardian", 'String'>
     readonly medicalHistory: FieldRef<"Guardian", 'String'>
   }
     
@@ -5696,6 +8496,1102 @@ export namespace Prisma {
 
 
   /**
+   * Model Document
+   */
+
+  export type AggregateDocument = {
+    _count: DocumentCountAggregateOutputType | null
+    _avg: DocumentAvgAggregateOutputType | null
+    _sum: DocumentSumAggregateOutputType | null
+    _min: DocumentMinAggregateOutputType | null
+    _max: DocumentMaxAggregateOutputType | null
+  }
+
+  export type DocumentAvgAggregateOutputType = {
+    id: number | null
+    studentId: number | null
+  }
+
+  export type DocumentSumAggregateOutputType = {
+    id: number | null
+    studentId: number | null
+  }
+
+  export type DocumentMinAggregateOutputType = {
+    id: number | null
+    studentId: number | null
+    type: string | null
+    fileUrl: string | null
+    uploadedAt: Date | null
+  }
+
+  export type DocumentMaxAggregateOutputType = {
+    id: number | null
+    studentId: number | null
+    type: string | null
+    fileUrl: string | null
+    uploadedAt: Date | null
+  }
+
+  export type DocumentCountAggregateOutputType = {
+    id: number
+    studentId: number
+    type: number
+    fileUrl: number
+    uploadedAt: number
+    _all: number
+  }
+
+
+  export type DocumentAvgAggregateInputType = {
+    id?: true
+    studentId?: true
+  }
+
+  export type DocumentSumAggregateInputType = {
+    id?: true
+    studentId?: true
+  }
+
+  export type DocumentMinAggregateInputType = {
+    id?: true
+    studentId?: true
+    type?: true
+    fileUrl?: true
+    uploadedAt?: true
+  }
+
+  export type DocumentMaxAggregateInputType = {
+    id?: true
+    studentId?: true
+    type?: true
+    fileUrl?: true
+    uploadedAt?: true
+  }
+
+  export type DocumentCountAggregateInputType = {
+    id?: true
+    studentId?: true
+    type?: true
+    fileUrl?: true
+    uploadedAt?: true
+    _all?: true
+  }
+
+  export type DocumentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Document to aggregate.
+     */
+    where?: DocumentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Documents to fetch.
+     */
+    orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: DocumentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Documents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Documents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Documents
+    **/
+    _count?: true | DocumentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: DocumentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: DocumentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: DocumentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: DocumentMaxAggregateInputType
+  }
+
+  export type GetDocumentAggregateType<T extends DocumentAggregateArgs> = {
+        [P in keyof T & keyof AggregateDocument]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateDocument[P]>
+      : GetScalarType<T[P], AggregateDocument[P]>
+  }
+
+
+
+
+  export type DocumentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: DocumentWhereInput
+    orderBy?: DocumentOrderByWithAggregationInput | DocumentOrderByWithAggregationInput[]
+    by: DocumentScalarFieldEnum[] | DocumentScalarFieldEnum
+    having?: DocumentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: DocumentCountAggregateInputType | true
+    _avg?: DocumentAvgAggregateInputType
+    _sum?: DocumentSumAggregateInputType
+    _min?: DocumentMinAggregateInputType
+    _max?: DocumentMaxAggregateInputType
+  }
+
+  export type DocumentGroupByOutputType = {
+    id: number
+    studentId: number
+    type: string
+    fileUrl: string
+    uploadedAt: Date
+    _count: DocumentCountAggregateOutputType | null
+    _avg: DocumentAvgAggregateOutputType | null
+    _sum: DocumentSumAggregateOutputType | null
+    _min: DocumentMinAggregateOutputType | null
+    _max: DocumentMaxAggregateOutputType | null
+  }
+
+  type GetDocumentGroupByPayload<T extends DocumentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<DocumentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof DocumentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], DocumentGroupByOutputType[P]>
+            : GetScalarType<T[P], DocumentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type DocumentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    studentId?: boolean
+    type?: boolean
+    fileUrl?: boolean
+    uploadedAt?: boolean
+    student?: boolean | StudentDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["document"]>
+
+  export type DocumentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    studentId?: boolean
+    type?: boolean
+    fileUrl?: boolean
+    uploadedAt?: boolean
+    student?: boolean | StudentDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["document"]>
+
+  export type DocumentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    studentId?: boolean
+    type?: boolean
+    fileUrl?: boolean
+    uploadedAt?: boolean
+    student?: boolean | StudentDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["document"]>
+
+  export type DocumentSelectScalar = {
+    id?: boolean
+    studentId?: boolean
+    type?: boolean
+    fileUrl?: boolean
+    uploadedAt?: boolean
+  }
+
+  export type DocumentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "type" | "fileUrl" | "uploadedAt", ExtArgs["result"]["document"]>
+  export type DocumentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    student?: boolean | StudentDefaultArgs<ExtArgs>
+  }
+  export type DocumentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    student?: boolean | StudentDefaultArgs<ExtArgs>
+  }
+  export type DocumentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    student?: boolean | StudentDefaultArgs<ExtArgs>
+  }
+
+  export type $DocumentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Document"
+    objects: {
+      student: Prisma.$StudentPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      studentId: number
+      type: string
+      fileUrl: string
+      uploadedAt: Date
+    }, ExtArgs["result"]["document"]>
+    composites: {}
+  }
+
+  type DocumentGetPayload<S extends boolean | null | undefined | DocumentDefaultArgs> = $Result.GetResult<Prisma.$DocumentPayload, S>
+
+  type DocumentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<DocumentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: DocumentCountAggregateInputType | true
+    }
+
+  export interface DocumentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Document'], meta: { name: 'Document' } }
+    /**
+     * Find zero or one Document that matches the filter.
+     * @param {DocumentFindUniqueArgs} args - Arguments to find a Document
+     * @example
+     * // Get one Document
+     * const document = await prisma.document.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends DocumentFindUniqueArgs>(args: SelectSubset<T, DocumentFindUniqueArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Document that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {DocumentFindUniqueOrThrowArgs} args - Arguments to find a Document
+     * @example
+     * // Get one Document
+     * const document = await prisma.document.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends DocumentFindUniqueOrThrowArgs>(args: SelectSubset<T, DocumentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Document that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentFindFirstArgs} args - Arguments to find a Document
+     * @example
+     * // Get one Document
+     * const document = await prisma.document.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends DocumentFindFirstArgs>(args?: SelectSubset<T, DocumentFindFirstArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Document that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentFindFirstOrThrowArgs} args - Arguments to find a Document
+     * @example
+     * // Get one Document
+     * const document = await prisma.document.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends DocumentFindFirstOrThrowArgs>(args?: SelectSubset<T, DocumentFindFirstOrThrowArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Documents that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Documents
+     * const documents = await prisma.document.findMany()
+     * 
+     * // Get first 10 Documents
+     * const documents = await prisma.document.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const documentWithIdOnly = await prisma.document.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends DocumentFindManyArgs>(args?: SelectSubset<T, DocumentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Document.
+     * @param {DocumentCreateArgs} args - Arguments to create a Document.
+     * @example
+     * // Create one Document
+     * const Document = await prisma.document.create({
+     *   data: {
+     *     // ... data to create a Document
+     *   }
+     * })
+     * 
+     */
+    create<T extends DocumentCreateArgs>(args: SelectSubset<T, DocumentCreateArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Documents.
+     * @param {DocumentCreateManyArgs} args - Arguments to create many Documents.
+     * @example
+     * // Create many Documents
+     * const document = await prisma.document.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends DocumentCreateManyArgs>(args?: SelectSubset<T, DocumentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Documents and returns the data saved in the database.
+     * @param {DocumentCreateManyAndReturnArgs} args - Arguments to create many Documents.
+     * @example
+     * // Create many Documents
+     * const document = await prisma.document.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Documents and only return the `id`
+     * const documentWithIdOnly = await prisma.document.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends DocumentCreateManyAndReturnArgs>(args?: SelectSubset<T, DocumentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Document.
+     * @param {DocumentDeleteArgs} args - Arguments to delete one Document.
+     * @example
+     * // Delete one Document
+     * const Document = await prisma.document.delete({
+     *   where: {
+     *     // ... filter to delete one Document
+     *   }
+     * })
+     * 
+     */
+    delete<T extends DocumentDeleteArgs>(args: SelectSubset<T, DocumentDeleteArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Document.
+     * @param {DocumentUpdateArgs} args - Arguments to update one Document.
+     * @example
+     * // Update one Document
+     * const document = await prisma.document.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends DocumentUpdateArgs>(args: SelectSubset<T, DocumentUpdateArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Documents.
+     * @param {DocumentDeleteManyArgs} args - Arguments to filter Documents to delete.
+     * @example
+     * // Delete a few Documents
+     * const { count } = await prisma.document.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends DocumentDeleteManyArgs>(args?: SelectSubset<T, DocumentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Documents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Documents
+     * const document = await prisma.document.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends DocumentUpdateManyArgs>(args: SelectSubset<T, DocumentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Documents and returns the data updated in the database.
+     * @param {DocumentUpdateManyAndReturnArgs} args - Arguments to update many Documents.
+     * @example
+     * // Update many Documents
+     * const document = await prisma.document.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Documents and only return the `id`
+     * const documentWithIdOnly = await prisma.document.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends DocumentUpdateManyAndReturnArgs>(args: SelectSubset<T, DocumentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Document.
+     * @param {DocumentUpsertArgs} args - Arguments to update or create a Document.
+     * @example
+     * // Update or create a Document
+     * const document = await prisma.document.upsert({
+     *   create: {
+     *     // ... data to create a Document
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Document we want to update
+     *   }
+     * })
+     */
+    upsert<T extends DocumentUpsertArgs>(args: SelectSubset<T, DocumentUpsertArgs<ExtArgs>>): Prisma__DocumentClient<$Result.GetResult<Prisma.$DocumentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Documents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentCountArgs} args - Arguments to filter Documents to count.
+     * @example
+     * // Count the number of Documents
+     * const count = await prisma.document.count({
+     *   where: {
+     *     // ... the filter for the Documents we want to count
+     *   }
+     * })
+    **/
+    count<T extends DocumentCountArgs>(
+      args?: Subset<T, DocumentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], DocumentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Document.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends DocumentAggregateArgs>(args: Subset<T, DocumentAggregateArgs>): Prisma.PrismaPromise<GetDocumentAggregateType<T>>
+
+    /**
+     * Group by Document.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {DocumentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends DocumentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: DocumentGroupByArgs['orderBy'] }
+        : { orderBy?: DocumentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, DocumentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetDocumentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Document model
+   */
+  readonly fields: DocumentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Document.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__DocumentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    student<T extends StudentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StudentDefaultArgs<ExtArgs>>): Prisma__StudentClient<$Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Document model
+   */
+  interface DocumentFieldRefs {
+    readonly id: FieldRef<"Document", 'Int'>
+    readonly studentId: FieldRef<"Document", 'Int'>
+    readonly type: FieldRef<"Document", 'String'>
+    readonly fileUrl: FieldRef<"Document", 'String'>
+    readonly uploadedAt: FieldRef<"Document", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Document findUnique
+   */
+  export type DocumentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which Document to fetch.
+     */
+    where: DocumentWhereUniqueInput
+  }
+
+  /**
+   * Document findUniqueOrThrow
+   */
+  export type DocumentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which Document to fetch.
+     */
+    where: DocumentWhereUniqueInput
+  }
+
+  /**
+   * Document findFirst
+   */
+  export type DocumentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which Document to fetch.
+     */
+    where?: DocumentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Documents to fetch.
+     */
+    orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Documents.
+     */
+    cursor?: DocumentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Documents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Documents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Documents.
+     */
+    distinct?: DocumentScalarFieldEnum | DocumentScalarFieldEnum[]
+  }
+
+  /**
+   * Document findFirstOrThrow
+   */
+  export type DocumentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which Document to fetch.
+     */
+    where?: DocumentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Documents to fetch.
+     */
+    orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Documents.
+     */
+    cursor?: DocumentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Documents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Documents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Documents.
+     */
+    distinct?: DocumentScalarFieldEnum | DocumentScalarFieldEnum[]
+  }
+
+  /**
+   * Document findMany
+   */
+  export type DocumentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentInclude<ExtArgs> | null
+    /**
+     * Filter, which Documents to fetch.
+     */
+    where?: DocumentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Documents to fetch.
+     */
+    orderBy?: DocumentOrderByWithRelationInput | DocumentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Documents.
+     */
+    cursor?: DocumentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Documents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Documents.
+     */
+    skip?: number
+    distinct?: DocumentScalarFieldEnum | DocumentScalarFieldEnum[]
+  }
+
+  /**
+   * Document create
+   */
+  export type DocumentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Document.
+     */
+    data: XOR<DocumentCreateInput, DocumentUncheckedCreateInput>
+  }
+
+  /**
+   * Document createMany
+   */
+  export type DocumentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Documents.
+     */
+    data: DocumentCreateManyInput | DocumentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Document createManyAndReturn
+   */
+  export type DocumentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * The data used to create many Documents.
+     */
+    data: DocumentCreateManyInput | DocumentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Document update
+   */
+  export type DocumentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Document.
+     */
+    data: XOR<DocumentUpdateInput, DocumentUncheckedUpdateInput>
+    /**
+     * Choose, which Document to update.
+     */
+    where: DocumentWhereUniqueInput
+  }
+
+  /**
+   * Document updateMany
+   */
+  export type DocumentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Documents.
+     */
+    data: XOR<DocumentUpdateManyMutationInput, DocumentUncheckedUpdateManyInput>
+    /**
+     * Filter which Documents to update
+     */
+    where?: DocumentWhereInput
+    /**
+     * Limit how many Documents to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Document updateManyAndReturn
+   */
+  export type DocumentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * The data used to update Documents.
+     */
+    data: XOR<DocumentUpdateManyMutationInput, DocumentUncheckedUpdateManyInput>
+    /**
+     * Filter which Documents to update
+     */
+    where?: DocumentWhereInput
+    /**
+     * Limit how many Documents to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Document upsert
+   */
+  export type DocumentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Document to update in case it exists.
+     */
+    where: DocumentWhereUniqueInput
+    /**
+     * In case the Document found by the `where` argument doesn't exist, create a new Document with this data.
+     */
+    create: XOR<DocumentCreateInput, DocumentUncheckedCreateInput>
+    /**
+     * In case the Document was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<DocumentUpdateInput, DocumentUncheckedUpdateInput>
+  }
+
+  /**
+   * Document delete
+   */
+  export type DocumentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentInclude<ExtArgs> | null
+    /**
+     * Filter which Document to delete.
+     */
+    where: DocumentWhereUniqueInput
+  }
+
+  /**
+   * Document deleteMany
+   */
+  export type DocumentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Documents to delete
+     */
+    where?: DocumentWhereInput
+    /**
+     * Limit how many Documents to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Document without action
+   */
+  export type DocumentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Document
+     */
+    select?: DocumentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Document
+     */
+    omit?: DocumentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DocumentInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -5709,22 +9605,48 @@ export namespace Prisma {
   export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+  export const PengawasScalarFieldEnum: {
+    id: 'id',
+    username: 'username',
+    password: 'password',
+    name: 'name',
+    wilayah: 'wilayah'
+  };
+
+  export type PengawasScalarFieldEnum = (typeof PengawasScalarFieldEnum)[keyof typeof PengawasScalarFieldEnum]
+
+
   export const StudentScalarFieldEnum: {
     id: 'id',
     username: 'username',
+    nik: 'nik',
     fullName: 'fullName',
     dateOfBirth: 'dateOfBirth',
     gender: 'gender',
-    city: 'city',
-    medicalHistory: 'medicalHistory',
+    citaCita: 'citaCita',
+    wilayah: 'wilayah',
+    pengawasId: 'pengawasId',
+    alamatLengkap: 'alamatLengkap',
+    noHp: 'noHp',
+    riwayatPenyakit: 'riwayatPenyakit',
     schoolName: 'schoolName',
-    grade: 'grade',
-    tuitionCost: 'tuitionCost',
-    status: 'status',
+    gradeLevel: 'gradeLevel',
+    nilaiRataRata: 'nilaiRataRata',
+    jumlahSaudara: 'jumlahSaudara',
     createdAt: 'createdAt'
   };
 
   export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeof StudentScalarFieldEnum]
+
+
+  export const EducationCostScalarFieldEnum: {
+    id: 'id',
+    studentId: 'studentId',
+    label: 'label',
+    amount: 'amount'
+  };
+
+  export type EducationCostScalarFieldEnum = (typeof EducationCostScalarFieldEnum)[keyof typeof EducationCostScalarFieldEnum]
 
 
   export const FatherScalarFieldEnum: {
@@ -5733,6 +9655,9 @@ export namespace Prisma {
     name: 'name',
     status: 'status',
     occupation: 'occupation',
+    incomePerMonth: 'incomePerMonth',
+    address: 'address',
+    phone: 'phone',
     medicalHistory: 'medicalHistory'
   };
 
@@ -5745,6 +9670,9 @@ export namespace Prisma {
     name: 'name',
     status: 'status',
     occupation: 'occupation',
+    incomePerMonth: 'incomePerMonth',
+    address: 'address',
+    phone: 'phone',
     medicalHistory: 'medicalHistory'
   };
 
@@ -5757,10 +9685,24 @@ export namespace Prisma {
     name: 'name',
     status: 'status',
     occupation: 'occupation',
+    incomePerMonth: 'incomePerMonth',
+    address: 'address',
+    phone: 'phone',
     medicalHistory: 'medicalHistory'
   };
 
   export type GuardianScalarFieldEnum = (typeof GuardianScalarFieldEnum)[keyof typeof GuardianScalarFieldEnum]
+
+
+  export const DocumentScalarFieldEnum: {
+    id: 'id',
+    studentId: 'studentId',
+    type: 'type',
+    fileUrl: 'fileUrl',
+    uploadedAt: 'uploadedAt'
+  };
+
+  export type DocumentScalarFieldEnum = (typeof DocumentScalarFieldEnum)[keyof typeof DocumentScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -5843,78 +9785,164 @@ export namespace Prisma {
    */
 
 
+  export type PengawasWhereInput = {
+    AND?: PengawasWhereInput | PengawasWhereInput[]
+    OR?: PengawasWhereInput[]
+    NOT?: PengawasWhereInput | PengawasWhereInput[]
+    id?: IntFilter<"Pengawas"> | number
+    username?: StringFilter<"Pengawas"> | string
+    password?: StringFilter<"Pengawas"> | string
+    name?: StringFilter<"Pengawas"> | string
+    wilayah?: StringFilter<"Pengawas"> | string
+    students?: StudentListRelationFilter
+  }
+
+  export type PengawasOrderByWithRelationInput = {
+    id?: SortOrder
+    username?: SortOrder
+    password?: SortOrder
+    name?: SortOrder
+    wilayah?: SortOrder
+    students?: StudentOrderByRelationAggregateInput
+  }
+
+  export type PengawasWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    username?: string
+    AND?: PengawasWhereInput | PengawasWhereInput[]
+    OR?: PengawasWhereInput[]
+    NOT?: PengawasWhereInput | PengawasWhereInput[]
+    password?: StringFilter<"Pengawas"> | string
+    name?: StringFilter<"Pengawas"> | string
+    wilayah?: StringFilter<"Pengawas"> | string
+    students?: StudentListRelationFilter
+  }, "id" | "username">
+
+  export type PengawasOrderByWithAggregationInput = {
+    id?: SortOrder
+    username?: SortOrder
+    password?: SortOrder
+    name?: SortOrder
+    wilayah?: SortOrder
+    _count?: PengawasCountOrderByAggregateInput
+    _avg?: PengawasAvgOrderByAggregateInput
+    _max?: PengawasMaxOrderByAggregateInput
+    _min?: PengawasMinOrderByAggregateInput
+    _sum?: PengawasSumOrderByAggregateInput
+  }
+
+  export type PengawasScalarWhereWithAggregatesInput = {
+    AND?: PengawasScalarWhereWithAggregatesInput | PengawasScalarWhereWithAggregatesInput[]
+    OR?: PengawasScalarWhereWithAggregatesInput[]
+    NOT?: PengawasScalarWhereWithAggregatesInput | PengawasScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Pengawas"> | number
+    username?: StringWithAggregatesFilter<"Pengawas"> | string
+    password?: StringWithAggregatesFilter<"Pengawas"> | string
+    name?: StringWithAggregatesFilter<"Pengawas"> | string
+    wilayah?: StringWithAggregatesFilter<"Pengawas"> | string
+  }
+
   export type StudentWhereInput = {
     AND?: StudentWhereInput | StudentWhereInput[]
     OR?: StudentWhereInput[]
     NOT?: StudentWhereInput | StudentWhereInput[]
     id?: IntFilter<"Student"> | number
     username?: StringFilter<"Student"> | string
+    nik?: StringFilter<"Student"> | string
     fullName?: StringFilter<"Student"> | string
     dateOfBirth?: DateTimeFilter<"Student"> | Date | string
     gender?: StringFilter<"Student"> | string
-    city?: StringFilter<"Student"> | string
-    medicalHistory?: StringFilter<"Student"> | string
+    citaCita?: StringFilter<"Student"> | string
+    wilayah?: StringFilter<"Student"> | string
+    pengawasId?: IntFilter<"Student"> | number
+    alamatLengkap?: StringFilter<"Student"> | string
+    noHp?: StringFilter<"Student"> | string
+    riwayatPenyakit?: StringFilter<"Student"> | string
     schoolName?: StringFilter<"Student"> | string
-    grade?: StringFilter<"Student"> | string
-    tuitionCost?: StringFilter<"Student"> | string
-    status?: StringFilter<"Student"> | string
+    gradeLevel?: StringFilter<"Student"> | string
+    nilaiRataRata?: StringFilter<"Student"> | string
+    jumlahSaudara?: IntFilter<"Student"> | number
     createdAt?: DateTimeFilter<"Student"> | Date | string
+    pengawas?: XOR<PengawasScalarRelationFilter, PengawasWhereInput>
     father?: XOR<FatherNullableScalarRelationFilter, FatherWhereInput> | null
     mother?: XOR<MotherNullableScalarRelationFilter, MotherWhereInput> | null
     guardian?: XOR<GuardianNullableScalarRelationFilter, GuardianWhereInput> | null
+    educationCosts?: EducationCostListRelationFilter
+    documents?: DocumentListRelationFilter
   }
 
   export type StudentOrderByWithRelationInput = {
     id?: SortOrder
     username?: SortOrder
+    nik?: SortOrder
     fullName?: SortOrder
     dateOfBirth?: SortOrder
     gender?: SortOrder
-    city?: SortOrder
-    medicalHistory?: SortOrder
+    citaCita?: SortOrder
+    wilayah?: SortOrder
+    pengawasId?: SortOrder
+    alamatLengkap?: SortOrder
+    noHp?: SortOrder
+    riwayatPenyakit?: SortOrder
     schoolName?: SortOrder
-    grade?: SortOrder
-    tuitionCost?: SortOrder
-    status?: SortOrder
+    gradeLevel?: SortOrder
+    nilaiRataRata?: SortOrder
+    jumlahSaudara?: SortOrder
     createdAt?: SortOrder
+    pengawas?: PengawasOrderByWithRelationInput
     father?: FatherOrderByWithRelationInput
     mother?: MotherOrderByWithRelationInput
     guardian?: GuardianOrderByWithRelationInput
+    educationCosts?: EducationCostOrderByRelationAggregateInput
+    documents?: DocumentOrderByRelationAggregateInput
   }
 
   export type StudentWhereUniqueInput = Prisma.AtLeast<{
     id?: number
     username?: string
+    nik?: string
     AND?: StudentWhereInput | StudentWhereInput[]
     OR?: StudentWhereInput[]
     NOT?: StudentWhereInput | StudentWhereInput[]
     fullName?: StringFilter<"Student"> | string
     dateOfBirth?: DateTimeFilter<"Student"> | Date | string
     gender?: StringFilter<"Student"> | string
-    city?: StringFilter<"Student"> | string
-    medicalHistory?: StringFilter<"Student"> | string
+    citaCita?: StringFilter<"Student"> | string
+    wilayah?: StringFilter<"Student"> | string
+    pengawasId?: IntFilter<"Student"> | number
+    alamatLengkap?: StringFilter<"Student"> | string
+    noHp?: StringFilter<"Student"> | string
+    riwayatPenyakit?: StringFilter<"Student"> | string
     schoolName?: StringFilter<"Student"> | string
-    grade?: StringFilter<"Student"> | string
-    tuitionCost?: StringFilter<"Student"> | string
-    status?: StringFilter<"Student"> | string
+    gradeLevel?: StringFilter<"Student"> | string
+    nilaiRataRata?: StringFilter<"Student"> | string
+    jumlahSaudara?: IntFilter<"Student"> | number
     createdAt?: DateTimeFilter<"Student"> | Date | string
+    pengawas?: XOR<PengawasScalarRelationFilter, PengawasWhereInput>
     father?: XOR<FatherNullableScalarRelationFilter, FatherWhereInput> | null
     mother?: XOR<MotherNullableScalarRelationFilter, MotherWhereInput> | null
     guardian?: XOR<GuardianNullableScalarRelationFilter, GuardianWhereInput> | null
-  }, "id" | "username">
+    educationCosts?: EducationCostListRelationFilter
+    documents?: DocumentListRelationFilter
+  }, "id" | "username" | "nik">
 
   export type StudentOrderByWithAggregationInput = {
     id?: SortOrder
     username?: SortOrder
+    nik?: SortOrder
     fullName?: SortOrder
     dateOfBirth?: SortOrder
     gender?: SortOrder
-    city?: SortOrder
-    medicalHistory?: SortOrder
+    citaCita?: SortOrder
+    wilayah?: SortOrder
+    pengawasId?: SortOrder
+    alamatLengkap?: SortOrder
+    noHp?: SortOrder
+    riwayatPenyakit?: SortOrder
     schoolName?: SortOrder
-    grade?: SortOrder
-    tuitionCost?: SortOrder
-    status?: SortOrder
+    gradeLevel?: SortOrder
+    nilaiRataRata?: SortOrder
+    jumlahSaudara?: SortOrder
     createdAt?: SortOrder
     _count?: StudentCountOrderByAggregateInput
     _avg?: StudentAvgOrderByAggregateInput
@@ -5929,16 +9957,73 @@ export namespace Prisma {
     NOT?: StudentScalarWhereWithAggregatesInput | StudentScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Student"> | number
     username?: StringWithAggregatesFilter<"Student"> | string
+    nik?: StringWithAggregatesFilter<"Student"> | string
     fullName?: StringWithAggregatesFilter<"Student"> | string
     dateOfBirth?: DateTimeWithAggregatesFilter<"Student"> | Date | string
     gender?: StringWithAggregatesFilter<"Student"> | string
-    city?: StringWithAggregatesFilter<"Student"> | string
-    medicalHistory?: StringWithAggregatesFilter<"Student"> | string
+    citaCita?: StringWithAggregatesFilter<"Student"> | string
+    wilayah?: StringWithAggregatesFilter<"Student"> | string
+    pengawasId?: IntWithAggregatesFilter<"Student"> | number
+    alamatLengkap?: StringWithAggregatesFilter<"Student"> | string
+    noHp?: StringWithAggregatesFilter<"Student"> | string
+    riwayatPenyakit?: StringWithAggregatesFilter<"Student"> | string
     schoolName?: StringWithAggregatesFilter<"Student"> | string
-    grade?: StringWithAggregatesFilter<"Student"> | string
-    tuitionCost?: StringWithAggregatesFilter<"Student"> | string
-    status?: StringWithAggregatesFilter<"Student"> | string
+    gradeLevel?: StringWithAggregatesFilter<"Student"> | string
+    nilaiRataRata?: StringWithAggregatesFilter<"Student"> | string
+    jumlahSaudara?: IntWithAggregatesFilter<"Student"> | number
     createdAt?: DateTimeWithAggregatesFilter<"Student"> | Date | string
+  }
+
+  export type EducationCostWhereInput = {
+    AND?: EducationCostWhereInput | EducationCostWhereInput[]
+    OR?: EducationCostWhereInput[]
+    NOT?: EducationCostWhereInput | EducationCostWhereInput[]
+    id?: IntFilter<"EducationCost"> | number
+    studentId?: IntFilter<"EducationCost"> | number
+    label?: StringFilter<"EducationCost"> | string
+    amount?: IntFilter<"EducationCost"> | number
+    student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
+  }
+
+  export type EducationCostOrderByWithRelationInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    label?: SortOrder
+    amount?: SortOrder
+    student?: StudentOrderByWithRelationInput
+  }
+
+  export type EducationCostWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: EducationCostWhereInput | EducationCostWhereInput[]
+    OR?: EducationCostWhereInput[]
+    NOT?: EducationCostWhereInput | EducationCostWhereInput[]
+    studentId?: IntFilter<"EducationCost"> | number
+    label?: StringFilter<"EducationCost"> | string
+    amount?: IntFilter<"EducationCost"> | number
+    student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
+  }, "id">
+
+  export type EducationCostOrderByWithAggregationInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    label?: SortOrder
+    amount?: SortOrder
+    _count?: EducationCostCountOrderByAggregateInput
+    _avg?: EducationCostAvgOrderByAggregateInput
+    _max?: EducationCostMaxOrderByAggregateInput
+    _min?: EducationCostMinOrderByAggregateInput
+    _sum?: EducationCostSumOrderByAggregateInput
+  }
+
+  export type EducationCostScalarWhereWithAggregatesInput = {
+    AND?: EducationCostScalarWhereWithAggregatesInput | EducationCostScalarWhereWithAggregatesInput[]
+    OR?: EducationCostScalarWhereWithAggregatesInput[]
+    NOT?: EducationCostScalarWhereWithAggregatesInput | EducationCostScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"EducationCost"> | number
+    studentId?: IntWithAggregatesFilter<"EducationCost"> | number
+    label?: StringWithAggregatesFilter<"EducationCost"> | string
+    amount?: IntWithAggregatesFilter<"EducationCost"> | number
   }
 
   export type FatherWhereInput = {
@@ -5950,6 +10035,9 @@ export namespace Prisma {
     name?: StringFilter<"Father"> | string
     status?: StringFilter<"Father"> | string
     occupation?: StringFilter<"Father"> | string
+    incomePerMonth?: StringFilter<"Father"> | string
+    address?: StringFilter<"Father"> | string
+    phone?: StringFilter<"Father"> | string
     medicalHistory?: StringFilter<"Father"> | string
     student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
   }
@@ -5960,6 +10048,9 @@ export namespace Prisma {
     name?: SortOrder
     status?: SortOrder
     occupation?: SortOrder
+    incomePerMonth?: SortOrder
+    address?: SortOrder
+    phone?: SortOrder
     medicalHistory?: SortOrder
     student?: StudentOrderByWithRelationInput
   }
@@ -5973,6 +10064,9 @@ export namespace Prisma {
     name?: StringFilter<"Father"> | string
     status?: StringFilter<"Father"> | string
     occupation?: StringFilter<"Father"> | string
+    incomePerMonth?: StringFilter<"Father"> | string
+    address?: StringFilter<"Father"> | string
+    phone?: StringFilter<"Father"> | string
     medicalHistory?: StringFilter<"Father"> | string
     student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
   }, "id" | "studentId">
@@ -5983,6 +10077,9 @@ export namespace Prisma {
     name?: SortOrder
     status?: SortOrder
     occupation?: SortOrder
+    incomePerMonth?: SortOrder
+    address?: SortOrder
+    phone?: SortOrder
     medicalHistory?: SortOrder
     _count?: FatherCountOrderByAggregateInput
     _avg?: FatherAvgOrderByAggregateInput
@@ -6000,6 +10097,9 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Father"> | string
     status?: StringWithAggregatesFilter<"Father"> | string
     occupation?: StringWithAggregatesFilter<"Father"> | string
+    incomePerMonth?: StringWithAggregatesFilter<"Father"> | string
+    address?: StringWithAggregatesFilter<"Father"> | string
+    phone?: StringWithAggregatesFilter<"Father"> | string
     medicalHistory?: StringWithAggregatesFilter<"Father"> | string
   }
 
@@ -6012,6 +10112,9 @@ export namespace Prisma {
     name?: StringFilter<"Mother"> | string
     status?: StringFilter<"Mother"> | string
     occupation?: StringFilter<"Mother"> | string
+    incomePerMonth?: StringFilter<"Mother"> | string
+    address?: StringFilter<"Mother"> | string
+    phone?: StringFilter<"Mother"> | string
     medicalHistory?: StringFilter<"Mother"> | string
     student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
   }
@@ -6022,6 +10125,9 @@ export namespace Prisma {
     name?: SortOrder
     status?: SortOrder
     occupation?: SortOrder
+    incomePerMonth?: SortOrder
+    address?: SortOrder
+    phone?: SortOrder
     medicalHistory?: SortOrder
     student?: StudentOrderByWithRelationInput
   }
@@ -6035,6 +10141,9 @@ export namespace Prisma {
     name?: StringFilter<"Mother"> | string
     status?: StringFilter<"Mother"> | string
     occupation?: StringFilter<"Mother"> | string
+    incomePerMonth?: StringFilter<"Mother"> | string
+    address?: StringFilter<"Mother"> | string
+    phone?: StringFilter<"Mother"> | string
     medicalHistory?: StringFilter<"Mother"> | string
     student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
   }, "id" | "studentId">
@@ -6045,6 +10154,9 @@ export namespace Prisma {
     name?: SortOrder
     status?: SortOrder
     occupation?: SortOrder
+    incomePerMonth?: SortOrder
+    address?: SortOrder
+    phone?: SortOrder
     medicalHistory?: SortOrder
     _count?: MotherCountOrderByAggregateInput
     _avg?: MotherAvgOrderByAggregateInput
@@ -6062,6 +10174,9 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Mother"> | string
     status?: StringWithAggregatesFilter<"Mother"> | string
     occupation?: StringWithAggregatesFilter<"Mother"> | string
+    incomePerMonth?: StringWithAggregatesFilter<"Mother"> | string
+    address?: StringWithAggregatesFilter<"Mother"> | string
+    phone?: StringWithAggregatesFilter<"Mother"> | string
     medicalHistory?: StringWithAggregatesFilter<"Mother"> | string
   }
 
@@ -6074,6 +10189,9 @@ export namespace Prisma {
     name?: StringFilter<"Guardian"> | string
     status?: StringFilter<"Guardian"> | string
     occupation?: StringFilter<"Guardian"> | string
+    incomePerMonth?: StringFilter<"Guardian"> | string
+    address?: StringFilter<"Guardian"> | string
+    phone?: StringFilter<"Guardian"> | string
     medicalHistory?: StringFilter<"Guardian"> | string
     student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
   }
@@ -6084,6 +10202,9 @@ export namespace Prisma {
     name?: SortOrder
     status?: SortOrder
     occupation?: SortOrder
+    incomePerMonth?: SortOrder
+    address?: SortOrder
+    phone?: SortOrder
     medicalHistory?: SortOrder
     student?: StudentOrderByWithRelationInput
   }
@@ -6097,6 +10218,9 @@ export namespace Prisma {
     name?: StringFilter<"Guardian"> | string
     status?: StringFilter<"Guardian"> | string
     occupation?: StringFilter<"Guardian"> | string
+    incomePerMonth?: StringFilter<"Guardian"> | string
+    address?: StringFilter<"Guardian"> | string
+    phone?: StringFilter<"Guardian"> | string
     medicalHistory?: StringFilter<"Guardian"> | string
     student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
   }, "id" | "studentId">
@@ -6107,6 +10231,9 @@ export namespace Prisma {
     name?: SortOrder
     status?: SortOrder
     occupation?: SortOrder
+    incomePerMonth?: SortOrder
+    address?: SortOrder
+    phone?: SortOrder
     medicalHistory?: SortOrder
     _count?: GuardianCountOrderByAggregateInput
     _avg?: GuardianAvgOrderByAggregateInput
@@ -6124,127 +10251,334 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"Guardian"> | string
     status?: StringWithAggregatesFilter<"Guardian"> | string
     occupation?: StringWithAggregatesFilter<"Guardian"> | string
+    incomePerMonth?: StringWithAggregatesFilter<"Guardian"> | string
+    address?: StringWithAggregatesFilter<"Guardian"> | string
+    phone?: StringWithAggregatesFilter<"Guardian"> | string
     medicalHistory?: StringWithAggregatesFilter<"Guardian"> | string
+  }
+
+  export type DocumentWhereInput = {
+    AND?: DocumentWhereInput | DocumentWhereInput[]
+    OR?: DocumentWhereInput[]
+    NOT?: DocumentWhereInput | DocumentWhereInput[]
+    id?: IntFilter<"Document"> | number
+    studentId?: IntFilter<"Document"> | number
+    type?: StringFilter<"Document"> | string
+    fileUrl?: StringFilter<"Document"> | string
+    uploadedAt?: DateTimeFilter<"Document"> | Date | string
+    student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
+  }
+
+  export type DocumentOrderByWithRelationInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    type?: SortOrder
+    fileUrl?: SortOrder
+    uploadedAt?: SortOrder
+    student?: StudentOrderByWithRelationInput
+  }
+
+  export type DocumentWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: DocumentWhereInput | DocumentWhereInput[]
+    OR?: DocumentWhereInput[]
+    NOT?: DocumentWhereInput | DocumentWhereInput[]
+    studentId?: IntFilter<"Document"> | number
+    type?: StringFilter<"Document"> | string
+    fileUrl?: StringFilter<"Document"> | string
+    uploadedAt?: DateTimeFilter<"Document"> | Date | string
+    student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
+  }, "id">
+
+  export type DocumentOrderByWithAggregationInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    type?: SortOrder
+    fileUrl?: SortOrder
+    uploadedAt?: SortOrder
+    _count?: DocumentCountOrderByAggregateInput
+    _avg?: DocumentAvgOrderByAggregateInput
+    _max?: DocumentMaxOrderByAggregateInput
+    _min?: DocumentMinOrderByAggregateInput
+    _sum?: DocumentSumOrderByAggregateInput
+  }
+
+  export type DocumentScalarWhereWithAggregatesInput = {
+    AND?: DocumentScalarWhereWithAggregatesInput | DocumentScalarWhereWithAggregatesInput[]
+    OR?: DocumentScalarWhereWithAggregatesInput[]
+    NOT?: DocumentScalarWhereWithAggregatesInput | DocumentScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Document"> | number
+    studentId?: IntWithAggregatesFilter<"Document"> | number
+    type?: StringWithAggregatesFilter<"Document"> | string
+    fileUrl?: StringWithAggregatesFilter<"Document"> | string
+    uploadedAt?: DateTimeWithAggregatesFilter<"Document"> | Date | string
+  }
+
+  export type PengawasCreateInput = {
+    username: string
+    password: string
+    name: string
+    wilayah: string
+    students?: StudentCreateNestedManyWithoutPengawasInput
+  }
+
+  export type PengawasUncheckedCreateInput = {
+    id?: number
+    username: string
+    password: string
+    name: string
+    wilayah: string
+    students?: StudentUncheckedCreateNestedManyWithoutPengawasInput
+  }
+
+  export type PengawasUpdateInput = {
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+    students?: StudentUpdateManyWithoutPengawasNestedInput
+  }
+
+  export type PengawasUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+    students?: StudentUncheckedUpdateManyWithoutPengawasNestedInput
+  }
+
+  export type PengawasCreateManyInput = {
+    id?: number
+    username: string
+    password: string
+    name: string
+    wilayah: string
+  }
+
+  export type PengawasUpdateManyMutationInput = {
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PengawasUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
   }
 
   export type StudentCreateInput = {
     username: string
+    nik: string
     fullName: string
     dateOfBirth: Date | string
     gender: string
-    city: string
-    medicalHistory: string
+    citaCita: string
+    wilayah: string
+    alamatLengkap: string
+    noHp: string
+    riwayatPenyakit: string
     schoolName: string
-    grade: string
-    tuitionCost: string
-    status?: string
+    gradeLevel: string
+    nilaiRataRata: string
+    jumlahSaudara: number
     createdAt?: Date | string
+    pengawas: PengawasCreateNestedOneWithoutStudentsInput
     father?: FatherCreateNestedOneWithoutStudentInput
     mother?: MotherCreateNestedOneWithoutStudentInput
     guardian?: GuardianCreateNestedOneWithoutStudentInput
+    educationCosts?: EducationCostCreateNestedManyWithoutStudentInput
+    documents?: DocumentCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateInput = {
     id?: number
     username: string
+    nik: string
     fullName: string
     dateOfBirth: Date | string
     gender: string
-    city: string
-    medicalHistory: string
+    citaCita: string
+    wilayah: string
+    pengawasId: number
+    alamatLengkap: string
+    noHp: string
+    riwayatPenyakit: string
     schoolName: string
-    grade: string
-    tuitionCost: string
-    status?: string
+    gradeLevel: string
+    nilaiRataRata: string
+    jumlahSaudara: number
     createdAt?: Date | string
     father?: FatherUncheckedCreateNestedOneWithoutStudentInput
     mother?: MotherUncheckedCreateNestedOneWithoutStudentInput
     guardian?: GuardianUncheckedCreateNestedOneWithoutStudentInput
+    educationCosts?: EducationCostUncheckedCreateNestedManyWithoutStudentInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUpdateInput = {
     username?: StringFieldUpdateOperationsInput | string
+    nik?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     dateOfBirth?: DateTimeFieldUpdateOperationsInput | Date | string
     gender?: StringFieldUpdateOperationsInput | string
-    city?: StringFieldUpdateOperationsInput | string
-    medicalHistory?: StringFieldUpdateOperationsInput | string
+    citaCita?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+    alamatLengkap?: StringFieldUpdateOperationsInput | string
+    noHp?: StringFieldUpdateOperationsInput | string
+    riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
-    grade?: StringFieldUpdateOperationsInput | string
-    tuitionCost?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    gradeLevel?: StringFieldUpdateOperationsInput | string
+    nilaiRataRata?: StringFieldUpdateOperationsInput | string
+    jumlahSaudara?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pengawas?: PengawasUpdateOneRequiredWithoutStudentsNestedInput
     father?: FatherUpdateOneWithoutStudentNestedInput
     mother?: MotherUpdateOneWithoutStudentNestedInput
     guardian?: GuardianUpdateOneWithoutStudentNestedInput
+    educationCosts?: EducationCostUpdateManyWithoutStudentNestedInput
+    documents?: DocumentUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
     username?: StringFieldUpdateOperationsInput | string
+    nik?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     dateOfBirth?: DateTimeFieldUpdateOperationsInput | Date | string
     gender?: StringFieldUpdateOperationsInput | string
-    city?: StringFieldUpdateOperationsInput | string
-    medicalHistory?: StringFieldUpdateOperationsInput | string
+    citaCita?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+    pengawasId?: IntFieldUpdateOperationsInput | number
+    alamatLengkap?: StringFieldUpdateOperationsInput | string
+    noHp?: StringFieldUpdateOperationsInput | string
+    riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
-    grade?: StringFieldUpdateOperationsInput | string
-    tuitionCost?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    gradeLevel?: StringFieldUpdateOperationsInput | string
+    nilaiRataRata?: StringFieldUpdateOperationsInput | string
+    jumlahSaudara?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     father?: FatherUncheckedUpdateOneWithoutStudentNestedInput
     mother?: MotherUncheckedUpdateOneWithoutStudentNestedInput
     guardian?: GuardianUncheckedUpdateOneWithoutStudentNestedInput
+    educationCosts?: EducationCostUncheckedUpdateManyWithoutStudentNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentCreateManyInput = {
     id?: number
     username: string
+    nik: string
     fullName: string
     dateOfBirth: Date | string
     gender: string
-    city: string
-    medicalHistory: string
+    citaCita: string
+    wilayah: string
+    pengawasId: number
+    alamatLengkap: string
+    noHp: string
+    riwayatPenyakit: string
     schoolName: string
-    grade: string
-    tuitionCost: string
-    status?: string
+    gradeLevel: string
+    nilaiRataRata: string
+    jumlahSaudara: number
     createdAt?: Date | string
   }
 
   export type StudentUpdateManyMutationInput = {
     username?: StringFieldUpdateOperationsInput | string
+    nik?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     dateOfBirth?: DateTimeFieldUpdateOperationsInput | Date | string
     gender?: StringFieldUpdateOperationsInput | string
-    city?: StringFieldUpdateOperationsInput | string
-    medicalHistory?: StringFieldUpdateOperationsInput | string
+    citaCita?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+    alamatLengkap?: StringFieldUpdateOperationsInput | string
+    noHp?: StringFieldUpdateOperationsInput | string
+    riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
-    grade?: StringFieldUpdateOperationsInput | string
-    tuitionCost?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    gradeLevel?: StringFieldUpdateOperationsInput | string
+    nilaiRataRata?: StringFieldUpdateOperationsInput | string
+    jumlahSaudara?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StudentUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     username?: StringFieldUpdateOperationsInput | string
+    nik?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     dateOfBirth?: DateTimeFieldUpdateOperationsInput | Date | string
     gender?: StringFieldUpdateOperationsInput | string
-    city?: StringFieldUpdateOperationsInput | string
-    medicalHistory?: StringFieldUpdateOperationsInput | string
+    citaCita?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+    pengawasId?: IntFieldUpdateOperationsInput | number
+    alamatLengkap?: StringFieldUpdateOperationsInput | string
+    noHp?: StringFieldUpdateOperationsInput | string
+    riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
-    grade?: StringFieldUpdateOperationsInput | string
-    tuitionCost?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    gradeLevel?: StringFieldUpdateOperationsInput | string
+    nilaiRataRata?: StringFieldUpdateOperationsInput | string
+    jumlahSaudara?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EducationCostCreateInput = {
+    label: string
+    amount: number
+    student: StudentCreateNestedOneWithoutEducationCostsInput
+  }
+
+  export type EducationCostUncheckedCreateInput = {
+    id?: number
+    studentId: number
+    label: string
+    amount: number
+  }
+
+  export type EducationCostUpdateInput = {
+    label?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+    student?: StudentUpdateOneRequiredWithoutEducationCostsNestedInput
+  }
+
+  export type EducationCostUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    studentId?: IntFieldUpdateOperationsInput | number
+    label?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type EducationCostCreateManyInput = {
+    id?: number
+    studentId: number
+    label: string
+    amount: number
+  }
+
+  export type EducationCostUpdateManyMutationInput = {
+    label?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type EducationCostUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    studentId?: IntFieldUpdateOperationsInput | number
+    label?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
   }
 
   export type FatherCreateInput = {
     name: string
     status: string
     occupation: string
+    incomePerMonth: string
+    address: string
+    phone: string
     medicalHistory: string
     student: StudentCreateNestedOneWithoutFatherInput
   }
@@ -6255,6 +10589,9 @@ export namespace Prisma {
     name: string
     status: string
     occupation: string
+    incomePerMonth: string
+    address: string
+    phone: string
     medicalHistory: string
   }
 
@@ -6262,6 +10599,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     occupation?: StringFieldUpdateOperationsInput | string
+    incomePerMonth?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
     medicalHistory?: StringFieldUpdateOperationsInput | string
     student?: StudentUpdateOneRequiredWithoutFatherNestedInput
   }
@@ -6272,6 +10612,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     occupation?: StringFieldUpdateOperationsInput | string
+    incomePerMonth?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
     medicalHistory?: StringFieldUpdateOperationsInput | string
   }
 
@@ -6281,6 +10624,9 @@ export namespace Prisma {
     name: string
     status: string
     occupation: string
+    incomePerMonth: string
+    address: string
+    phone: string
     medicalHistory: string
   }
 
@@ -6288,6 +10634,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     occupation?: StringFieldUpdateOperationsInput | string
+    incomePerMonth?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
     medicalHistory?: StringFieldUpdateOperationsInput | string
   }
 
@@ -6297,6 +10646,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     occupation?: StringFieldUpdateOperationsInput | string
+    incomePerMonth?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
     medicalHistory?: StringFieldUpdateOperationsInput | string
   }
 
@@ -6304,6 +10656,9 @@ export namespace Prisma {
     name: string
     status: string
     occupation: string
+    incomePerMonth: string
+    address: string
+    phone: string
     medicalHistory: string
     student: StudentCreateNestedOneWithoutMotherInput
   }
@@ -6314,6 +10669,9 @@ export namespace Prisma {
     name: string
     status: string
     occupation: string
+    incomePerMonth: string
+    address: string
+    phone: string
     medicalHistory: string
   }
 
@@ -6321,6 +10679,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     occupation?: StringFieldUpdateOperationsInput | string
+    incomePerMonth?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
     medicalHistory?: StringFieldUpdateOperationsInput | string
     student?: StudentUpdateOneRequiredWithoutMotherNestedInput
   }
@@ -6331,6 +10692,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     occupation?: StringFieldUpdateOperationsInput | string
+    incomePerMonth?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
     medicalHistory?: StringFieldUpdateOperationsInput | string
   }
 
@@ -6340,6 +10704,9 @@ export namespace Prisma {
     name: string
     status: string
     occupation: string
+    incomePerMonth: string
+    address: string
+    phone: string
     medicalHistory: string
   }
 
@@ -6347,6 +10714,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     occupation?: StringFieldUpdateOperationsInput | string
+    incomePerMonth?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
     medicalHistory?: StringFieldUpdateOperationsInput | string
   }
 
@@ -6356,6 +10726,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     occupation?: StringFieldUpdateOperationsInput | string
+    incomePerMonth?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
     medicalHistory?: StringFieldUpdateOperationsInput | string
   }
 
@@ -6363,6 +10736,9 @@ export namespace Prisma {
     name: string
     status: string
     occupation: string
+    incomePerMonth: string
+    address: string
+    phone: string
     medicalHistory: string
     student: StudentCreateNestedOneWithoutGuardianInput
   }
@@ -6373,6 +10749,9 @@ export namespace Prisma {
     name: string
     status: string
     occupation: string
+    incomePerMonth: string
+    address: string
+    phone: string
     medicalHistory: string
   }
 
@@ -6380,6 +10759,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     occupation?: StringFieldUpdateOperationsInput | string
+    incomePerMonth?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
     medicalHistory?: StringFieldUpdateOperationsInput | string
     student?: StudentUpdateOneRequiredWithoutGuardianNestedInput
   }
@@ -6390,6 +10772,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     occupation?: StringFieldUpdateOperationsInput | string
+    incomePerMonth?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
     medicalHistory?: StringFieldUpdateOperationsInput | string
   }
 
@@ -6399,6 +10784,9 @@ export namespace Prisma {
     name: string
     status: string
     occupation: string
+    incomePerMonth: string
+    address: string
+    phone: string
     medicalHistory: string
   }
 
@@ -6406,6 +10794,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     occupation?: StringFieldUpdateOperationsInput | string
+    incomePerMonth?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
     medicalHistory?: StringFieldUpdateOperationsInput | string
   }
 
@@ -6415,7 +10806,62 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     occupation?: StringFieldUpdateOperationsInput | string
+    incomePerMonth?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
     medicalHistory?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type DocumentCreateInput = {
+    type: string
+    fileUrl: string
+    uploadedAt?: Date | string
+    student: StudentCreateNestedOneWithoutDocumentsInput
+  }
+
+  export type DocumentUncheckedCreateInput = {
+    id?: number
+    studentId: number
+    type: string
+    fileUrl: string
+    uploadedAt?: Date | string
+  }
+
+  export type DocumentUpdateInput = {
+    type?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    student?: StudentUpdateOneRequiredWithoutDocumentsNestedInput
+  }
+
+  export type DocumentUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    studentId?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentCreateManyInput = {
+    id?: number
+    studentId: number
+    type: string
+    fileUrl: string
+    uploadedAt?: Date | string
+  }
+
+  export type DocumentUpdateManyMutationInput = {
+    type?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    studentId?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -6444,82 +10890,45 @@ export namespace Prisma {
     not?: NestedStringFilter<$PrismaModel> | string
   }
 
-  export type DateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  export type StudentListRelationFilter = {
+    every?: StudentWhereInput
+    some?: StudentWhereInput
+    none?: StudentWhereInput
   }
 
-  export type FatherNullableScalarRelationFilter = {
-    is?: FatherWhereInput | null
-    isNot?: FatherWhereInput | null
+  export type StudentOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
-  export type MotherNullableScalarRelationFilter = {
-    is?: MotherWhereInput | null
-    isNot?: MotherWhereInput | null
-  }
-
-  export type GuardianNullableScalarRelationFilter = {
-    is?: GuardianWhereInput | null
-    isNot?: GuardianWhereInput | null
-  }
-
-  export type StudentCountOrderByAggregateInput = {
+  export type PengawasCountOrderByAggregateInput = {
     id?: SortOrder
     username?: SortOrder
-    fullName?: SortOrder
-    dateOfBirth?: SortOrder
-    gender?: SortOrder
-    city?: SortOrder
-    medicalHistory?: SortOrder
-    schoolName?: SortOrder
-    grade?: SortOrder
-    tuitionCost?: SortOrder
-    status?: SortOrder
-    createdAt?: SortOrder
+    password?: SortOrder
+    name?: SortOrder
+    wilayah?: SortOrder
   }
 
-  export type StudentAvgOrderByAggregateInput = {
+  export type PengawasAvgOrderByAggregateInput = {
     id?: SortOrder
   }
 
-  export type StudentMaxOrderByAggregateInput = {
+  export type PengawasMaxOrderByAggregateInput = {
     id?: SortOrder
     username?: SortOrder
-    fullName?: SortOrder
-    dateOfBirth?: SortOrder
-    gender?: SortOrder
-    city?: SortOrder
-    medicalHistory?: SortOrder
-    schoolName?: SortOrder
-    grade?: SortOrder
-    tuitionCost?: SortOrder
-    status?: SortOrder
-    createdAt?: SortOrder
+    password?: SortOrder
+    name?: SortOrder
+    wilayah?: SortOrder
   }
 
-  export type StudentMinOrderByAggregateInput = {
+  export type PengawasMinOrderByAggregateInput = {
     id?: SortOrder
     username?: SortOrder
-    fullName?: SortOrder
-    dateOfBirth?: SortOrder
-    gender?: SortOrder
-    city?: SortOrder
-    medicalHistory?: SortOrder
-    schoolName?: SortOrder
-    grade?: SortOrder
-    tuitionCost?: SortOrder
-    status?: SortOrder
-    createdAt?: SortOrder
+    password?: SortOrder
+    name?: SortOrder
+    wilayah?: SortOrder
   }
 
-  export type StudentSumOrderByAggregateInput = {
+  export type PengawasSumOrderByAggregateInput = {
     id?: SortOrder
   }
 
@@ -6557,6 +10966,129 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type DateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
+  export type PengawasScalarRelationFilter = {
+    is?: PengawasWhereInput
+    isNot?: PengawasWhereInput
+  }
+
+  export type FatherNullableScalarRelationFilter = {
+    is?: FatherWhereInput | null
+    isNot?: FatherWhereInput | null
+  }
+
+  export type MotherNullableScalarRelationFilter = {
+    is?: MotherWhereInput | null
+    isNot?: MotherWhereInput | null
+  }
+
+  export type GuardianNullableScalarRelationFilter = {
+    is?: GuardianWhereInput | null
+    isNot?: GuardianWhereInput | null
+  }
+
+  export type EducationCostListRelationFilter = {
+    every?: EducationCostWhereInput
+    some?: EducationCostWhereInput
+    none?: EducationCostWhereInput
+  }
+
+  export type DocumentListRelationFilter = {
+    every?: DocumentWhereInput
+    some?: DocumentWhereInput
+    none?: DocumentWhereInput
+  }
+
+  export type EducationCostOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type DocumentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type StudentCountOrderByAggregateInput = {
+    id?: SortOrder
+    username?: SortOrder
+    nik?: SortOrder
+    fullName?: SortOrder
+    dateOfBirth?: SortOrder
+    gender?: SortOrder
+    citaCita?: SortOrder
+    wilayah?: SortOrder
+    pengawasId?: SortOrder
+    alamatLengkap?: SortOrder
+    noHp?: SortOrder
+    riwayatPenyakit?: SortOrder
+    schoolName?: SortOrder
+    gradeLevel?: SortOrder
+    nilaiRataRata?: SortOrder
+    jumlahSaudara?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StudentAvgOrderByAggregateInput = {
+    id?: SortOrder
+    pengawasId?: SortOrder
+    jumlahSaudara?: SortOrder
+  }
+
+  export type StudentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    username?: SortOrder
+    nik?: SortOrder
+    fullName?: SortOrder
+    dateOfBirth?: SortOrder
+    gender?: SortOrder
+    citaCita?: SortOrder
+    wilayah?: SortOrder
+    pengawasId?: SortOrder
+    alamatLengkap?: SortOrder
+    noHp?: SortOrder
+    riwayatPenyakit?: SortOrder
+    schoolName?: SortOrder
+    gradeLevel?: SortOrder
+    nilaiRataRata?: SortOrder
+    jumlahSaudara?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StudentMinOrderByAggregateInput = {
+    id?: SortOrder
+    username?: SortOrder
+    nik?: SortOrder
+    fullName?: SortOrder
+    dateOfBirth?: SortOrder
+    gender?: SortOrder
+    citaCita?: SortOrder
+    wilayah?: SortOrder
+    pengawasId?: SortOrder
+    alamatLengkap?: SortOrder
+    noHp?: SortOrder
+    riwayatPenyakit?: SortOrder
+    schoolName?: SortOrder
+    gradeLevel?: SortOrder
+    nilaiRataRata?: SortOrder
+    jumlahSaudara?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StudentSumOrderByAggregateInput = {
+    id?: SortOrder
+    pengawasId?: SortOrder
+    jumlahSaudara?: SortOrder
+  }
+
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -6576,12 +11108,48 @@ export namespace Prisma {
     isNot?: StudentWhereInput
   }
 
+  export type EducationCostCountOrderByAggregateInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    label?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type EducationCostAvgOrderByAggregateInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type EducationCostMaxOrderByAggregateInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    label?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type EducationCostMinOrderByAggregateInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    label?: SortOrder
+    amount?: SortOrder
+  }
+
+  export type EducationCostSumOrderByAggregateInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    amount?: SortOrder
+  }
+
   export type FatherCountOrderByAggregateInput = {
     id?: SortOrder
     studentId?: SortOrder
     name?: SortOrder
     status?: SortOrder
     occupation?: SortOrder
+    incomePerMonth?: SortOrder
+    address?: SortOrder
+    phone?: SortOrder
     medicalHistory?: SortOrder
   }
 
@@ -6596,6 +11164,9 @@ export namespace Prisma {
     name?: SortOrder
     status?: SortOrder
     occupation?: SortOrder
+    incomePerMonth?: SortOrder
+    address?: SortOrder
+    phone?: SortOrder
     medicalHistory?: SortOrder
   }
 
@@ -6605,6 +11176,9 @@ export namespace Prisma {
     name?: SortOrder
     status?: SortOrder
     occupation?: SortOrder
+    incomePerMonth?: SortOrder
+    address?: SortOrder
+    phone?: SortOrder
     medicalHistory?: SortOrder
   }
 
@@ -6619,6 +11193,9 @@ export namespace Prisma {
     name?: SortOrder
     status?: SortOrder
     occupation?: SortOrder
+    incomePerMonth?: SortOrder
+    address?: SortOrder
+    phone?: SortOrder
     medicalHistory?: SortOrder
   }
 
@@ -6633,6 +11210,9 @@ export namespace Prisma {
     name?: SortOrder
     status?: SortOrder
     occupation?: SortOrder
+    incomePerMonth?: SortOrder
+    address?: SortOrder
+    phone?: SortOrder
     medicalHistory?: SortOrder
   }
 
@@ -6642,6 +11222,9 @@ export namespace Prisma {
     name?: SortOrder
     status?: SortOrder
     occupation?: SortOrder
+    incomePerMonth?: SortOrder
+    address?: SortOrder
+    phone?: SortOrder
     medicalHistory?: SortOrder
   }
 
@@ -6656,6 +11239,9 @@ export namespace Prisma {
     name?: SortOrder
     status?: SortOrder
     occupation?: SortOrder
+    incomePerMonth?: SortOrder
+    address?: SortOrder
+    phone?: SortOrder
     medicalHistory?: SortOrder
   }
 
@@ -6670,6 +11256,9 @@ export namespace Prisma {
     name?: SortOrder
     status?: SortOrder
     occupation?: SortOrder
+    incomePerMonth?: SortOrder
+    address?: SortOrder
+    phone?: SortOrder
     medicalHistory?: SortOrder
   }
 
@@ -6679,12 +11268,109 @@ export namespace Prisma {
     name?: SortOrder
     status?: SortOrder
     occupation?: SortOrder
+    incomePerMonth?: SortOrder
+    address?: SortOrder
+    phone?: SortOrder
     medicalHistory?: SortOrder
   }
 
   export type GuardianSumOrderByAggregateInput = {
     id?: SortOrder
     studentId?: SortOrder
+  }
+
+  export type DocumentCountOrderByAggregateInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    type?: SortOrder
+    fileUrl?: SortOrder
+    uploadedAt?: SortOrder
+  }
+
+  export type DocumentAvgOrderByAggregateInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+  }
+
+  export type DocumentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    type?: SortOrder
+    fileUrl?: SortOrder
+    uploadedAt?: SortOrder
+  }
+
+  export type DocumentMinOrderByAggregateInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    type?: SortOrder
+    fileUrl?: SortOrder
+    uploadedAt?: SortOrder
+  }
+
+  export type DocumentSumOrderByAggregateInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+  }
+
+  export type StudentCreateNestedManyWithoutPengawasInput = {
+    create?: XOR<StudentCreateWithoutPengawasInput, StudentUncheckedCreateWithoutPengawasInput> | StudentCreateWithoutPengawasInput[] | StudentUncheckedCreateWithoutPengawasInput[]
+    connectOrCreate?: StudentCreateOrConnectWithoutPengawasInput | StudentCreateOrConnectWithoutPengawasInput[]
+    createMany?: StudentCreateManyPengawasInputEnvelope
+    connect?: StudentWhereUniqueInput | StudentWhereUniqueInput[]
+  }
+
+  export type StudentUncheckedCreateNestedManyWithoutPengawasInput = {
+    create?: XOR<StudentCreateWithoutPengawasInput, StudentUncheckedCreateWithoutPengawasInput> | StudentCreateWithoutPengawasInput[] | StudentUncheckedCreateWithoutPengawasInput[]
+    connectOrCreate?: StudentCreateOrConnectWithoutPengawasInput | StudentCreateOrConnectWithoutPengawasInput[]
+    createMany?: StudentCreateManyPengawasInputEnvelope
+    connect?: StudentWhereUniqueInput | StudentWhereUniqueInput[]
+  }
+
+  export type StringFieldUpdateOperationsInput = {
+    set?: string
+  }
+
+  export type StudentUpdateManyWithoutPengawasNestedInput = {
+    create?: XOR<StudentCreateWithoutPengawasInput, StudentUncheckedCreateWithoutPengawasInput> | StudentCreateWithoutPengawasInput[] | StudentUncheckedCreateWithoutPengawasInput[]
+    connectOrCreate?: StudentCreateOrConnectWithoutPengawasInput | StudentCreateOrConnectWithoutPengawasInput[]
+    upsert?: StudentUpsertWithWhereUniqueWithoutPengawasInput | StudentUpsertWithWhereUniqueWithoutPengawasInput[]
+    createMany?: StudentCreateManyPengawasInputEnvelope
+    set?: StudentWhereUniqueInput | StudentWhereUniqueInput[]
+    disconnect?: StudentWhereUniqueInput | StudentWhereUniqueInput[]
+    delete?: StudentWhereUniqueInput | StudentWhereUniqueInput[]
+    connect?: StudentWhereUniqueInput | StudentWhereUniqueInput[]
+    update?: StudentUpdateWithWhereUniqueWithoutPengawasInput | StudentUpdateWithWhereUniqueWithoutPengawasInput[]
+    updateMany?: StudentUpdateManyWithWhereWithoutPengawasInput | StudentUpdateManyWithWhereWithoutPengawasInput[]
+    deleteMany?: StudentScalarWhereInput | StudentScalarWhereInput[]
+  }
+
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type StudentUncheckedUpdateManyWithoutPengawasNestedInput = {
+    create?: XOR<StudentCreateWithoutPengawasInput, StudentUncheckedCreateWithoutPengawasInput> | StudentCreateWithoutPengawasInput[] | StudentUncheckedCreateWithoutPengawasInput[]
+    connectOrCreate?: StudentCreateOrConnectWithoutPengawasInput | StudentCreateOrConnectWithoutPengawasInput[]
+    upsert?: StudentUpsertWithWhereUniqueWithoutPengawasInput | StudentUpsertWithWhereUniqueWithoutPengawasInput[]
+    createMany?: StudentCreateManyPengawasInputEnvelope
+    set?: StudentWhereUniqueInput | StudentWhereUniqueInput[]
+    disconnect?: StudentWhereUniqueInput | StudentWhereUniqueInput[]
+    delete?: StudentWhereUniqueInput | StudentWhereUniqueInput[]
+    connect?: StudentWhereUniqueInput | StudentWhereUniqueInput[]
+    update?: StudentUpdateWithWhereUniqueWithoutPengawasInput | StudentUpdateWithWhereUniqueWithoutPengawasInput[]
+    updateMany?: StudentUpdateManyWithWhereWithoutPengawasInput | StudentUpdateManyWithWhereWithoutPengawasInput[]
+    deleteMany?: StudentScalarWhereInput | StudentScalarWhereInput[]
+  }
+
+  export type PengawasCreateNestedOneWithoutStudentsInput = {
+    create?: XOR<PengawasCreateWithoutStudentsInput, PengawasUncheckedCreateWithoutStudentsInput>
+    connectOrCreate?: PengawasCreateOrConnectWithoutStudentsInput
+    connect?: PengawasWhereUniqueInput
   }
 
   export type FatherCreateNestedOneWithoutStudentInput = {
@@ -6705,6 +11391,20 @@ export namespace Prisma {
     connect?: GuardianWhereUniqueInput
   }
 
+  export type EducationCostCreateNestedManyWithoutStudentInput = {
+    create?: XOR<EducationCostCreateWithoutStudentInput, EducationCostUncheckedCreateWithoutStudentInput> | EducationCostCreateWithoutStudentInput[] | EducationCostUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: EducationCostCreateOrConnectWithoutStudentInput | EducationCostCreateOrConnectWithoutStudentInput[]
+    createMany?: EducationCostCreateManyStudentInputEnvelope
+    connect?: EducationCostWhereUniqueInput | EducationCostWhereUniqueInput[]
+  }
+
+  export type DocumentCreateNestedManyWithoutStudentInput = {
+    create?: XOR<DocumentCreateWithoutStudentInput, DocumentUncheckedCreateWithoutStudentInput> | DocumentCreateWithoutStudentInput[] | DocumentUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutStudentInput | DocumentCreateOrConnectWithoutStudentInput[]
+    createMany?: DocumentCreateManyStudentInputEnvelope
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+  }
+
   export type FatherUncheckedCreateNestedOneWithoutStudentInput = {
     create?: XOR<FatherCreateWithoutStudentInput, FatherUncheckedCreateWithoutStudentInput>
     connectOrCreate?: FatherCreateOrConnectWithoutStudentInput
@@ -6723,12 +11423,30 @@ export namespace Prisma {
     connect?: GuardianWhereUniqueInput
   }
 
-  export type StringFieldUpdateOperationsInput = {
-    set?: string
+  export type EducationCostUncheckedCreateNestedManyWithoutStudentInput = {
+    create?: XOR<EducationCostCreateWithoutStudentInput, EducationCostUncheckedCreateWithoutStudentInput> | EducationCostCreateWithoutStudentInput[] | EducationCostUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: EducationCostCreateOrConnectWithoutStudentInput | EducationCostCreateOrConnectWithoutStudentInput[]
+    createMany?: EducationCostCreateManyStudentInputEnvelope
+    connect?: EducationCostWhereUniqueInput | EducationCostWhereUniqueInput[]
+  }
+
+  export type DocumentUncheckedCreateNestedManyWithoutStudentInput = {
+    create?: XOR<DocumentCreateWithoutStudentInput, DocumentUncheckedCreateWithoutStudentInput> | DocumentCreateWithoutStudentInput[] | DocumentUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutStudentInput | DocumentCreateOrConnectWithoutStudentInput[]
+    createMany?: DocumentCreateManyStudentInputEnvelope
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
+  }
+
+  export type PengawasUpdateOneRequiredWithoutStudentsNestedInput = {
+    create?: XOR<PengawasCreateWithoutStudentsInput, PengawasUncheckedCreateWithoutStudentsInput>
+    connectOrCreate?: PengawasCreateOrConnectWithoutStudentsInput
+    upsert?: PengawasUpsertWithoutStudentsInput
+    connect?: PengawasWhereUniqueInput
+    update?: XOR<XOR<PengawasUpdateToOneWithWhereWithoutStudentsInput, PengawasUpdateWithoutStudentsInput>, PengawasUncheckedUpdateWithoutStudentsInput>
   }
 
   export type FatherUpdateOneWithoutStudentNestedInput = {
@@ -6761,12 +11479,32 @@ export namespace Prisma {
     update?: XOR<XOR<GuardianUpdateToOneWithWhereWithoutStudentInput, GuardianUpdateWithoutStudentInput>, GuardianUncheckedUpdateWithoutStudentInput>
   }
 
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
+  export type EducationCostUpdateManyWithoutStudentNestedInput = {
+    create?: XOR<EducationCostCreateWithoutStudentInput, EducationCostUncheckedCreateWithoutStudentInput> | EducationCostCreateWithoutStudentInput[] | EducationCostUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: EducationCostCreateOrConnectWithoutStudentInput | EducationCostCreateOrConnectWithoutStudentInput[]
+    upsert?: EducationCostUpsertWithWhereUniqueWithoutStudentInput | EducationCostUpsertWithWhereUniqueWithoutStudentInput[]
+    createMany?: EducationCostCreateManyStudentInputEnvelope
+    set?: EducationCostWhereUniqueInput | EducationCostWhereUniqueInput[]
+    disconnect?: EducationCostWhereUniqueInput | EducationCostWhereUniqueInput[]
+    delete?: EducationCostWhereUniqueInput | EducationCostWhereUniqueInput[]
+    connect?: EducationCostWhereUniqueInput | EducationCostWhereUniqueInput[]
+    update?: EducationCostUpdateWithWhereUniqueWithoutStudentInput | EducationCostUpdateWithWhereUniqueWithoutStudentInput[]
+    updateMany?: EducationCostUpdateManyWithWhereWithoutStudentInput | EducationCostUpdateManyWithWhereWithoutStudentInput[]
+    deleteMany?: EducationCostScalarWhereInput | EducationCostScalarWhereInput[]
+  }
+
+  export type DocumentUpdateManyWithoutStudentNestedInput = {
+    create?: XOR<DocumentCreateWithoutStudentInput, DocumentUncheckedCreateWithoutStudentInput> | DocumentCreateWithoutStudentInput[] | DocumentUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutStudentInput | DocumentCreateOrConnectWithoutStudentInput[]
+    upsert?: DocumentUpsertWithWhereUniqueWithoutStudentInput | DocumentUpsertWithWhereUniqueWithoutStudentInput[]
+    createMany?: DocumentCreateManyStudentInputEnvelope
+    set?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    disconnect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    delete?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    update?: DocumentUpdateWithWhereUniqueWithoutStudentInput | DocumentUpdateWithWhereUniqueWithoutStudentInput[]
+    updateMany?: DocumentUpdateManyWithWhereWithoutStudentInput | DocumentUpdateManyWithWhereWithoutStudentInput[]
+    deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
   }
 
   export type FatherUncheckedUpdateOneWithoutStudentNestedInput = {
@@ -6797,6 +11535,48 @@ export namespace Prisma {
     delete?: GuardianWhereInput | boolean
     connect?: GuardianWhereUniqueInput
     update?: XOR<XOR<GuardianUpdateToOneWithWhereWithoutStudentInput, GuardianUpdateWithoutStudentInput>, GuardianUncheckedUpdateWithoutStudentInput>
+  }
+
+  export type EducationCostUncheckedUpdateManyWithoutStudentNestedInput = {
+    create?: XOR<EducationCostCreateWithoutStudentInput, EducationCostUncheckedCreateWithoutStudentInput> | EducationCostCreateWithoutStudentInput[] | EducationCostUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: EducationCostCreateOrConnectWithoutStudentInput | EducationCostCreateOrConnectWithoutStudentInput[]
+    upsert?: EducationCostUpsertWithWhereUniqueWithoutStudentInput | EducationCostUpsertWithWhereUniqueWithoutStudentInput[]
+    createMany?: EducationCostCreateManyStudentInputEnvelope
+    set?: EducationCostWhereUniqueInput | EducationCostWhereUniqueInput[]
+    disconnect?: EducationCostWhereUniqueInput | EducationCostWhereUniqueInput[]
+    delete?: EducationCostWhereUniqueInput | EducationCostWhereUniqueInput[]
+    connect?: EducationCostWhereUniqueInput | EducationCostWhereUniqueInput[]
+    update?: EducationCostUpdateWithWhereUniqueWithoutStudentInput | EducationCostUpdateWithWhereUniqueWithoutStudentInput[]
+    updateMany?: EducationCostUpdateManyWithWhereWithoutStudentInput | EducationCostUpdateManyWithWhereWithoutStudentInput[]
+    deleteMany?: EducationCostScalarWhereInput | EducationCostScalarWhereInput[]
+  }
+
+  export type DocumentUncheckedUpdateManyWithoutStudentNestedInput = {
+    create?: XOR<DocumentCreateWithoutStudentInput, DocumentUncheckedCreateWithoutStudentInput> | DocumentCreateWithoutStudentInput[] | DocumentUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: DocumentCreateOrConnectWithoutStudentInput | DocumentCreateOrConnectWithoutStudentInput[]
+    upsert?: DocumentUpsertWithWhereUniqueWithoutStudentInput | DocumentUpsertWithWhereUniqueWithoutStudentInput[]
+    createMany?: DocumentCreateManyStudentInputEnvelope
+    set?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    disconnect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    delete?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    connect?: DocumentWhereUniqueInput | DocumentWhereUniqueInput[]
+    update?: DocumentUpdateWithWhereUniqueWithoutStudentInput | DocumentUpdateWithWhereUniqueWithoutStudentInput[]
+    updateMany?: DocumentUpdateManyWithWhereWithoutStudentInput | DocumentUpdateManyWithWhereWithoutStudentInput[]
+    deleteMany?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
+  }
+
+  export type StudentCreateNestedOneWithoutEducationCostsInput = {
+    create?: XOR<StudentCreateWithoutEducationCostsInput, StudentUncheckedCreateWithoutEducationCostsInput>
+    connectOrCreate?: StudentCreateOrConnectWithoutEducationCostsInput
+    connect?: StudentWhereUniqueInput
+  }
+
+  export type StudentUpdateOneRequiredWithoutEducationCostsNestedInput = {
+    create?: XOR<StudentCreateWithoutEducationCostsInput, StudentUncheckedCreateWithoutEducationCostsInput>
+    connectOrCreate?: StudentCreateOrConnectWithoutEducationCostsInput
+    upsert?: StudentUpsertWithoutEducationCostsInput
+    connect?: StudentWhereUniqueInput
+    update?: XOR<XOR<StudentUpdateToOneWithWhereWithoutEducationCostsInput, StudentUpdateWithoutEducationCostsInput>, StudentUncheckedUpdateWithoutEducationCostsInput>
   }
 
   export type StudentCreateNestedOneWithoutFatherInput = {
@@ -6841,6 +11621,20 @@ export namespace Prisma {
     update?: XOR<XOR<StudentUpdateToOneWithWhereWithoutGuardianInput, StudentUpdateWithoutGuardianInput>, StudentUncheckedUpdateWithoutGuardianInput>
   }
 
+  export type StudentCreateNestedOneWithoutDocumentsInput = {
+    create?: XOR<StudentCreateWithoutDocumentsInput, StudentUncheckedCreateWithoutDocumentsInput>
+    connectOrCreate?: StudentCreateOrConnectWithoutDocumentsInput
+    connect?: StudentWhereUniqueInput
+  }
+
+  export type StudentUpdateOneRequiredWithoutDocumentsNestedInput = {
+    create?: XOR<StudentCreateWithoutDocumentsInput, StudentUncheckedCreateWithoutDocumentsInput>
+    connectOrCreate?: StudentCreateOrConnectWithoutDocumentsInput
+    upsert?: StudentUpsertWithoutDocumentsInput
+    connect?: StudentWhereUniqueInput
+    update?: XOR<XOR<StudentUpdateToOneWithWhereWithoutDocumentsInput, StudentUpdateWithoutDocumentsInput>, StudentUncheckedUpdateWithoutDocumentsInput>
+  }
+
   export type NestedIntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -6864,17 +11658,6 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringFilter<$PrismaModel> | string
-  }
-
-  export type NestedDateTimeFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
   }
 
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -6921,6 +11704,17 @@ export namespace Prisma {
     _max?: NestedStringFilter<$PrismaModel>
   }
 
+  export type NestedDateTimeFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeFilter<$PrismaModel> | Date | string
+  }
+
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -6935,10 +11729,129 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type StudentCreateWithoutPengawasInput = {
+    username: string
+    nik: string
+    fullName: string
+    dateOfBirth: Date | string
+    gender: string
+    citaCita: string
+    wilayah: string
+    alamatLengkap: string
+    noHp: string
+    riwayatPenyakit: string
+    schoolName: string
+    gradeLevel: string
+    nilaiRataRata: string
+    jumlahSaudara: number
+    createdAt?: Date | string
+    father?: FatherCreateNestedOneWithoutStudentInput
+    mother?: MotherCreateNestedOneWithoutStudentInput
+    guardian?: GuardianCreateNestedOneWithoutStudentInput
+    educationCosts?: EducationCostCreateNestedManyWithoutStudentInput
+    documents?: DocumentCreateNestedManyWithoutStudentInput
+  }
+
+  export type StudentUncheckedCreateWithoutPengawasInput = {
+    id?: number
+    username: string
+    nik: string
+    fullName: string
+    dateOfBirth: Date | string
+    gender: string
+    citaCita: string
+    wilayah: string
+    alamatLengkap: string
+    noHp: string
+    riwayatPenyakit: string
+    schoolName: string
+    gradeLevel: string
+    nilaiRataRata: string
+    jumlahSaudara: number
+    createdAt?: Date | string
+    father?: FatherUncheckedCreateNestedOneWithoutStudentInput
+    mother?: MotherUncheckedCreateNestedOneWithoutStudentInput
+    guardian?: GuardianUncheckedCreateNestedOneWithoutStudentInput
+    educationCosts?: EducationCostUncheckedCreateNestedManyWithoutStudentInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutStudentInput
+  }
+
+  export type StudentCreateOrConnectWithoutPengawasInput = {
+    where: StudentWhereUniqueInput
+    create: XOR<StudentCreateWithoutPengawasInput, StudentUncheckedCreateWithoutPengawasInput>
+  }
+
+  export type StudentCreateManyPengawasInputEnvelope = {
+    data: StudentCreateManyPengawasInput | StudentCreateManyPengawasInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type StudentUpsertWithWhereUniqueWithoutPengawasInput = {
+    where: StudentWhereUniqueInput
+    update: XOR<StudentUpdateWithoutPengawasInput, StudentUncheckedUpdateWithoutPengawasInput>
+    create: XOR<StudentCreateWithoutPengawasInput, StudentUncheckedCreateWithoutPengawasInput>
+  }
+
+  export type StudentUpdateWithWhereUniqueWithoutPengawasInput = {
+    where: StudentWhereUniqueInput
+    data: XOR<StudentUpdateWithoutPengawasInput, StudentUncheckedUpdateWithoutPengawasInput>
+  }
+
+  export type StudentUpdateManyWithWhereWithoutPengawasInput = {
+    where: StudentScalarWhereInput
+    data: XOR<StudentUpdateManyMutationInput, StudentUncheckedUpdateManyWithoutPengawasInput>
+  }
+
+  export type StudentScalarWhereInput = {
+    AND?: StudentScalarWhereInput | StudentScalarWhereInput[]
+    OR?: StudentScalarWhereInput[]
+    NOT?: StudentScalarWhereInput | StudentScalarWhereInput[]
+    id?: IntFilter<"Student"> | number
+    username?: StringFilter<"Student"> | string
+    nik?: StringFilter<"Student"> | string
+    fullName?: StringFilter<"Student"> | string
+    dateOfBirth?: DateTimeFilter<"Student"> | Date | string
+    gender?: StringFilter<"Student"> | string
+    citaCita?: StringFilter<"Student"> | string
+    wilayah?: StringFilter<"Student"> | string
+    pengawasId?: IntFilter<"Student"> | number
+    alamatLengkap?: StringFilter<"Student"> | string
+    noHp?: StringFilter<"Student"> | string
+    riwayatPenyakit?: StringFilter<"Student"> | string
+    schoolName?: StringFilter<"Student"> | string
+    gradeLevel?: StringFilter<"Student"> | string
+    nilaiRataRata?: StringFilter<"Student"> | string
+    jumlahSaudara?: IntFilter<"Student"> | number
+    createdAt?: DateTimeFilter<"Student"> | Date | string
+  }
+
+  export type PengawasCreateWithoutStudentsInput = {
+    username: string
+    password: string
+    name: string
+    wilayah: string
+  }
+
+  export type PengawasUncheckedCreateWithoutStudentsInput = {
+    id?: number
+    username: string
+    password: string
+    name: string
+    wilayah: string
+  }
+
+  export type PengawasCreateOrConnectWithoutStudentsInput = {
+    where: PengawasWhereUniqueInput
+    create: XOR<PengawasCreateWithoutStudentsInput, PengawasUncheckedCreateWithoutStudentsInput>
+  }
+
   export type FatherCreateWithoutStudentInput = {
     name: string
     status: string
     occupation: string
+    incomePerMonth: string
+    address: string
+    phone: string
     medicalHistory: string
   }
 
@@ -6947,6 +11860,9 @@ export namespace Prisma {
     name: string
     status: string
     occupation: string
+    incomePerMonth: string
+    address: string
+    phone: string
     medicalHistory: string
   }
 
@@ -6959,6 +11875,9 @@ export namespace Prisma {
     name: string
     status: string
     occupation: string
+    incomePerMonth: string
+    address: string
+    phone: string
     medicalHistory: string
   }
 
@@ -6967,6 +11886,9 @@ export namespace Prisma {
     name: string
     status: string
     occupation: string
+    incomePerMonth: string
+    address: string
+    phone: string
     medicalHistory: string
   }
 
@@ -6979,6 +11901,9 @@ export namespace Prisma {
     name: string
     status: string
     occupation: string
+    incomePerMonth: string
+    address: string
+    phone: string
     medicalHistory: string
   }
 
@@ -6987,12 +11912,85 @@ export namespace Prisma {
     name: string
     status: string
     occupation: string
+    incomePerMonth: string
+    address: string
+    phone: string
     medicalHistory: string
   }
 
   export type GuardianCreateOrConnectWithoutStudentInput = {
     where: GuardianWhereUniqueInput
     create: XOR<GuardianCreateWithoutStudentInput, GuardianUncheckedCreateWithoutStudentInput>
+  }
+
+  export type EducationCostCreateWithoutStudentInput = {
+    label: string
+    amount: number
+  }
+
+  export type EducationCostUncheckedCreateWithoutStudentInput = {
+    id?: number
+    label: string
+    amount: number
+  }
+
+  export type EducationCostCreateOrConnectWithoutStudentInput = {
+    where: EducationCostWhereUniqueInput
+    create: XOR<EducationCostCreateWithoutStudentInput, EducationCostUncheckedCreateWithoutStudentInput>
+  }
+
+  export type EducationCostCreateManyStudentInputEnvelope = {
+    data: EducationCostCreateManyStudentInput | EducationCostCreateManyStudentInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type DocumentCreateWithoutStudentInput = {
+    type: string
+    fileUrl: string
+    uploadedAt?: Date | string
+  }
+
+  export type DocumentUncheckedCreateWithoutStudentInput = {
+    id?: number
+    type: string
+    fileUrl: string
+    uploadedAt?: Date | string
+  }
+
+  export type DocumentCreateOrConnectWithoutStudentInput = {
+    where: DocumentWhereUniqueInput
+    create: XOR<DocumentCreateWithoutStudentInput, DocumentUncheckedCreateWithoutStudentInput>
+  }
+
+  export type DocumentCreateManyStudentInputEnvelope = {
+    data: DocumentCreateManyStudentInput | DocumentCreateManyStudentInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PengawasUpsertWithoutStudentsInput = {
+    update: XOR<PengawasUpdateWithoutStudentsInput, PengawasUncheckedUpdateWithoutStudentsInput>
+    create: XOR<PengawasCreateWithoutStudentsInput, PengawasUncheckedCreateWithoutStudentsInput>
+    where?: PengawasWhereInput
+  }
+
+  export type PengawasUpdateToOneWithWhereWithoutStudentsInput = {
+    where?: PengawasWhereInput
+    data: XOR<PengawasUpdateWithoutStudentsInput, PengawasUncheckedUpdateWithoutStudentsInput>
+  }
+
+  export type PengawasUpdateWithoutStudentsInput = {
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type PengawasUncheckedUpdateWithoutStudentsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
   }
 
   export type FatherUpsertWithoutStudentInput = {
@@ -7010,6 +12008,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     occupation?: StringFieldUpdateOperationsInput | string
+    incomePerMonth?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
     medicalHistory?: StringFieldUpdateOperationsInput | string
   }
 
@@ -7018,6 +12019,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     occupation?: StringFieldUpdateOperationsInput | string
+    incomePerMonth?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
     medicalHistory?: StringFieldUpdateOperationsInput | string
   }
 
@@ -7036,6 +12040,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     occupation?: StringFieldUpdateOperationsInput | string
+    incomePerMonth?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
     medicalHistory?: StringFieldUpdateOperationsInput | string
   }
 
@@ -7044,6 +12051,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     occupation?: StringFieldUpdateOperationsInput | string
+    incomePerMonth?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
     medicalHistory?: StringFieldUpdateOperationsInput | string
   }
 
@@ -7062,6 +12072,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     occupation?: StringFieldUpdateOperationsInput | string
+    incomePerMonth?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
     medicalHistory?: StringFieldUpdateOperationsInput | string
   }
 
@@ -7070,40 +12083,220 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     status?: StringFieldUpdateOperationsInput | string
     occupation?: StringFieldUpdateOperationsInput | string
+    incomePerMonth?: StringFieldUpdateOperationsInput | string
+    address?: StringFieldUpdateOperationsInput | string
+    phone?: StringFieldUpdateOperationsInput | string
     medicalHistory?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type EducationCostUpsertWithWhereUniqueWithoutStudentInput = {
+    where: EducationCostWhereUniqueInput
+    update: XOR<EducationCostUpdateWithoutStudentInput, EducationCostUncheckedUpdateWithoutStudentInput>
+    create: XOR<EducationCostCreateWithoutStudentInput, EducationCostUncheckedCreateWithoutStudentInput>
+  }
+
+  export type EducationCostUpdateWithWhereUniqueWithoutStudentInput = {
+    where: EducationCostWhereUniqueInput
+    data: XOR<EducationCostUpdateWithoutStudentInput, EducationCostUncheckedUpdateWithoutStudentInput>
+  }
+
+  export type EducationCostUpdateManyWithWhereWithoutStudentInput = {
+    where: EducationCostScalarWhereInput
+    data: XOR<EducationCostUpdateManyMutationInput, EducationCostUncheckedUpdateManyWithoutStudentInput>
+  }
+
+  export type EducationCostScalarWhereInput = {
+    AND?: EducationCostScalarWhereInput | EducationCostScalarWhereInput[]
+    OR?: EducationCostScalarWhereInput[]
+    NOT?: EducationCostScalarWhereInput | EducationCostScalarWhereInput[]
+    id?: IntFilter<"EducationCost"> | number
+    studentId?: IntFilter<"EducationCost"> | number
+    label?: StringFilter<"EducationCost"> | string
+    amount?: IntFilter<"EducationCost"> | number
+  }
+
+  export type DocumentUpsertWithWhereUniqueWithoutStudentInput = {
+    where: DocumentWhereUniqueInput
+    update: XOR<DocumentUpdateWithoutStudentInput, DocumentUncheckedUpdateWithoutStudentInput>
+    create: XOR<DocumentCreateWithoutStudentInput, DocumentUncheckedCreateWithoutStudentInput>
+  }
+
+  export type DocumentUpdateWithWhereUniqueWithoutStudentInput = {
+    where: DocumentWhereUniqueInput
+    data: XOR<DocumentUpdateWithoutStudentInput, DocumentUncheckedUpdateWithoutStudentInput>
+  }
+
+  export type DocumentUpdateManyWithWhereWithoutStudentInput = {
+    where: DocumentScalarWhereInput
+    data: XOR<DocumentUpdateManyMutationInput, DocumentUncheckedUpdateManyWithoutStudentInput>
+  }
+
+  export type DocumentScalarWhereInput = {
+    AND?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
+    OR?: DocumentScalarWhereInput[]
+    NOT?: DocumentScalarWhereInput | DocumentScalarWhereInput[]
+    id?: IntFilter<"Document"> | number
+    studentId?: IntFilter<"Document"> | number
+    type?: StringFilter<"Document"> | string
+    fileUrl?: StringFilter<"Document"> | string
+    uploadedAt?: DateTimeFilter<"Document"> | Date | string
+  }
+
+  export type StudentCreateWithoutEducationCostsInput = {
+    username: string
+    nik: string
+    fullName: string
+    dateOfBirth: Date | string
+    gender: string
+    citaCita: string
+    wilayah: string
+    alamatLengkap: string
+    noHp: string
+    riwayatPenyakit: string
+    schoolName: string
+    gradeLevel: string
+    nilaiRataRata: string
+    jumlahSaudara: number
+    createdAt?: Date | string
+    pengawas: PengawasCreateNestedOneWithoutStudentsInput
+    father?: FatherCreateNestedOneWithoutStudentInput
+    mother?: MotherCreateNestedOneWithoutStudentInput
+    guardian?: GuardianCreateNestedOneWithoutStudentInput
+    documents?: DocumentCreateNestedManyWithoutStudentInput
+  }
+
+  export type StudentUncheckedCreateWithoutEducationCostsInput = {
+    id?: number
+    username: string
+    nik: string
+    fullName: string
+    dateOfBirth: Date | string
+    gender: string
+    citaCita: string
+    wilayah: string
+    pengawasId: number
+    alamatLengkap: string
+    noHp: string
+    riwayatPenyakit: string
+    schoolName: string
+    gradeLevel: string
+    nilaiRataRata: string
+    jumlahSaudara: number
+    createdAt?: Date | string
+    father?: FatherUncheckedCreateNestedOneWithoutStudentInput
+    mother?: MotherUncheckedCreateNestedOneWithoutStudentInput
+    guardian?: GuardianUncheckedCreateNestedOneWithoutStudentInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutStudentInput
+  }
+
+  export type StudentCreateOrConnectWithoutEducationCostsInput = {
+    where: StudentWhereUniqueInput
+    create: XOR<StudentCreateWithoutEducationCostsInput, StudentUncheckedCreateWithoutEducationCostsInput>
+  }
+
+  export type StudentUpsertWithoutEducationCostsInput = {
+    update: XOR<StudentUpdateWithoutEducationCostsInput, StudentUncheckedUpdateWithoutEducationCostsInput>
+    create: XOR<StudentCreateWithoutEducationCostsInput, StudentUncheckedCreateWithoutEducationCostsInput>
+    where?: StudentWhereInput
+  }
+
+  export type StudentUpdateToOneWithWhereWithoutEducationCostsInput = {
+    where?: StudentWhereInput
+    data: XOR<StudentUpdateWithoutEducationCostsInput, StudentUncheckedUpdateWithoutEducationCostsInput>
+  }
+
+  export type StudentUpdateWithoutEducationCostsInput = {
+    username?: StringFieldUpdateOperationsInput | string
+    nik?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    dateOfBirth?: DateTimeFieldUpdateOperationsInput | Date | string
+    gender?: StringFieldUpdateOperationsInput | string
+    citaCita?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+    alamatLengkap?: StringFieldUpdateOperationsInput | string
+    noHp?: StringFieldUpdateOperationsInput | string
+    riwayatPenyakit?: StringFieldUpdateOperationsInput | string
+    schoolName?: StringFieldUpdateOperationsInput | string
+    gradeLevel?: StringFieldUpdateOperationsInput | string
+    nilaiRataRata?: StringFieldUpdateOperationsInput | string
+    jumlahSaudara?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pengawas?: PengawasUpdateOneRequiredWithoutStudentsNestedInput
+    father?: FatherUpdateOneWithoutStudentNestedInput
+    mother?: MotherUpdateOneWithoutStudentNestedInput
+    guardian?: GuardianUpdateOneWithoutStudentNestedInput
+    documents?: DocumentUpdateManyWithoutStudentNestedInput
+  }
+
+  export type StudentUncheckedUpdateWithoutEducationCostsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    username?: StringFieldUpdateOperationsInput | string
+    nik?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    dateOfBirth?: DateTimeFieldUpdateOperationsInput | Date | string
+    gender?: StringFieldUpdateOperationsInput | string
+    citaCita?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+    pengawasId?: IntFieldUpdateOperationsInput | number
+    alamatLengkap?: StringFieldUpdateOperationsInput | string
+    noHp?: StringFieldUpdateOperationsInput | string
+    riwayatPenyakit?: StringFieldUpdateOperationsInput | string
+    schoolName?: StringFieldUpdateOperationsInput | string
+    gradeLevel?: StringFieldUpdateOperationsInput | string
+    nilaiRataRata?: StringFieldUpdateOperationsInput | string
+    jumlahSaudara?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    father?: FatherUncheckedUpdateOneWithoutStudentNestedInput
+    mother?: MotherUncheckedUpdateOneWithoutStudentNestedInput
+    guardian?: GuardianUncheckedUpdateOneWithoutStudentNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentCreateWithoutFatherInput = {
     username: string
+    nik: string
     fullName: string
     dateOfBirth: Date | string
     gender: string
-    city: string
-    medicalHistory: string
+    citaCita: string
+    wilayah: string
+    alamatLengkap: string
+    noHp: string
+    riwayatPenyakit: string
     schoolName: string
-    grade: string
-    tuitionCost: string
-    status?: string
+    gradeLevel: string
+    nilaiRataRata: string
+    jumlahSaudara: number
     createdAt?: Date | string
+    pengawas: PengawasCreateNestedOneWithoutStudentsInput
     mother?: MotherCreateNestedOneWithoutStudentInput
     guardian?: GuardianCreateNestedOneWithoutStudentInput
+    educationCosts?: EducationCostCreateNestedManyWithoutStudentInput
+    documents?: DocumentCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateWithoutFatherInput = {
     id?: number
     username: string
+    nik: string
     fullName: string
     dateOfBirth: Date | string
     gender: string
-    city: string
-    medicalHistory: string
+    citaCita: string
+    wilayah: string
+    pengawasId: number
+    alamatLengkap: string
+    noHp: string
+    riwayatPenyakit: string
     schoolName: string
-    grade: string
-    tuitionCost: string
-    status?: string
+    gradeLevel: string
+    nilaiRataRata: string
+    jumlahSaudara: number
     createdAt?: Date | string
     mother?: MotherUncheckedCreateNestedOneWithoutStudentInput
     guardian?: GuardianUncheckedCreateNestedOneWithoutStudentInput
+    educationCosts?: EducationCostUncheckedCreateNestedManyWithoutStudentInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentCreateOrConnectWithoutFatherInput = {
@@ -7124,68 +12317,96 @@ export namespace Prisma {
 
   export type StudentUpdateWithoutFatherInput = {
     username?: StringFieldUpdateOperationsInput | string
+    nik?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     dateOfBirth?: DateTimeFieldUpdateOperationsInput | Date | string
     gender?: StringFieldUpdateOperationsInput | string
-    city?: StringFieldUpdateOperationsInput | string
-    medicalHistory?: StringFieldUpdateOperationsInput | string
+    citaCita?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+    alamatLengkap?: StringFieldUpdateOperationsInput | string
+    noHp?: StringFieldUpdateOperationsInput | string
+    riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
-    grade?: StringFieldUpdateOperationsInput | string
-    tuitionCost?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    gradeLevel?: StringFieldUpdateOperationsInput | string
+    nilaiRataRata?: StringFieldUpdateOperationsInput | string
+    jumlahSaudara?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pengawas?: PengawasUpdateOneRequiredWithoutStudentsNestedInput
     mother?: MotherUpdateOneWithoutStudentNestedInput
     guardian?: GuardianUpdateOneWithoutStudentNestedInput
+    educationCosts?: EducationCostUpdateManyWithoutStudentNestedInput
+    documents?: DocumentUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateWithoutFatherInput = {
     id?: IntFieldUpdateOperationsInput | number
     username?: StringFieldUpdateOperationsInput | string
+    nik?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     dateOfBirth?: DateTimeFieldUpdateOperationsInput | Date | string
     gender?: StringFieldUpdateOperationsInput | string
-    city?: StringFieldUpdateOperationsInput | string
-    medicalHistory?: StringFieldUpdateOperationsInput | string
+    citaCita?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+    pengawasId?: IntFieldUpdateOperationsInput | number
+    alamatLengkap?: StringFieldUpdateOperationsInput | string
+    noHp?: StringFieldUpdateOperationsInput | string
+    riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
-    grade?: StringFieldUpdateOperationsInput | string
-    tuitionCost?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    gradeLevel?: StringFieldUpdateOperationsInput | string
+    nilaiRataRata?: StringFieldUpdateOperationsInput | string
+    jumlahSaudara?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     mother?: MotherUncheckedUpdateOneWithoutStudentNestedInput
     guardian?: GuardianUncheckedUpdateOneWithoutStudentNestedInput
+    educationCosts?: EducationCostUncheckedUpdateManyWithoutStudentNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentCreateWithoutMotherInput = {
     username: string
+    nik: string
     fullName: string
     dateOfBirth: Date | string
     gender: string
-    city: string
-    medicalHistory: string
+    citaCita: string
+    wilayah: string
+    alamatLengkap: string
+    noHp: string
+    riwayatPenyakit: string
     schoolName: string
-    grade: string
-    tuitionCost: string
-    status?: string
+    gradeLevel: string
+    nilaiRataRata: string
+    jumlahSaudara: number
     createdAt?: Date | string
+    pengawas: PengawasCreateNestedOneWithoutStudentsInput
     father?: FatherCreateNestedOneWithoutStudentInput
     guardian?: GuardianCreateNestedOneWithoutStudentInput
+    educationCosts?: EducationCostCreateNestedManyWithoutStudentInput
+    documents?: DocumentCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateWithoutMotherInput = {
     id?: number
     username: string
+    nik: string
     fullName: string
     dateOfBirth: Date | string
     gender: string
-    city: string
-    medicalHistory: string
+    citaCita: string
+    wilayah: string
+    pengawasId: number
+    alamatLengkap: string
+    noHp: string
+    riwayatPenyakit: string
     schoolName: string
-    grade: string
-    tuitionCost: string
-    status?: string
+    gradeLevel: string
+    nilaiRataRata: string
+    jumlahSaudara: number
     createdAt?: Date | string
     father?: FatherUncheckedCreateNestedOneWithoutStudentInput
     guardian?: GuardianUncheckedCreateNestedOneWithoutStudentInput
+    educationCosts?: EducationCostUncheckedCreateNestedManyWithoutStudentInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentCreateOrConnectWithoutMotherInput = {
@@ -7206,68 +12427,96 @@ export namespace Prisma {
 
   export type StudentUpdateWithoutMotherInput = {
     username?: StringFieldUpdateOperationsInput | string
+    nik?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     dateOfBirth?: DateTimeFieldUpdateOperationsInput | Date | string
     gender?: StringFieldUpdateOperationsInput | string
-    city?: StringFieldUpdateOperationsInput | string
-    medicalHistory?: StringFieldUpdateOperationsInput | string
+    citaCita?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+    alamatLengkap?: StringFieldUpdateOperationsInput | string
+    noHp?: StringFieldUpdateOperationsInput | string
+    riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
-    grade?: StringFieldUpdateOperationsInput | string
-    tuitionCost?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    gradeLevel?: StringFieldUpdateOperationsInput | string
+    nilaiRataRata?: StringFieldUpdateOperationsInput | string
+    jumlahSaudara?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pengawas?: PengawasUpdateOneRequiredWithoutStudentsNestedInput
     father?: FatherUpdateOneWithoutStudentNestedInput
     guardian?: GuardianUpdateOneWithoutStudentNestedInput
+    educationCosts?: EducationCostUpdateManyWithoutStudentNestedInput
+    documents?: DocumentUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateWithoutMotherInput = {
     id?: IntFieldUpdateOperationsInput | number
     username?: StringFieldUpdateOperationsInput | string
+    nik?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     dateOfBirth?: DateTimeFieldUpdateOperationsInput | Date | string
     gender?: StringFieldUpdateOperationsInput | string
-    city?: StringFieldUpdateOperationsInput | string
-    medicalHistory?: StringFieldUpdateOperationsInput | string
+    citaCita?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+    pengawasId?: IntFieldUpdateOperationsInput | number
+    alamatLengkap?: StringFieldUpdateOperationsInput | string
+    noHp?: StringFieldUpdateOperationsInput | string
+    riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
-    grade?: StringFieldUpdateOperationsInput | string
-    tuitionCost?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    gradeLevel?: StringFieldUpdateOperationsInput | string
+    nilaiRataRata?: StringFieldUpdateOperationsInput | string
+    jumlahSaudara?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     father?: FatherUncheckedUpdateOneWithoutStudentNestedInput
     guardian?: GuardianUncheckedUpdateOneWithoutStudentNestedInput
+    educationCosts?: EducationCostUncheckedUpdateManyWithoutStudentNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentCreateWithoutGuardianInput = {
     username: string
+    nik: string
     fullName: string
     dateOfBirth: Date | string
     gender: string
-    city: string
-    medicalHistory: string
+    citaCita: string
+    wilayah: string
+    alamatLengkap: string
+    noHp: string
+    riwayatPenyakit: string
     schoolName: string
-    grade: string
-    tuitionCost: string
-    status?: string
+    gradeLevel: string
+    nilaiRataRata: string
+    jumlahSaudara: number
     createdAt?: Date | string
+    pengawas: PengawasCreateNestedOneWithoutStudentsInput
     father?: FatherCreateNestedOneWithoutStudentInput
     mother?: MotherCreateNestedOneWithoutStudentInput
+    educationCosts?: EducationCostCreateNestedManyWithoutStudentInput
+    documents?: DocumentCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateWithoutGuardianInput = {
     id?: number
     username: string
+    nik: string
     fullName: string
     dateOfBirth: Date | string
     gender: string
-    city: string
-    medicalHistory: string
+    citaCita: string
+    wilayah: string
+    pengawasId: number
+    alamatLengkap: string
+    noHp: string
+    riwayatPenyakit: string
     schoolName: string
-    grade: string
-    tuitionCost: string
-    status?: string
+    gradeLevel: string
+    nilaiRataRata: string
+    jumlahSaudara: number
     createdAt?: Date | string
     father?: FatherUncheckedCreateNestedOneWithoutStudentInput
     mother?: MotherUncheckedCreateNestedOneWithoutStudentInput
+    educationCosts?: EducationCostUncheckedCreateNestedManyWithoutStudentInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentCreateOrConnectWithoutGuardianInput = {
@@ -7288,35 +12537,294 @@ export namespace Prisma {
 
   export type StudentUpdateWithoutGuardianInput = {
     username?: StringFieldUpdateOperationsInput | string
+    nik?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     dateOfBirth?: DateTimeFieldUpdateOperationsInput | Date | string
     gender?: StringFieldUpdateOperationsInput | string
-    city?: StringFieldUpdateOperationsInput | string
-    medicalHistory?: StringFieldUpdateOperationsInput | string
+    citaCita?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+    alamatLengkap?: StringFieldUpdateOperationsInput | string
+    noHp?: StringFieldUpdateOperationsInput | string
+    riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
-    grade?: StringFieldUpdateOperationsInput | string
-    tuitionCost?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    gradeLevel?: StringFieldUpdateOperationsInput | string
+    nilaiRataRata?: StringFieldUpdateOperationsInput | string
+    jumlahSaudara?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pengawas?: PengawasUpdateOneRequiredWithoutStudentsNestedInput
     father?: FatherUpdateOneWithoutStudentNestedInput
     mother?: MotherUpdateOneWithoutStudentNestedInput
+    educationCosts?: EducationCostUpdateManyWithoutStudentNestedInput
+    documents?: DocumentUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateWithoutGuardianInput = {
     id?: IntFieldUpdateOperationsInput | number
     username?: StringFieldUpdateOperationsInput | string
+    nik?: StringFieldUpdateOperationsInput | string
     fullName?: StringFieldUpdateOperationsInput | string
     dateOfBirth?: DateTimeFieldUpdateOperationsInput | Date | string
     gender?: StringFieldUpdateOperationsInput | string
-    city?: StringFieldUpdateOperationsInput | string
-    medicalHistory?: StringFieldUpdateOperationsInput | string
+    citaCita?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+    pengawasId?: IntFieldUpdateOperationsInput | number
+    alamatLengkap?: StringFieldUpdateOperationsInput | string
+    noHp?: StringFieldUpdateOperationsInput | string
+    riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
-    grade?: StringFieldUpdateOperationsInput | string
-    tuitionCost?: StringFieldUpdateOperationsInput | string
-    status?: StringFieldUpdateOperationsInput | string
+    gradeLevel?: StringFieldUpdateOperationsInput | string
+    nilaiRataRata?: StringFieldUpdateOperationsInput | string
+    jumlahSaudara?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     father?: FatherUncheckedUpdateOneWithoutStudentNestedInput
     mother?: MotherUncheckedUpdateOneWithoutStudentNestedInput
+    educationCosts?: EducationCostUncheckedUpdateManyWithoutStudentNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutStudentNestedInput
+  }
+
+  export type StudentCreateWithoutDocumentsInput = {
+    username: string
+    nik: string
+    fullName: string
+    dateOfBirth: Date | string
+    gender: string
+    citaCita: string
+    wilayah: string
+    alamatLengkap: string
+    noHp: string
+    riwayatPenyakit: string
+    schoolName: string
+    gradeLevel: string
+    nilaiRataRata: string
+    jumlahSaudara: number
+    createdAt?: Date | string
+    pengawas: PengawasCreateNestedOneWithoutStudentsInput
+    father?: FatherCreateNestedOneWithoutStudentInput
+    mother?: MotherCreateNestedOneWithoutStudentInput
+    guardian?: GuardianCreateNestedOneWithoutStudentInput
+    educationCosts?: EducationCostCreateNestedManyWithoutStudentInput
+  }
+
+  export type StudentUncheckedCreateWithoutDocumentsInput = {
+    id?: number
+    username: string
+    nik: string
+    fullName: string
+    dateOfBirth: Date | string
+    gender: string
+    citaCita: string
+    wilayah: string
+    pengawasId: number
+    alamatLengkap: string
+    noHp: string
+    riwayatPenyakit: string
+    schoolName: string
+    gradeLevel: string
+    nilaiRataRata: string
+    jumlahSaudara: number
+    createdAt?: Date | string
+    father?: FatherUncheckedCreateNestedOneWithoutStudentInput
+    mother?: MotherUncheckedCreateNestedOneWithoutStudentInput
+    guardian?: GuardianUncheckedCreateNestedOneWithoutStudentInput
+    educationCosts?: EducationCostUncheckedCreateNestedManyWithoutStudentInput
+  }
+
+  export type StudentCreateOrConnectWithoutDocumentsInput = {
+    where: StudentWhereUniqueInput
+    create: XOR<StudentCreateWithoutDocumentsInput, StudentUncheckedCreateWithoutDocumentsInput>
+  }
+
+  export type StudentUpsertWithoutDocumentsInput = {
+    update: XOR<StudentUpdateWithoutDocumentsInput, StudentUncheckedUpdateWithoutDocumentsInput>
+    create: XOR<StudentCreateWithoutDocumentsInput, StudentUncheckedCreateWithoutDocumentsInput>
+    where?: StudentWhereInput
+  }
+
+  export type StudentUpdateToOneWithWhereWithoutDocumentsInput = {
+    where?: StudentWhereInput
+    data: XOR<StudentUpdateWithoutDocumentsInput, StudentUncheckedUpdateWithoutDocumentsInput>
+  }
+
+  export type StudentUpdateWithoutDocumentsInput = {
+    username?: StringFieldUpdateOperationsInput | string
+    nik?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    dateOfBirth?: DateTimeFieldUpdateOperationsInput | Date | string
+    gender?: StringFieldUpdateOperationsInput | string
+    citaCita?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+    alamatLengkap?: StringFieldUpdateOperationsInput | string
+    noHp?: StringFieldUpdateOperationsInput | string
+    riwayatPenyakit?: StringFieldUpdateOperationsInput | string
+    schoolName?: StringFieldUpdateOperationsInput | string
+    gradeLevel?: StringFieldUpdateOperationsInput | string
+    nilaiRataRata?: StringFieldUpdateOperationsInput | string
+    jumlahSaudara?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pengawas?: PengawasUpdateOneRequiredWithoutStudentsNestedInput
+    father?: FatherUpdateOneWithoutStudentNestedInput
+    mother?: MotherUpdateOneWithoutStudentNestedInput
+    guardian?: GuardianUpdateOneWithoutStudentNestedInput
+    educationCosts?: EducationCostUpdateManyWithoutStudentNestedInput
+  }
+
+  export type StudentUncheckedUpdateWithoutDocumentsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    username?: StringFieldUpdateOperationsInput | string
+    nik?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    dateOfBirth?: DateTimeFieldUpdateOperationsInput | Date | string
+    gender?: StringFieldUpdateOperationsInput | string
+    citaCita?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+    pengawasId?: IntFieldUpdateOperationsInput | number
+    alamatLengkap?: StringFieldUpdateOperationsInput | string
+    noHp?: StringFieldUpdateOperationsInput | string
+    riwayatPenyakit?: StringFieldUpdateOperationsInput | string
+    schoolName?: StringFieldUpdateOperationsInput | string
+    gradeLevel?: StringFieldUpdateOperationsInput | string
+    nilaiRataRata?: StringFieldUpdateOperationsInput | string
+    jumlahSaudara?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    father?: FatherUncheckedUpdateOneWithoutStudentNestedInput
+    mother?: MotherUncheckedUpdateOneWithoutStudentNestedInput
+    guardian?: GuardianUncheckedUpdateOneWithoutStudentNestedInput
+    educationCosts?: EducationCostUncheckedUpdateManyWithoutStudentNestedInput
+  }
+
+  export type StudentCreateManyPengawasInput = {
+    id?: number
+    username: string
+    nik: string
+    fullName: string
+    dateOfBirth: Date | string
+    gender: string
+    citaCita: string
+    wilayah: string
+    alamatLengkap: string
+    noHp: string
+    riwayatPenyakit: string
+    schoolName: string
+    gradeLevel: string
+    nilaiRataRata: string
+    jumlahSaudara: number
+    createdAt?: Date | string
+  }
+
+  export type StudentUpdateWithoutPengawasInput = {
+    username?: StringFieldUpdateOperationsInput | string
+    nik?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    dateOfBirth?: DateTimeFieldUpdateOperationsInput | Date | string
+    gender?: StringFieldUpdateOperationsInput | string
+    citaCita?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+    alamatLengkap?: StringFieldUpdateOperationsInput | string
+    noHp?: StringFieldUpdateOperationsInput | string
+    riwayatPenyakit?: StringFieldUpdateOperationsInput | string
+    schoolName?: StringFieldUpdateOperationsInput | string
+    gradeLevel?: StringFieldUpdateOperationsInput | string
+    nilaiRataRata?: StringFieldUpdateOperationsInput | string
+    jumlahSaudara?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    father?: FatherUpdateOneWithoutStudentNestedInput
+    mother?: MotherUpdateOneWithoutStudentNestedInput
+    guardian?: GuardianUpdateOneWithoutStudentNestedInput
+    educationCosts?: EducationCostUpdateManyWithoutStudentNestedInput
+    documents?: DocumentUpdateManyWithoutStudentNestedInput
+  }
+
+  export type StudentUncheckedUpdateWithoutPengawasInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    username?: StringFieldUpdateOperationsInput | string
+    nik?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    dateOfBirth?: DateTimeFieldUpdateOperationsInput | Date | string
+    gender?: StringFieldUpdateOperationsInput | string
+    citaCita?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+    alamatLengkap?: StringFieldUpdateOperationsInput | string
+    noHp?: StringFieldUpdateOperationsInput | string
+    riwayatPenyakit?: StringFieldUpdateOperationsInput | string
+    schoolName?: StringFieldUpdateOperationsInput | string
+    gradeLevel?: StringFieldUpdateOperationsInput | string
+    nilaiRataRata?: StringFieldUpdateOperationsInput | string
+    jumlahSaudara?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    father?: FatherUncheckedUpdateOneWithoutStudentNestedInput
+    mother?: MotherUncheckedUpdateOneWithoutStudentNestedInput
+    guardian?: GuardianUncheckedUpdateOneWithoutStudentNestedInput
+    educationCosts?: EducationCostUncheckedUpdateManyWithoutStudentNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutStudentNestedInput
+  }
+
+  export type StudentUncheckedUpdateManyWithoutPengawasInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    username?: StringFieldUpdateOperationsInput | string
+    nik?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    dateOfBirth?: DateTimeFieldUpdateOperationsInput | Date | string
+    gender?: StringFieldUpdateOperationsInput | string
+    citaCita?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+    alamatLengkap?: StringFieldUpdateOperationsInput | string
+    noHp?: StringFieldUpdateOperationsInput | string
+    riwayatPenyakit?: StringFieldUpdateOperationsInput | string
+    schoolName?: StringFieldUpdateOperationsInput | string
+    gradeLevel?: StringFieldUpdateOperationsInput | string
+    nilaiRataRata?: StringFieldUpdateOperationsInput | string
+    jumlahSaudara?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type EducationCostCreateManyStudentInput = {
+    id?: number
+    label: string
+    amount: number
+  }
+
+  export type DocumentCreateManyStudentInput = {
+    id?: number
+    type: string
+    fileUrl: string
+    uploadedAt?: Date | string
+  }
+
+  export type EducationCostUpdateWithoutStudentInput = {
+    label?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type EducationCostUncheckedUpdateWithoutStudentInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    label?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type EducationCostUncheckedUpdateManyWithoutStudentInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    label?: StringFieldUpdateOperationsInput | string
+    amount?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type DocumentUpdateWithoutStudentInput = {
+    type?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentUncheckedUpdateWithoutStudentInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type DocumentUncheckedUpdateManyWithoutStudentInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    type?: StringFieldUpdateOperationsInput | string
+    fileUrl?: StringFieldUpdateOperationsInput | string
+    uploadedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

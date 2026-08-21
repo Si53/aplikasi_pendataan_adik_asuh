@@ -27,7 +27,7 @@ type Family = {
 
 const emptyFamily: Family = { name: "", status: "Hidup", occupation: "", medicalHistory: "" }
 
-const TOTAL_STEPS = 4
+const TOTAL_STEPS = 6
 
 export function RegisterForm() {
   const router = useRouter()
@@ -51,6 +51,7 @@ export function RegisterForm() {
   const [father, setFather] = useState<Family>({ ...emptyFamily })
   const [mother, setMother] = useState<Family>({ ...emptyFamily })
   const [guardian, setGuardian] = useState<Family>({ ...emptyFamily })
+  const [documents, setDocuments] = useState({ kk: "", rapor: "", foto: "" })
 
   function next() {
     setError(undefined)
@@ -69,6 +70,10 @@ export function RegisterForm() {
         setError("Lengkapi data pendidikan terlebih dahulu.")
         return
       }
+    }
+    if (step === 5 && !documents.kk && !documents.rapor && !documents.foto) {
+      setError("Pilih setidaknya satu dokumen, atau lanjutkan untuk mengunggahnya nanti.")
+      return
     }
     setStep((s) => Math.min(s + 1, TOTAL_STEPS))
   }
@@ -265,6 +270,41 @@ export function RegisterForm() {
         </section>
       )}
 
+      {step === 5 && (
+        <section className="flex flex-col gap-5">
+          <div className="space-y-1">
+            <h2 className="text-xl font-extrabold text-foreground">Dokumen Pendukung</h2>
+            <p className="text-sm leading-relaxed text-muted-foreground">Unggah gambar atau PDF. Kamu boleh melengkapinya nanti.</p>
+          </div>
+          {([
+            ["kk", "Kartu Keluarga (KK)"],
+            ["rapor", "Foto Rapor Terakhir"],
+            ["foto", "Foto Anak"],
+          ] as const).map(([key, label]) => (
+            <Field key={key} label={label}>
+              <Input
+                type="file"
+                accept="image/*,.pdf"
+                onChange={(event) => setDocuments((current) => ({ ...current, [key]: event.target.files?.[0]?.name ?? "" }))}
+                className="h-14 rounded-2xl py-3"
+              />
+            </Field>
+          ))}
+        </section>
+      )}
+
+      {step === 6 && (
+        <section className="flex flex-col gap-4 rounded-2xl bg-secondary p-5">
+          <h2 className="text-xl font-extrabold text-foreground">Siap mendaftar?</h2>
+          <p className="leading-relaxed text-muted-foreground">Periksa kembali data kamu. Setelah dikirim, Pengawas akan meninjau pendaftaranmu.</p>
+          <div className="rounded-xl bg-background p-4 text-sm text-foreground">
+            <p><strong>Nama:</strong> {fullName || "Belum diisi"}</p>
+            <p><strong>Sekolah:</strong> {schoolName || "Belum diisi"}</p>
+            <p><strong>Wilayah:</strong> {city || "Belum diisi"}</p>
+          </div>
+        </section>
+      )}
+
       <div className="mt-2 flex flex-col gap-3">
         {step < TOTAL_STEPS ? (
           <Button
@@ -352,7 +392,7 @@ function FamilyFields({
         />
       </Field>
       <Field label="Status">
-        <Select value={value.status} onValueChange={(status) => set({ status })}>
+        <Select value={value.status ?? undefined} onValueChange={(status) => set({ status: status ?? "Hidup" })}>
           <SelectTrigger className="!h-14 rounded-2xl text-lg">
             <SelectValue placeholder="Pilih status" />
           </SelectTrigger>
