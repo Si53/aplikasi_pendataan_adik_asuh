@@ -17,15 +17,15 @@ export function LoginForm() {
     <form action={formAction} className="flex w-full flex-col gap-5">
       <div className="flex flex-col gap-2">
         <Label htmlFor="username" className="text-base font-bold">
-          Username
+          Username atau NIM
         </Label>
         <Input
-          id="username"
-          name="username"
+          id="identifier"
+          name="identifier"
           autoComplete="username"
           autoCapitalize="none"
           spellCheck={false}
-          placeholder="Ketik username kamu"
+          placeholder="Ketik username atau NIM kamu"
           className="h-14 rounded-2xl text-lg"
           required
         />

@@ -7,10 +7,17 @@ import { redirect } from "next/navigation"
 export type LoginState = { error?: string }
 
 export async function loginAction(_prev: LoginState, formData: FormData): Promise<LoginState> {
-  const username = String(formData.get("username") ?? "").trim()
-  if (!username) return { error: "Silakan isi username kamu terlebih dahulu." }
-  const student = await prisma.student.findUnique({ where: { username } })
-  if (!student) return { error: `Username "${username}" belum terdaftar. Yuk daftar dulu.` }
+  const identifier = String(formData.get("identifier") ?? "").trim()
+  if (!identifier) return { error: "Silakan isi username atau NIM kamu terlebih dahulu." }
+
+  const student = await prisma.student.findFirst({
+    where: {
+      OR: [{ username: identifier }, { nik: identifier }],
+    },
+    select: { username: true },
+  })
+
+  if (!student) return { error: "Username atau NIM belum terdaftar. Yuk daftar dulu." }
   await setSession(student.username)
   redirect("/dashboard")
 }

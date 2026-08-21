@@ -12,7 +12,7 @@ export default async function LoginPage() {
       <PageHeader title="Login" backHref="/" />
       <div className="flex flex-1 flex-col gap-6 px-5 py-6">
         <p className="text-pretty text-lg leading-relaxed text-muted-foreground">
-          Masuk menggunakan username yang kamu buat saat mendaftar.
+          Masuk menggunakan username atau NIM yang kamu daftarkan.
         </p>
         <LoginForm />
       </div>
