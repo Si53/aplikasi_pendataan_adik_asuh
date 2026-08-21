@@ -5,10 +5,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // The runtime datasourceUrl in lib/prisma.ts supplies the real Neon URL.
-  // Keeping a schema fallback avoids client initialization failing when the
-  // preview server does not expose DATABASE_URL as a process environment variable.
-  url      = "postgresql://localhost:5432/adik_asuh"
+  url      = env("DATABASE_URL")
 }
 
 model Pengawas {
