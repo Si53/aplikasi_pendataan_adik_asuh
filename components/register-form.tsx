@@ -21,7 +21,6 @@ import {
   PartyPopper,
   Plus,
   Trash2,
-  Upload,
 } from "lucide-react"
 
 type Family = {
@@ -79,7 +78,7 @@ const formatNominal = (val: string) => {
 
 // Helper warna progress taskbar yang semakin ke kanan semakin hijau
 const getStepColor = (index: number, currentStep: number) => {
-  if (index >= currentStep) return "bg-secondary"
+  if (index >= currentStep) return "bg-black/10"
   const greenShades = [
     "bg-emerald-300",
     "bg-emerald-400",
@@ -266,13 +265,13 @@ export function RegisterForm() {
   }
 
   return (
-    <div className="flex flex-1 flex-col gap-6 px-5 py-6">
+    <div className="flex flex-1 flex-col gap-5 px-4 sm:px-5 py-4">
       {/* Progress Taskbar dengan gradien hijau semakin ke kanan */}
       {step < 6 && (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 rounded-2xl bg-white/85 p-4 shadow-sm backdrop-blur-md border border-white/80">
           <div className="flex items-center justify-between">
-            <p className="font-bold text-primary">Langkah {step} dari 5</p>
-            <span className="text-xs text-muted-foreground font-semibold">
+            <p className="font-bold text-foreground">Langkah {step} dari 5</p>
+            <span className="text-xs font-semibold text-muted-foreground">
               {step === 1 && "Kredensial Akun"}
               {step === 2 && "Profil Siswa"}
               {step === 3 && "Pendidikan & Biaya"}
@@ -297,7 +296,7 @@ export function RegisterForm() {
       {error && (
         <div
           role="alert"
-          className="flex items-start gap-2 rounded-2xl bg-destructive/10 p-4 text-sm font-medium text-destructive"
+          className="flex items-start gap-2.5 rounded-2xl bg-red-500/15 border border-red-500/30 p-4 text-sm font-medium text-destructive backdrop-blur-md shadow-sm"
         >
           <AlertCircle className="mt-0.5 size-5 shrink-0" aria-hidden="true" />
           <span>{error}</span>
@@ -315,7 +314,7 @@ export function RegisterForm() {
               value={data.username}
               onChange={(e) => set("username", e.target.value.replace(/\s+/g, "").toLowerCase())}
               placeholder="Contoh: budi2015"
-              className="h-14 rounded-2xl text-base"
+              className="h-14 rounded-2xl bg-white text-base shadow-sm"
               required
             />
           </Field>
@@ -328,7 +327,7 @@ export function RegisterForm() {
                 value={data.nik}
                 onChange={(e) => set("nik", e.target.value.replace(/\D/g, ""))}
                 placeholder="Masukkan 16 digit angka NIK"
-                className="h-14 rounded-2xl text-base"
+                className="h-14 rounded-2xl bg-white text-base shadow-sm"
                 required
               />
               {/* Indikator jumlah angka yang diinputkan */}
@@ -371,7 +370,7 @@ export function RegisterForm() {
               value={data.fullName}
               onChange={(e) => set("fullName", e.target.value)}
               placeholder="Contoh: Budi Santoso"
-              className="h-14 rounded-2xl text-base"
+              className="h-14 rounded-2xl bg-white text-base shadow-sm"
             />
           </Field>
 
@@ -383,7 +382,7 @@ export function RegisterForm() {
                 <select
                   value={data.birthDay}
                   onChange={(e) => set("birthDay", e.target.value)}
-                  className="h-14 rounded-2xl border border-border bg-background px-3 text-sm font-semibold text-foreground"
+                  className="h-14 rounded-2xl border border-border bg-white px-3 text-sm font-semibold text-foreground shadow-sm"
                   aria-label="Pilih Tanggal"
                 >
                   {Array.from({ length: 31 }, (_, i) => String(i + 1)).map((d) => (
@@ -397,7 +396,7 @@ export function RegisterForm() {
                 <select
                   value={data.birthMonth}
                   onChange={(e) => set("birthMonth", e.target.value)}
-                  className="h-14 rounded-2xl border border-border bg-background px-3 text-sm font-semibold text-foreground"
+                  className="h-14 rounded-2xl border border-border bg-white px-3 text-sm font-semibold text-foreground shadow-sm"
                   aria-label="Pilih Bulan"
                 >
                   {months.map((m) => (
@@ -411,7 +410,7 @@ export function RegisterForm() {
                 <select
                   value={data.birthYear}
                   onChange={(e) => set("birthYear", e.target.value)}
-                  className="h-14 rounded-2xl border border-border bg-background px-3 text-sm font-semibold text-foreground"
+                  className="h-14 rounded-2xl border border-border bg-white px-3 text-sm font-semibold text-foreground shadow-sm"
                   aria-label="Pilih Tahun"
                 >
                   {Array.from({ length: 30 }, (_, i) => String(2026 - i)).map((y) => (
@@ -421,7 +420,7 @@ export function RegisterForm() {
                   ))}
                 </select>
               </div>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-muted-foreground font-medium">
                 Format terpilih: <strong>{`${data.birthDay}-${data.birthMonth}-${data.birthYear}`}</strong>
               </p>
             </div>
@@ -435,7 +434,9 @@ export function RegisterForm() {
                   type="button"
                   variant={data.gender === x ? "default" : "outline"}
                   onClick={() => set("gender", x)}
-                  className="h-12 rounded-2xl text-sm font-bold"
+                  className={`h-12 rounded-2xl text-sm font-bold shadow-sm ${
+                    data.gender !== x ? "bg-white/90 hover:bg-white" : ""
+                  }`}
                 >
                   {x}
                 </Button>
@@ -448,7 +449,7 @@ export function RegisterForm() {
               value={data.citaCita}
               onChange={(e) => set("citaCita", e.target.value)}
               placeholder="Contoh: Dokter, Guru, Insinyur"
-              className="h-14 rounded-2xl text-base"
+              className="h-14 rounded-2xl bg-white text-base shadow-sm"
             />
           </Field>
 
@@ -463,7 +464,9 @@ export function RegisterForm() {
                     set("wilayah", reg)
                     set("pengawasName", wilayahPengawasMap[reg]?.[0] || "")
                   }}
-                  className="h-12 rounded-2xl text-sm font-bold"
+                  className={`h-12 rounded-2xl text-sm font-bold shadow-sm ${
+                    data.wilayah !== reg ? "bg-white/90 hover:bg-white" : ""
+                  }`}
                 >
                   {reg}
                 </Button>
@@ -480,7 +483,9 @@ export function RegisterForm() {
                     type="button"
                     variant={data.pengawasName === pName ? "default" : "outline"}
                     onClick={() => set("pengawasName", pName)}
-                    className="h-12 justify-start rounded-2xl px-4 text-sm font-semibold"
+                    className={`h-12 justify-start rounded-2xl px-4 text-sm font-semibold shadow-sm ${
+                      data.pengawasName !== pName ? "bg-white/90 hover:bg-white" : ""
+                    }`}
                   >
                     {pName}
                   </Button>
@@ -494,7 +499,7 @@ export function RegisterForm() {
               value={data.alamatLengkap}
               onChange={(e) => set("alamatLengkap", e.target.value)}
               placeholder="Jalan, RT/RW, Kelurahan, Kecamatan, Kota"
-              className="min-h-24 rounded-2xl text-base"
+              className="min-h-24 rounded-2xl bg-white text-base shadow-sm"
             />
           </Field>
 
@@ -504,7 +509,7 @@ export function RegisterForm() {
               value={data.noHp}
               onChange={(e) => set("noHp", e.target.value)}
               placeholder="Contoh: 08123456789"
-              className="h-14 rounded-2xl text-base"
+              className="h-14 rounded-2xl bg-white text-base shadow-sm"
             />
           </Field>
 
@@ -513,7 +518,7 @@ export function RegisterForm() {
               value={data.riwayatPenyakit}
               onChange={(e) => set("riwayatPenyakit", e.target.value)}
               placeholder="Isi - bila tidak ada riwayat penyakit"
-              className="min-h-20 rounded-2xl text-base"
+              className="min-h-20 rounded-2xl bg-white text-base shadow-sm"
             />
           </Field>
         </Section>
@@ -530,7 +535,7 @@ export function RegisterForm() {
               value={data.schoolName}
               onChange={(e) => set("schoolName", e.target.value)}
               placeholder="Contoh: SMP Negeri 1 Pati"
-              className="h-14 rounded-2xl text-base"
+              className="h-14 rounded-2xl bg-white text-base shadow-sm"
             />
           </Field>
 
@@ -539,7 +544,7 @@ export function RegisterForm() {
               value={data.gradeLevel}
               onChange={(e) => set("gradeLevel", e.target.value)}
               placeholder="Contoh: Kelas 8 / Semester 2"
-              className="h-14 rounded-2xl text-base"
+              className="h-14 rounded-2xl bg-white text-base shadow-sm"
             />
           </Field>
 
@@ -548,7 +553,7 @@ export function RegisterForm() {
               value={data.nilaiRataRata}
               onChange={(e) => set("nilaiRataRata", e.target.value)}
               placeholder="Contoh: 88.5 atau 3.80"
-              className="h-14 rounded-2xl text-base"
+              className="h-14 rounded-2xl bg-white text-base shadow-sm"
               required
             />
           </Field>
@@ -559,12 +564,12 @@ export function RegisterForm() {
               min="0"
               value={data.jumlahSaudara}
               onChange={(e) => set("jumlahSaudara", e.target.value)}
-              className="h-14 rounded-2xl text-base"
+              className="h-14 rounded-2xl bg-white text-base shadow-sm"
             />
           </Field>
 
           {/* Rincian Biaya Pendidikan dengan Format Nominal Titik */}
-          <div className="flex flex-col gap-3 rounded-2xl border border-border p-4">
+          <div className="flex flex-col gap-3 rounded-2xl border border-border/80 bg-white/80 p-4 shadow-sm">
             <div className="flex flex-col gap-1">
               <Label className="font-bold text-foreground">Komponen Biaya Pendidikan</Label>
               <p className="text-xs text-muted-foreground">
@@ -573,7 +578,7 @@ export function RegisterForm() {
             </div>
 
             {costs.map((c, i) => (
-              <div key={i} className="flex flex-col gap-2 rounded-xl bg-secondary/30 p-3 sm:flex-row">
+              <div key={i} className="flex flex-col gap-2 rounded-xl bg-secondary/40 p-3 sm:flex-row shadow-sm border border-border/50">
                 <Input
                   placeholder="Keterangan biaya (contoh: SPP Bulanan)"
                   value={c.label}
@@ -582,7 +587,7 @@ export function RegisterForm() {
                       arr.map((x, j) => (j === i ? { ...x, label: e.target.value } : x))
                     )
                   }
-                  className="h-12 flex-1 rounded-xl text-sm"
+                  className="h-12 flex-1 rounded-xl bg-white text-sm"
                 />
                 <div className="flex items-center gap-2">
                   <div className="relative w-full sm:w-44">
@@ -599,7 +604,7 @@ export function RegisterForm() {
                           arr.map((x, j) => (j === i ? { ...x, amount: raw } : x))
                         )
                       }}
-                      className="h-12 rounded-xl pl-9 text-sm font-semibold"
+                      className="h-12 rounded-xl bg-white pl-9 text-sm font-semibold"
                     />
                   </div>
                   {costs.length > 1 && (
@@ -622,7 +627,7 @@ export function RegisterForm() {
               type="button"
               variant="outline"
               onClick={() => setCosts((arr) => [...arr, { label: "", amount: "" }])}
-              className="mt-1 h-11 rounded-xl font-semibold"
+              className="mt-1 h-11 rounded-xl font-semibold bg-white/90 hover:bg-white shadow-sm"
             >
               <Plus className="size-4 mr-1.5" />
               Tambah Komponen Biaya
@@ -665,8 +670,10 @@ export function RegisterForm() {
             return (
               <div
                 key={key}
-                className={`flex flex-col gap-3 rounded-2xl border p-4 transition ${
-                  item?.url ? "border-emerald-500/40 bg-emerald-50/20" : "border-border bg-card"
+                className={`flex flex-col gap-3 rounded-2xl border p-4 transition shadow-sm ${
+                  item?.url
+                    ? "border-emerald-500/50 bg-emerald-50/70"
+                    : "border-border/80 bg-white/80"
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -698,9 +705,9 @@ export function RegisterForm() {
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center justify-between">
                   <label
                     htmlFor={inputId}
-                    className={`flex items-center justify-center gap-2 rounded-xl border px-4 py-3 text-xs sm:text-sm font-bold cursor-pointer transition ${
+                    className={`flex items-center justify-center gap-2 rounded-xl border px-4 py-3 text-xs sm:text-sm font-bold cursor-pointer transition shadow-sm ${
                       item?.url
-                        ? "border-emerald-500 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
+                        ? "border-emerald-500 bg-emerald-100/80 text-emerald-800 hover:bg-emerald-100"
                         : "border-primary bg-primary/10 text-primary hover:bg-primary/20"
                     }`}
                   >
@@ -733,7 +740,7 @@ export function RegisterForm() {
 
       {/* LANGKAH 6: SELAMAT MENJADI ADIK ASUH & LOGIN */}
       {step === 6 && (
-        <div className="flex flex-col items-center justify-center gap-6 py-6 text-center animate-in fade-in zoom-in-95">
+        <div className="flex flex-col items-center justify-center gap-6 rounded-3xl bg-white/95 p-6 sm:p-8 text-center shadow-lg backdrop-blur-md border border-white/80 animate-in fade-in zoom-in-95">
           <div className="flex size-24 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 shadow-inner">
             <PartyPopper className="size-12" />
           </div>
@@ -748,7 +755,7 @@ export function RegisterForm() {
             </p>
           </div>
 
-          <div className="w-full max-w-sm rounded-2xl bg-secondary/50 p-4 text-xs text-left space-y-1.5">
+          <div className="w-full max-w-sm rounded-2xl bg-secondary/60 p-4 text-xs text-left space-y-1.5 border border-border/50">
             <p className="font-bold text-foreground">Kredensial Masuk Anda:</p>
             <p className="text-muted-foreground">
               Username: <strong className="text-foreground">{data.username}</strong>
@@ -774,13 +781,13 @@ export function RegisterForm() {
 
       {/* Tombol Aksi Bawah (Hanya untuk Langkah 1 - 5) */}
       {step < 6 && (
-        <div className="flex flex-col gap-3 pt-2">
+        <div className="flex flex-col gap-3 rounded-3xl bg-white/85 p-4 shadow-sm backdrop-blur-md border border-white/80">
           {step < 5 ? (
             <Button
               type="button"
               size="lg"
               onClick={next}
-              className="h-14 rounded-2xl text-base font-bold"
+              className="h-14 rounded-2xl text-base font-bold shadow-md bg-gradient-to-r from-orange-500 via-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white"
             >
               <span>Lanjut</span>
               <ArrowRight className="size-5 ml-1.5" />
@@ -791,7 +798,7 @@ export function RegisterForm() {
               size="lg"
               onClick={submitRegistration}
               disabled={pending}
-              className="h-14 rounded-2xl text-base font-bold bg-green-600 hover:bg-green-700 text-white shadow-md"
+              className="h-14 rounded-2xl text-base font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md"
             >
               {pending ? (
                 <span className="flex items-center gap-2">
@@ -811,7 +818,7 @@ export function RegisterForm() {
               size="lg"
               variant="secondary"
               onClick={() => setStep((s) => s - 1)}
-              className="h-14 rounded-2xl text-base font-bold"
+              className="h-14 rounded-2xl text-base font-bold bg-white/90 hover:bg-white border border-border/80 text-foreground shadow-sm"
             >
               <ArrowLeft className="size-5 mr-1.5" />
               <span>Kembali</span>
@@ -822,7 +829,7 @@ export function RegisterForm() {
               variant="ghost"
               nativeButton={false}
               render={<Link href="/">Batal & Kembali ke Beranda</Link>}
-              className="h-12 rounded-2xl text-sm"
+              className="h-12 rounded-2xl text-sm font-semibold text-muted-foreground hover:text-foreground"
             />
           )}
         </div>
@@ -841,8 +848,8 @@ function Section({
   children: React.ReactNode
 }) {
   return (
-    <section className="flex flex-col gap-5">
-      <div className="flex flex-col gap-1">
+    <section className="flex flex-col gap-5 rounded-3xl bg-white/90 p-5 sm:p-6 shadow-md backdrop-blur-md border border-white/80">
+      <div className="flex flex-col gap-1 border-b border-border/60 pb-3">
         <h2 className="text-xl font-extrabold text-foreground">{title}</h2>
         <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">{note}</p>
       </div>
@@ -862,8 +869,8 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 
 function Hint({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex items-start gap-2 rounded-2xl bg-secondary/60 p-4 text-xs leading-relaxed text-secondary-foreground sm:text-sm">
-      <Info className="size-5 shrink-0 text-primary mt-0.5" aria-hidden="true" />
+    <div className="flex items-start gap-2.5 rounded-2xl bg-amber-500/10 border border-amber-500/20 p-4 text-xs leading-relaxed text-amber-950 sm:text-sm">
+      <Info className="size-5 shrink-0 text-amber-600 mt-0.5" aria-hidden="true" />
       <span>{children}</span>
     </div>
   )
@@ -881,8 +888,8 @@ function FamilyFields({
   const setVal = (p: Partial<Family>) => onChange({ ...value, ...p })
 
   return (
-    <div className="flex flex-col gap-4 rounded-2xl border border-border p-4 bg-card">
-      <div className="flex items-center justify-between border-b border-border pb-2">
+    <div className="flex flex-col gap-4 rounded-2xl border border-border/80 p-4 bg-white/80 shadow-sm">
+      <div className="flex items-center justify-between border-b border-border/60 pb-2">
         <h3 className="font-bold text-foreground text-sm">{title}</h3>
       </div>
       <Field label="Nama Lengkap">
@@ -890,14 +897,14 @@ function FamilyFields({
           value={value.name}
           onChange={(e) => setVal({ name: e.target.value })}
           placeholder="Nama lengkap"
-          className="h-12 rounded-xl text-sm"
+          className="h-12 rounded-xl bg-white text-sm shadow-sm"
         />
       </Field>
       <Field label="Kondisi / Status">
         <select
           value={value.status}
           onChange={(e) => setVal({ status: e.target.value })}
-          className="h-12 rounded-xl border border-border bg-background px-3 text-sm text-foreground"
+          className="h-12 rounded-xl border border-border bg-white px-3 text-sm font-semibold text-foreground shadow-sm"
         >
           <option>Sehat</option>
           <option>Sakit</option>
@@ -909,7 +916,7 @@ function FamilyFields({
           value={value.occupation}
           onChange={(e) => setVal({ occupation: e.target.value })}
           placeholder="Contoh: Buruh Harian, Wiraswasta"
-          className="h-12 rounded-xl text-sm"
+          className="h-12 rounded-xl bg-white text-sm shadow-sm"
         />
       </Field>
       <Field label="Penghasilan per Bulan (Format Nominal)">
@@ -925,7 +932,7 @@ function FamilyFields({
               setVal({ incomePerMonth: raw ? `Rp ${Number(raw).toLocaleString("id-ID")}` : "" })
             }}
             placeholder="0 (contoh: 80.000 atau 1.500.000)"
-            className="h-12 rounded-xl pl-9 text-sm font-semibold"
+            className="h-12 rounded-xl bg-white pl-9 text-sm font-semibold shadow-sm"
           />
         </div>
       </Field>
@@ -934,7 +941,7 @@ function FamilyFields({
           value={value.phone}
           onChange={(e) => setVal({ phone: e.target.value })}
           placeholder="Nomor HP aktif"
-          className="h-12 rounded-xl text-sm"
+          className="h-12 rounded-xl bg-white text-sm shadow-sm"
         />
       </Field>
       <Field label="Alamat Domisili">
@@ -942,7 +949,7 @@ function FamilyFields({
           value={value.address}
           onChange={(e) => setVal({ address: e.target.value })}
           placeholder="Alamat tempat tinggal"
-          className="min-h-16 rounded-xl text-sm"
+          className="min-h-16 rounded-xl bg-white text-sm shadow-sm"
         />
       </Field>
       <Field label="Riwayat Penyakit">
@@ -950,7 +957,7 @@ function FamilyFields({
           value={value.medicalHistory}
           onChange={(e) => setVal({ medicalHistory: e.target.value })}
           placeholder="Isi - bila tidak ada"
-          className="min-h-16 rounded-xl text-sm"
+          className="min-h-16 rounded-xl bg-white text-sm shadow-sm"
         />
       </Field>
     </div>
