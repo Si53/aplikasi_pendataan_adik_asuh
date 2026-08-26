@@ -76,20 +76,6 @@ const formatNominal = (val: string) => {
   return digits ? Number(digits).toLocaleString("id-ID") : ""
 }
 
-// Helper warna progress taskbar yang semakin ke kanan semakin hijau
-const getStepColor = (index: number, currentStep: number) => {
-  if (index >= currentStep) return "bg-black/10"
-  const greenShades = [
-    "bg-emerald-300",
-    "bg-emerald-400",
-    "bg-emerald-500",
-    "bg-emerald-600",
-    "bg-green-600",
-    "bg-green-700",
-  ]
-  return greenShades[index] || "bg-primary"
-}
-
 export function RegisterForm() {
   const [pending, startTransition] = useTransition()
   const [step, setStep] = useState(1)
@@ -264,31 +250,123 @@ export function RegisterForm() {
     })
   }
 
+  // Cek kelengkapan data per langkah secara real-time (mengikuti logic validasi wajib)
+  const stepTitles = [
+    "Kredensial Akun",
+    "Profil Siswa",
+    "Pendidikan & Biaya",
+    "Data Orang Tua / Wali",
+    "Unggah Dokumen",
+  ]
+
+  const isStep1Complete = Boolean(
+    data.username.trim() &&
+    !/\s/.test(data.username) &&
+    /^\d{16}$/.test(data.nik.trim())
+  )
+
+  const isStep2Complete = Boolean(
+    data.fullName.trim() &&
+    data.birthDay &&
+    data.birthMonth &&
+    data.birthYear &&
+    data.gender &&
+    data.wilayah &&
+    data.alamatLengkap.trim() &&
+    data.noHp.trim()
+  )
+
+  const isStep3Complete = Boolean(
+    data.schoolName.trim() &&
+    data.gradeLevel.trim() &&
+    data.nilaiRataRata.trim()
+  )
+
+  const isStep4Complete = Boolean(
+    father.name.trim() || mother.name.trim() || guardian.name.trim()
+  )
+
+  const isStep5Complete = Boolean(
+    uploadedFiles.KK?.url &&
+    uploadedFiles.RAPOR?.url &&
+    uploadedFiles.FOTO_ANAK?.url
+  )
+
+  const stepsStatus = [
+    isStep1Complete,
+    isStep2Complete,
+    isStep3Complete,
+    isStep4Complete,
+    isStep5Complete,
+  ]
+
   return (
     <div className="flex flex-1 flex-col gap-5 px-4 sm:px-5 py-4">
-      {/* Progress Taskbar dengan gradien hijau semakin ke kanan */}
+      {/* Progress Taskbar Informatif & Interaktif */}
       {step < 6 && (
-        <div className="flex flex-col gap-2 rounded-2xl bg-white/85 p-4 shadow-sm backdrop-blur-md border border-white/80">
+        <div className="flex flex-col gap-3 rounded-3xl bg-white/90 p-4 shadow-sm backdrop-blur-md border border-white/80">
           <div className="flex items-center justify-between">
-            <p className="font-bold text-foreground">Langkah {step} dari 5</p>
-            <span className="text-xs font-semibold text-muted-foreground">
-              {step === 1 && "Kredensial Akun"}
-              {step === 2 && "Profil Siswa"}
-              {step === 3 && "Pendidikan & Biaya"}
-              {step === 4 && "Data Orang Tua / Wali"}
-              {step === 5 && "Unggah Dokumen"}
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-black text-orange-800 shrink-0">
+                Langkah {step} / 5
+              </span>
+              <span className="text-xs font-bold text-foreground truncate">
+                {stepTitles[step - 1]}
+              </span>
+            </div>
+            <span className="text-[11px] font-extrabold text-orange-900/80 shrink-0">
+              {stepsStatus.filter(Boolean).length}/5 Lengkap
             </span>
           </div>
-          <div className="flex gap-1.5" aria-hidden="true">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div
-                key={i}
-                className={`h-2.5 flex-1 rounded-full transition-all duration-300 ${getStepColor(
-                  i,
-                  step
-                )}`}
-              />
-            ))}
+
+          {/* 5 Tombol Kotak Progress Bar (Merah = Belum Lengkap, Hijau = Lengkap, Ring = Aktif) */}
+          <div className="grid grid-cols-5 gap-2" role="group" aria-label="Progress langkah pendaftaran">
+            {stepsStatus.map((isComplete, i) => {
+              const stepNum = i + 1
+              const isActive = step === stepNum
+              const statusText = isComplete ? "Sudah lengkap" : "Belum lengkap"
+
+              return (
+                <button
+                  key={stepNum}
+                  type="button"
+                  onClick={() => {
+                    setError("")
+                    setStep(stepNum)
+                  }}
+                  aria-label={`Langkah ${stepNum}: ${stepTitles[i]}, ${statusText}${isActive ? " (Sedang aktif)" : ""}`}
+                  className={`group relative flex h-9 items-center justify-center rounded-xl transition-all duration-200 cursor-pointer ${
+                    isComplete
+                      ? "bg-emerald-500 hover:bg-emerald-600 text-white shadow-sm shadow-emerald-500/25"
+                      : "bg-rose-500 hover:bg-rose-600 text-white shadow-sm shadow-rose-500/25"
+                  } ${
+                    isActive
+                      ? "ring-2 ring-orange-500 ring-offset-2 ring-offset-white font-black scale-105"
+                      : "opacity-85 hover:opacity-100"
+                  }`}
+                >
+                  <span className="text-xs font-extrabold flex items-center gap-1">
+                    {stepNum}
+                    {isComplete && <Check className="size-3 stroke-[3]" />}
+                  </span>
+                </button>
+              )
+            })}
+          </div>
+
+          {/* Legend Indikator Status & Navigasi */}
+          <div className="flex items-center justify-between border-t border-border/40 pt-2 text-[10px] font-semibold text-muted-foreground">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1.5">
+                <span className="size-2 rounded-full bg-emerald-500" />
+                <span className="text-emerald-700">Hijau: Lengkap</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="size-2 rounded-full bg-rose-500" />
+                <span className="text-rose-700">Merah: Belum Lengkap</span>
+              </div>
+            </div>
+            <span className="text-orange-600 font-bold hidden sm:inline">Klik angka untuk loncat</span>
           </div>
         </div>
       )}
@@ -307,13 +385,13 @@ export function RegisterForm() {
       {step === 1 && (
         <Section
           title="1. Informasi Akun"
-          note="Kredensial sistem yang akan digunakan untuk masuk ke aplikasi."
+          note="Data yang akan digunakan untuk masuk ke aplikasi nanti."
         >
           <Field label="Username *">
             <Input
               value={data.username}
               onChange={(e) => set("username", e.target.value.replace(/\s+/g, "").toLowerCase())}
-              placeholder="Contoh: budi2015"
+              placeholder="Contoh: yuhen01"
               className="h-14 rounded-2xl bg-white text-base shadow-sm"
               required
             />
@@ -326,7 +404,7 @@ export function RegisterForm() {
                 maxLength={16}
                 value={data.nik}
                 onChange={(e) => set("nik", e.target.value.replace(/\D/g, ""))}
-                placeholder="Masukkan 16 digit angka NIK"
+                placeholder="Masukkan 16 digit angka"
                 className="h-14 rounded-2xl bg-white text-base shadow-sm"
                 required
               />
@@ -344,7 +422,7 @@ export function RegisterForm() {
                       <Check className="size-3.5" /> 16 angka lengkap
                     </span>
                   ) : (
-                    `Sudah diisi: ${data.nik.length} dari 16 angka (kurang ${16 - data.nik.length})`
+                    `Sudah diisi: ${data.nik.length} dari 16 angka ( Kurang ${16 - data.nik.length} )`
                   )}
                 </span>
                 <span className="text-muted-foreground">Maks. 16 angka</span>
@@ -369,7 +447,7 @@ export function RegisterForm() {
             <Input
               value={data.fullName}
               onChange={(e) => set("fullName", e.target.value)}
-              placeholder="Contoh: Budi Santoso"
+              placeholder="Contoh: Yuhen Aditya Gunawan"
               className="h-14 rounded-2xl bg-white text-base shadow-sm"
             />
           </Field>
@@ -448,7 +526,7 @@ export function RegisterForm() {
             <Input
               value={data.citaCita}
               onChange={(e) => set("citaCita", e.target.value)}
-              placeholder="Contoh: Dokter, Guru, Insinyur"
+              placeholder="Contoh: Dokter, Chef, Insinyur"
               className="h-14 rounded-2xl bg-white text-base shadow-sm"
             />
           </Field>
@@ -513,11 +591,10 @@ export function RegisterForm() {
             />
           </Field>
 
-          <Field label="Riwayat Penyakit (Bila Ada)">
+          <Field label='Riwayat Penyakit (isi dengan " - " bila tidak ada)'>
             <Textarea
               value={data.riwayatPenyakit}
               onChange={(e) => set("riwayatPenyakit", e.target.value)}
-              placeholder="Isi - bila tidak ada riwayat penyakit"
               className="min-h-20 rounded-2xl bg-white text-base shadow-sm"
             />
           </Field>
@@ -543,7 +620,7 @@ export function RegisterForm() {
             <Input
               value={data.gradeLevel}
               onChange={(e) => set("gradeLevel", e.target.value)}
-              placeholder="Contoh: Kelas 8 / Semester 2"
+              placeholder="Contoh: 7 SMP / Semester 6"
               className="h-14 rounded-2xl bg-white text-base shadow-sm"
             />
           </Field>
@@ -640,7 +717,7 @@ export function RegisterForm() {
       {step === 4 && (
         <Section
           title="4. Informasi Keluarga & Orang Tua"
-          note="Data orang tua atau wali dengan format nominal penghasilan."
+          note="Data orang tua atau wali."
         >
           <FamilyFields title="Data Ayah" value={father} onChange={setFather} />
           <FamilyFields title="Data Ibu" value={mother} onChange={setMother} />

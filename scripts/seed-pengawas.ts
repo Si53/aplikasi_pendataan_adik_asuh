@@ -16,8 +16,8 @@ const pengawas = [
 ]
 
 async function main() {
-  const temporaryPassword = "adik-asuh123"
-  const password = await bcrypt.hash(temporaryPassword, 12)
+  const pengawasPassword = "hidupadikasuh"
+  const password = await bcrypt.hash(pengawasPassword, 12)
 
   for (const account of pengawas) {
     await prisma.pengawas.upsert({
@@ -28,7 +28,7 @@ async function main() {
   }
 
   console.log(`Seeded ${pengawas.length} Pengawas accounts.`)
-  console.log(`Temporary password: ${temporaryPassword}`)
+  console.log(`Password Pengawas updated to: ${pengawasPassword}`)
 }
 
 main()
