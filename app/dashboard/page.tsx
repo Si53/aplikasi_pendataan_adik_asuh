@@ -2,6 +2,7 @@ import { redirect } from "next/navigation"
 import { auth } from "@/auth"
 import { LogoutButton } from "@/components/logout-button"
 import { prisma } from "@/lib/prisma"
+import { getPresignedR2Url } from "@/lib/r2"
 import { Heart, MapPin } from "lucide-react"
 import { StudentDashboard, type StudentData } from "@/components/student-dashboard"
 
@@ -25,8 +26,17 @@ export default async function DashboardPage() {
   if (!student) redirect("/login")
 
   const fotoDoc = student.documents.find((d) => d.type === "FOTO_ANAK")
+  const presignedFotoUrl = fotoDoc?.fileUrl ? await getPresignedR2Url(fotoDoc.fileUrl) : null
 
-  // Inisial avatar
+  const presignedDocuments = await Promise.all(
+    student.documents.map(async (d) => ({
+      id: d.id,
+      type: d.type,
+      fileUrl: await getPresignedR2Url(d.fileUrl),
+    }))
+  )
+
+  // Inisial avatar fallback
   const initials = student.fullName
     .split(" ")
     .slice(0, 2)
@@ -54,7 +64,7 @@ export default async function DashboardPage() {
     riwayatPenyakit: student.riwayatPenyakit,
     jumlahSaudara: student.jumlahSaudara,
     pengawasName: student.pengawas?.name ?? "Pengawas Wilayah",
-    fotoUrl: fotoDoc?.fileUrl || null,
+    fotoUrl: presignedFotoUrl,
     father: student.father
       ? {
           name: student.father.name,
@@ -93,11 +103,7 @@ export default async function DashboardPage() {
       label: c.label,
       amount: c.amount,
     })),
-    documents: student.documents.map((d) => ({
-      id: d.id,
-      type: d.type,
-      fileUrl: d.fileUrl,
-    })),
+    documents: presignedDocuments,
   }
 
   return (
@@ -160,12 +166,12 @@ export default async function DashboardPage() {
         {/* 3. Kartu Profil (Cream/Putih, Rounded Besar, Tombol Keluar Oranye Pill-Shape) */}
         <div className="flex items-center justify-between gap-4 rounded-3xl bg-white/90 p-4 sm:p-5 shadow-md backdrop-blur-md border border-orange-100/80">
           <div className="flex items-center gap-3 sm:gap-4 min-w-0">
-            {/* Avatar */}
+            {/* Avatar dengan Foto Asli Presigned / Fallback Inisial */}
             <div className="relative size-12 sm:size-14 shrink-0 overflow-hidden rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 text-white font-extrabold text-base sm:text-lg flex items-center justify-center shadow-md shadow-orange-500/20 border-2 border-white">
-              {fotoDoc?.fileUrl ? (
+              {presignedFotoUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={fotoDoc.fileUrl}
+                  src={presignedFotoUrl}
                   alt={student.fullName}
                   className="size-full object-cover"
                 />

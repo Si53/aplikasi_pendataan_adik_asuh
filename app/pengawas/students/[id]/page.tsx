@@ -3,6 +3,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
+import { getPresignedR2Url } from "@/lib/r2"
 import {
   ArrowLeft,
   BookOpen,
@@ -60,6 +61,16 @@ export default async function StudentDetailPage({
 
   const isBinaan = student.pengawasId === pengawas.id
   const fotoDoc = student.documents.find((d) => d.type === "FOTO_ANAK")
+  const presignedFotoUrl = fotoDoc?.fileUrl ? await getPresignedR2Url(fotoDoc.fileUrl) : null
+
+  const presignedDocuments = await Promise.all(
+    student.documents.map(async (doc) => ({
+      id: doc.id,
+      type: doc.type,
+      fileUrl: await getPresignedR2Url(doc.fileUrl),
+    }))
+  )
+
   const totalCost = student.educationCosts.reduce((sum, c) => sum + c.amount, 0)
 
   // Inisial untuk avatar fallback
@@ -136,10 +147,10 @@ export default async function StudentDetailPage({
         {/* Banner Profil Siswa */}
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 rounded-3xl bg-white/90 p-6 shadow-md backdrop-blur-md border border-orange-100/80">
           <div className="relative size-24 shrink-0 overflow-hidden rounded-2xl bg-gradient-to-br from-orange-100 to-amber-100 border-2 border-orange-200 shadow-sm">
-            {fotoDoc?.fileUrl ? (
+            {presignedFotoUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={fotoDoc.fileUrl}
+                src={presignedFotoUrl}
                 alt={student.fullName}
                 className="size-full object-cover"
               />
@@ -392,8 +403,8 @@ export default async function StudentDetailPage({
           <div className="rounded-3xl bg-white/90 p-5 sm:p-6 shadow-sm backdrop-blur-md border border-orange-100/80 flex flex-col gap-3">
             <h3 className="text-sm font-bold text-foreground">Dokumen Pendukung</h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {student.documents.length > 0 ? (
-                student.documents.map((doc) => (
+              {presignedDocuments.length > 0 ? (
+                presignedDocuments.map((doc) => (
                   <div
                     key={doc.id}
                     className="flex flex-col justify-between gap-3 rounded-2xl bg-orange-50/50 p-4 border border-orange-200/60"

@@ -7,14 +7,38 @@ const allowedTypes = new Set(["KK", "RAPOR", "FOTO_ANAK"])
 const allowedMimeTypes = new Set([
   "application/pdf",
   "image/jpeg",
+  "image/jpg",
   "image/png",
   "image/webp",
+  "image/heic",
+  "image/heif",
+  "image/pjpeg",
+  "application/octet-stream",
 ])
-const maxFileSize = 10 * 1024 * 1024
+
+const allowedExtensions = new Set([
+  "pdf",
+  "jpg",
+  "jpeg",
+  "png",
+  "webp",
+  "heic",
+  "heif",
+])
+
+const maxFileSize = 15 * 1024 * 1024 // 15 MB
 
 export type UploadDocumentResult =
   | { success: true; fileUrl: string }
   | { success: false; error: string }
+
+function isValidFileType(file: File): boolean {
+  const extension = file.name.split(".").pop()?.toLowerCase() || ""
+  if (allowedExtensions.has(extension)) return true
+  if (allowedMimeTypes.has(file.type)) return true
+  if (file.type.startsWith("image/")) return true
+  return false
+}
 
 export async function uploadDocumentAction(
   formData: FormData,
@@ -31,23 +55,24 @@ export async function uploadDocumentAction(
     return { success: false, error: "Silakan pilih file terlebih dahulu." }
   }
 
-  if (!allowedMimeTypes.has(file.type)) {
-    return { success: false, error: "File harus berupa gambar atau PDF." }
+  if (!isValidFileType(file)) {
+    return { success: false, error: "File harus berupa gambar (JPG/PNG/WEBP/HEIC) atau PDF." }
   }
 
   if (file.size > maxFileSize) {
-    return { success: false, error: "Ukuran file maksimal 10 MB." }
+    return { success: false, error: "Ukuran file terlalu besar (maksimal 15 MB). Silakan kompres berkas terlebih dahulu." }
   }
 
   try {
-    const extension = file.name.split(".").pop()?.toLowerCase() || "bin"
+    const extension = file.name.split(".").pop()?.toLowerCase() || "jpg"
     const key = `students/${studentId}/${type.toLowerCase()}-${randomUUID()}.${extension}`
+    const contentType = file.type || (extension === "pdf" ? "application/pdf" : "image/jpeg")
 
     if (process.env.R2_ACCOUNT_ID && process.env.R2_ACCESS_KEY_ID) {
       await uploadToR2({
         key,
         body: new Uint8Array(await file.arrayBuffer()),
-        contentType: file.type,
+        contentType,
       })
       const publicUrl = process.env.R2_PUBLIC_URL
         ? `${process.env.R2_PUBLIC_URL.replace(/\/$/, "")}/${key}`
@@ -55,12 +80,12 @@ export async function uploadDocumentAction(
       return { success: true, fileUrl: publicUrl }
     } else {
       const buffer = Buffer.from(await file.arrayBuffer())
-      const base64 = `data:${file.type};base64,${buffer.toString("base64")}`
+      const base64 = `data:${contentType};base64,${buffer.toString("base64")}`
       return { success: true, fileUrl: base64 }
     }
   } catch (error) {
-    console.error("[v0] Document upload failed", error)
-    return { success: false, error: "Upload gagal. Silakan coba lagi." }
+    console.error("[Document upload failed]", error)
+    return { success: false, error: "Gagal mengunggah ke server. Periksa koneksi internet Anda dan coba lagi." }
   }
 }
 
@@ -79,23 +104,24 @@ export async function uploadRegistrationDocumentAction(
     return { success: false, error: "Silakan pilih file terlebih dahulu." }
   }
 
-  if (!allowedMimeTypes.has(file.type)) {
-    return { success: false, error: "File harus berupa gambar atau PDF." }
+  if (!isValidFileType(file)) {
+    return { success: false, error: "File harus berupa gambar (JPG/PNG/WEBP/HEIC) atau PDF." }
   }
 
   if (file.size > maxFileSize) {
-    return { success: false, error: "Ukuran file maksimal 10 MB." }
+    return { success: false, error: "Ukuran file terlalu besar (maksimal 15 MB). Silakan kompres berkas terlebih dahulu." }
   }
 
   try {
-    const extension = file.name.split(".").pop()?.toLowerCase() || "bin"
+    const extension = file.name.split(".").pop()?.toLowerCase() || "jpg"
     const key = `registration/${username}/${type.toLowerCase()}-${randomUUID()}.${extension}`
+    const contentType = file.type || (extension === "pdf" ? "application/pdf" : "image/jpeg")
 
     if (process.env.R2_ACCOUNT_ID && process.env.R2_ACCESS_KEY_ID) {
       await uploadToR2({
         key,
         body: new Uint8Array(await file.arrayBuffer()),
-        contentType: file.type,
+        contentType,
       })
       const publicUrl = process.env.R2_PUBLIC_URL
         ? `${process.env.R2_PUBLIC_URL.replace(/\/$/, "")}/${key}`
@@ -103,11 +129,11 @@ export async function uploadRegistrationDocumentAction(
       return { success: true, fileUrl: publicUrl }
     } else {
       const buffer = Buffer.from(await file.arrayBuffer())
-      const base64 = `data:${file.type};base64,${buffer.toString("base64")}`
+      const base64 = `data:${contentType};base64,${buffer.toString("base64")}`
       return { success: true, fileUrl: base64 }
     }
   } catch (error) {
-    console.error("[v0] Registration document upload failed", error)
-    return { success: false, error: "Upload gagal. Silakan coba lagi." }
+    console.error("[Registration document upload failed]", error)
+    return { success: false, error: "Gagal mengunggah ke server. Periksa koneksi internet Anda dan coba lagi." }
   }
 }

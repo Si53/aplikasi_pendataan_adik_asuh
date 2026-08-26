@@ -76,6 +76,84 @@ const formatNominal = (val: string) => {
   return digits ? Number(digits).toLocaleString("id-ID") : ""
 }
 
+/**
+ * Kompresi gambar di sisi klien sebelum dikirim ke server.
+ * Memperkecil resolusi foto kamera HP (3-10MB) menjadi < 800KB secara otomatis
+ * dan mengonversi format foto (termasuk foto iPhone) menjadi JPEG standar.
+ */
+async function compressImageClientSide(file: File): Promise<File> {
+  // Jika file PDF, jangan kompres dengan canvas
+  if (file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")) {
+    return file
+  }
+
+  // Jika ukuran file sudah kecil (< 500 KB), tidak perlu dikompres
+  if (file.size < 500 * 1024) {
+    return file
+  }
+
+  try {
+    return await new Promise<File>((resolve) => {
+      const img = new window.Image()
+      const url = URL.createObjectURL(file)
+
+      img.onload = () => {
+        URL.revokeObjectURL(url)
+        const maxDimension = 1920
+        let { width, height } = img
+
+        if (width > maxDimension || height > maxDimension) {
+          if (width > height) {
+            height = Math.round((height * maxDimension) / width)
+            width = maxDimension
+          } else {
+            width = Math.round((width * maxDimension) / height)
+            height = maxDimension
+          }
+        }
+
+        const canvas = document.createElement("canvas")
+        canvas.width = width
+        canvas.height = height
+        const ctx = canvas.getContext("2d")
+
+        if (!ctx) {
+          return resolve(file)
+        }
+
+        ctx.drawImage(img, 0, 0, width, height)
+
+        canvas.toBlob(
+          (blob) => {
+            if (blob && blob.size < file.size) {
+              const baseName = file.name.replace(/\.[^/.]+$/, "")
+              const compressedFile = new File([blob], `${baseName}.jpg`, {
+                type: "image/jpeg",
+                lastModified: Date.now(),
+              })
+              resolve(compressedFile)
+            } else {
+              resolve(file)
+            }
+          },
+          "image/jpeg",
+          0.82
+        )
+      }
+
+      img.onerror = () => {
+        URL.revokeObjectURL(url)
+        resolve(file) // Fallback file asli jika tidak bisa dimuat di canvas
+      }
+
+      img.src = url
+    })
+  } catch (err) {
+    console.warn("Client-side image compression fallback", err)
+    return file
+  }
+}
+
 export function RegisterForm() {
   const [pending, startTransition] = useTransition()
   const [step, setStep] = useState(1)
@@ -118,24 +196,44 @@ export function RegisterForm() {
   const set = (key: string, value: string) => setData((d) => ({ ...d, [key]: value }))
 
   const handleFileUpload = async (type: "KK" | "RAPOR" | "FOTO_ANAK", file: File) => {
+    setError("")
+
+    if (file.size > 15 * 1024 * 1024) {
+      setError(`Ukuran file "${file.name}" terlalu besar (maksimal 15 MB). Silakan pilih file yang lebih kecil atau kompres terlebih dahulu.`)
+      return
+    }
+
     setUploadedFiles((prev) => ({
       ...prev,
       [type]: { name: file.name, url: "", uploading: true },
     }))
 
-    const formData = new FormData()
-    formData.append("type", type)
-    formData.append("username", data.username.trim() || "temp")
-    formData.append("file", file)
+    try {
+      // Kompresi otomatis di sisi browser untuk foto kamera HP berukuran besar
+      const processedFile = await compressImageClientSide(file)
 
-    const res = await uploadRegistrationDocumentAction(formData)
-    if (res.success) {
-      setUploadedFiles((prev) => ({
-        ...prev,
-        [type]: { name: file.name, url: res.fileUrl, uploading: false },
-      }))
-    } else {
-      setError(res.error)
+      const formData = new FormData()
+      formData.append("type", type)
+      formData.append("username", data.username.trim() || "temp")
+      formData.append("file", processedFile)
+
+      const res = await uploadRegistrationDocumentAction(formData)
+      if (res.success) {
+        setUploadedFiles((prev) => ({
+          ...prev,
+          [type]: { name: file.name, url: res.fileUrl, uploading: false },
+        }))
+      } else {
+        setError(res.error || "Gagal mengunggah berkas. Silakan coba lagi.")
+        setUploadedFiles((prev) => {
+          const copy = { ...prev }
+          delete copy[type]
+          return copy
+        })
+      }
+    } catch (err) {
+      console.error("Upload failed", err)
+      setError("Gagal mengunggah berkas. Periksa koneksi internet Anda atau coba kompres berkas terlebih dahulu.")
       setUploadedFiles((prev) => {
         const copy = { ...prev }
         delete copy[type]
@@ -319,7 +417,7 @@ export function RegisterForm() {
             </span>
           </div>
 
-          {/* 5 Tombol Kotak Progress Bar (Merah = Belum Lengkap, Hijau = Lengkap, Ring = Aktif) */}
+          {/* 5 Tombol Kotak Progress Bar (Oranye = Belum Lengkap, Hijau = Lengkap, Ring = Aktif) */}
           <div className="grid grid-cols-5 gap-2" role="group" aria-label="Progress langkah pendaftaran">
             {stepsStatus.map((isComplete, i) => {
               const stepNum = i + 1
@@ -338,10 +436,10 @@ export function RegisterForm() {
                   className={`group relative flex h-9 items-center justify-center rounded-xl transition-all duration-200 cursor-pointer ${
                     isComplete
                       ? "bg-emerald-500 hover:bg-emerald-600 text-white shadow-sm shadow-emerald-500/25"
-                      : "bg-rose-500 hover:bg-rose-600 text-white shadow-sm shadow-rose-500/25"
+                      : "bg-orange-500 hover:bg-orange-600 text-white shadow-sm shadow-orange-500/25"
                   } ${
                     isActive
-                      ? "ring-2 ring-orange-500 ring-offset-2 ring-offset-white font-black scale-105"
+                      ? "ring-2 ring-orange-600 ring-offset-2 ring-offset-white font-black scale-105 shadow-md"
                       : "opacity-85 hover:opacity-100"
                   }`}
                 >
@@ -362,8 +460,8 @@ export function RegisterForm() {
                 <span className="text-emerald-700">Hijau: Lengkap</span>
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="size-2 rounded-full bg-rose-500" />
-                <span className="text-rose-700">Merah: Belum Lengkap</span>
+                <span className="size-2 rounded-full bg-orange-500" />
+                <span className="text-orange-700">Oranye: Belum Lengkap</span>
               </div>
             </div>
             <span className="text-orange-600 font-bold hidden sm:inline">Klik angka untuk loncat</span>

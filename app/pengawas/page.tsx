@@ -1,8 +1,9 @@
 import { redirect } from "next/navigation"
 import Image from "next/image"
-import { Bell, MapPin, ShieldCheck, User } from "lucide-react"
+import { Bell, MapPin, ShieldCheck } from "lucide-react"
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/auth"
+import { getPresignedR2Url } from "@/lib/r2"
 import { LogoutButton } from "@/components/logout-button"
 import { PengawasDashboard, type StudentDetail } from "@/components/pengawas-dashboard"
 
@@ -49,8 +50,18 @@ export default async function PengawasPage() {
     }),
   ])
 
-  const mapStudent = (s: typeof binaanStudentsRaw[number]): StudentDetail => {
+  const mapStudent = async (s: typeof binaanStudentsRaw[number]): Promise<StudentDetail> => {
     const fotoDoc = s.documents.find((d) => d.type === "FOTO_ANAK")
+    const presignedFotoUrl = fotoDoc?.fileUrl ? await getPresignedR2Url(fotoDoc.fileUrl) : null
+
+    const presignedDocs = await Promise.all(
+      s.documents.map(async (d) => ({
+        id: d.id,
+        type: d.type,
+        fileUrl: await getPresignedR2Url(d.fileUrl),
+      }))
+    )
+
     return {
       id: s.id,
       fullName: s.fullName,
@@ -72,7 +83,7 @@ export default async function PengawasPage() {
       jumlahSaudara: s.jumlahSaudara,
       pengawasId: s.pengawasId,
       pengawasName: s.pengawas?.name ?? pengawas.name,
-      fotoUrl: fotoDoc?.fileUrl || null,
+      fotoUrl: presignedFotoUrl,
       father: s.father
         ? {
             name: s.father.name,
@@ -111,16 +122,14 @@ export default async function PengawasPage() {
         label: c.label,
         amount: c.amount,
       })),
-      documents: s.documents.map((d) => ({
-        id: d.id,
-        type: d.type,
-        fileUrl: d.fileUrl,
-      })),
+      documents: presignedDocs,
     }
   }
 
-  const binaanStudents = binaanStudentsRaw.map(mapStudent)
-  const allWilayahStudents = allWilayahStudentsRaw.map(mapStudent)
+  const [binaanStudents, allWilayahStudents] = await Promise.all([
+    Promise.all(binaanStudentsRaw.map(mapStudent)),
+    Promise.all(allWilayahStudentsRaw.map(mapStudent)),
+  ])
 
   // Inisial untuk avatar pengawas
   const pengawasInitials = pengawas.name

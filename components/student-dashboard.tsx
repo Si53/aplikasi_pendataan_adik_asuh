@@ -203,40 +203,53 @@ export function StudentDashboard({ student }: { student: StudentData }) {
                 student.documents.map((doc) => (
                   <div
                     key={doc.id}
-                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl bg-orange-50/60 p-4 border border-orange-200/60"
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl bg-orange-50/60 p-4 border border-orange-200/60 transition hover:bg-orange-50/90"
                   >
-                    <div className="flex items-center gap-3">
-                      <div className="flex size-10 items-center justify-center rounded-xl bg-orange-500/10 text-orange-600">
-                        <FileText className="size-5" />
-                      </div>
-                      <div>
-                        <p className="font-bold text-sm text-foreground">
+                    <div className="flex items-center gap-3 min-w-0">
+                      {doc.type === "FOTO_ANAK" && doc.fileUrl ? (
+                        <div className="relative size-12 shrink-0 overflow-hidden rounded-xl border-2 border-orange-300 bg-amber-100 shadow-sm">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={doc.fileUrl}
+                            alt="Foto Anak"
+                            className="size-full object-cover"
+                          />
+                        </div>
+                      ) : (
+                        <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-orange-500/15 text-orange-600 shadow-sm border border-orange-200/60">
+                          <FileText className="size-6" />
+                        </div>
+                      )}
+                      <div className="min-w-0">
+                        <p className="font-extrabold text-sm text-foreground truncate">
                           {doc.type === "FOTO_ANAK"
                             ? "Foto Anak"
                             : doc.type === "RAPOR"
                             ? "Rapor Terakhir"
                             : "Kartu Keluarga (KK)"}
                         </p>
-                        <span className="text-[11px] text-muted-foreground">{doc.type}</span>
+                        <span className="text-[11px] font-semibold text-orange-700 block">
+                          Tipe: {doc.type}
+                        </span>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 shrink-0">
                       <a
                         href={doc.fileUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="flex items-center gap-1 rounded-xl bg-white px-3.5 py-2 text-xs font-bold text-foreground shadow-sm border border-orange-200 hover:bg-orange-50 transition"
+                        className="flex flex-1 sm:flex-none items-center justify-center gap-1.5 rounded-xl bg-white px-4 py-2 text-xs font-bold text-orange-950 shadow-sm border border-orange-200 hover:bg-orange-100/60 hover:text-orange-900 transition"
                       >
                         <ExternalLink className="size-3.5" />
-                        <span>Lihat</span>
+                        <span>Buka / Lihat</span>
                       </a>
                       <a
                         href={doc.fileUrl}
                         download
                         target="_blank"
                         rel="noreferrer"
-                        className="flex items-center gap-1 rounded-xl bg-orange-500 px-3.5 py-2 text-xs font-bold text-white shadow-sm hover:bg-orange-600 transition"
+                        className="flex flex-1 sm:flex-none items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-4 py-2 text-xs font-bold text-white shadow-sm hover:from-orange-600 hover:to-amber-600 transition"
                       >
                         <Download className="size-3.5" />
                         <span>Unduh</span>
@@ -245,7 +258,9 @@ export function StudentDashboard({ student }: { student: StudentData }) {
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-muted-foreground">Belum ada dokumen yang diunggah.</p>
+                <div className="rounded-2xl border border-dashed border-orange-200 p-6 text-center text-sm text-muted-foreground">
+                  Belum ada dokumen yang diunggah.
+                </div>
               )}
             </div>
           </div>

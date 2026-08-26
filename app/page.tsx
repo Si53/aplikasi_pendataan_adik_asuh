@@ -61,9 +61,9 @@ export default function LandingPage() {
             />
           </div>
 
-          {/* Teks Adik Asuh */}
-          <h1 className="text-4xl font-extrabold tracking-wide text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.25)] sm:text-5xl">
-            Adik Asuh
+          {/* Judul Aplikasi */}
+          <h1 className="text-2xl font-black tracking-tight text-white drop-shadow-[0_2px_6px_rgba(0,0,0,0.25)] sm:text-3xl max-w-xs sm:max-w-md leading-snug">
+            Aplikasi Adik Asuh<br />Vihara Vimala Dharma
           </h1>
         </div>
 

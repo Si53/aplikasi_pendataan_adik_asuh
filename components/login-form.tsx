@@ -35,27 +35,10 @@ export function LoginForm() {
           /* ============================================================ */
           <>
             {/* Header Oranye Solid di Atas Card */}
-            <div className="flex items-center justify-between bg-gradient-to-r from-orange-500 via-orange-500 to-amber-500 px-6 py-3.5 text-white shadow-sm">
-              {/* Avatar Anak Laki-laki di Kiri */}
-              <div
-                className="flex size-9 items-center justify-center rounded-full bg-white/30 text-base shadow-inner border border-white/60"
-                aria-label="Avatar Anak Laki-laki"
-              >
-                👦
-              </div>
-
-              {/* Judul di Tengah */}
-              <h2 className="text-xl font-black tracking-wide drop-shadow-sm">
+            <div className="flex items-center justify-center bg-gradient-to-r from-orange-500 via-orange-500 to-amber-500 px-6 py-4 text-white shadow-sm">
+              <h2 className="text-xl font-black tracking-wide drop-shadow-sm text-center">
                 Adik Asuh
               </h2>
-
-              {/* Avatar Anak Perempuan di Kanan */}
-              <div
-                className="flex size-9 items-center justify-center rounded-full bg-white/30 text-base shadow-inner border border-white/60"
-                aria-label="Avatar Anak Perempuan"
-              >
-                👧
-              </div>
             </div>
 
             {/* Isi Konten Card */}
