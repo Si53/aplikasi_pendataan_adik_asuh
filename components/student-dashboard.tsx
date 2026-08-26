@@ -91,13 +91,13 @@ export function StudentDashboard({ student }: { student: StudentData }) {
             <div className="flex flex-1 flex-col justify-center text-center md:text-left gap-3 w-full">
               <div className="space-y-1">
                 <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-orange-800">
-                  <Sparkles className="size-3" /> Program Beasiswa
+                  <Sparkles className="size-3" /> Program Bantuan Dana Pendidikan
                 </span>
                 <h2 className="text-xl sm:text-2xl font-black text-foreground tracking-tight">
                   Selamat datang di Program Adik Asuh!
                 </h2>
                 <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground font-medium">
-                  Bersama Vihara Vimala Dharma, kita raih cita-cita setinggi mungkin melalui
+                  Bersama Vihara Vimala Dharma, raih cita-cita setinggi mungkin melalui
                   pendidikan yang berkelanjutan.
                 </p>
               </div>
@@ -123,7 +123,7 @@ export function StudentDashboard({ student }: { student: StudentData }) {
             className="flex h-14 w-full items-center justify-center gap-3 rounded-full bg-gradient-to-r from-emerald-600 via-emerald-500 to-green-500 hover:from-emerald-700 hover:to-green-600 px-6 text-base font-extrabold text-white shadow-lg shadow-emerald-600/25 active:scale-[0.98] transition duration-200 cursor-pointer"
           >
             <MessageCircle className="size-5" />
-            <span>Hubungi Pengawas (WhatsApp)</span>
+            <span>Hubungi Kakak Asuh (WhatsApp)</span>
           </a>
         </section>
       )}
