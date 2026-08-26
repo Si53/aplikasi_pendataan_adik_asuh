@@ -10,12 +10,12 @@ async function main() {
 
   // Seed sample student for Kusnadi (Binaan Kusnadi)
   await prisma.student.upsert({
-    where: { username: "budi2015" },
+    where: { username: "sion88" },
     update: {},
     create: {
-      username: "budi2015",
+      username: "sion88",
       nik: "3318010101010001",
-      fullName: "Budi Santoso",
+      fullName: "sion marcelyo",
       dateOfBirth: new Date("2010-05-15"),
       gender: "Laki-laki",
       citaCita: "Dokter",
@@ -36,10 +36,10 @@ async function main() {
       },
       father: {
         create: {
-          name: "Joko Santoso",
+          name: "Joko anwar",
           status: "Sehat",
-          occupation: "Buruh Tani",
-          incomePerMonth: "Rp 1.200.000 / bulan",
+          occupation: "wirawasta",
+          incomePerMonth: "Rp 7.200.000 / bulan",
           address: "Jl. Pemuda No. 12, Pati",
           phone: "081298765432",
           medicalHistory: "-",
@@ -47,7 +47,7 @@ async function main() {
       },
       mother: {
         create: {
-          name: "Siti Rahayu",
+          name: "Sarwendah",
           status: "Sehat",
           occupation: "Ibu Rumah Tangga",
           incomePerMonth: "Rp 0",
@@ -61,12 +61,12 @@ async function main() {
 
   // Seed sample student for Sukijo (Sewilayah with Kusnadi)
   await prisma.student.upsert({
-    where: { username: "ani2016" },
+    where: { username: "vine99" },
     update: {},
     create: {
-      username: "ani2016",
+      username: "vine99",
       nik: "3318010202020002",
-      fullName: "Ani Lestari",
+      fullName: "Vinechie",
       dateOfBirth: new Date("2011-08-20"),
       gender: "Perempuan",
       citaCita: "Guru",
@@ -90,7 +90,7 @@ async function main() {
           name: "Bambang Lestari",
           status: "Sehat",
           occupation: "Pedagang Kaki Lima",
-          incomePerMonth: "Rp 1.500.000 / bulan",
+          incomePerMonth: "Rp 6.500.000 / bulan",
           address: "Desa Tambaharjo, Pati",
           phone: "082398765431",
           medicalHistory: "-",

@@ -1096,7 +1096,7 @@ function FamilyFields({
         <Input
           value={value.name}
           onChange={(e) => setVal({ name: e.target.value })}
-          placeholder="Nama lengkap"
+          placeholder="Isi Nama lengkap Orang tua"
           className="h-12 rounded-xl bg-white text-sm shadow-sm"
         />
       </Field>
@@ -1115,11 +1115,11 @@ function FamilyFields({
           disabled={isDeceased}
           value={isDeceased ? "-" : value.occupation}
           onChange={(e) => setVal({ occupation: e.target.value })}
-          placeholder={isDeceased ? "Tidak berlaku (Meninggal Dunia)" : "Contoh: Buruh Harian, Wiraswasta"}
+          placeholder={isDeceased ? "Tidak berlaku (Meninggal Dunia)" : "Contoh: Petani, Peternak"}
           className="h-12 rounded-xl bg-white text-sm shadow-sm disabled:bg-muted/60 disabled:text-muted-foreground disabled:cursor-not-allowed"
         />
       </Field>
-      <Field label="Penghasilan per Bulan (Format Nominal)">
+      <Field label="Penghasilan per Bulan ">
         <div className="relative">
           <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-muted-foreground">
             Rp
@@ -1132,7 +1132,7 @@ function FamilyFields({
               const raw = e.target.value.replace(/\D/g, "")
               setVal({ incomePerMonth: raw ? `Rp ${Number(raw).toLocaleString("id-ID")}` : "" })
             }}
-            placeholder={isDeceased ? "-" : "0 (contoh: 80.000 atau 1.500.000)"}
+            placeholder={isDeceased ? "-" : "0"}
             className="h-12 rounded-xl bg-white pl-9 text-sm font-semibold shadow-sm disabled:bg-muted/60 disabled:text-muted-foreground disabled:cursor-not-allowed"
           />
         </div>
@@ -1151,16 +1151,16 @@ function FamilyFields({
           disabled={isDeceased}
           value={isDeceased ? "-" : value.address}
           onChange={(e) => setVal({ address: e.target.value })}
-          placeholder={isDeceased ? "Tidak berlaku" : "Alamat tempat tinggal"}
+          placeholder={isDeceased ? "Tidak berlaku" : "Kota Tempat Tinggal saat ini"}
           className="min-h-16 rounded-xl bg-white text-sm shadow-sm disabled:bg-muted/60 disabled:text-muted-foreground disabled:cursor-not-allowed"
         />
       </Field>
-      <Field label="Riwayat Penyakit">
+      <Field label='Riwayat Penyakit (isi dengan " - " bila tidak ada)'>
         <Textarea
           disabled={isDeceased}
           value={isDeceased ? "-" : value.medicalHistory}
           onChange={(e) => setVal({ medicalHistory: e.target.value })}
-          placeholder={isDeceased ? "Tidak berlaku" : "Isi - bila tidak ada"}
+          placeholder={isDeceased ? "Tidak berlaku" : ""}
           className="min-h-16 rounded-xl bg-white text-sm shadow-sm disabled:bg-muted/60 disabled:text-muted-foreground disabled:cursor-not-allowed"
         />
       </Field>
