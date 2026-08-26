@@ -7,18 +7,9 @@ import { getPresignedR2Url } from "@/lib/r2"
 import {
   ArrowLeft,
   BookOpen,
-  Calendar,
-  CheckCircle2,
-  Download,
-  ExternalLink,
-  FileText,
   GraduationCap,
-  HeartPulse,
-  Home,
   MapPin,
   Phone,
-  ShieldCheck,
-  User,
   Users,
 } from "lucide-react"
 
@@ -62,15 +53,6 @@ export default async function StudentDetailPage({
   const isBinaan = student.pengawasId === pengawas.id
   const fotoDoc = student.documents.find((d) => d.type === "FOTO_ANAK")
   const presignedFotoUrl = fotoDoc?.fileUrl ? await getPresignedR2Url(fotoDoc.fileUrl) : null
-
-  const presignedDocuments = await Promise.all(
-    student.documents.map(async (doc) => ({
-      id: doc.id,
-      type: doc.type,
-      fileUrl: await getPresignedR2Url(doc.fileUrl),
-    }))
-  )
-
   const totalCost = student.educationCosts.reduce((sum, c) => sum + c.amount, 0)
 
   // Inisial untuk avatar fallback
@@ -144,7 +126,7 @@ export default async function StudentDetailPage({
           </div>
         </header>
 
-        {/* Banner Profil Siswa */}
+        {/* Banner Profil Siswa (Foto Asli Tetap Ditampilkan) */}
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 rounded-3xl bg-white/90 p-6 shadow-md backdrop-blur-md border border-orange-100/80">
           <div className="relative size-24 shrink-0 overflow-hidden rounded-2xl bg-gradient-to-br from-orange-100 to-amber-100 border-2 border-orange-200 shadow-sm">
             {presignedFotoUrl ? (
@@ -189,7 +171,8 @@ export default async function StudentDetailPage({
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className={`grid grid-cols-1 gap-4 ${isBinaan ? "sm:grid-cols-2" : ""}`}>
+            {/* Informasi Sekolah & Jenjang */}
             <div className="flex flex-col gap-3 rounded-3xl bg-white/90 p-5 shadow-sm backdrop-blur-md border border-orange-100/80">
               <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <BookOpen className="size-4 text-orange-500" />
@@ -213,35 +196,37 @@ export default async function StudentDetailPage({
               </div>
             </div>
 
-            {/* Rincian Kebutuhan Biaya Pendidikan */}
-            <div className="flex flex-col gap-3 rounded-3xl bg-white/90 p-5 shadow-sm backdrop-blur-md border border-orange-100/80">
-              <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold text-foreground">Estimasi Biaya Pendidikan</h3>
-                <span className="text-xs font-bold text-orange-600">
-                  {student.educationCosts.length} Komponen
-                </span>
-              </div>
-              <div className="flex flex-col divide-y divide-border/60 text-sm">
-                {student.educationCosts.length > 0 ? (
-                  student.educationCosts.map((cost) => (
-                    <div key={cost.id} className="flex justify-between py-2">
-                      <span className="text-muted-foreground">{cost.label}</span>
-                      <span className="font-bold text-foreground">
-                        Rp {cost.amount.toLocaleString("id-ID")}
-                      </span>
-                    </div>
-                  ))
-                ) : (
-                  <p className="py-2 text-xs text-muted-foreground">
-                    Tidak ada rincian biaya khusus.
-                  </p>
-                )}
-                <div className="flex justify-between pt-2 text-base font-extrabold text-orange-600">
-                  <span>Total Biaya</span>
-                  <span>Rp {totalCost.toLocaleString("id-ID")}</span>
+            {/* Rincian Kebutuhan Biaya Pendidikan (KHUSUS Adik Asuh Binaan Saya) */}
+            {isBinaan && (
+              <div className="flex flex-col gap-3 rounded-3xl bg-white/90 p-5 shadow-sm backdrop-blur-md border border-orange-100/80">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-foreground">Estimasi Biaya Pendidikan</h3>
+                  <span className="text-xs font-bold text-orange-600">
+                    {student.educationCosts.length} Komponen
+                  </span>
+                </div>
+                <div className="flex flex-col divide-y divide-border/60 text-sm">
+                  {student.educationCosts.length > 0 ? (
+                    student.educationCosts.map((cost) => (
+                      <div key={cost.id} className="flex justify-between py-2">
+                        <span className="text-muted-foreground">{cost.label}</span>
+                        <span className="font-bold text-foreground">
+                          Rp {cost.amount.toLocaleString("id-ID")}
+                        </span>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="py-2 text-xs text-muted-foreground">
+                      Tidak ada rincian biaya khusus.
+                    </p>
+                  )}
+                  <div className="flex justify-between pt-2 text-base font-extrabold text-orange-600">
+                    <span>Total Biaya</span>
+                    <span>Rp {totalCost.toLocaleString("id-ID")}</span>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </section>
 
@@ -397,57 +382,6 @@ export default async function StudentDetailPage({
                 </div>
               </div>
             )}
-          </div>
-
-          {/* Dokumen Terunggah */}
-          <div className="rounded-3xl bg-white/90 p-5 sm:p-6 shadow-sm backdrop-blur-md border border-orange-100/80 flex flex-col gap-3">
-            <h3 className="text-sm font-bold text-foreground">Dokumen Pendukung</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              {presignedDocuments.length > 0 ? (
-                presignedDocuments.map((doc) => (
-                  <div
-                    key={doc.id}
-                    className="flex flex-col justify-between gap-3 rounded-2xl bg-orange-50/50 p-4 border border-orange-200/60"
-                  >
-                    <div className="flex items-center gap-2">
-                      <FileText className="size-5 text-orange-600" />
-                      <div>
-                        <p className="font-bold text-xs text-foreground">
-                          {doc.type === "KK"
-                            ? "Kartu Keluarga"
-                            : doc.type === "RAPOR"
-                            ? "Rapor Terakhir"
-                            : "Foto Anak"}
-                        </p>
-                        <span className="text-[10px] text-muted-foreground">{doc.type}</span>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 pt-1">
-                      <a
-                        href={doc.fileUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-white px-2.5 py-2 text-xs font-bold text-orange-800 shadow-sm border border-orange-200 hover:bg-orange-50"
-                      >
-                        <ExternalLink className="size-3.5" />
-                        <span>Buka</span>
-                      </a>
-                      <a
-                        href={doc.fileUrl}
-                        download
-                        target="_blank"
-                        rel="noreferrer"
-                        className="flex items-center justify-center rounded-xl bg-orange-500 px-3 py-2 text-xs font-bold text-white shadow-sm hover:bg-orange-600"
-                      >
-                        <Download className="size-3.5" />
-                      </a>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p className="text-xs text-muted-foreground">Belum ada dokumen yang terunggah.</p>
-              )}
-            </div>
           </div>
         </section>
       </main>

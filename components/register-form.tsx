@@ -37,7 +37,7 @@ type Cost = { label: string; amount: string }
 
 const emptyFamily = (): Family => ({
   name: "",
-  status: "Sehat",
+  status: "Hidup",
   occupation: "",
   incomePerMonth: "",
   address: "",
@@ -1061,6 +1061,31 @@ function FamilyFields({
   onChange: (v: Family) => void
 }) {
   const setVal = (p: Partial<Family>) => onChange({ ...value, ...p })
+  const isDeceased = value.status === "Meninggal Dunia"
+
+  const handleStatusChange = (newStatus: string) => {
+    if (newStatus === "Meninggal Dunia") {
+      onChange({
+        ...value,
+        status: newStatus,
+        occupation: "-",
+        incomePerMonth: "-",
+        phone: "-",
+        address: "-",
+        medicalHistory: "-",
+      })
+    } else {
+      onChange({
+        ...value,
+        status: newStatus,
+        occupation: value.occupation === "-" ? "" : value.occupation,
+        incomePerMonth: value.incomePerMonth === "-" ? "" : value.incomePerMonth,
+        phone: value.phone === "-" ? "" : value.phone,
+        address: value.address === "-" ? "" : value.address,
+        medicalHistory: value.medicalHistory === "-" ? "" : value.medicalHistory,
+      })
+    }
+  }
 
   return (
     <div className="flex flex-col gap-4 rounded-2xl border border-border/80 p-4 bg-white/80 shadow-sm">
@@ -1078,20 +1103,20 @@ function FamilyFields({
       <Field label="Kondisi / Status">
         <select
           value={value.status}
-          onChange={(e) => setVal({ status: e.target.value })}
+          onChange={(e) => handleStatusChange(e.target.value)}
           className="h-12 rounded-xl border border-border bg-white px-3 text-sm font-semibold text-foreground shadow-sm"
         >
-          <option>Sehat</option>
-          <option>Sakit</option>
-          <option>Meninggal Dunia</option>
+          <option value="Hidup">Hidup</option>
+          <option value="Meninggal Dunia">Meninggal Dunia</option>
         </select>
       </Field>
       <Field label="Pekerjaan">
         <Input
-          value={value.occupation}
+          disabled={isDeceased}
+          value={isDeceased ? "-" : value.occupation}
           onChange={(e) => setVal({ occupation: e.target.value })}
-          placeholder="Contoh: Buruh Harian, Wiraswasta"
-          className="h-12 rounded-xl bg-white text-sm shadow-sm"
+          placeholder={isDeceased ? "Tidak berlaku (Meninggal Dunia)" : "Contoh: Buruh Harian, Wiraswasta"}
+          className="h-12 rounded-xl bg-white text-sm shadow-sm disabled:bg-muted/60 disabled:text-muted-foreground disabled:cursor-not-allowed"
         />
       </Field>
       <Field label="Penghasilan per Bulan (Format Nominal)">
@@ -1100,39 +1125,43 @@ function FamilyFields({
             Rp
           </span>
           <Input
+            disabled={isDeceased}
             inputMode="numeric"
-            value={formatNominal(value.incomePerMonth)}
+            value={isDeceased ? "-" : formatNominal(value.incomePerMonth)}
             onChange={(e) => {
               const raw = e.target.value.replace(/\D/g, "")
               setVal({ incomePerMonth: raw ? `Rp ${Number(raw).toLocaleString("id-ID")}` : "" })
             }}
-            placeholder="0 (contoh: 80.000 atau 1.500.000)"
-            className="h-12 rounded-xl bg-white pl-9 text-sm font-semibold shadow-sm"
+            placeholder={isDeceased ? "-" : "0 (contoh: 80.000 atau 1.500.000)"}
+            className="h-12 rounded-xl bg-white pl-9 text-sm font-semibold shadow-sm disabled:bg-muted/60 disabled:text-muted-foreground disabled:cursor-not-allowed"
           />
         </div>
       </Field>
       <Field label="Nomor Telepon / HP">
         <Input
-          value={value.phone}
+          disabled={isDeceased}
+          value={isDeceased ? "-" : value.phone}
           onChange={(e) => setVal({ phone: e.target.value })}
-          placeholder="Nomor HP aktif"
-          className="h-12 rounded-xl bg-white text-sm shadow-sm"
+          placeholder={isDeceased ? "Tidak berlaku" : "Nomor HP aktif"}
+          className="h-12 rounded-xl bg-white text-sm shadow-sm disabled:bg-muted/60 disabled:text-muted-foreground disabled:cursor-not-allowed"
         />
       </Field>
       <Field label="Alamat Domisili">
         <Textarea
-          value={value.address}
+          disabled={isDeceased}
+          value={isDeceased ? "-" : value.address}
           onChange={(e) => setVal({ address: e.target.value })}
-          placeholder="Alamat tempat tinggal"
-          className="min-h-16 rounded-xl bg-white text-sm shadow-sm"
+          placeholder={isDeceased ? "Tidak berlaku" : "Alamat tempat tinggal"}
+          className="min-h-16 rounded-xl bg-white text-sm shadow-sm disabled:bg-muted/60 disabled:text-muted-foreground disabled:cursor-not-allowed"
         />
       </Field>
       <Field label="Riwayat Penyakit">
         <Textarea
-          value={value.medicalHistory}
+          disabled={isDeceased}
+          value={isDeceased ? "-" : value.medicalHistory}
           onChange={(e) => setVal({ medicalHistory: e.target.value })}
-          placeholder="Isi - bila tidak ada"
-          className="min-h-16 rounded-xl bg-white text-sm shadow-sm"
+          placeholder={isDeceased ? "Tidak berlaku" : "Isi - bila tidak ada"}
+          className="min-h-16 rounded-xl bg-white text-sm shadow-sm disabled:bg-muted/60 disabled:text-muted-foreground disabled:cursor-not-allowed"
         />
       </Field>
     </div>
