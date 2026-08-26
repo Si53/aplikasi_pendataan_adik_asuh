@@ -412,9 +412,6 @@ export function RegisterForm() {
                 {stepTitles[step - 1]}
               </span>
             </div>
-            <span className="text-[11px] font-extrabold text-orange-900/80 shrink-0">
-              {stepsStatus.filter(Boolean).length}/5 Lengkap
-            </span>
           </div>
 
           {/* 5 Tombol Kotak Progress Bar (Oranye = Belum Lengkap, Hijau = Lengkap, Ring = Aktif) */}
@@ -520,7 +517,7 @@ export function RegisterForm() {
                       <Check className="size-3.5" /> 16 angka lengkap
                     </span>
                   ) : (
-                    `Sudah diisi: ${data.nik.length} dari 16 angka ( Kurang ${16 - data.nik.length} )`
+                    `Sudah diisi: ${data.nik.length} dari 16 angka`
                   )}
                 </span>
                 <span className="text-muted-foreground">Maks. 16 angka</span>
@@ -733,7 +730,7 @@ export function RegisterForm() {
             />
           </Field>
 
-          <Field label="Jumlah Saudara Kandung">
+          <Field label="Berapa Bersaudara">
             <Input
               type="number"
               min="0"
