@@ -711,7 +711,7 @@ export function RegisterForm() {
             />
           </Field>
 
-          <Field label="Kelas / Tingkat / Semester *">
+          <Field label="Kelas / Semester *">
             <Input
               value={data.gradeLevel}
               onChange={(e) => set("gradeLevel", e.target.value)}
