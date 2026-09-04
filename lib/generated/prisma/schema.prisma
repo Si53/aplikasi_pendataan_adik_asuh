@@ -9,41 +9,62 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+model Admin {
+  id                 Int                 @id @default(autoincrement())
+  email              String              @unique
+  name               String
+  notes              AdminNote[]
+  bantuanAdjustments BantuanAdjustment[]
+  createdAt          DateTime            @default(now()) @map("created_at")
+
+  @@map("admins")
+}
+
 model Pengawas {
-  id       Int       @id @default(autoincrement())
-  username String    @unique
-  password String // hashed dengan bcrypt
-  name     String
-  wilayah  String // Pati, Jepara, Ampel, Wonosobo, Sukabumi, Bandung
-  students Student[]
+  id                  Int                 @id @default(autoincrement())
+  username            String              @unique
+  password            String // hashed dengan bcrypt
+  name                String
+  wilayah             String // Pati, Jepara, Ampel, Wonosobo, Sukabumi, Bandung
+  failedLoginAttempts Int                 @default(0) @map("failed_login_attempts")
+  lockedUntil         DateTime?           @map("locked_until")
+  students            Student[]
+  disbursements       DisbursementProof[]
 
   @@map("pengawas")
 }
 
 model Student {
-  id              Int      @id @default(autoincrement())
-  username        String   @unique
-  nik             String   @unique // plain text, bukan di-hash
-  fullName        String   @map("full_name")
-  dateOfBirth     DateTime @map("date_of_birth")
-  gender          String
-  citaCita        String   @map("cita_cita")
-  wilayah         String
-  pengawasId      Int      @map("pengawas_id")
-  pengawas        Pengawas @relation(fields: [pengawasId], references: [id])
-  alamatLengkap   String   @map("alamat_lengkap")
-  noHp            String   @map("no_hp")
-  riwayatPenyakit String   @map("riwayat_penyakit")
-  schoolName      String   @map("school_name")
-  gradeLevel      String   @map("grade_level")
-  nilaiRataRata   String   @map("nilai_rata_rata")
-  jumlahSaudara   Int      @map("jumlah_saudara")
+  id                  Int       @id @default(autoincrement())
+  username            String    @unique
+  nik                 String    @unique // plain text, bukan di-hash
+  fullName            String    @map("full_name")
+  dateOfBirth         DateTime  @map("date_of_birth")
+  gender              String
+  citaCita            String    @map("cita_cita")
+  wilayah             String
+  pengawasId          Int       @map("pengawas_id")
+  pengawas            Pengawas  @relation(fields: [pengawasId], references: [id])
+  alamatLengkap       String    @map("alamat_lengkap")
+  noHp                String    @map("no_hp")
+  riwayatPenyakit     String    @map("riwayat_penyakit")
+  schoolName          String    @map("school_name")
+  gradeLevel          String    @map("grade_level")
+  nilaiRataRata       String    @map("nilai_rata_rata")
+  jumlahSaudara       Int       @map("jumlah_saudara")
+  status              String    @default("pending") // "pending" | "approved" | "rejected"
+  failedLoginAttempts Int       @default(0) @map("failed_login_attempts")
+  lockedUntil         DateTime? @map("locked_until")
 
-  father         Father?
-  mother         Mother?
-  guardian       Guardian?
-  educationCosts EducationCost[]
-  documents      Document[]
+  father             Father?
+  mother             Mother?
+  guardian           Guardian?
+  educationCosts     EducationCost[]
+  documents          Document[]
+  academicUpdates    AcademicUpdate[]
+  disbursements      DisbursementProof[]
+  adminNotes         AdminNote[]
+  bantuanAdjustments BantuanAdjustment[]
 
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -109,9 +130,62 @@ model Document {
   id         Int      @id @default(autoincrement())
   studentId  Int      @map("student_id")
   student    Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  type       String // "KK" | "RAPOR" | "FOTO_ANAK"
+  type       String // "KK" | "RAPOR" | "FOTO_ANAK" | "SKTM" | "PRESTASI"
   fileUrl    String   @map("file_url")
   uploadedAt DateTime @default(now()) @map("uploaded_at")
 
   @@map("documents")
+}
+
+model AcademicUpdate {
+  id              Int      @id @default(autoincrement())
+  studentId       Int      @map("student_id")
+  student         Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  tanggalInput    DateTime @default(now()) @map("tanggal_input")
+  kelasSaatItu    String   @map("kelas_saat_itu")
+  nilaiRataRata   String   @map("nilai_rata_rata")
+  namaSekolahBaru String?  @map("nama_sekolah_baru")
+  dokumenRapor    String?  @map("dokumen_rapor")
+
+  @@map("academic_updates")
+}
+
+model DisbursementProof {
+  id         Int       @id @default(autoincrement())
+  studentId  Int       @map("student_id")
+  student    Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  pengawasId Int       @map("pengawas_id")
+  pengawas   Pengawas  @relation(fields: [pengawasId], references: [id])
+  fileUrl    String    @map("file_url")
+  tanggal    DateTime  @default(now())
+  verified   Boolean   @default(false)
+  verifiedAt DateTime? @map("verified_at")
+
+  @@map("disbursement_proofs")
+}
+
+model AdminNote {
+  id        Int      @id @default(autoincrement())
+  studentId Int      @map("student_id")
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  adminId   Int      @map("admin_id")
+  admin     Admin    @relation(fields: [adminId], references: [id])
+  note      String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("admin_notes")
+}
+
+model BantuanAdjustment {
+  id          Int      @id @default(autoincrement())
+  studentId   Int      @map("student_id")
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  adminId     Int      @map("admin_id")
+  admin       Admin    @relation(fields: [adminId], references: [id])
+  nominalLama Int      @map("nominal_lama")
+  nominalBaru Int      @map("nominal_baru")
+  catatan     String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("bantuan_adjustments")
 }
