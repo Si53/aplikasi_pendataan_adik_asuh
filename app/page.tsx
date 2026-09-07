@@ -116,6 +116,16 @@ export default function LandingPage() {
             />
             <span>Daftar</span>
           </Link>
+
+          {/* Link Cek Status Pendaftaran */}
+          <div className="pt-1 text-center">
+            <Link
+              href="/cek-status"
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-orange-700 hover:text-orange-950 underline-offset-4 hover:underline transition-colors"
+            >
+              <span>Sudah daftar? Cek status pendaftaran di sini</span>
+            </Link>
+          </div>
         </div>
       </section>
     </main>

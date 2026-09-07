@@ -13,6 +13,8 @@ import {
   X,
   Award,
   Sparkles,
+  UploadCloud,
+  ChevronDown,
 } from "lucide-react"
 
 export type StudentDetail = {
@@ -74,6 +76,17 @@ export function PengawasDashboard({
   wilayah: string
 }) {
   const [query, setQuery] = useState("")
+  const [openSections, setOpenSections] = useState({
+    binaan: false,
+    wilayah: false,
+  })
+
+  const toggleSection = (key: "binaan" | "wilayah") => {
+    setOpenSections((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }))
+  }
 
   // Filter pencarian real-time berdasarkan nama, sekolah, atau cita-cita
   const filterStudents = (list: StudentDetail[]) => {
@@ -141,6 +154,69 @@ export function PengawasDashboard({
         </div>
       </div>
 
+      {/* ACTION BANNERS: Quick Links to Penyaluran Dana & Pemantauan Akademik */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Banner 1: Pemantauan Akademik */}
+        <div className="relative overflow-hidden rounded-3xl border border-orange-200/80 bg-gradient-to-br from-amber-500 via-orange-500 to-orange-600 p-5 sm:p-6 text-white shadow-md shadow-amber-500/15 flex flex-col justify-between gap-4">
+          <div className="flex items-start gap-4">
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-md text-white shadow-inner">
+              <BookOpen className="size-6" />
+            </div>
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="rounded-full bg-white/25 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white">
+                  Monitoring
+                </span>
+                <h3 className="text-base sm:text-lg font-black tracking-tight text-white">
+                  Pemantauan Akademik
+                </h3>
+              </div>
+              <p className="text-xs sm:text-sm text-white/90">
+                Pantau nilai awal pendaftaran, perkembangan semester, dan berkas rapor adik asuh.
+              </p>
+            </div>
+          </div>
+
+          <Link
+            href="/pengawas/pemantauan-akademik"
+            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-2.5 text-xs sm:text-sm font-black text-orange-600 hover:bg-orange-50 transition shadow-sm shrink-0 group self-start sm:self-auto w-full sm:w-auto"
+          >
+            <span>Buka Pemantauan</span>
+            <ArrowRight className="size-4 group-hover:translate-x-0.5 transition-transform" />
+          </Link>
+        </div>
+
+        {/* Banner 2: Input Bukti Penyaluran Dana */}
+        <div className="relative overflow-hidden rounded-3xl border border-orange-200/80 bg-gradient-to-br from-orange-500 via-orange-500 to-amber-500 p-5 sm:p-6 text-white shadow-md shadow-orange-500/15 flex flex-col justify-between gap-4">
+          <div className="flex items-start gap-4">
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-md text-white shadow-inner">
+              <UploadCloud className="size-6" />
+            </div>
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="rounded-full bg-white/25 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white">
+                  Audit
+                </span>
+                <h3 className="text-base sm:text-lg font-black tracking-tight text-white">
+                  Input Penyaluran Dana
+                </h3>
+              </div>
+              <p className="text-xs sm:text-sm text-white/90">
+                Unggah bukti struk/nota dan nominal bantuan yang telah diserahkan ke adik asuh.
+              </p>
+            </div>
+          </div>
+
+          <Link
+            href="/pengawas/penyaluran-dana"
+            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-2.5 text-xs sm:text-sm font-black text-orange-600 hover:bg-orange-50 transition shadow-sm shrink-0 group self-start sm:self-auto w-full sm:w-auto"
+          >
+            <span>Unggah Bukti</span>
+            <ArrowRight className="size-4 group-hover:translate-x-0.5 transition-transform" />
+          </Link>
+        </div>
+      </div>
+
       {/* 4. SEARCH BAR (Pencarian Real-time Nama, Sekolah, Cita-cita) */}
       <div className="relative w-full">
         <Search className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-orange-500" />
@@ -163,73 +239,123 @@ export function PengawasDashboard({
         )}
       </div>
 
-      {/* 5. SECTION 1 - "Adik Asuh Binaan Saya ([jumlah])" */}
-      <section className="flex flex-col gap-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="flex size-8 items-center justify-center rounded-xl bg-orange-500 text-white shadow-sm">
-              <Users className="size-4" />
+      {/* 5. SECTION 1 - ACCORDION: "Adik Asuh Binaan Saya ([jumlah])" */}
+      <section className="overflow-hidden rounded-3xl border border-orange-100/90 bg-white/95 shadow-md backdrop-blur-md transition-all">
+        {/* Collapsible Header */}
+        <button
+          type="button"
+          onClick={() => toggleSection("binaan")}
+          className="flex w-full items-center justify-between p-5 sm:p-6 text-left hover:bg-orange-50/40 transition-colors cursor-pointer"
+          aria-expanded={openSections.binaan}
+        >
+          <div className="flex items-center gap-3.5 min-w-0">
+            <div className="flex size-10 sm:size-12 shrink-0 items-center justify-center rounded-2xl bg-orange-100 text-orange-600 font-bold shadow-xs">
+              <Users className="size-5 sm:size-6" />
             </div>
-            <div>
-              <h2 className="text-xl font-extrabold text-foreground">
+            <div className="space-y-0.5 min-w-0">
+              <h2 className="text-base sm:text-xl font-extrabold text-foreground truncate">
                 Adik Asuh Binaan Saya ({filteredBinaan.length})
               </h2>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-muted-foreground truncate">
                 Adik asuh yang memilih bimbingan langsung Anda
               </p>
             </div>
           </div>
-        </div>
 
-        {filteredBinaan.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-orange-200 bg-white/60 p-8 text-center text-sm text-muted-foreground backdrop-blur-sm">
-            {query
-              ? "Tidak ada adik asuh binaan yang cocok dengan pencarian."
-              : "Belum ada adik asuh yang memilih Anda sebagai pengawas langsung."}
+          <div className="flex items-center gap-2.5 shrink-0 pl-2">
+            <span className="hidden sm:inline-flex items-center rounded-full bg-orange-50 px-3 py-1 text-xs font-bold text-orange-800 border border-orange-200">
+              {filteredBinaan.length} Siswa
+            </span>
+
+            <div
+              className={`flex size-8 sm:size-9 items-center justify-center rounded-xl bg-stone-100 text-stone-600 transition-transform duration-200 ${
+                openSections.binaan ? "rotate-180 bg-orange-100 text-orange-700" : ""
+              }`}
+            >
+              <ChevronDown className="size-4 sm:size-5" />
+            </div>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {filteredBinaan.map((student) => (
-              <StudentCard key={student.id} student={student} isBinaan={true} />
-            ))}
+        </button>
+
+        {/* Collapsible Content */}
+        {openSections.binaan && (
+          <div className="border-t border-orange-100/80 p-5 sm:p-6 bg-orange-50/20 animate-in fade-in slide-in-from-top-2 duration-200">
+            {filteredBinaan.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-orange-200 bg-white/60 p-8 text-center text-sm text-muted-foreground backdrop-blur-sm">
+                {query
+                  ? "Tidak ada adik asuh binaan yang cocok dengan pencarian."
+                  : "Belum ada adik asuh yang memilih Anda sebagai pengawas langsung."}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                {filteredBinaan.map((student) => (
+                  <StudentCard key={student.id} student={student} isBinaan={true} />
+                ))}
+              </div>
+            )}
           </div>
         )}
       </section>
 
-      {/* 6. SECTION 2 - "Adik Asuh di Wilayah [nama wilayah]" */}
-      <section className="flex flex-col gap-4 pt-2">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="flex size-8 items-center justify-center rounded-xl bg-amber-500 text-white shadow-sm">
-              <MapPin className="size-4" />
+      {/* 6. SECTION 2 - ACCORDION: "Adik Asuh di Wilayah [nama wilayah]" */}
+      <section className="overflow-hidden rounded-3xl border border-orange-100/90 bg-white/95 shadow-md backdrop-blur-md transition-all">
+        {/* Collapsible Header */}
+        <button
+          type="button"
+          onClick={() => toggleSection("wilayah")}
+          className="flex w-full items-center justify-between p-5 sm:p-6 text-left hover:bg-orange-50/40 transition-colors cursor-pointer"
+          aria-expanded={openSections.wilayah}
+        >
+          <div className="flex items-center gap-3.5 min-w-0">
+            <div className="flex size-10 sm:size-12 shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-amber-600 font-bold shadow-xs">
+              <MapPin className="size-5 sm:size-6" />
             </div>
-            <div>
-              <h2 className="text-xl font-extrabold text-foreground">
+            <div className="space-y-0.5 min-w-0">
+              <h2 className="text-base sm:text-xl font-extrabold text-foreground truncate">
                 Adik Asuh di Wilayah {wilayah} ({filteredAllWilayah.length})
               </h2>
-              <p className="text-xs text-muted-foreground">
+              <p className="text-xs text-muted-foreground truncate">
                 Semua adik asuh terdaftar di wilayah {wilayah}
               </p>
             </div>
           </div>
-        </div>
 
-        {filteredAllWilayah.length === 0 ? (
-          <div className="rounded-3xl border border-dashed border-orange-200 bg-white/60 p-8 text-center text-sm text-muted-foreground backdrop-blur-sm">
-            {query
-              ? "Tidak ada adik asuh di wilayah ini yang cocok dengan pencarian."
-              : `Belum ada adik asuh terdaftar di wilayah ${wilayah}.`}
+          <div className="flex items-center gap-2.5 shrink-0 pl-2">
+            <span className="hidden sm:inline-flex items-center rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-800 border border-amber-200">
+              {filteredAllWilayah.length} Siswa
+            </span>
+
+            <div
+              className={`flex size-8 sm:size-9 items-center justify-center rounded-xl bg-stone-100 text-stone-600 transition-transform duration-200 ${
+                openSections.wilayah ? "rotate-180 bg-orange-100 text-orange-700" : ""
+              }`}
+            >
+              <ChevronDown className="size-4 sm:size-5" />
+            </div>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {filteredAllWilayah.map((student) => (
-              <StudentCard
-                key={student.id}
-                student={student}
-                isBinaan={student.pengawasId === student.pengawasId}
-                badgeLabel={student.pengawasName ? `Pengawas: ${student.pengawasName}` : undefined}
-              />
-            ))}
+        </button>
+
+        {/* Collapsible Content */}
+        {openSections.wilayah && (
+          <div className="border-t border-orange-100/80 p-5 sm:p-6 bg-orange-50/20 animate-in fade-in slide-in-from-top-2 duration-200">
+            {filteredAllWilayah.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-orange-200 bg-white/60 p-8 text-center text-sm text-muted-foreground backdrop-blur-sm">
+                {query
+                  ? "Tidak ada adik asuh di wilayah ini yang cocok dengan pencarian."
+                  : `Belum ada adik asuh terdaftar di wilayah ${wilayah}.`}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                {filteredAllWilayah.map((student) => (
+                  <StudentCard
+                    key={student.id}
+                    student={student}
+                    isBinaan={student.pengawasId === student.pengawasId}
+                    badgeLabel={student.pengawasName ? `Pengawas: ${student.pengawasName}` : undefined}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         )}
       </section>

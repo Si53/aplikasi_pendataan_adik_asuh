@@ -3,7 +3,7 @@
 import { randomUUID } from "node:crypto"
 import { uploadToR2 } from "@/lib/r2"
 
-const allowedTypes = new Set(["KK", "RAPOR", "FOTO_ANAK"])
+const allowedTypes = new Set(["KK", "RAPOR", "FOTO_ANAK", "SKTM", "PRESTASI"])
 const allowedMimeTypes = new Set([
   "application/pdf",
   "image/jpeg",

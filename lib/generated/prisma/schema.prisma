@@ -15,6 +15,7 @@ model Admin {
   name               String
   notes              AdminNote[]
   bantuanAdjustments BantuanAdjustment[]
+  visitLogs          VisitLog[]
   createdAt          DateTime            @default(now()) @map("created_at")
 
   @@map("admins")
@@ -26,10 +27,14 @@ model Pengawas {
   password            String // hashed dengan bcrypt
   name                String
   wilayah             String // Pati, Jepara, Ampel, Wonosobo, Sukabumi, Bandung
+  noHp                String?             @map("no_hp")
+  status              String              @default("aktif") // "aktif" | "nonaktif"
   failedLoginAttempts Int                 @default(0) @map("failed_login_attempts")
   lockedUntil         DateTime?           @map("locked_until")
   students            Student[]
   disbursements       DisbursementProof[]
+  visitLogs           VisitLog[]
+  adminNotes          AdminNote[]
 
   @@map("pengawas")
 }
@@ -65,6 +70,7 @@ model Student {
   disbursements      DisbursementProof[]
   adminNotes         AdminNote[]
   bantuanAdjustments BantuanAdjustment[]
+  visitLogs          VisitLog[]
 
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -151,27 +157,30 @@ model AcademicUpdate {
 }
 
 model DisbursementProof {
-  id         Int       @id @default(autoincrement())
-  studentId  Int       @map("student_id")
-  student    Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  pengawasId Int       @map("pengawas_id")
-  pengawas   Pengawas  @relation(fields: [pengawasId], references: [id])
-  fileUrl    String    @map("file_url")
-  tanggal    DateTime  @default(now())
-  verified   Boolean   @default(false)
-  verifiedAt DateTime? @map("verified_at")
+  id          Int       @id @default(autoincrement())
+  studentId   Int       @map("student_id")
+  student     Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  pengawasId  Int       @map("pengawas_id")
+  pengawas    Pengawas  @relation(fields: [pengawasId], references: [id])
+  fileUrl     String    @map("file_url")
+  nominal     Int?      @map("nominal")
+  tanggal     DateTime  @default(now())
+  status      String    @default("pending") // "pending" | "verified" | "rejected"
+  processedAt DateTime? @map("processed_at")
 
   @@map("disbursement_proofs")
 }
 
 model AdminNote {
-  id        Int      @id @default(autoincrement())
-  studentId Int      @map("student_id")
-  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  adminId   Int      @map("admin_id")
-  admin     Admin    @relation(fields: [adminId], references: [id])
-  note      String
-  createdAt DateTime @default(now()) @map("created_at")
+  id         Int       @id @default(autoincrement())
+  studentId  Int?      @map("student_id")
+  student    Student?  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  pengawasId Int?      @map("pengawas_id_note")
+  pengawas   Pengawas? @relation(fields: [pengawasId], references: [id])
+  adminId    Int       @map("admin_id")
+  admin      Admin     @relation(fields: [adminId], references: [id])
+  note       String
+  createdAt  DateTime  @default(now()) @map("created_at")
 
   @@map("admin_notes")
 }
@@ -188,4 +197,27 @@ model BantuanAdjustment {
   createdAt   DateTime @default(now()) @map("created_at")
 
   @@map("bantuan_adjustments")
+}
+
+model VisitLog {
+  id         Int       @id @default(autoincrement())
+  studentId  Int       @map("student_id")
+  student    Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  pengawasId Int?      @map("pengawas_id")
+  pengawas   Pengawas? @relation(fields: [pengawasId], references: [id])
+  adminId    Int?      @map("admin_id")
+  admin      Admin?    @relation(fields: [adminId], references: [id])
+  tanggal    DateTime  @default(now())
+  catatan    String?
+
+  @@map("visit_logs")
+}
+
+model LoginAttempt {
+  id        Int      @id @default(autoincrement())
+  ipAddress String   @map("ip_address")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([ipAddress, createdAt])
+  @@map("login_attempts")
 }

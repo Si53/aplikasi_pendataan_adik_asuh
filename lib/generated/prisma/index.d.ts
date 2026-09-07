@@ -73,6 +73,16 @@ export type AdminNote = $Result.DefaultSelection<Prisma.$AdminNotePayload>
  * 
  */
 export type BantuanAdjustment = $Result.DefaultSelection<Prisma.$BantuanAdjustmentPayload>
+/**
+ * Model VisitLog
+ * 
+ */
+export type VisitLog = $Result.DefaultSelection<Prisma.$VisitLogPayload>
+/**
+ * Model LoginAttempt
+ * 
+ */
+export type LoginAttempt = $Result.DefaultSelection<Prisma.$LoginAttemptPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -311,6 +321,26 @@ export class PrismaClient<
     * ```
     */
   get bantuanAdjustment(): Prisma.BantuanAdjustmentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.visitLog`: Exposes CRUD operations for the **VisitLog** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more VisitLogs
+    * const visitLogs = await prisma.visitLog.findMany()
+    * ```
+    */
+  get visitLog(): Prisma.VisitLogDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.loginAttempt`: Exposes CRUD operations for the **LoginAttempt** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more LoginAttempts
+    * const loginAttempts = await prisma.loginAttempt.findMany()
+    * ```
+    */
+  get loginAttempt(): Prisma.LoginAttemptDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -763,7 +793,9 @@ export namespace Prisma {
     AcademicUpdate: 'AcademicUpdate',
     DisbursementProof: 'DisbursementProof',
     AdminNote: 'AdminNote',
-    BantuanAdjustment: 'BantuanAdjustment'
+    BantuanAdjustment: 'BantuanAdjustment',
+    VisitLog: 'VisitLog',
+    LoginAttempt: 'LoginAttempt'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -782,7 +814,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "admin" | "pengawas" | "student" | "educationCost" | "father" | "mother" | "guardian" | "document" | "academicUpdate" | "disbursementProof" | "adminNote" | "bantuanAdjustment"
+      modelProps: "admin" | "pengawas" | "student" | "educationCost" | "father" | "mother" | "guardian" | "document" | "academicUpdate" | "disbursementProof" | "adminNote" | "bantuanAdjustment" | "visitLog" | "loginAttempt"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1674,6 +1706,154 @@ export namespace Prisma {
           }
         }
       }
+      VisitLog: {
+        payload: Prisma.$VisitLogPayload<ExtArgs>
+        fields: Prisma.VisitLogFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.VisitLogFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitLogPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.VisitLogFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitLogPayload>
+          }
+          findFirst: {
+            args: Prisma.VisitLogFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitLogPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.VisitLogFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitLogPayload>
+          }
+          findMany: {
+            args: Prisma.VisitLogFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitLogPayload>[]
+          }
+          create: {
+            args: Prisma.VisitLogCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitLogPayload>
+          }
+          createMany: {
+            args: Prisma.VisitLogCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.VisitLogCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitLogPayload>[]
+          }
+          delete: {
+            args: Prisma.VisitLogDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitLogPayload>
+          }
+          update: {
+            args: Prisma.VisitLogUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitLogPayload>
+          }
+          deleteMany: {
+            args: Prisma.VisitLogDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.VisitLogUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.VisitLogUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitLogPayload>[]
+          }
+          upsert: {
+            args: Prisma.VisitLogUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$VisitLogPayload>
+          }
+          aggregate: {
+            args: Prisma.VisitLogAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateVisitLog>
+          }
+          groupBy: {
+            args: Prisma.VisitLogGroupByArgs<ExtArgs>
+            result: $Utils.Optional<VisitLogGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.VisitLogCountArgs<ExtArgs>
+            result: $Utils.Optional<VisitLogCountAggregateOutputType> | number
+          }
+        }
+      }
+      LoginAttempt: {
+        payload: Prisma.$LoginAttemptPayload<ExtArgs>
+        fields: Prisma.LoginAttemptFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.LoginAttemptFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.LoginAttemptFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+          }
+          findFirst: {
+            args: Prisma.LoginAttemptFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.LoginAttemptFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+          }
+          findMany: {
+            args: Prisma.LoginAttemptFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>[]
+          }
+          create: {
+            args: Prisma.LoginAttemptCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+          }
+          createMany: {
+            args: Prisma.LoginAttemptCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.LoginAttemptCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>[]
+          }
+          delete: {
+            args: Prisma.LoginAttemptDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+          }
+          update: {
+            args: Prisma.LoginAttemptUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+          }
+          deleteMany: {
+            args: Prisma.LoginAttemptDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.LoginAttemptUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.LoginAttemptUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>[]
+          }
+          upsert: {
+            args: Prisma.LoginAttemptUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LoginAttemptPayload>
+          }
+          aggregate: {
+            args: Prisma.LoginAttemptAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLoginAttempt>
+          }
+          groupBy: {
+            args: Prisma.LoginAttemptGroupByArgs<ExtArgs>
+            result: $Utils.Optional<LoginAttemptGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.LoginAttemptCountArgs<ExtArgs>
+            result: $Utils.Optional<LoginAttemptCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1782,6 +1962,8 @@ export namespace Prisma {
     disbursementProof?: DisbursementProofOmit
     adminNote?: AdminNoteOmit
     bantuanAdjustment?: BantuanAdjustmentOmit
+    visitLog?: VisitLogOmit
+    loginAttempt?: LoginAttemptOmit
   }
 
   /* Types for Logging */
@@ -1864,11 +2046,13 @@ export namespace Prisma {
   export type AdminCountOutputType = {
     notes: number
     bantuanAdjustments: number
+    visitLogs: number
   }
 
   export type AdminCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     notes?: boolean | AdminCountOutputTypeCountNotesArgs
     bantuanAdjustments?: boolean | AdminCountOutputTypeCountBantuanAdjustmentsArgs
+    visitLogs?: boolean | AdminCountOutputTypeCountVisitLogsArgs
   }
 
   // Custom InputTypes
@@ -1896,6 +2080,13 @@ export namespace Prisma {
     where?: BantuanAdjustmentWhereInput
   }
 
+  /**
+   * AdminCountOutputType without action
+   */
+  export type AdminCountOutputTypeCountVisitLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VisitLogWhereInput
+  }
+
 
   /**
    * Count Type PengawasCountOutputType
@@ -1904,11 +2095,15 @@ export namespace Prisma {
   export type PengawasCountOutputType = {
     students: number
     disbursements: number
+    visitLogs: number
+    adminNotes: number
   }
 
   export type PengawasCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     students?: boolean | PengawasCountOutputTypeCountStudentsArgs
     disbursements?: boolean | PengawasCountOutputTypeCountDisbursementsArgs
+    visitLogs?: boolean | PengawasCountOutputTypeCountVisitLogsArgs
+    adminNotes?: boolean | PengawasCountOutputTypeCountAdminNotesArgs
   }
 
   // Custom InputTypes
@@ -1936,6 +2131,20 @@ export namespace Prisma {
     where?: DisbursementProofWhereInput
   }
 
+  /**
+   * PengawasCountOutputType without action
+   */
+  export type PengawasCountOutputTypeCountVisitLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VisitLogWhereInput
+  }
+
+  /**
+   * PengawasCountOutputType without action
+   */
+  export type PengawasCountOutputTypeCountAdminNotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AdminNoteWhereInput
+  }
+
 
   /**
    * Count Type StudentCountOutputType
@@ -1948,6 +2157,7 @@ export namespace Prisma {
     disbursements: number
     adminNotes: number
     bantuanAdjustments: number
+    visitLogs: number
   }
 
   export type StudentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -1957,6 +2167,7 @@ export namespace Prisma {
     disbursements?: boolean | StudentCountOutputTypeCountDisbursementsArgs
     adminNotes?: boolean | StudentCountOutputTypeCountAdminNotesArgs
     bantuanAdjustments?: boolean | StudentCountOutputTypeCountBantuanAdjustmentsArgs
+    visitLogs?: boolean | StudentCountOutputTypeCountVisitLogsArgs
   }
 
   // Custom InputTypes
@@ -2010,6 +2221,13 @@ export namespace Prisma {
    */
   export type StudentCountOutputTypeCountBantuanAdjustmentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: BantuanAdjustmentWhereInput
+  }
+
+  /**
+   * StudentCountOutputType without action
+   */
+  export type StudentCountOutputTypeCountVisitLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VisitLogWhereInput
   }
 
 
@@ -2209,6 +2427,7 @@ export namespace Prisma {
     createdAt?: boolean
     notes?: boolean | Admin$notesArgs<ExtArgs>
     bantuanAdjustments?: boolean | Admin$bantuanAdjustmentsArgs<ExtArgs>
+    visitLogs?: boolean | Admin$visitLogsArgs<ExtArgs>
     _count?: boolean | AdminCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["admin"]>
 
@@ -2237,6 +2456,7 @@ export namespace Prisma {
   export type AdminInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     notes?: boolean | Admin$notesArgs<ExtArgs>
     bantuanAdjustments?: boolean | Admin$bantuanAdjustmentsArgs<ExtArgs>
+    visitLogs?: boolean | Admin$visitLogsArgs<ExtArgs>
     _count?: boolean | AdminCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type AdminIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2247,6 +2467,7 @@ export namespace Prisma {
     objects: {
       notes: Prisma.$AdminNotePayload<ExtArgs>[]
       bantuanAdjustments: Prisma.$BantuanAdjustmentPayload<ExtArgs>[]
+      visitLogs: Prisma.$VisitLogPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -2649,6 +2870,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     notes<T extends Admin$notesArgs<ExtArgs> = {}>(args?: Subset<T, Admin$notesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     bantuanAdjustments<T extends Admin$bantuanAdjustmentsArgs<ExtArgs> = {}>(args?: Subset<T, Admin$bantuanAdjustmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BantuanAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    visitLogs<T extends Admin$visitLogsArgs<ExtArgs> = {}>(args?: Subset<T, Admin$visitLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VisitLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3118,6 +3340,30 @@ export namespace Prisma {
   }
 
   /**
+   * Admin.visitLogs
+   */
+  export type Admin$visitLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitLog
+     */
+    select?: VisitLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitLog
+     */
+    omit?: VisitLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitLogInclude<ExtArgs> | null
+    where?: VisitLogWhereInput
+    orderBy?: VisitLogOrderByWithRelationInput | VisitLogOrderByWithRelationInput[]
+    cursor?: VisitLogWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VisitLogScalarFieldEnum | VisitLogScalarFieldEnum[]
+  }
+
+  /**
    * Admin without action
    */
   export type AdminDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3164,6 +3410,8 @@ export namespace Prisma {
     password: string | null
     name: string | null
     wilayah: string | null
+    noHp: string | null
+    status: string | null
     failedLoginAttempts: number | null
     lockedUntil: Date | null
   }
@@ -3174,6 +3422,8 @@ export namespace Prisma {
     password: string | null
     name: string | null
     wilayah: string | null
+    noHp: string | null
+    status: string | null
     failedLoginAttempts: number | null
     lockedUntil: Date | null
   }
@@ -3184,6 +3434,8 @@ export namespace Prisma {
     password: number
     name: number
     wilayah: number
+    noHp: number
+    status: number
     failedLoginAttempts: number
     lockedUntil: number
     _all: number
@@ -3206,6 +3458,8 @@ export namespace Prisma {
     password?: true
     name?: true
     wilayah?: true
+    noHp?: true
+    status?: true
     failedLoginAttempts?: true
     lockedUntil?: true
   }
@@ -3216,6 +3470,8 @@ export namespace Prisma {
     password?: true
     name?: true
     wilayah?: true
+    noHp?: true
+    status?: true
     failedLoginAttempts?: true
     lockedUntil?: true
   }
@@ -3226,6 +3482,8 @@ export namespace Prisma {
     password?: true
     name?: true
     wilayah?: true
+    noHp?: true
+    status?: true
     failedLoginAttempts?: true
     lockedUntil?: true
     _all?: true
@@ -3323,6 +3581,8 @@ export namespace Prisma {
     password: string
     name: string
     wilayah: string
+    noHp: string | null
+    status: string
     failedLoginAttempts: number
     lockedUntil: Date | null
     _count: PengawasCountAggregateOutputType | null
@@ -3352,10 +3612,14 @@ export namespace Prisma {
     password?: boolean
     name?: boolean
     wilayah?: boolean
+    noHp?: boolean
+    status?: boolean
     failedLoginAttempts?: boolean
     lockedUntil?: boolean
     students?: boolean | Pengawas$studentsArgs<ExtArgs>
     disbursements?: boolean | Pengawas$disbursementsArgs<ExtArgs>
+    visitLogs?: boolean | Pengawas$visitLogsArgs<ExtArgs>
+    adminNotes?: boolean | Pengawas$adminNotesArgs<ExtArgs>
     _count?: boolean | PengawasCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["pengawas"]>
 
@@ -3365,6 +3629,8 @@ export namespace Prisma {
     password?: boolean
     name?: boolean
     wilayah?: boolean
+    noHp?: boolean
+    status?: boolean
     failedLoginAttempts?: boolean
     lockedUntil?: boolean
   }, ExtArgs["result"]["pengawas"]>
@@ -3375,6 +3641,8 @@ export namespace Prisma {
     password?: boolean
     name?: boolean
     wilayah?: boolean
+    noHp?: boolean
+    status?: boolean
     failedLoginAttempts?: boolean
     lockedUntil?: boolean
   }, ExtArgs["result"]["pengawas"]>
@@ -3385,14 +3653,18 @@ export namespace Prisma {
     password?: boolean
     name?: boolean
     wilayah?: boolean
+    noHp?: boolean
+    status?: boolean
     failedLoginAttempts?: boolean
     lockedUntil?: boolean
   }
 
-  export type PengawasOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "password" | "name" | "wilayah" | "failedLoginAttempts" | "lockedUntil", ExtArgs["result"]["pengawas"]>
+  export type PengawasOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "password" | "name" | "wilayah" | "noHp" | "status" | "failedLoginAttempts" | "lockedUntil", ExtArgs["result"]["pengawas"]>
   export type PengawasInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     students?: boolean | Pengawas$studentsArgs<ExtArgs>
     disbursements?: boolean | Pengawas$disbursementsArgs<ExtArgs>
+    visitLogs?: boolean | Pengawas$visitLogsArgs<ExtArgs>
+    adminNotes?: boolean | Pengawas$adminNotesArgs<ExtArgs>
     _count?: boolean | PengawasCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type PengawasIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3403,6 +3675,8 @@ export namespace Prisma {
     objects: {
       students: Prisma.$StudentPayload<ExtArgs>[]
       disbursements: Prisma.$DisbursementProofPayload<ExtArgs>[]
+      visitLogs: Prisma.$VisitLogPayload<ExtArgs>[]
+      adminNotes: Prisma.$AdminNotePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -3410,6 +3684,8 @@ export namespace Prisma {
       password: string
       name: string
       wilayah: string
+      noHp: string | null
+      status: string
       failedLoginAttempts: number
       lockedUntil: Date | null
     }, ExtArgs["result"]["pengawas"]>
@@ -3808,6 +4084,8 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     students<T extends Pengawas$studentsArgs<ExtArgs> = {}>(args?: Subset<T, Pengawas$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     disbursements<T extends Pengawas$disbursementsArgs<ExtArgs> = {}>(args?: Subset<T, Pengawas$disbursementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DisbursementProofPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    visitLogs<T extends Pengawas$visitLogsArgs<ExtArgs> = {}>(args?: Subset<T, Pengawas$visitLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VisitLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    adminNotes<T extends Pengawas$adminNotesArgs<ExtArgs> = {}>(args?: Subset<T, Pengawas$adminNotesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3842,6 +4120,8 @@ export namespace Prisma {
     readonly password: FieldRef<"Pengawas", 'String'>
     readonly name: FieldRef<"Pengawas", 'String'>
     readonly wilayah: FieldRef<"Pengawas", 'String'>
+    readonly noHp: FieldRef<"Pengawas", 'String'>
+    readonly status: FieldRef<"Pengawas", 'String'>
     readonly failedLoginAttempts: FieldRef<"Pengawas", 'Int'>
     readonly lockedUntil: FieldRef<"Pengawas", 'DateTime'>
   }
@@ -4280,6 +4560,54 @@ export namespace Prisma {
   }
 
   /**
+   * Pengawas.visitLogs
+   */
+  export type Pengawas$visitLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitLog
+     */
+    select?: VisitLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitLog
+     */
+    omit?: VisitLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitLogInclude<ExtArgs> | null
+    where?: VisitLogWhereInput
+    orderBy?: VisitLogOrderByWithRelationInput | VisitLogOrderByWithRelationInput[]
+    cursor?: VisitLogWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VisitLogScalarFieldEnum | VisitLogScalarFieldEnum[]
+  }
+
+  /**
+   * Pengawas.adminNotes
+   */
+  export type Pengawas$adminNotesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdminNote
+     */
+    select?: AdminNoteSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdminNote
+     */
+    omit?: AdminNoteOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminNoteInclude<ExtArgs> | null
+    where?: AdminNoteWhereInput
+    orderBy?: AdminNoteOrderByWithRelationInput | AdminNoteOrderByWithRelationInput[]
+    cursor?: AdminNoteWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AdminNoteScalarFieldEnum | AdminNoteScalarFieldEnum[]
+  }
+
+  /**
    * Pengawas without action
    */
   export type PengawasDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4638,6 +4966,7 @@ export namespace Prisma {
     disbursements?: boolean | Student$disbursementsArgs<ExtArgs>
     adminNotes?: boolean | Student$adminNotesArgs<ExtArgs>
     bantuanAdjustments?: boolean | Student$bantuanAdjustmentsArgs<ExtArgs>
+    visitLogs?: boolean | Student$visitLogsArgs<ExtArgs>
     _count?: boolean | StudentCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["student"]>
 
@@ -4724,6 +5053,7 @@ export namespace Prisma {
     disbursements?: boolean | Student$disbursementsArgs<ExtArgs>
     adminNotes?: boolean | Student$adminNotesArgs<ExtArgs>
     bantuanAdjustments?: boolean | Student$bantuanAdjustmentsArgs<ExtArgs>
+    visitLogs?: boolean | Student$visitLogsArgs<ExtArgs>
     _count?: boolean | StudentCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type StudentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4746,6 +5076,7 @@ export namespace Prisma {
       disbursements: Prisma.$DisbursementProofPayload<ExtArgs>[]
       adminNotes: Prisma.$AdminNotePayload<ExtArgs>[]
       bantuanAdjustments: Prisma.$BantuanAdjustmentPayload<ExtArgs>[]
+      visitLogs: Prisma.$VisitLogPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -5172,6 +5503,7 @@ export namespace Prisma {
     disbursements<T extends Student$disbursementsArgs<ExtArgs> = {}>(args?: Subset<T, Student$disbursementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$DisbursementProofPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     adminNotes<T extends Student$adminNotesArgs<ExtArgs> = {}>(args?: Subset<T, Student$adminNotesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdminNotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     bantuanAdjustments<T extends Student$bantuanAdjustmentsArgs<ExtArgs> = {}>(args?: Subset<T, Student$bantuanAdjustmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BantuanAdjustmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    visitLogs<T extends Student$visitLogsArgs<ExtArgs> = {}>(args?: Subset<T, Student$visitLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VisitLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5815,6 +6147,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: BantuanAdjustmentScalarFieldEnum | BantuanAdjustmentScalarFieldEnum[]
+  }
+
+  /**
+   * Student.visitLogs
+   */
+  export type Student$visitLogsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitLog
+     */
+    select?: VisitLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitLog
+     */
+    omit?: VisitLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitLogInclude<ExtArgs> | null
+    where?: VisitLogWhereInput
+    orderBy?: VisitLogOrderByWithRelationInput | VisitLogOrderByWithRelationInput[]
+    cursor?: VisitLogWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: VisitLogScalarFieldEnum | VisitLogScalarFieldEnum[]
   }
 
   /**
@@ -12601,12 +12957,14 @@ export namespace Prisma {
     id: number | null
     studentId: number | null
     pengawasId: number | null
+    nominal: number | null
   }
 
   export type DisbursementProofSumAggregateOutputType = {
     id: number | null
     studentId: number | null
     pengawasId: number | null
+    nominal: number | null
   }
 
   export type DisbursementProofMinAggregateOutputType = {
@@ -12614,9 +12972,10 @@ export namespace Prisma {
     studentId: number | null
     pengawasId: number | null
     fileUrl: string | null
+    nominal: number | null
     tanggal: Date | null
-    verified: boolean | null
-    verifiedAt: Date | null
+    status: string | null
+    processedAt: Date | null
   }
 
   export type DisbursementProofMaxAggregateOutputType = {
@@ -12624,9 +12983,10 @@ export namespace Prisma {
     studentId: number | null
     pengawasId: number | null
     fileUrl: string | null
+    nominal: number | null
     tanggal: Date | null
-    verified: boolean | null
-    verifiedAt: Date | null
+    status: string | null
+    processedAt: Date | null
   }
 
   export type DisbursementProofCountAggregateOutputType = {
@@ -12634,9 +12994,10 @@ export namespace Prisma {
     studentId: number
     pengawasId: number
     fileUrl: number
+    nominal: number
     tanggal: number
-    verified: number
-    verifiedAt: number
+    status: number
+    processedAt: number
     _all: number
   }
 
@@ -12645,12 +13006,14 @@ export namespace Prisma {
     id?: true
     studentId?: true
     pengawasId?: true
+    nominal?: true
   }
 
   export type DisbursementProofSumAggregateInputType = {
     id?: true
     studentId?: true
     pengawasId?: true
+    nominal?: true
   }
 
   export type DisbursementProofMinAggregateInputType = {
@@ -12658,9 +13021,10 @@ export namespace Prisma {
     studentId?: true
     pengawasId?: true
     fileUrl?: true
+    nominal?: true
     tanggal?: true
-    verified?: true
-    verifiedAt?: true
+    status?: true
+    processedAt?: true
   }
 
   export type DisbursementProofMaxAggregateInputType = {
@@ -12668,9 +13032,10 @@ export namespace Prisma {
     studentId?: true
     pengawasId?: true
     fileUrl?: true
+    nominal?: true
     tanggal?: true
-    verified?: true
-    verifiedAt?: true
+    status?: true
+    processedAt?: true
   }
 
   export type DisbursementProofCountAggregateInputType = {
@@ -12678,9 +13043,10 @@ export namespace Prisma {
     studentId?: true
     pengawasId?: true
     fileUrl?: true
+    nominal?: true
     tanggal?: true
-    verified?: true
-    verifiedAt?: true
+    status?: true
+    processedAt?: true
     _all?: true
   }
 
@@ -12775,9 +13141,10 @@ export namespace Prisma {
     studentId: number
     pengawasId: number
     fileUrl: string
+    nominal: number | null
     tanggal: Date
-    verified: boolean
-    verifiedAt: Date | null
+    status: string
+    processedAt: Date | null
     _count: DisbursementProofCountAggregateOutputType | null
     _avg: DisbursementProofAvgAggregateOutputType | null
     _sum: DisbursementProofSumAggregateOutputType | null
@@ -12804,9 +13171,10 @@ export namespace Prisma {
     studentId?: boolean
     pengawasId?: boolean
     fileUrl?: boolean
+    nominal?: boolean
     tanggal?: boolean
-    verified?: boolean
-    verifiedAt?: boolean
+    status?: boolean
+    processedAt?: boolean
     student?: boolean | StudentDefaultArgs<ExtArgs>
     pengawas?: boolean | PengawasDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["disbursementProof"]>
@@ -12816,9 +13184,10 @@ export namespace Prisma {
     studentId?: boolean
     pengawasId?: boolean
     fileUrl?: boolean
+    nominal?: boolean
     tanggal?: boolean
-    verified?: boolean
-    verifiedAt?: boolean
+    status?: boolean
+    processedAt?: boolean
     student?: boolean | StudentDefaultArgs<ExtArgs>
     pengawas?: boolean | PengawasDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["disbursementProof"]>
@@ -12828,9 +13197,10 @@ export namespace Prisma {
     studentId?: boolean
     pengawasId?: boolean
     fileUrl?: boolean
+    nominal?: boolean
     tanggal?: boolean
-    verified?: boolean
-    verifiedAt?: boolean
+    status?: boolean
+    processedAt?: boolean
     student?: boolean | StudentDefaultArgs<ExtArgs>
     pengawas?: boolean | PengawasDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["disbursementProof"]>
@@ -12840,12 +13210,13 @@ export namespace Prisma {
     studentId?: boolean
     pengawasId?: boolean
     fileUrl?: boolean
+    nominal?: boolean
     tanggal?: boolean
-    verified?: boolean
-    verifiedAt?: boolean
+    status?: boolean
+    processedAt?: boolean
   }
 
-  export type DisbursementProofOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "pengawasId" | "fileUrl" | "tanggal" | "verified" | "verifiedAt", ExtArgs["result"]["disbursementProof"]>
+  export type DisbursementProofOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "pengawasId" | "fileUrl" | "nominal" | "tanggal" | "status" | "processedAt", ExtArgs["result"]["disbursementProof"]>
   export type DisbursementProofInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     student?: boolean | StudentDefaultArgs<ExtArgs>
     pengawas?: boolean | PengawasDefaultArgs<ExtArgs>
@@ -12870,9 +13241,10 @@ export namespace Prisma {
       studentId: number
       pengawasId: number
       fileUrl: string
+      nominal: number | null
       tanggal: Date
-      verified: boolean
-      verifiedAt: Date | null
+      status: string
+      processedAt: Date | null
     }, ExtArgs["result"]["disbursementProof"]>
     composites: {}
   }
@@ -13302,9 +13674,10 @@ export namespace Prisma {
     readonly studentId: FieldRef<"DisbursementProof", 'Int'>
     readonly pengawasId: FieldRef<"DisbursementProof", 'Int'>
     readonly fileUrl: FieldRef<"DisbursementProof", 'String'>
+    readonly nominal: FieldRef<"DisbursementProof", 'Int'>
     readonly tanggal: FieldRef<"DisbursementProof", 'DateTime'>
-    readonly verified: FieldRef<"DisbursementProof", 'Boolean'>
-    readonly verifiedAt: FieldRef<"DisbursementProof", 'DateTime'>
+    readonly status: FieldRef<"DisbursementProof", 'String'>
+    readonly processedAt: FieldRef<"DisbursementProof", 'DateTime'>
   }
     
 
@@ -13734,18 +14107,21 @@ export namespace Prisma {
   export type AdminNoteAvgAggregateOutputType = {
     id: number | null
     studentId: number | null
+    pengawasId: number | null
     adminId: number | null
   }
 
   export type AdminNoteSumAggregateOutputType = {
     id: number | null
     studentId: number | null
+    pengawasId: number | null
     adminId: number | null
   }
 
   export type AdminNoteMinAggregateOutputType = {
     id: number | null
     studentId: number | null
+    pengawasId: number | null
     adminId: number | null
     note: string | null
     createdAt: Date | null
@@ -13754,6 +14130,7 @@ export namespace Prisma {
   export type AdminNoteMaxAggregateOutputType = {
     id: number | null
     studentId: number | null
+    pengawasId: number | null
     adminId: number | null
     note: string | null
     createdAt: Date | null
@@ -13762,6 +14139,7 @@ export namespace Prisma {
   export type AdminNoteCountAggregateOutputType = {
     id: number
     studentId: number
+    pengawasId: number
     adminId: number
     note: number
     createdAt: number
@@ -13772,18 +14150,21 @@ export namespace Prisma {
   export type AdminNoteAvgAggregateInputType = {
     id?: true
     studentId?: true
+    pengawasId?: true
     adminId?: true
   }
 
   export type AdminNoteSumAggregateInputType = {
     id?: true
     studentId?: true
+    pengawasId?: true
     adminId?: true
   }
 
   export type AdminNoteMinAggregateInputType = {
     id?: true
     studentId?: true
+    pengawasId?: true
     adminId?: true
     note?: true
     createdAt?: true
@@ -13792,6 +14173,7 @@ export namespace Prisma {
   export type AdminNoteMaxAggregateInputType = {
     id?: true
     studentId?: true
+    pengawasId?: true
     adminId?: true
     note?: true
     createdAt?: true
@@ -13800,6 +14182,7 @@ export namespace Prisma {
   export type AdminNoteCountAggregateInputType = {
     id?: true
     studentId?: true
+    pengawasId?: true
     adminId?: true
     note?: true
     createdAt?: true
@@ -13894,7 +14277,8 @@ export namespace Prisma {
 
   export type AdminNoteGroupByOutputType = {
     id: number
-    studentId: number
+    studentId: number | null
+    pengawasId: number | null
     adminId: number
     note: string
     createdAt: Date
@@ -13922,64 +14306,76 @@ export namespace Prisma {
   export type AdminNoteSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     studentId?: boolean
+    pengawasId?: boolean
     adminId?: boolean
     note?: boolean
     createdAt?: boolean
-    student?: boolean | StudentDefaultArgs<ExtArgs>
+    student?: boolean | AdminNote$studentArgs<ExtArgs>
+    pengawas?: boolean | AdminNote$pengawasArgs<ExtArgs>
     admin?: boolean | AdminDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["adminNote"]>
 
   export type AdminNoteSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     studentId?: boolean
+    pengawasId?: boolean
     adminId?: boolean
     note?: boolean
     createdAt?: boolean
-    student?: boolean | StudentDefaultArgs<ExtArgs>
+    student?: boolean | AdminNote$studentArgs<ExtArgs>
+    pengawas?: boolean | AdminNote$pengawasArgs<ExtArgs>
     admin?: boolean | AdminDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["adminNote"]>
 
   export type AdminNoteSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     studentId?: boolean
+    pengawasId?: boolean
     adminId?: boolean
     note?: boolean
     createdAt?: boolean
-    student?: boolean | StudentDefaultArgs<ExtArgs>
+    student?: boolean | AdminNote$studentArgs<ExtArgs>
+    pengawas?: boolean | AdminNote$pengawasArgs<ExtArgs>
     admin?: boolean | AdminDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["adminNote"]>
 
   export type AdminNoteSelectScalar = {
     id?: boolean
     studentId?: boolean
+    pengawasId?: boolean
     adminId?: boolean
     note?: boolean
     createdAt?: boolean
   }
 
-  export type AdminNoteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "adminId" | "note" | "createdAt", ExtArgs["result"]["adminNote"]>
+  export type AdminNoteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "pengawasId" | "adminId" | "note" | "createdAt", ExtArgs["result"]["adminNote"]>
   export type AdminNoteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    student?: boolean | StudentDefaultArgs<ExtArgs>
+    student?: boolean | AdminNote$studentArgs<ExtArgs>
+    pengawas?: boolean | AdminNote$pengawasArgs<ExtArgs>
     admin?: boolean | AdminDefaultArgs<ExtArgs>
   }
   export type AdminNoteIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    student?: boolean | StudentDefaultArgs<ExtArgs>
+    student?: boolean | AdminNote$studentArgs<ExtArgs>
+    pengawas?: boolean | AdminNote$pengawasArgs<ExtArgs>
     admin?: boolean | AdminDefaultArgs<ExtArgs>
   }
   export type AdminNoteIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    student?: boolean | StudentDefaultArgs<ExtArgs>
+    student?: boolean | AdminNote$studentArgs<ExtArgs>
+    pengawas?: boolean | AdminNote$pengawasArgs<ExtArgs>
     admin?: boolean | AdminDefaultArgs<ExtArgs>
   }
 
   export type $AdminNotePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "AdminNote"
     objects: {
-      student: Prisma.$StudentPayload<ExtArgs>
+      student: Prisma.$StudentPayload<ExtArgs> | null
+      pengawas: Prisma.$PengawasPayload<ExtArgs> | null
       admin: Prisma.$AdminPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      studentId: number
+      studentId: number | null
+      pengawasId: number | null
       adminId: number
       note: string
       createdAt: Date
@@ -14377,7 +14773,8 @@ export namespace Prisma {
    */
   export interface Prisma__AdminNoteClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    student<T extends StudentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StudentDefaultArgs<ExtArgs>>): Prisma__StudentClient<$Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    student<T extends AdminNote$studentArgs<ExtArgs> = {}>(args?: Subset<T, AdminNote$studentArgs<ExtArgs>>): Prisma__StudentClient<$Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    pengawas<T extends AdminNote$pengawasArgs<ExtArgs> = {}>(args?: Subset<T, AdminNote$pengawasArgs<ExtArgs>>): Prisma__PengawasClient<$Result.GetResult<Prisma.$PengawasPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     admin<T extends AdminDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AdminDefaultArgs<ExtArgs>>): Prisma__AdminClient<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -14410,6 +14807,7 @@ export namespace Prisma {
   interface AdminNoteFieldRefs {
     readonly id: FieldRef<"AdminNote", 'Int'>
     readonly studentId: FieldRef<"AdminNote", 'Int'>
+    readonly pengawasId: FieldRef<"AdminNote", 'Int'>
     readonly adminId: FieldRef<"AdminNote", 'Int'>
     readonly note: FieldRef<"AdminNote", 'String'>
     readonly createdAt: FieldRef<"AdminNote", 'DateTime'>
@@ -14806,6 +15204,44 @@ export namespace Prisma {
      * Limit how many AdminNotes to delete.
      */
     limit?: number
+  }
+
+  /**
+   * AdminNote.student
+   */
+  export type AdminNote$studentArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Student
+     */
+    select?: StudentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Student
+     */
+    omit?: StudentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StudentInclude<ExtArgs> | null
+    where?: StudentWhereInput
+  }
+
+  /**
+   * AdminNote.pengawas
+   */
+  export type AdminNote$pengawasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pengawas
+     */
+    select?: PengawasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Pengawas
+     */
+    omit?: PengawasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PengawasInclude<ExtArgs> | null
+    where?: PengawasWhereInput
   }
 
   /**
@@ -15970,6 +16406,2180 @@ export namespace Prisma {
 
 
   /**
+   * Model VisitLog
+   */
+
+  export type AggregateVisitLog = {
+    _count: VisitLogCountAggregateOutputType | null
+    _avg: VisitLogAvgAggregateOutputType | null
+    _sum: VisitLogSumAggregateOutputType | null
+    _min: VisitLogMinAggregateOutputType | null
+    _max: VisitLogMaxAggregateOutputType | null
+  }
+
+  export type VisitLogAvgAggregateOutputType = {
+    id: number | null
+    studentId: number | null
+    pengawasId: number | null
+    adminId: number | null
+  }
+
+  export type VisitLogSumAggregateOutputType = {
+    id: number | null
+    studentId: number | null
+    pengawasId: number | null
+    adminId: number | null
+  }
+
+  export type VisitLogMinAggregateOutputType = {
+    id: number | null
+    studentId: number | null
+    pengawasId: number | null
+    adminId: number | null
+    tanggal: Date | null
+    catatan: string | null
+  }
+
+  export type VisitLogMaxAggregateOutputType = {
+    id: number | null
+    studentId: number | null
+    pengawasId: number | null
+    adminId: number | null
+    tanggal: Date | null
+    catatan: string | null
+  }
+
+  export type VisitLogCountAggregateOutputType = {
+    id: number
+    studentId: number
+    pengawasId: number
+    adminId: number
+    tanggal: number
+    catatan: number
+    _all: number
+  }
+
+
+  export type VisitLogAvgAggregateInputType = {
+    id?: true
+    studentId?: true
+    pengawasId?: true
+    adminId?: true
+  }
+
+  export type VisitLogSumAggregateInputType = {
+    id?: true
+    studentId?: true
+    pengawasId?: true
+    adminId?: true
+  }
+
+  export type VisitLogMinAggregateInputType = {
+    id?: true
+    studentId?: true
+    pengawasId?: true
+    adminId?: true
+    tanggal?: true
+    catatan?: true
+  }
+
+  export type VisitLogMaxAggregateInputType = {
+    id?: true
+    studentId?: true
+    pengawasId?: true
+    adminId?: true
+    tanggal?: true
+    catatan?: true
+  }
+
+  export type VisitLogCountAggregateInputType = {
+    id?: true
+    studentId?: true
+    pengawasId?: true
+    adminId?: true
+    tanggal?: true
+    catatan?: true
+    _all?: true
+  }
+
+  export type VisitLogAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which VisitLog to aggregate.
+     */
+    where?: VisitLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VisitLogs to fetch.
+     */
+    orderBy?: VisitLogOrderByWithRelationInput | VisitLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: VisitLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VisitLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VisitLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned VisitLogs
+    **/
+    _count?: true | VisitLogCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: VisitLogAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: VisitLogSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: VisitLogMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: VisitLogMaxAggregateInputType
+  }
+
+  export type GetVisitLogAggregateType<T extends VisitLogAggregateArgs> = {
+        [P in keyof T & keyof AggregateVisitLog]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateVisitLog[P]>
+      : GetScalarType<T[P], AggregateVisitLog[P]>
+  }
+
+
+
+
+  export type VisitLogGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: VisitLogWhereInput
+    orderBy?: VisitLogOrderByWithAggregationInput | VisitLogOrderByWithAggregationInput[]
+    by: VisitLogScalarFieldEnum[] | VisitLogScalarFieldEnum
+    having?: VisitLogScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: VisitLogCountAggregateInputType | true
+    _avg?: VisitLogAvgAggregateInputType
+    _sum?: VisitLogSumAggregateInputType
+    _min?: VisitLogMinAggregateInputType
+    _max?: VisitLogMaxAggregateInputType
+  }
+
+  export type VisitLogGroupByOutputType = {
+    id: number
+    studentId: number
+    pengawasId: number | null
+    adminId: number | null
+    tanggal: Date
+    catatan: string | null
+    _count: VisitLogCountAggregateOutputType | null
+    _avg: VisitLogAvgAggregateOutputType | null
+    _sum: VisitLogSumAggregateOutputType | null
+    _min: VisitLogMinAggregateOutputType | null
+    _max: VisitLogMaxAggregateOutputType | null
+  }
+
+  type GetVisitLogGroupByPayload<T extends VisitLogGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<VisitLogGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof VisitLogGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], VisitLogGroupByOutputType[P]>
+            : GetScalarType<T[P], VisitLogGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type VisitLogSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    studentId?: boolean
+    pengawasId?: boolean
+    adminId?: boolean
+    tanggal?: boolean
+    catatan?: boolean
+    student?: boolean | StudentDefaultArgs<ExtArgs>
+    pengawas?: boolean | VisitLog$pengawasArgs<ExtArgs>
+    admin?: boolean | VisitLog$adminArgs<ExtArgs>
+  }, ExtArgs["result"]["visitLog"]>
+
+  export type VisitLogSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    studentId?: boolean
+    pengawasId?: boolean
+    adminId?: boolean
+    tanggal?: boolean
+    catatan?: boolean
+    student?: boolean | StudentDefaultArgs<ExtArgs>
+    pengawas?: boolean | VisitLog$pengawasArgs<ExtArgs>
+    admin?: boolean | VisitLog$adminArgs<ExtArgs>
+  }, ExtArgs["result"]["visitLog"]>
+
+  export type VisitLogSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    studentId?: boolean
+    pengawasId?: boolean
+    adminId?: boolean
+    tanggal?: boolean
+    catatan?: boolean
+    student?: boolean | StudentDefaultArgs<ExtArgs>
+    pengawas?: boolean | VisitLog$pengawasArgs<ExtArgs>
+    admin?: boolean | VisitLog$adminArgs<ExtArgs>
+  }, ExtArgs["result"]["visitLog"]>
+
+  export type VisitLogSelectScalar = {
+    id?: boolean
+    studentId?: boolean
+    pengawasId?: boolean
+    adminId?: boolean
+    tanggal?: boolean
+    catatan?: boolean
+  }
+
+  export type VisitLogOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "pengawasId" | "adminId" | "tanggal" | "catatan", ExtArgs["result"]["visitLog"]>
+  export type VisitLogInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    student?: boolean | StudentDefaultArgs<ExtArgs>
+    pengawas?: boolean | VisitLog$pengawasArgs<ExtArgs>
+    admin?: boolean | VisitLog$adminArgs<ExtArgs>
+  }
+  export type VisitLogIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    student?: boolean | StudentDefaultArgs<ExtArgs>
+    pengawas?: boolean | VisitLog$pengawasArgs<ExtArgs>
+    admin?: boolean | VisitLog$adminArgs<ExtArgs>
+  }
+  export type VisitLogIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    student?: boolean | StudentDefaultArgs<ExtArgs>
+    pengawas?: boolean | VisitLog$pengawasArgs<ExtArgs>
+    admin?: boolean | VisitLog$adminArgs<ExtArgs>
+  }
+
+  export type $VisitLogPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "VisitLog"
+    objects: {
+      student: Prisma.$StudentPayload<ExtArgs>
+      pengawas: Prisma.$PengawasPayload<ExtArgs> | null
+      admin: Prisma.$AdminPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      studentId: number
+      pengawasId: number | null
+      adminId: number | null
+      tanggal: Date
+      catatan: string | null
+    }, ExtArgs["result"]["visitLog"]>
+    composites: {}
+  }
+
+  type VisitLogGetPayload<S extends boolean | null | undefined | VisitLogDefaultArgs> = $Result.GetResult<Prisma.$VisitLogPayload, S>
+
+  type VisitLogCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<VisitLogFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: VisitLogCountAggregateInputType | true
+    }
+
+  export interface VisitLogDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['VisitLog'], meta: { name: 'VisitLog' } }
+    /**
+     * Find zero or one VisitLog that matches the filter.
+     * @param {VisitLogFindUniqueArgs} args - Arguments to find a VisitLog
+     * @example
+     * // Get one VisitLog
+     * const visitLog = await prisma.visitLog.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends VisitLogFindUniqueArgs>(args: SelectSubset<T, VisitLogFindUniqueArgs<ExtArgs>>): Prisma__VisitLogClient<$Result.GetResult<Prisma.$VisitLogPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one VisitLog that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {VisitLogFindUniqueOrThrowArgs} args - Arguments to find a VisitLog
+     * @example
+     * // Get one VisitLog
+     * const visitLog = await prisma.visitLog.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends VisitLogFindUniqueOrThrowArgs>(args: SelectSubset<T, VisitLogFindUniqueOrThrowArgs<ExtArgs>>): Prisma__VisitLogClient<$Result.GetResult<Prisma.$VisitLogPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first VisitLog that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitLogFindFirstArgs} args - Arguments to find a VisitLog
+     * @example
+     * // Get one VisitLog
+     * const visitLog = await prisma.visitLog.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends VisitLogFindFirstArgs>(args?: SelectSubset<T, VisitLogFindFirstArgs<ExtArgs>>): Prisma__VisitLogClient<$Result.GetResult<Prisma.$VisitLogPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first VisitLog that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitLogFindFirstOrThrowArgs} args - Arguments to find a VisitLog
+     * @example
+     * // Get one VisitLog
+     * const visitLog = await prisma.visitLog.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends VisitLogFindFirstOrThrowArgs>(args?: SelectSubset<T, VisitLogFindFirstOrThrowArgs<ExtArgs>>): Prisma__VisitLogClient<$Result.GetResult<Prisma.$VisitLogPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more VisitLogs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitLogFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all VisitLogs
+     * const visitLogs = await prisma.visitLog.findMany()
+     * 
+     * // Get first 10 VisitLogs
+     * const visitLogs = await prisma.visitLog.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const visitLogWithIdOnly = await prisma.visitLog.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends VisitLogFindManyArgs>(args?: SelectSubset<T, VisitLogFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VisitLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a VisitLog.
+     * @param {VisitLogCreateArgs} args - Arguments to create a VisitLog.
+     * @example
+     * // Create one VisitLog
+     * const VisitLog = await prisma.visitLog.create({
+     *   data: {
+     *     // ... data to create a VisitLog
+     *   }
+     * })
+     * 
+     */
+    create<T extends VisitLogCreateArgs>(args: SelectSubset<T, VisitLogCreateArgs<ExtArgs>>): Prisma__VisitLogClient<$Result.GetResult<Prisma.$VisitLogPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many VisitLogs.
+     * @param {VisitLogCreateManyArgs} args - Arguments to create many VisitLogs.
+     * @example
+     * // Create many VisitLogs
+     * const visitLog = await prisma.visitLog.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends VisitLogCreateManyArgs>(args?: SelectSubset<T, VisitLogCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many VisitLogs and returns the data saved in the database.
+     * @param {VisitLogCreateManyAndReturnArgs} args - Arguments to create many VisitLogs.
+     * @example
+     * // Create many VisitLogs
+     * const visitLog = await prisma.visitLog.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many VisitLogs and only return the `id`
+     * const visitLogWithIdOnly = await prisma.visitLog.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends VisitLogCreateManyAndReturnArgs>(args?: SelectSubset<T, VisitLogCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VisitLogPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a VisitLog.
+     * @param {VisitLogDeleteArgs} args - Arguments to delete one VisitLog.
+     * @example
+     * // Delete one VisitLog
+     * const VisitLog = await prisma.visitLog.delete({
+     *   where: {
+     *     // ... filter to delete one VisitLog
+     *   }
+     * })
+     * 
+     */
+    delete<T extends VisitLogDeleteArgs>(args: SelectSubset<T, VisitLogDeleteArgs<ExtArgs>>): Prisma__VisitLogClient<$Result.GetResult<Prisma.$VisitLogPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one VisitLog.
+     * @param {VisitLogUpdateArgs} args - Arguments to update one VisitLog.
+     * @example
+     * // Update one VisitLog
+     * const visitLog = await prisma.visitLog.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends VisitLogUpdateArgs>(args: SelectSubset<T, VisitLogUpdateArgs<ExtArgs>>): Prisma__VisitLogClient<$Result.GetResult<Prisma.$VisitLogPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more VisitLogs.
+     * @param {VisitLogDeleteManyArgs} args - Arguments to filter VisitLogs to delete.
+     * @example
+     * // Delete a few VisitLogs
+     * const { count } = await prisma.visitLog.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends VisitLogDeleteManyArgs>(args?: SelectSubset<T, VisitLogDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more VisitLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitLogUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many VisitLogs
+     * const visitLog = await prisma.visitLog.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends VisitLogUpdateManyArgs>(args: SelectSubset<T, VisitLogUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more VisitLogs and returns the data updated in the database.
+     * @param {VisitLogUpdateManyAndReturnArgs} args - Arguments to update many VisitLogs.
+     * @example
+     * // Update many VisitLogs
+     * const visitLog = await prisma.visitLog.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more VisitLogs and only return the `id`
+     * const visitLogWithIdOnly = await prisma.visitLog.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends VisitLogUpdateManyAndReturnArgs>(args: SelectSubset<T, VisitLogUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$VisitLogPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one VisitLog.
+     * @param {VisitLogUpsertArgs} args - Arguments to update or create a VisitLog.
+     * @example
+     * // Update or create a VisitLog
+     * const visitLog = await prisma.visitLog.upsert({
+     *   create: {
+     *     // ... data to create a VisitLog
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the VisitLog we want to update
+     *   }
+     * })
+     */
+    upsert<T extends VisitLogUpsertArgs>(args: SelectSubset<T, VisitLogUpsertArgs<ExtArgs>>): Prisma__VisitLogClient<$Result.GetResult<Prisma.$VisitLogPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of VisitLogs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitLogCountArgs} args - Arguments to filter VisitLogs to count.
+     * @example
+     * // Count the number of VisitLogs
+     * const count = await prisma.visitLog.count({
+     *   where: {
+     *     // ... the filter for the VisitLogs we want to count
+     *   }
+     * })
+    **/
+    count<T extends VisitLogCountArgs>(
+      args?: Subset<T, VisitLogCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], VisitLogCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a VisitLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitLogAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends VisitLogAggregateArgs>(args: Subset<T, VisitLogAggregateArgs>): Prisma.PrismaPromise<GetVisitLogAggregateType<T>>
+
+    /**
+     * Group by VisitLog.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {VisitLogGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends VisitLogGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: VisitLogGroupByArgs['orderBy'] }
+        : { orderBy?: VisitLogGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, VisitLogGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetVisitLogGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the VisitLog model
+   */
+  readonly fields: VisitLogFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for VisitLog.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__VisitLogClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    student<T extends StudentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StudentDefaultArgs<ExtArgs>>): Prisma__StudentClient<$Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    pengawas<T extends VisitLog$pengawasArgs<ExtArgs> = {}>(args?: Subset<T, VisitLog$pengawasArgs<ExtArgs>>): Prisma__PengawasClient<$Result.GetResult<Prisma.$PengawasPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    admin<T extends VisitLog$adminArgs<ExtArgs> = {}>(args?: Subset<T, VisitLog$adminArgs<ExtArgs>>): Prisma__AdminClient<$Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the VisitLog model
+   */
+  interface VisitLogFieldRefs {
+    readonly id: FieldRef<"VisitLog", 'Int'>
+    readonly studentId: FieldRef<"VisitLog", 'Int'>
+    readonly pengawasId: FieldRef<"VisitLog", 'Int'>
+    readonly adminId: FieldRef<"VisitLog", 'Int'>
+    readonly tanggal: FieldRef<"VisitLog", 'DateTime'>
+    readonly catatan: FieldRef<"VisitLog", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * VisitLog findUnique
+   */
+  export type VisitLogFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitLog
+     */
+    select?: VisitLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitLog
+     */
+    omit?: VisitLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitLogInclude<ExtArgs> | null
+    /**
+     * Filter, which VisitLog to fetch.
+     */
+    where: VisitLogWhereUniqueInput
+  }
+
+  /**
+   * VisitLog findUniqueOrThrow
+   */
+  export type VisitLogFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitLog
+     */
+    select?: VisitLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitLog
+     */
+    omit?: VisitLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitLogInclude<ExtArgs> | null
+    /**
+     * Filter, which VisitLog to fetch.
+     */
+    where: VisitLogWhereUniqueInput
+  }
+
+  /**
+   * VisitLog findFirst
+   */
+  export type VisitLogFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitLog
+     */
+    select?: VisitLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitLog
+     */
+    omit?: VisitLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitLogInclude<ExtArgs> | null
+    /**
+     * Filter, which VisitLog to fetch.
+     */
+    where?: VisitLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VisitLogs to fetch.
+     */
+    orderBy?: VisitLogOrderByWithRelationInput | VisitLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for VisitLogs.
+     */
+    cursor?: VisitLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VisitLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VisitLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VisitLogs.
+     */
+    distinct?: VisitLogScalarFieldEnum | VisitLogScalarFieldEnum[]
+  }
+
+  /**
+   * VisitLog findFirstOrThrow
+   */
+  export type VisitLogFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitLog
+     */
+    select?: VisitLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitLog
+     */
+    omit?: VisitLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitLogInclude<ExtArgs> | null
+    /**
+     * Filter, which VisitLog to fetch.
+     */
+    where?: VisitLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VisitLogs to fetch.
+     */
+    orderBy?: VisitLogOrderByWithRelationInput | VisitLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for VisitLogs.
+     */
+    cursor?: VisitLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VisitLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VisitLogs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of VisitLogs.
+     */
+    distinct?: VisitLogScalarFieldEnum | VisitLogScalarFieldEnum[]
+  }
+
+  /**
+   * VisitLog findMany
+   */
+  export type VisitLogFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitLog
+     */
+    select?: VisitLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitLog
+     */
+    omit?: VisitLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitLogInclude<ExtArgs> | null
+    /**
+     * Filter, which VisitLogs to fetch.
+     */
+    where?: VisitLogWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of VisitLogs to fetch.
+     */
+    orderBy?: VisitLogOrderByWithRelationInput | VisitLogOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing VisitLogs.
+     */
+    cursor?: VisitLogWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` VisitLogs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` VisitLogs.
+     */
+    skip?: number
+    distinct?: VisitLogScalarFieldEnum | VisitLogScalarFieldEnum[]
+  }
+
+  /**
+   * VisitLog create
+   */
+  export type VisitLogCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitLog
+     */
+    select?: VisitLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitLog
+     */
+    omit?: VisitLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitLogInclude<ExtArgs> | null
+    /**
+     * The data needed to create a VisitLog.
+     */
+    data: XOR<VisitLogCreateInput, VisitLogUncheckedCreateInput>
+  }
+
+  /**
+   * VisitLog createMany
+   */
+  export type VisitLogCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many VisitLogs.
+     */
+    data: VisitLogCreateManyInput | VisitLogCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * VisitLog createManyAndReturn
+   */
+  export type VisitLogCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitLog
+     */
+    select?: VisitLogSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitLog
+     */
+    omit?: VisitLogOmit<ExtArgs> | null
+    /**
+     * The data used to create many VisitLogs.
+     */
+    data: VisitLogCreateManyInput | VisitLogCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitLogIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * VisitLog update
+   */
+  export type VisitLogUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitLog
+     */
+    select?: VisitLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitLog
+     */
+    omit?: VisitLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitLogInclude<ExtArgs> | null
+    /**
+     * The data needed to update a VisitLog.
+     */
+    data: XOR<VisitLogUpdateInput, VisitLogUncheckedUpdateInput>
+    /**
+     * Choose, which VisitLog to update.
+     */
+    where: VisitLogWhereUniqueInput
+  }
+
+  /**
+   * VisitLog updateMany
+   */
+  export type VisitLogUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update VisitLogs.
+     */
+    data: XOR<VisitLogUpdateManyMutationInput, VisitLogUncheckedUpdateManyInput>
+    /**
+     * Filter which VisitLogs to update
+     */
+    where?: VisitLogWhereInput
+    /**
+     * Limit how many VisitLogs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * VisitLog updateManyAndReturn
+   */
+  export type VisitLogUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitLog
+     */
+    select?: VisitLogSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitLog
+     */
+    omit?: VisitLogOmit<ExtArgs> | null
+    /**
+     * The data used to update VisitLogs.
+     */
+    data: XOR<VisitLogUpdateManyMutationInput, VisitLogUncheckedUpdateManyInput>
+    /**
+     * Filter which VisitLogs to update
+     */
+    where?: VisitLogWhereInput
+    /**
+     * Limit how many VisitLogs to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitLogIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * VisitLog upsert
+   */
+  export type VisitLogUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitLog
+     */
+    select?: VisitLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitLog
+     */
+    omit?: VisitLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitLogInclude<ExtArgs> | null
+    /**
+     * The filter to search for the VisitLog to update in case it exists.
+     */
+    where: VisitLogWhereUniqueInput
+    /**
+     * In case the VisitLog found by the `where` argument doesn't exist, create a new VisitLog with this data.
+     */
+    create: XOR<VisitLogCreateInput, VisitLogUncheckedCreateInput>
+    /**
+     * In case the VisitLog was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<VisitLogUpdateInput, VisitLogUncheckedUpdateInput>
+  }
+
+  /**
+   * VisitLog delete
+   */
+  export type VisitLogDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitLog
+     */
+    select?: VisitLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitLog
+     */
+    omit?: VisitLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitLogInclude<ExtArgs> | null
+    /**
+     * Filter which VisitLog to delete.
+     */
+    where: VisitLogWhereUniqueInput
+  }
+
+  /**
+   * VisitLog deleteMany
+   */
+  export type VisitLogDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which VisitLogs to delete
+     */
+    where?: VisitLogWhereInput
+    /**
+     * Limit how many VisitLogs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * VisitLog.pengawas
+   */
+  export type VisitLog$pengawasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Pengawas
+     */
+    select?: PengawasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Pengawas
+     */
+    omit?: PengawasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PengawasInclude<ExtArgs> | null
+    where?: PengawasWhereInput
+  }
+
+  /**
+   * VisitLog.admin
+   */
+  export type VisitLog$adminArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Admin
+     */
+    select?: AdminSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Admin
+     */
+    omit?: AdminOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdminInclude<ExtArgs> | null
+    where?: AdminWhereInput
+  }
+
+  /**
+   * VisitLog without action
+   */
+  export type VisitLogDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the VisitLog
+     */
+    select?: VisitLogSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the VisitLog
+     */
+    omit?: VisitLogOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: VisitLogInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model LoginAttempt
+   */
+
+  export type AggregateLoginAttempt = {
+    _count: LoginAttemptCountAggregateOutputType | null
+    _avg: LoginAttemptAvgAggregateOutputType | null
+    _sum: LoginAttemptSumAggregateOutputType | null
+    _min: LoginAttemptMinAggregateOutputType | null
+    _max: LoginAttemptMaxAggregateOutputType | null
+  }
+
+  export type LoginAttemptAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type LoginAttemptSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type LoginAttemptMinAggregateOutputType = {
+    id: number | null
+    ipAddress: string | null
+    createdAt: Date | null
+  }
+
+  export type LoginAttemptMaxAggregateOutputType = {
+    id: number | null
+    ipAddress: string | null
+    createdAt: Date | null
+  }
+
+  export type LoginAttemptCountAggregateOutputType = {
+    id: number
+    ipAddress: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type LoginAttemptAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type LoginAttemptSumAggregateInputType = {
+    id?: true
+  }
+
+  export type LoginAttemptMinAggregateInputType = {
+    id?: true
+    ipAddress?: true
+    createdAt?: true
+  }
+
+  export type LoginAttemptMaxAggregateInputType = {
+    id?: true
+    ipAddress?: true
+    createdAt?: true
+  }
+
+  export type LoginAttemptCountAggregateInputType = {
+    id?: true
+    ipAddress?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type LoginAttemptAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LoginAttempt to aggregate.
+     */
+    where?: LoginAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LoginAttempts to fetch.
+     */
+    orderBy?: LoginAttemptOrderByWithRelationInput | LoginAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: LoginAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LoginAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LoginAttempts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned LoginAttempts
+    **/
+    _count?: true | LoginAttemptCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: LoginAttemptAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: LoginAttemptSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: LoginAttemptMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: LoginAttemptMaxAggregateInputType
+  }
+
+  export type GetLoginAttemptAggregateType<T extends LoginAttemptAggregateArgs> = {
+        [P in keyof T & keyof AggregateLoginAttempt]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLoginAttempt[P]>
+      : GetScalarType<T[P], AggregateLoginAttempt[P]>
+  }
+
+
+
+
+  export type LoginAttemptGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LoginAttemptWhereInput
+    orderBy?: LoginAttemptOrderByWithAggregationInput | LoginAttemptOrderByWithAggregationInput[]
+    by: LoginAttemptScalarFieldEnum[] | LoginAttemptScalarFieldEnum
+    having?: LoginAttemptScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: LoginAttemptCountAggregateInputType | true
+    _avg?: LoginAttemptAvgAggregateInputType
+    _sum?: LoginAttemptSumAggregateInputType
+    _min?: LoginAttemptMinAggregateInputType
+    _max?: LoginAttemptMaxAggregateInputType
+  }
+
+  export type LoginAttemptGroupByOutputType = {
+    id: number
+    ipAddress: string
+    createdAt: Date
+    _count: LoginAttemptCountAggregateOutputType | null
+    _avg: LoginAttemptAvgAggregateOutputType | null
+    _sum: LoginAttemptSumAggregateOutputType | null
+    _min: LoginAttemptMinAggregateOutputType | null
+    _max: LoginAttemptMaxAggregateOutputType | null
+  }
+
+  type GetLoginAttemptGroupByPayload<T extends LoginAttemptGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<LoginAttemptGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof LoginAttemptGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], LoginAttemptGroupByOutputType[P]>
+            : GetScalarType<T[P], LoginAttemptGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type LoginAttemptSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ipAddress?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["loginAttempt"]>
+
+  export type LoginAttemptSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ipAddress?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["loginAttempt"]>
+
+  export type LoginAttemptSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    ipAddress?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["loginAttempt"]>
+
+  export type LoginAttemptSelectScalar = {
+    id?: boolean
+    ipAddress?: boolean
+    createdAt?: boolean
+  }
+
+  export type LoginAttemptOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "ipAddress" | "createdAt", ExtArgs["result"]["loginAttempt"]>
+
+  export type $LoginAttemptPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "LoginAttempt"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      ipAddress: string
+      createdAt: Date
+    }, ExtArgs["result"]["loginAttempt"]>
+    composites: {}
+  }
+
+  type LoginAttemptGetPayload<S extends boolean | null | undefined | LoginAttemptDefaultArgs> = $Result.GetResult<Prisma.$LoginAttemptPayload, S>
+
+  type LoginAttemptCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<LoginAttemptFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: LoginAttemptCountAggregateInputType | true
+    }
+
+  export interface LoginAttemptDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['LoginAttempt'], meta: { name: 'LoginAttempt' } }
+    /**
+     * Find zero or one LoginAttempt that matches the filter.
+     * @param {LoginAttemptFindUniqueArgs} args - Arguments to find a LoginAttempt
+     * @example
+     * // Get one LoginAttempt
+     * const loginAttempt = await prisma.loginAttempt.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends LoginAttemptFindUniqueArgs>(args: SelectSubset<T, LoginAttemptFindUniqueArgs<ExtArgs>>): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one LoginAttempt that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {LoginAttemptFindUniqueOrThrowArgs} args - Arguments to find a LoginAttempt
+     * @example
+     * // Get one LoginAttempt
+     * const loginAttempt = await prisma.loginAttempt.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends LoginAttemptFindUniqueOrThrowArgs>(args: SelectSubset<T, LoginAttemptFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LoginAttempt that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptFindFirstArgs} args - Arguments to find a LoginAttempt
+     * @example
+     * // Get one LoginAttempt
+     * const loginAttempt = await prisma.loginAttempt.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends LoginAttemptFindFirstArgs>(args?: SelectSubset<T, LoginAttemptFindFirstArgs<ExtArgs>>): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LoginAttempt that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptFindFirstOrThrowArgs} args - Arguments to find a LoginAttempt
+     * @example
+     * // Get one LoginAttempt
+     * const loginAttempt = await prisma.loginAttempt.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends LoginAttemptFindFirstOrThrowArgs>(args?: SelectSubset<T, LoginAttemptFindFirstOrThrowArgs<ExtArgs>>): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more LoginAttempts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all LoginAttempts
+     * const loginAttempts = await prisma.loginAttempt.findMany()
+     * 
+     * // Get first 10 LoginAttempts
+     * const loginAttempts = await prisma.loginAttempt.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const loginAttemptWithIdOnly = await prisma.loginAttempt.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends LoginAttemptFindManyArgs>(args?: SelectSubset<T, LoginAttemptFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a LoginAttempt.
+     * @param {LoginAttemptCreateArgs} args - Arguments to create a LoginAttempt.
+     * @example
+     * // Create one LoginAttempt
+     * const LoginAttempt = await prisma.loginAttempt.create({
+     *   data: {
+     *     // ... data to create a LoginAttempt
+     *   }
+     * })
+     * 
+     */
+    create<T extends LoginAttemptCreateArgs>(args: SelectSubset<T, LoginAttemptCreateArgs<ExtArgs>>): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many LoginAttempts.
+     * @param {LoginAttemptCreateManyArgs} args - Arguments to create many LoginAttempts.
+     * @example
+     * // Create many LoginAttempts
+     * const loginAttempt = await prisma.loginAttempt.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends LoginAttemptCreateManyArgs>(args?: SelectSubset<T, LoginAttemptCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many LoginAttempts and returns the data saved in the database.
+     * @param {LoginAttemptCreateManyAndReturnArgs} args - Arguments to create many LoginAttempts.
+     * @example
+     * // Create many LoginAttempts
+     * const loginAttempt = await prisma.loginAttempt.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many LoginAttempts and only return the `id`
+     * const loginAttemptWithIdOnly = await prisma.loginAttempt.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends LoginAttemptCreateManyAndReturnArgs>(args?: SelectSubset<T, LoginAttemptCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a LoginAttempt.
+     * @param {LoginAttemptDeleteArgs} args - Arguments to delete one LoginAttempt.
+     * @example
+     * // Delete one LoginAttempt
+     * const LoginAttempt = await prisma.loginAttempt.delete({
+     *   where: {
+     *     // ... filter to delete one LoginAttempt
+     *   }
+     * })
+     * 
+     */
+    delete<T extends LoginAttemptDeleteArgs>(args: SelectSubset<T, LoginAttemptDeleteArgs<ExtArgs>>): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one LoginAttempt.
+     * @param {LoginAttemptUpdateArgs} args - Arguments to update one LoginAttempt.
+     * @example
+     * // Update one LoginAttempt
+     * const loginAttempt = await prisma.loginAttempt.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends LoginAttemptUpdateArgs>(args: SelectSubset<T, LoginAttemptUpdateArgs<ExtArgs>>): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more LoginAttempts.
+     * @param {LoginAttemptDeleteManyArgs} args - Arguments to filter LoginAttempts to delete.
+     * @example
+     * // Delete a few LoginAttempts
+     * const { count } = await prisma.loginAttempt.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends LoginAttemptDeleteManyArgs>(args?: SelectSubset<T, LoginAttemptDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LoginAttempts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many LoginAttempts
+     * const loginAttempt = await prisma.loginAttempt.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends LoginAttemptUpdateManyArgs>(args: SelectSubset<T, LoginAttemptUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LoginAttempts and returns the data updated in the database.
+     * @param {LoginAttemptUpdateManyAndReturnArgs} args - Arguments to update many LoginAttempts.
+     * @example
+     * // Update many LoginAttempts
+     * const loginAttempt = await prisma.loginAttempt.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more LoginAttempts and only return the `id`
+     * const loginAttemptWithIdOnly = await prisma.loginAttempt.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends LoginAttemptUpdateManyAndReturnArgs>(args: SelectSubset<T, LoginAttemptUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one LoginAttempt.
+     * @param {LoginAttemptUpsertArgs} args - Arguments to update or create a LoginAttempt.
+     * @example
+     * // Update or create a LoginAttempt
+     * const loginAttempt = await prisma.loginAttempt.upsert({
+     *   create: {
+     *     // ... data to create a LoginAttempt
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the LoginAttempt we want to update
+     *   }
+     * })
+     */
+    upsert<T extends LoginAttemptUpsertArgs>(args: SelectSubset<T, LoginAttemptUpsertArgs<ExtArgs>>): Prisma__LoginAttemptClient<$Result.GetResult<Prisma.$LoginAttemptPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of LoginAttempts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptCountArgs} args - Arguments to filter LoginAttempts to count.
+     * @example
+     * // Count the number of LoginAttempts
+     * const count = await prisma.loginAttempt.count({
+     *   where: {
+     *     // ... the filter for the LoginAttempts we want to count
+     *   }
+     * })
+    **/
+    count<T extends LoginAttemptCountArgs>(
+      args?: Subset<T, LoginAttemptCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], LoginAttemptCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a LoginAttempt.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends LoginAttemptAggregateArgs>(args: Subset<T, LoginAttemptAggregateArgs>): Prisma.PrismaPromise<GetLoginAttemptAggregateType<T>>
+
+    /**
+     * Group by LoginAttempt.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LoginAttemptGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends LoginAttemptGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: LoginAttemptGroupByArgs['orderBy'] }
+        : { orderBy?: LoginAttemptGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, LoginAttemptGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLoginAttemptGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the LoginAttempt model
+   */
+  readonly fields: LoginAttemptFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for LoginAttempt.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__LoginAttemptClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the LoginAttempt model
+   */
+  interface LoginAttemptFieldRefs {
+    readonly id: FieldRef<"LoginAttempt", 'Int'>
+    readonly ipAddress: FieldRef<"LoginAttempt", 'String'>
+    readonly createdAt: FieldRef<"LoginAttempt", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * LoginAttempt findUnique
+   */
+  export type LoginAttemptFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * Filter, which LoginAttempt to fetch.
+     */
+    where: LoginAttemptWhereUniqueInput
+  }
+
+  /**
+   * LoginAttempt findUniqueOrThrow
+   */
+  export type LoginAttemptFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * Filter, which LoginAttempt to fetch.
+     */
+    where: LoginAttemptWhereUniqueInput
+  }
+
+  /**
+   * LoginAttempt findFirst
+   */
+  export type LoginAttemptFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * Filter, which LoginAttempt to fetch.
+     */
+    where?: LoginAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LoginAttempts to fetch.
+     */
+    orderBy?: LoginAttemptOrderByWithRelationInput | LoginAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LoginAttempts.
+     */
+    cursor?: LoginAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LoginAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LoginAttempts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LoginAttempts.
+     */
+    distinct?: LoginAttemptScalarFieldEnum | LoginAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * LoginAttempt findFirstOrThrow
+   */
+  export type LoginAttemptFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * Filter, which LoginAttempt to fetch.
+     */
+    where?: LoginAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LoginAttempts to fetch.
+     */
+    orderBy?: LoginAttemptOrderByWithRelationInput | LoginAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LoginAttempts.
+     */
+    cursor?: LoginAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LoginAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LoginAttempts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LoginAttempts.
+     */
+    distinct?: LoginAttemptScalarFieldEnum | LoginAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * LoginAttempt findMany
+   */
+  export type LoginAttemptFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * Filter, which LoginAttempts to fetch.
+     */
+    where?: LoginAttemptWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LoginAttempts to fetch.
+     */
+    orderBy?: LoginAttemptOrderByWithRelationInput | LoginAttemptOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing LoginAttempts.
+     */
+    cursor?: LoginAttemptWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LoginAttempts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LoginAttempts.
+     */
+    skip?: number
+    distinct?: LoginAttemptScalarFieldEnum | LoginAttemptScalarFieldEnum[]
+  }
+
+  /**
+   * LoginAttempt create
+   */
+  export type LoginAttemptCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * The data needed to create a LoginAttempt.
+     */
+    data: XOR<LoginAttemptCreateInput, LoginAttemptUncheckedCreateInput>
+  }
+
+  /**
+   * LoginAttempt createMany
+   */
+  export type LoginAttemptCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many LoginAttempts.
+     */
+    data: LoginAttemptCreateManyInput | LoginAttemptCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * LoginAttempt createManyAndReturn
+   */
+  export type LoginAttemptCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * The data used to create many LoginAttempts.
+     */
+    data: LoginAttemptCreateManyInput | LoginAttemptCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * LoginAttempt update
+   */
+  export type LoginAttemptUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * The data needed to update a LoginAttempt.
+     */
+    data: XOR<LoginAttemptUpdateInput, LoginAttemptUncheckedUpdateInput>
+    /**
+     * Choose, which LoginAttempt to update.
+     */
+    where: LoginAttemptWhereUniqueInput
+  }
+
+  /**
+   * LoginAttempt updateMany
+   */
+  export type LoginAttemptUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update LoginAttempts.
+     */
+    data: XOR<LoginAttemptUpdateManyMutationInput, LoginAttemptUncheckedUpdateManyInput>
+    /**
+     * Filter which LoginAttempts to update
+     */
+    where?: LoginAttemptWhereInput
+    /**
+     * Limit how many LoginAttempts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * LoginAttempt updateManyAndReturn
+   */
+  export type LoginAttemptUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * The data used to update LoginAttempts.
+     */
+    data: XOR<LoginAttemptUpdateManyMutationInput, LoginAttemptUncheckedUpdateManyInput>
+    /**
+     * Filter which LoginAttempts to update
+     */
+    where?: LoginAttemptWhereInput
+    /**
+     * Limit how many LoginAttempts to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * LoginAttempt upsert
+   */
+  export type LoginAttemptUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * The filter to search for the LoginAttempt to update in case it exists.
+     */
+    where: LoginAttemptWhereUniqueInput
+    /**
+     * In case the LoginAttempt found by the `where` argument doesn't exist, create a new LoginAttempt with this data.
+     */
+    create: XOR<LoginAttemptCreateInput, LoginAttemptUncheckedCreateInput>
+    /**
+     * In case the LoginAttempt was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<LoginAttemptUpdateInput, LoginAttemptUncheckedUpdateInput>
+  }
+
+  /**
+   * LoginAttempt delete
+   */
+  export type LoginAttemptDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+    /**
+     * Filter which LoginAttempt to delete.
+     */
+    where: LoginAttemptWhereUniqueInput
+  }
+
+  /**
+   * LoginAttempt deleteMany
+   */
+  export type LoginAttemptDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LoginAttempts to delete
+     */
+    where?: LoginAttemptWhereInput
+    /**
+     * Limit how many LoginAttempts to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * LoginAttempt without action
+   */
+  export type LoginAttemptDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LoginAttempt
+     */
+    select?: LoginAttemptSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LoginAttempt
+     */
+    omit?: LoginAttemptOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -15999,6 +18609,8 @@ export namespace Prisma {
     password: 'password',
     name: 'name',
     wilayah: 'wilayah',
+    noHp: 'noHp',
+    status: 'status',
     failedLoginAttempts: 'failedLoginAttempts',
     lockedUntil: 'lockedUntil'
   };
@@ -16116,9 +18728,10 @@ export namespace Prisma {
     studentId: 'studentId',
     pengawasId: 'pengawasId',
     fileUrl: 'fileUrl',
+    nominal: 'nominal',
     tanggal: 'tanggal',
-    verified: 'verified',
-    verifiedAt: 'verifiedAt'
+    status: 'status',
+    processedAt: 'processedAt'
   };
 
   export type DisbursementProofScalarFieldEnum = (typeof DisbursementProofScalarFieldEnum)[keyof typeof DisbursementProofScalarFieldEnum]
@@ -16127,6 +18740,7 @@ export namespace Prisma {
   export const AdminNoteScalarFieldEnum: {
     id: 'id',
     studentId: 'studentId',
+    pengawasId: 'pengawasId',
     adminId: 'adminId',
     note: 'note',
     createdAt: 'createdAt'
@@ -16146,6 +18760,27 @@ export namespace Prisma {
   };
 
   export type BantuanAdjustmentScalarFieldEnum = (typeof BantuanAdjustmentScalarFieldEnum)[keyof typeof BantuanAdjustmentScalarFieldEnum]
+
+
+  export const VisitLogScalarFieldEnum: {
+    id: 'id',
+    studentId: 'studentId',
+    pengawasId: 'pengawasId',
+    adminId: 'adminId',
+    tanggal: 'tanggal',
+    catatan: 'catatan'
+  };
+
+  export type VisitLogScalarFieldEnum = (typeof VisitLogScalarFieldEnum)[keyof typeof VisitLogScalarFieldEnum]
+
+
+  export const LoginAttemptScalarFieldEnum: {
+    id: 'id',
+    ipAddress: 'ipAddress',
+    createdAt: 'createdAt'
+  };
+
+  export type LoginAttemptScalarFieldEnum = (typeof LoginAttemptScalarFieldEnum)[keyof typeof LoginAttemptScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -16220,13 +18855,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -16253,6 +18881,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Admin"> | Date | string
     notes?: AdminNoteListRelationFilter
     bantuanAdjustments?: BantuanAdjustmentListRelationFilter
+    visitLogs?: VisitLogListRelationFilter
   }
 
   export type AdminOrderByWithRelationInput = {
@@ -16262,6 +18891,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     notes?: AdminNoteOrderByRelationAggregateInput
     bantuanAdjustments?: BantuanAdjustmentOrderByRelationAggregateInput
+    visitLogs?: VisitLogOrderByRelationAggregateInput
   }
 
   export type AdminWhereUniqueInput = Prisma.AtLeast<{
@@ -16274,6 +18904,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Admin"> | Date | string
     notes?: AdminNoteListRelationFilter
     bantuanAdjustments?: BantuanAdjustmentListRelationFilter
+    visitLogs?: VisitLogListRelationFilter
   }, "id" | "email">
 
   export type AdminOrderByWithAggregationInput = {
@@ -16307,10 +18938,14 @@ export namespace Prisma {
     password?: StringFilter<"Pengawas"> | string
     name?: StringFilter<"Pengawas"> | string
     wilayah?: StringFilter<"Pengawas"> | string
+    noHp?: StringNullableFilter<"Pengawas"> | string | null
+    status?: StringFilter<"Pengawas"> | string
     failedLoginAttempts?: IntFilter<"Pengawas"> | number
     lockedUntil?: DateTimeNullableFilter<"Pengawas"> | Date | string | null
     students?: StudentListRelationFilter
     disbursements?: DisbursementProofListRelationFilter
+    visitLogs?: VisitLogListRelationFilter
+    adminNotes?: AdminNoteListRelationFilter
   }
 
   export type PengawasOrderByWithRelationInput = {
@@ -16319,10 +18954,14 @@ export namespace Prisma {
     password?: SortOrder
     name?: SortOrder
     wilayah?: SortOrder
+    noHp?: SortOrderInput | SortOrder
+    status?: SortOrder
     failedLoginAttempts?: SortOrder
     lockedUntil?: SortOrderInput | SortOrder
     students?: StudentOrderByRelationAggregateInput
     disbursements?: DisbursementProofOrderByRelationAggregateInput
+    visitLogs?: VisitLogOrderByRelationAggregateInput
+    adminNotes?: AdminNoteOrderByRelationAggregateInput
   }
 
   export type PengawasWhereUniqueInput = Prisma.AtLeast<{
@@ -16334,10 +18973,14 @@ export namespace Prisma {
     password?: StringFilter<"Pengawas"> | string
     name?: StringFilter<"Pengawas"> | string
     wilayah?: StringFilter<"Pengawas"> | string
+    noHp?: StringNullableFilter<"Pengawas"> | string | null
+    status?: StringFilter<"Pengawas"> | string
     failedLoginAttempts?: IntFilter<"Pengawas"> | number
     lockedUntil?: DateTimeNullableFilter<"Pengawas"> | Date | string | null
     students?: StudentListRelationFilter
     disbursements?: DisbursementProofListRelationFilter
+    visitLogs?: VisitLogListRelationFilter
+    adminNotes?: AdminNoteListRelationFilter
   }, "id" | "username">
 
   export type PengawasOrderByWithAggregationInput = {
@@ -16346,6 +18989,8 @@ export namespace Prisma {
     password?: SortOrder
     name?: SortOrder
     wilayah?: SortOrder
+    noHp?: SortOrderInput | SortOrder
+    status?: SortOrder
     failedLoginAttempts?: SortOrder
     lockedUntil?: SortOrderInput | SortOrder
     _count?: PengawasCountOrderByAggregateInput
@@ -16364,6 +19009,8 @@ export namespace Prisma {
     password?: StringWithAggregatesFilter<"Pengawas"> | string
     name?: StringWithAggregatesFilter<"Pengawas"> | string
     wilayah?: StringWithAggregatesFilter<"Pengawas"> | string
+    noHp?: StringNullableWithAggregatesFilter<"Pengawas"> | string | null
+    status?: StringWithAggregatesFilter<"Pengawas"> | string
     failedLoginAttempts?: IntWithAggregatesFilter<"Pengawas"> | number
     lockedUntil?: DateTimeNullableWithAggregatesFilter<"Pengawas"> | Date | string | null
   }
@@ -16402,6 +19049,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofListRelationFilter
     adminNotes?: AdminNoteListRelationFilter
     bantuanAdjustments?: BantuanAdjustmentListRelationFilter
+    visitLogs?: VisitLogListRelationFilter
   }
 
   export type StudentOrderByWithRelationInput = {
@@ -16435,6 +19083,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofOrderByRelationAggregateInput
     adminNotes?: AdminNoteOrderByRelationAggregateInput
     bantuanAdjustments?: BantuanAdjustmentOrderByRelationAggregateInput
+    visitLogs?: VisitLogOrderByRelationAggregateInput
   }
 
   export type StudentWhereUniqueInput = Prisma.AtLeast<{
@@ -16471,6 +19120,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofListRelationFilter
     adminNotes?: AdminNoteListRelationFilter
     bantuanAdjustments?: BantuanAdjustmentListRelationFilter
+    visitLogs?: VisitLogListRelationFilter
   }, "id" | "username" | "nik">
 
   export type StudentOrderByWithAggregationInput = {
@@ -16942,9 +19592,10 @@ export namespace Prisma {
     studentId?: IntFilter<"DisbursementProof"> | number
     pengawasId?: IntFilter<"DisbursementProof"> | number
     fileUrl?: StringFilter<"DisbursementProof"> | string
+    nominal?: IntNullableFilter<"DisbursementProof"> | number | null
     tanggal?: DateTimeFilter<"DisbursementProof"> | Date | string
-    verified?: BoolFilter<"DisbursementProof"> | boolean
-    verifiedAt?: DateTimeNullableFilter<"DisbursementProof"> | Date | string | null
+    status?: StringFilter<"DisbursementProof"> | string
+    processedAt?: DateTimeNullableFilter<"DisbursementProof"> | Date | string | null
     student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
     pengawas?: XOR<PengawasScalarRelationFilter, PengawasWhereInput>
   }
@@ -16954,9 +19605,10 @@ export namespace Prisma {
     studentId?: SortOrder
     pengawasId?: SortOrder
     fileUrl?: SortOrder
+    nominal?: SortOrderInput | SortOrder
     tanggal?: SortOrder
-    verified?: SortOrder
-    verifiedAt?: SortOrderInput | SortOrder
+    status?: SortOrder
+    processedAt?: SortOrderInput | SortOrder
     student?: StudentOrderByWithRelationInput
     pengawas?: PengawasOrderByWithRelationInput
   }
@@ -16969,9 +19621,10 @@ export namespace Prisma {
     studentId?: IntFilter<"DisbursementProof"> | number
     pengawasId?: IntFilter<"DisbursementProof"> | number
     fileUrl?: StringFilter<"DisbursementProof"> | string
+    nominal?: IntNullableFilter<"DisbursementProof"> | number | null
     tanggal?: DateTimeFilter<"DisbursementProof"> | Date | string
-    verified?: BoolFilter<"DisbursementProof"> | boolean
-    verifiedAt?: DateTimeNullableFilter<"DisbursementProof"> | Date | string | null
+    status?: StringFilter<"DisbursementProof"> | string
+    processedAt?: DateTimeNullableFilter<"DisbursementProof"> | Date | string | null
     student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
     pengawas?: XOR<PengawasScalarRelationFilter, PengawasWhereInput>
   }, "id">
@@ -16981,9 +19634,10 @@ export namespace Prisma {
     studentId?: SortOrder
     pengawasId?: SortOrder
     fileUrl?: SortOrder
+    nominal?: SortOrderInput | SortOrder
     tanggal?: SortOrder
-    verified?: SortOrder
-    verifiedAt?: SortOrderInput | SortOrder
+    status?: SortOrder
+    processedAt?: SortOrderInput | SortOrder
     _count?: DisbursementProofCountOrderByAggregateInput
     _avg?: DisbursementProofAvgOrderByAggregateInput
     _max?: DisbursementProofMaxOrderByAggregateInput
@@ -16999,9 +19653,10 @@ export namespace Prisma {
     studentId?: IntWithAggregatesFilter<"DisbursementProof"> | number
     pengawasId?: IntWithAggregatesFilter<"DisbursementProof"> | number
     fileUrl?: StringWithAggregatesFilter<"DisbursementProof"> | string
+    nominal?: IntNullableWithAggregatesFilter<"DisbursementProof"> | number | null
     tanggal?: DateTimeWithAggregatesFilter<"DisbursementProof"> | Date | string
-    verified?: BoolWithAggregatesFilter<"DisbursementProof"> | boolean
-    verifiedAt?: DateTimeNullableWithAggregatesFilter<"DisbursementProof"> | Date | string | null
+    status?: StringWithAggregatesFilter<"DisbursementProof"> | string
+    processedAt?: DateTimeNullableWithAggregatesFilter<"DisbursementProof"> | Date | string | null
   }
 
   export type AdminNoteWhereInput = {
@@ -17009,21 +19664,25 @@ export namespace Prisma {
     OR?: AdminNoteWhereInput[]
     NOT?: AdminNoteWhereInput | AdminNoteWhereInput[]
     id?: IntFilter<"AdminNote"> | number
-    studentId?: IntFilter<"AdminNote"> | number
+    studentId?: IntNullableFilter<"AdminNote"> | number | null
+    pengawasId?: IntNullableFilter<"AdminNote"> | number | null
     adminId?: IntFilter<"AdminNote"> | number
     note?: StringFilter<"AdminNote"> | string
     createdAt?: DateTimeFilter<"AdminNote"> | Date | string
-    student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
+    student?: XOR<StudentNullableScalarRelationFilter, StudentWhereInput> | null
+    pengawas?: XOR<PengawasNullableScalarRelationFilter, PengawasWhereInput> | null
     admin?: XOR<AdminScalarRelationFilter, AdminWhereInput>
   }
 
   export type AdminNoteOrderByWithRelationInput = {
     id?: SortOrder
-    studentId?: SortOrder
+    studentId?: SortOrderInput | SortOrder
+    pengawasId?: SortOrderInput | SortOrder
     adminId?: SortOrder
     note?: SortOrder
     createdAt?: SortOrder
     student?: StudentOrderByWithRelationInput
+    pengawas?: PengawasOrderByWithRelationInput
     admin?: AdminOrderByWithRelationInput
   }
 
@@ -17032,17 +19691,20 @@ export namespace Prisma {
     AND?: AdminNoteWhereInput | AdminNoteWhereInput[]
     OR?: AdminNoteWhereInput[]
     NOT?: AdminNoteWhereInput | AdminNoteWhereInput[]
-    studentId?: IntFilter<"AdminNote"> | number
+    studentId?: IntNullableFilter<"AdminNote"> | number | null
+    pengawasId?: IntNullableFilter<"AdminNote"> | number | null
     adminId?: IntFilter<"AdminNote"> | number
     note?: StringFilter<"AdminNote"> | string
     createdAt?: DateTimeFilter<"AdminNote"> | Date | string
-    student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
+    student?: XOR<StudentNullableScalarRelationFilter, StudentWhereInput> | null
+    pengawas?: XOR<PengawasNullableScalarRelationFilter, PengawasWhereInput> | null
     admin?: XOR<AdminScalarRelationFilter, AdminWhereInput>
   }, "id">
 
   export type AdminNoteOrderByWithAggregationInput = {
     id?: SortOrder
-    studentId?: SortOrder
+    studentId?: SortOrderInput | SortOrder
+    pengawasId?: SortOrderInput | SortOrder
     adminId?: SortOrder
     note?: SortOrder
     createdAt?: SortOrder
@@ -17058,7 +19720,8 @@ export namespace Prisma {
     OR?: AdminNoteScalarWhereWithAggregatesInput[]
     NOT?: AdminNoteScalarWhereWithAggregatesInput | AdminNoteScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"AdminNote"> | number
-    studentId?: IntWithAggregatesFilter<"AdminNote"> | number
+    studentId?: IntNullableWithAggregatesFilter<"AdminNote"> | number | null
+    pengawasId?: IntNullableWithAggregatesFilter<"AdminNote"> | number | null
     adminId?: IntWithAggregatesFilter<"AdminNote"> | number
     note?: StringWithAggregatesFilter<"AdminNote"> | string
     createdAt?: DateTimeWithAggregatesFilter<"AdminNote"> | Date | string
@@ -17134,12 +19797,125 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter<"BantuanAdjustment"> | Date | string
   }
 
+  export type VisitLogWhereInput = {
+    AND?: VisitLogWhereInput | VisitLogWhereInput[]
+    OR?: VisitLogWhereInput[]
+    NOT?: VisitLogWhereInput | VisitLogWhereInput[]
+    id?: IntFilter<"VisitLog"> | number
+    studentId?: IntFilter<"VisitLog"> | number
+    pengawasId?: IntNullableFilter<"VisitLog"> | number | null
+    adminId?: IntNullableFilter<"VisitLog"> | number | null
+    tanggal?: DateTimeFilter<"VisitLog"> | Date | string
+    catatan?: StringNullableFilter<"VisitLog"> | string | null
+    student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
+    pengawas?: XOR<PengawasNullableScalarRelationFilter, PengawasWhereInput> | null
+    admin?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
+  }
+
+  export type VisitLogOrderByWithRelationInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    pengawasId?: SortOrderInput | SortOrder
+    adminId?: SortOrderInput | SortOrder
+    tanggal?: SortOrder
+    catatan?: SortOrderInput | SortOrder
+    student?: StudentOrderByWithRelationInput
+    pengawas?: PengawasOrderByWithRelationInput
+    admin?: AdminOrderByWithRelationInput
+  }
+
+  export type VisitLogWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: VisitLogWhereInput | VisitLogWhereInput[]
+    OR?: VisitLogWhereInput[]
+    NOT?: VisitLogWhereInput | VisitLogWhereInput[]
+    studentId?: IntFilter<"VisitLog"> | number
+    pengawasId?: IntNullableFilter<"VisitLog"> | number | null
+    adminId?: IntNullableFilter<"VisitLog"> | number | null
+    tanggal?: DateTimeFilter<"VisitLog"> | Date | string
+    catatan?: StringNullableFilter<"VisitLog"> | string | null
+    student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
+    pengawas?: XOR<PengawasNullableScalarRelationFilter, PengawasWhereInput> | null
+    admin?: XOR<AdminNullableScalarRelationFilter, AdminWhereInput> | null
+  }, "id">
+
+  export type VisitLogOrderByWithAggregationInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    pengawasId?: SortOrderInput | SortOrder
+    adminId?: SortOrderInput | SortOrder
+    tanggal?: SortOrder
+    catatan?: SortOrderInput | SortOrder
+    _count?: VisitLogCountOrderByAggregateInput
+    _avg?: VisitLogAvgOrderByAggregateInput
+    _max?: VisitLogMaxOrderByAggregateInput
+    _min?: VisitLogMinOrderByAggregateInput
+    _sum?: VisitLogSumOrderByAggregateInput
+  }
+
+  export type VisitLogScalarWhereWithAggregatesInput = {
+    AND?: VisitLogScalarWhereWithAggregatesInput | VisitLogScalarWhereWithAggregatesInput[]
+    OR?: VisitLogScalarWhereWithAggregatesInput[]
+    NOT?: VisitLogScalarWhereWithAggregatesInput | VisitLogScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"VisitLog"> | number
+    studentId?: IntWithAggregatesFilter<"VisitLog"> | number
+    pengawasId?: IntNullableWithAggregatesFilter<"VisitLog"> | number | null
+    adminId?: IntNullableWithAggregatesFilter<"VisitLog"> | number | null
+    tanggal?: DateTimeWithAggregatesFilter<"VisitLog"> | Date | string
+    catatan?: StringNullableWithAggregatesFilter<"VisitLog"> | string | null
+  }
+
+  export type LoginAttemptWhereInput = {
+    AND?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
+    OR?: LoginAttemptWhereInput[]
+    NOT?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
+    id?: IntFilter<"LoginAttempt"> | number
+    ipAddress?: StringFilter<"LoginAttempt"> | string
+    createdAt?: DateTimeFilter<"LoginAttempt"> | Date | string
+  }
+
+  export type LoginAttemptOrderByWithRelationInput = {
+    id?: SortOrder
+    ipAddress?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type LoginAttemptWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
+    OR?: LoginAttemptWhereInput[]
+    NOT?: LoginAttemptWhereInput | LoginAttemptWhereInput[]
+    ipAddress?: StringFilter<"LoginAttempt"> | string
+    createdAt?: DateTimeFilter<"LoginAttempt"> | Date | string
+  }, "id">
+
+  export type LoginAttemptOrderByWithAggregationInput = {
+    id?: SortOrder
+    ipAddress?: SortOrder
+    createdAt?: SortOrder
+    _count?: LoginAttemptCountOrderByAggregateInput
+    _avg?: LoginAttemptAvgOrderByAggregateInput
+    _max?: LoginAttemptMaxOrderByAggregateInput
+    _min?: LoginAttemptMinOrderByAggregateInput
+    _sum?: LoginAttemptSumOrderByAggregateInput
+  }
+
+  export type LoginAttemptScalarWhereWithAggregatesInput = {
+    AND?: LoginAttemptScalarWhereWithAggregatesInput | LoginAttemptScalarWhereWithAggregatesInput[]
+    OR?: LoginAttemptScalarWhereWithAggregatesInput[]
+    NOT?: LoginAttemptScalarWhereWithAggregatesInput | LoginAttemptScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"LoginAttempt"> | number
+    ipAddress?: StringWithAggregatesFilter<"LoginAttempt"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"LoginAttempt"> | Date | string
+  }
+
   export type AdminCreateInput = {
     email: string
     name: string
     createdAt?: Date | string
     notes?: AdminNoteCreateNestedManyWithoutAdminInput
     bantuanAdjustments?: BantuanAdjustmentCreateNestedManyWithoutAdminInput
+    visitLogs?: VisitLogCreateNestedManyWithoutAdminInput
   }
 
   export type AdminUncheckedCreateInput = {
@@ -17149,6 +19925,7 @@ export namespace Prisma {
     createdAt?: Date | string
     notes?: AdminNoteUncheckedCreateNestedManyWithoutAdminInput
     bantuanAdjustments?: BantuanAdjustmentUncheckedCreateNestedManyWithoutAdminInput
+    visitLogs?: VisitLogUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AdminUpdateInput = {
@@ -17157,6 +19934,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     notes?: AdminNoteUpdateManyWithoutAdminNestedInput
     bantuanAdjustments?: BantuanAdjustmentUpdateManyWithoutAdminNestedInput
+    visitLogs?: VisitLogUpdateManyWithoutAdminNestedInput
   }
 
   export type AdminUncheckedUpdateInput = {
@@ -17166,6 +19944,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     notes?: AdminNoteUncheckedUpdateManyWithoutAdminNestedInput
     bantuanAdjustments?: BantuanAdjustmentUncheckedUpdateManyWithoutAdminNestedInput
+    visitLogs?: VisitLogUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type AdminCreateManyInput = {
@@ -17193,10 +19972,14 @@ export namespace Prisma {
     password: string
     name: string
     wilayah: string
+    noHp?: string | null
+    status?: string
     failedLoginAttempts?: number
     lockedUntil?: Date | string | null
     students?: StudentCreateNestedManyWithoutPengawasInput
     disbursements?: DisbursementProofCreateNestedManyWithoutPengawasInput
+    visitLogs?: VisitLogCreateNestedManyWithoutPengawasInput
+    adminNotes?: AdminNoteCreateNestedManyWithoutPengawasInput
   }
 
   export type PengawasUncheckedCreateInput = {
@@ -17205,10 +19988,14 @@ export namespace Prisma {
     password: string
     name: string
     wilayah: string
+    noHp?: string | null
+    status?: string
     failedLoginAttempts?: number
     lockedUntil?: Date | string | null
     students?: StudentUncheckedCreateNestedManyWithoutPengawasInput
     disbursements?: DisbursementProofUncheckedCreateNestedManyWithoutPengawasInput
+    visitLogs?: VisitLogUncheckedCreateNestedManyWithoutPengawasInput
+    adminNotes?: AdminNoteUncheckedCreateNestedManyWithoutPengawasInput
   }
 
   export type PengawasUpdateInput = {
@@ -17216,10 +20003,14 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     wilayah?: StringFieldUpdateOperationsInput | string
+    noHp?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
     failedLoginAttempts?: IntFieldUpdateOperationsInput | number
     lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     students?: StudentUpdateManyWithoutPengawasNestedInput
     disbursements?: DisbursementProofUpdateManyWithoutPengawasNestedInput
+    visitLogs?: VisitLogUpdateManyWithoutPengawasNestedInput
+    adminNotes?: AdminNoteUpdateManyWithoutPengawasNestedInput
   }
 
   export type PengawasUncheckedUpdateInput = {
@@ -17228,10 +20019,14 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     wilayah?: StringFieldUpdateOperationsInput | string
+    noHp?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
     failedLoginAttempts?: IntFieldUpdateOperationsInput | number
     lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     students?: StudentUncheckedUpdateManyWithoutPengawasNestedInput
     disbursements?: DisbursementProofUncheckedUpdateManyWithoutPengawasNestedInput
+    visitLogs?: VisitLogUncheckedUpdateManyWithoutPengawasNestedInput
+    adminNotes?: AdminNoteUncheckedUpdateManyWithoutPengawasNestedInput
   }
 
   export type PengawasCreateManyInput = {
@@ -17240,6 +20035,8 @@ export namespace Prisma {
     password: string
     name: string
     wilayah: string
+    noHp?: string | null
+    status?: string
     failedLoginAttempts?: number
     lockedUntil?: Date | string | null
   }
@@ -17249,6 +20046,8 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     wilayah?: StringFieldUpdateOperationsInput | string
+    noHp?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
     failedLoginAttempts?: IntFieldUpdateOperationsInput | number
     lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -17259,6 +20058,8 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     wilayah?: StringFieldUpdateOperationsInput | string
+    noHp?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
     failedLoginAttempts?: IntFieldUpdateOperationsInput | number
     lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -17292,6 +20093,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofCreateNestedManyWithoutStudentInput
     adminNotes?: AdminNoteCreateNestedManyWithoutStudentInput
     bantuanAdjustments?: BantuanAdjustmentCreateNestedManyWithoutStudentInput
+    visitLogs?: VisitLogCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateInput = {
@@ -17324,6 +20126,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofUncheckedCreateNestedManyWithoutStudentInput
     adminNotes?: AdminNoteUncheckedCreateNestedManyWithoutStudentInput
     bantuanAdjustments?: BantuanAdjustmentUncheckedCreateNestedManyWithoutStudentInput
+    visitLogs?: VisitLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUpdateInput = {
@@ -17355,6 +20158,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofUpdateManyWithoutStudentNestedInput
     adminNotes?: AdminNoteUpdateManyWithoutStudentNestedInput
     bantuanAdjustments?: BantuanAdjustmentUpdateManyWithoutStudentNestedInput
+    visitLogs?: VisitLogUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateInput = {
@@ -17387,6 +20191,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofUncheckedUpdateManyWithoutStudentNestedInput
     adminNotes?: AdminNoteUncheckedUpdateManyWithoutStudentNestedInput
     bantuanAdjustments?: BantuanAdjustmentUncheckedUpdateManyWithoutStudentNestedInput
+    visitLogs?: VisitLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentCreateManyInput = {
@@ -17861,9 +20666,10 @@ export namespace Prisma {
 
   export type DisbursementProofCreateInput = {
     fileUrl: string
+    nominal?: number | null
     tanggal?: Date | string
-    verified?: boolean
-    verifiedAt?: Date | string | null
+    status?: string
+    processedAt?: Date | string | null
     student: StudentCreateNestedOneWithoutDisbursementsInput
     pengawas: PengawasCreateNestedOneWithoutDisbursementsInput
   }
@@ -17873,16 +20679,18 @@ export namespace Prisma {
     studentId: number
     pengawasId: number
     fileUrl: string
+    nominal?: number | null
     tanggal?: Date | string
-    verified?: boolean
-    verifiedAt?: Date | string | null
+    status?: string
+    processedAt?: Date | string | null
   }
 
   export type DisbursementProofUpdateInput = {
     fileUrl?: StringFieldUpdateOperationsInput | string
+    nominal?: NullableIntFieldUpdateOperationsInput | number | null
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
-    verified?: BoolFieldUpdateOperationsInput | boolean
-    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     student?: StudentUpdateOneRequiredWithoutDisbursementsNestedInput
     pengawas?: PengawasUpdateOneRequiredWithoutDisbursementsNestedInput
   }
@@ -17892,9 +20700,10 @@ export namespace Prisma {
     studentId?: IntFieldUpdateOperationsInput | number
     pengawasId?: IntFieldUpdateOperationsInput | number
     fileUrl?: StringFieldUpdateOperationsInput | string
+    nominal?: NullableIntFieldUpdateOperationsInput | number | null
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
-    verified?: BoolFieldUpdateOperationsInput | boolean
-    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type DisbursementProofCreateManyInput = {
@@ -17902,16 +20711,18 @@ export namespace Prisma {
     studentId: number
     pengawasId: number
     fileUrl: string
+    nominal?: number | null
     tanggal?: Date | string
-    verified?: boolean
-    verifiedAt?: Date | string | null
+    status?: string
+    processedAt?: Date | string | null
   }
 
   export type DisbursementProofUpdateManyMutationInput = {
     fileUrl?: StringFieldUpdateOperationsInput | string
+    nominal?: NullableIntFieldUpdateOperationsInput | number | null
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
-    verified?: BoolFieldUpdateOperationsInput | boolean
-    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type DisbursementProofUncheckedUpdateManyInput = {
@@ -17919,21 +20730,24 @@ export namespace Prisma {
     studentId?: IntFieldUpdateOperationsInput | number
     pengawasId?: IntFieldUpdateOperationsInput | number
     fileUrl?: StringFieldUpdateOperationsInput | string
+    nominal?: NullableIntFieldUpdateOperationsInput | number | null
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
-    verified?: BoolFieldUpdateOperationsInput | boolean
-    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type AdminNoteCreateInput = {
     note: string
     createdAt?: Date | string
-    student: StudentCreateNestedOneWithoutAdminNotesInput
+    student?: StudentCreateNestedOneWithoutAdminNotesInput
+    pengawas?: PengawasCreateNestedOneWithoutAdminNotesInput
     admin: AdminCreateNestedOneWithoutNotesInput
   }
 
   export type AdminNoteUncheckedCreateInput = {
     id?: number
-    studentId: number
+    studentId?: number | null
+    pengawasId?: number | null
     adminId: number
     note: string
     createdAt?: Date | string
@@ -17942,13 +20756,15 @@ export namespace Prisma {
   export type AdminNoteUpdateInput = {
     note?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    student?: StudentUpdateOneRequiredWithoutAdminNotesNestedInput
+    student?: StudentUpdateOneWithoutAdminNotesNestedInput
+    pengawas?: PengawasUpdateOneWithoutAdminNotesNestedInput
     admin?: AdminUpdateOneRequiredWithoutNotesNestedInput
   }
 
   export type AdminNoteUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    studentId?: IntFieldUpdateOperationsInput | number
+    studentId?: NullableIntFieldUpdateOperationsInput | number | null
+    pengawasId?: NullableIntFieldUpdateOperationsInput | number | null
     adminId?: IntFieldUpdateOperationsInput | number
     note?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -17956,7 +20772,8 @@ export namespace Prisma {
 
   export type AdminNoteCreateManyInput = {
     id?: number
-    studentId: number
+    studentId?: number | null
+    pengawasId?: number | null
     adminId: number
     note: string
     createdAt?: Date | string
@@ -17969,7 +20786,8 @@ export namespace Prisma {
 
   export type AdminNoteUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    studentId?: IntFieldUpdateOperationsInput | number
+    studentId?: NullableIntFieldUpdateOperationsInput | number | null
+    pengawasId?: NullableIntFieldUpdateOperationsInput | number | null
     adminId?: IntFieldUpdateOperationsInput | number
     note?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -18040,6 +20858,102 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type VisitLogCreateInput = {
+    tanggal?: Date | string
+    catatan?: string | null
+    student: StudentCreateNestedOneWithoutVisitLogsInput
+    pengawas?: PengawasCreateNestedOneWithoutVisitLogsInput
+    admin?: AdminCreateNestedOneWithoutVisitLogsInput
+  }
+
+  export type VisitLogUncheckedCreateInput = {
+    id?: number
+    studentId: number
+    pengawasId?: number | null
+    adminId?: number | null
+    tanggal?: Date | string
+    catatan?: string | null
+  }
+
+  export type VisitLogUpdateInput = {
+    tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
+    catatan?: NullableStringFieldUpdateOperationsInput | string | null
+    student?: StudentUpdateOneRequiredWithoutVisitLogsNestedInput
+    pengawas?: PengawasUpdateOneWithoutVisitLogsNestedInput
+    admin?: AdminUpdateOneWithoutVisitLogsNestedInput
+  }
+
+  export type VisitLogUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    studentId?: IntFieldUpdateOperationsInput | number
+    pengawasId?: NullableIntFieldUpdateOperationsInput | number | null
+    adminId?: NullableIntFieldUpdateOperationsInput | number | null
+    tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
+    catatan?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type VisitLogCreateManyInput = {
+    id?: number
+    studentId: number
+    pengawasId?: number | null
+    adminId?: number | null
+    tanggal?: Date | string
+    catatan?: string | null
+  }
+
+  export type VisitLogUpdateManyMutationInput = {
+    tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
+    catatan?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type VisitLogUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    studentId?: IntFieldUpdateOperationsInput | number
+    pengawasId?: NullableIntFieldUpdateOperationsInput | number | null
+    adminId?: NullableIntFieldUpdateOperationsInput | number | null
+    tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
+    catatan?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type LoginAttemptCreateInput = {
+    ipAddress: string
+    createdAt?: Date | string
+  }
+
+  export type LoginAttemptUncheckedCreateInput = {
+    id?: number
+    ipAddress: string
+    createdAt?: Date | string
+  }
+
+  export type LoginAttemptUpdateInput = {
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LoginAttemptUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LoginAttemptCreateManyInput = {
+    id?: number
+    ipAddress: string
+    createdAt?: Date | string
+  }
+
+  export type LoginAttemptUpdateManyMutationInput = {
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LoginAttemptUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    ipAddress?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -18089,11 +21003,21 @@ export namespace Prisma {
     none?: BantuanAdjustmentWhereInput
   }
 
+  export type VisitLogListRelationFilter = {
+    every?: VisitLogWhereInput
+    some?: VisitLogWhereInput
+    none?: VisitLogWhereInput
+  }
+
   export type AdminNoteOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type BantuanAdjustmentOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type VisitLogOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -18174,6 +21098,21 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type StringNullableFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
   export type DateTimeNullableFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
@@ -18216,6 +21155,8 @@ export namespace Prisma {
     password?: SortOrder
     name?: SortOrder
     wilayah?: SortOrder
+    noHp?: SortOrder
+    status?: SortOrder
     failedLoginAttempts?: SortOrder
     lockedUntil?: SortOrder
   }
@@ -18231,6 +21172,8 @@ export namespace Prisma {
     password?: SortOrder
     name?: SortOrder
     wilayah?: SortOrder
+    noHp?: SortOrder
+    status?: SortOrder
     failedLoginAttempts?: SortOrder
     lockedUntil?: SortOrder
   }
@@ -18241,6 +21184,8 @@ export namespace Prisma {
     password?: SortOrder
     name?: SortOrder
     wilayah?: SortOrder
+    noHp?: SortOrder
+    status?: SortOrder
     failedLoginAttempts?: SortOrder
     lockedUntil?: SortOrder
   }
@@ -18248,6 +21193,24 @@ export namespace Prisma {
   export type PengawasSumOrderByAggregateInput = {
     id?: SortOrder
     failedLoginAttempts?: SortOrder
+  }
+
+  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    contains?: string | StringFieldRefInput<$PrismaModel>
+    startsWith?: string | StringFieldRefInput<$PrismaModel>
+    endsWith?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -18607,21 +21570,6 @@ export namespace Prisma {
     studentId?: SortOrder
   }
 
-  export type StringNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
   export type AcademicUpdateCountOrderByAggregateInput = {
     id?: SortOrder
     studentId?: SortOrder
@@ -18662,27 +21610,15 @@ export namespace Prisma {
     studentId?: SortOrder
   }
 
-  export type StringNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    contains?: string | StringFieldRefInput<$PrismaModel>
-    startsWith?: string | StringFieldRefInput<$PrismaModel>
-    endsWith?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
-  }
-
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
   export type DisbursementProofCountOrderByAggregateInput = {
@@ -18690,15 +21626,17 @@ export namespace Prisma {
     studentId?: SortOrder
     pengawasId?: SortOrder
     fileUrl?: SortOrder
+    nominal?: SortOrder
     tanggal?: SortOrder
-    verified?: SortOrder
-    verifiedAt?: SortOrder
+    status?: SortOrder
+    processedAt?: SortOrder
   }
 
   export type DisbursementProofAvgOrderByAggregateInput = {
     id?: SortOrder
     studentId?: SortOrder
     pengawasId?: SortOrder
+    nominal?: SortOrder
   }
 
   export type DisbursementProofMaxOrderByAggregateInput = {
@@ -18706,9 +21644,10 @@ export namespace Prisma {
     studentId?: SortOrder
     pengawasId?: SortOrder
     fileUrl?: SortOrder
+    nominal?: SortOrder
     tanggal?: SortOrder
-    verified?: SortOrder
-    verifiedAt?: SortOrder
+    status?: SortOrder
+    processedAt?: SortOrder
   }
 
   export type DisbursementProofMinOrderByAggregateInput = {
@@ -18716,23 +21655,43 @@ export namespace Prisma {
     studentId?: SortOrder
     pengawasId?: SortOrder
     fileUrl?: SortOrder
+    nominal?: SortOrder
     tanggal?: SortOrder
-    verified?: SortOrder
-    verifiedAt?: SortOrder
+    status?: SortOrder
+    processedAt?: SortOrder
   }
 
   export type DisbursementProofSumOrderByAggregateInput = {
     id?: SortOrder
     studentId?: SortOrder
     pengawasId?: SortOrder
+    nominal?: SortOrder
   }
 
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type StudentNullableScalarRelationFilter = {
+    is?: StudentWhereInput | null
+    isNot?: StudentWhereInput | null
+  }
+
+  export type PengawasNullableScalarRelationFilter = {
+    is?: PengawasWhereInput | null
+    isNot?: PengawasWhereInput | null
   }
 
   export type AdminScalarRelationFilter = {
@@ -18743,6 +21702,7 @@ export namespace Prisma {
   export type AdminNoteCountOrderByAggregateInput = {
     id?: SortOrder
     studentId?: SortOrder
+    pengawasId?: SortOrder
     adminId?: SortOrder
     note?: SortOrder
     createdAt?: SortOrder
@@ -18751,12 +21711,14 @@ export namespace Prisma {
   export type AdminNoteAvgOrderByAggregateInput = {
     id?: SortOrder
     studentId?: SortOrder
+    pengawasId?: SortOrder
     adminId?: SortOrder
   }
 
   export type AdminNoteMaxOrderByAggregateInput = {
     id?: SortOrder
     studentId?: SortOrder
+    pengawasId?: SortOrder
     adminId?: SortOrder
     note?: SortOrder
     createdAt?: SortOrder
@@ -18765,6 +21727,7 @@ export namespace Prisma {
   export type AdminNoteMinOrderByAggregateInput = {
     id?: SortOrder
     studentId?: SortOrder
+    pengawasId?: SortOrder
     adminId?: SortOrder
     note?: SortOrder
     createdAt?: SortOrder
@@ -18773,6 +21736,7 @@ export namespace Prisma {
   export type AdminNoteSumOrderByAggregateInput = {
     id?: SortOrder
     studentId?: SortOrder
+    pengawasId?: SortOrder
     adminId?: SortOrder
   }
 
@@ -18822,6 +21786,78 @@ export namespace Prisma {
     nominalBaru?: SortOrder
   }
 
+  export type AdminNullableScalarRelationFilter = {
+    is?: AdminWhereInput | null
+    isNot?: AdminWhereInput | null
+  }
+
+  export type VisitLogCountOrderByAggregateInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    pengawasId?: SortOrder
+    adminId?: SortOrder
+    tanggal?: SortOrder
+    catatan?: SortOrder
+  }
+
+  export type VisitLogAvgOrderByAggregateInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    pengawasId?: SortOrder
+    adminId?: SortOrder
+  }
+
+  export type VisitLogMaxOrderByAggregateInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    pengawasId?: SortOrder
+    adminId?: SortOrder
+    tanggal?: SortOrder
+    catatan?: SortOrder
+  }
+
+  export type VisitLogMinOrderByAggregateInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    pengawasId?: SortOrder
+    adminId?: SortOrder
+    tanggal?: SortOrder
+    catatan?: SortOrder
+  }
+
+  export type VisitLogSumOrderByAggregateInput = {
+    id?: SortOrder
+    studentId?: SortOrder
+    pengawasId?: SortOrder
+    adminId?: SortOrder
+  }
+
+  export type LoginAttemptCountOrderByAggregateInput = {
+    id?: SortOrder
+    ipAddress?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type LoginAttemptAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type LoginAttemptMaxOrderByAggregateInput = {
+    id?: SortOrder
+    ipAddress?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type LoginAttemptMinOrderByAggregateInput = {
+    id?: SortOrder
+    ipAddress?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type LoginAttemptSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
   export type AdminNoteCreateNestedManyWithoutAdminInput = {
     create?: XOR<AdminNoteCreateWithoutAdminInput, AdminNoteUncheckedCreateWithoutAdminInput> | AdminNoteCreateWithoutAdminInput[] | AdminNoteUncheckedCreateWithoutAdminInput[]
     connectOrCreate?: AdminNoteCreateOrConnectWithoutAdminInput | AdminNoteCreateOrConnectWithoutAdminInput[]
@@ -18836,6 +21872,13 @@ export namespace Prisma {
     connect?: BantuanAdjustmentWhereUniqueInput | BantuanAdjustmentWhereUniqueInput[]
   }
 
+  export type VisitLogCreateNestedManyWithoutAdminInput = {
+    create?: XOR<VisitLogCreateWithoutAdminInput, VisitLogUncheckedCreateWithoutAdminInput> | VisitLogCreateWithoutAdminInput[] | VisitLogUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: VisitLogCreateOrConnectWithoutAdminInput | VisitLogCreateOrConnectWithoutAdminInput[]
+    createMany?: VisitLogCreateManyAdminInputEnvelope
+    connect?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+  }
+
   export type AdminNoteUncheckedCreateNestedManyWithoutAdminInput = {
     create?: XOR<AdminNoteCreateWithoutAdminInput, AdminNoteUncheckedCreateWithoutAdminInput> | AdminNoteCreateWithoutAdminInput[] | AdminNoteUncheckedCreateWithoutAdminInput[]
     connectOrCreate?: AdminNoteCreateOrConnectWithoutAdminInput | AdminNoteCreateOrConnectWithoutAdminInput[]
@@ -18848,6 +21891,13 @@ export namespace Prisma {
     connectOrCreate?: BantuanAdjustmentCreateOrConnectWithoutAdminInput | BantuanAdjustmentCreateOrConnectWithoutAdminInput[]
     createMany?: BantuanAdjustmentCreateManyAdminInputEnvelope
     connect?: BantuanAdjustmentWhereUniqueInput | BantuanAdjustmentWhereUniqueInput[]
+  }
+
+  export type VisitLogUncheckedCreateNestedManyWithoutAdminInput = {
+    create?: XOR<VisitLogCreateWithoutAdminInput, VisitLogUncheckedCreateWithoutAdminInput> | VisitLogCreateWithoutAdminInput[] | VisitLogUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: VisitLogCreateOrConnectWithoutAdminInput | VisitLogCreateOrConnectWithoutAdminInput[]
+    createMany?: VisitLogCreateManyAdminInputEnvelope
+    connect?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -18886,6 +21936,20 @@ export namespace Prisma {
     deleteMany?: BantuanAdjustmentScalarWhereInput | BantuanAdjustmentScalarWhereInput[]
   }
 
+  export type VisitLogUpdateManyWithoutAdminNestedInput = {
+    create?: XOR<VisitLogCreateWithoutAdminInput, VisitLogUncheckedCreateWithoutAdminInput> | VisitLogCreateWithoutAdminInput[] | VisitLogUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: VisitLogCreateOrConnectWithoutAdminInput | VisitLogCreateOrConnectWithoutAdminInput[]
+    upsert?: VisitLogUpsertWithWhereUniqueWithoutAdminInput | VisitLogUpsertWithWhereUniqueWithoutAdminInput[]
+    createMany?: VisitLogCreateManyAdminInputEnvelope
+    set?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+    disconnect?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+    delete?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+    connect?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+    update?: VisitLogUpdateWithWhereUniqueWithoutAdminInput | VisitLogUpdateWithWhereUniqueWithoutAdminInput[]
+    updateMany?: VisitLogUpdateManyWithWhereWithoutAdminInput | VisitLogUpdateManyWithWhereWithoutAdminInput[]
+    deleteMany?: VisitLogScalarWhereInput | VisitLogScalarWhereInput[]
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -18922,6 +21986,20 @@ export namespace Prisma {
     deleteMany?: BantuanAdjustmentScalarWhereInput | BantuanAdjustmentScalarWhereInput[]
   }
 
+  export type VisitLogUncheckedUpdateManyWithoutAdminNestedInput = {
+    create?: XOR<VisitLogCreateWithoutAdminInput, VisitLogUncheckedCreateWithoutAdminInput> | VisitLogCreateWithoutAdminInput[] | VisitLogUncheckedCreateWithoutAdminInput[]
+    connectOrCreate?: VisitLogCreateOrConnectWithoutAdminInput | VisitLogCreateOrConnectWithoutAdminInput[]
+    upsert?: VisitLogUpsertWithWhereUniqueWithoutAdminInput | VisitLogUpsertWithWhereUniqueWithoutAdminInput[]
+    createMany?: VisitLogCreateManyAdminInputEnvelope
+    set?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+    disconnect?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+    delete?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+    connect?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+    update?: VisitLogUpdateWithWhereUniqueWithoutAdminInput | VisitLogUpdateWithWhereUniqueWithoutAdminInput[]
+    updateMany?: VisitLogUpdateManyWithWhereWithoutAdminInput | VisitLogUpdateManyWithWhereWithoutAdminInput[]
+    deleteMany?: VisitLogScalarWhereInput | VisitLogScalarWhereInput[]
+  }
+
   export type StudentCreateNestedManyWithoutPengawasInput = {
     create?: XOR<StudentCreateWithoutPengawasInput, StudentUncheckedCreateWithoutPengawasInput> | StudentCreateWithoutPengawasInput[] | StudentUncheckedCreateWithoutPengawasInput[]
     connectOrCreate?: StudentCreateOrConnectWithoutPengawasInput | StudentCreateOrConnectWithoutPengawasInput[]
@@ -18936,6 +22014,20 @@ export namespace Prisma {
     connect?: DisbursementProofWhereUniqueInput | DisbursementProofWhereUniqueInput[]
   }
 
+  export type VisitLogCreateNestedManyWithoutPengawasInput = {
+    create?: XOR<VisitLogCreateWithoutPengawasInput, VisitLogUncheckedCreateWithoutPengawasInput> | VisitLogCreateWithoutPengawasInput[] | VisitLogUncheckedCreateWithoutPengawasInput[]
+    connectOrCreate?: VisitLogCreateOrConnectWithoutPengawasInput | VisitLogCreateOrConnectWithoutPengawasInput[]
+    createMany?: VisitLogCreateManyPengawasInputEnvelope
+    connect?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+  }
+
+  export type AdminNoteCreateNestedManyWithoutPengawasInput = {
+    create?: XOR<AdminNoteCreateWithoutPengawasInput, AdminNoteUncheckedCreateWithoutPengawasInput> | AdminNoteCreateWithoutPengawasInput[] | AdminNoteUncheckedCreateWithoutPengawasInput[]
+    connectOrCreate?: AdminNoteCreateOrConnectWithoutPengawasInput | AdminNoteCreateOrConnectWithoutPengawasInput[]
+    createMany?: AdminNoteCreateManyPengawasInputEnvelope
+    connect?: AdminNoteWhereUniqueInput | AdminNoteWhereUniqueInput[]
+  }
+
   export type StudentUncheckedCreateNestedManyWithoutPengawasInput = {
     create?: XOR<StudentCreateWithoutPengawasInput, StudentUncheckedCreateWithoutPengawasInput> | StudentCreateWithoutPengawasInput[] | StudentUncheckedCreateWithoutPengawasInput[]
     connectOrCreate?: StudentCreateOrConnectWithoutPengawasInput | StudentCreateOrConnectWithoutPengawasInput[]
@@ -18948,6 +22040,24 @@ export namespace Prisma {
     connectOrCreate?: DisbursementProofCreateOrConnectWithoutPengawasInput | DisbursementProofCreateOrConnectWithoutPengawasInput[]
     createMany?: DisbursementProofCreateManyPengawasInputEnvelope
     connect?: DisbursementProofWhereUniqueInput | DisbursementProofWhereUniqueInput[]
+  }
+
+  export type VisitLogUncheckedCreateNestedManyWithoutPengawasInput = {
+    create?: XOR<VisitLogCreateWithoutPengawasInput, VisitLogUncheckedCreateWithoutPengawasInput> | VisitLogCreateWithoutPengawasInput[] | VisitLogUncheckedCreateWithoutPengawasInput[]
+    connectOrCreate?: VisitLogCreateOrConnectWithoutPengawasInput | VisitLogCreateOrConnectWithoutPengawasInput[]
+    createMany?: VisitLogCreateManyPengawasInputEnvelope
+    connect?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+  }
+
+  export type AdminNoteUncheckedCreateNestedManyWithoutPengawasInput = {
+    create?: XOR<AdminNoteCreateWithoutPengawasInput, AdminNoteUncheckedCreateWithoutPengawasInput> | AdminNoteCreateWithoutPengawasInput[] | AdminNoteUncheckedCreateWithoutPengawasInput[]
+    connectOrCreate?: AdminNoteCreateOrConnectWithoutPengawasInput | AdminNoteCreateOrConnectWithoutPengawasInput[]
+    createMany?: AdminNoteCreateManyPengawasInputEnvelope
+    connect?: AdminNoteWhereUniqueInput | AdminNoteWhereUniqueInput[]
+  }
+
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
   }
 
   export type NullableDateTimeFieldUpdateOperationsInput = {
@@ -18982,6 +22092,34 @@ export namespace Prisma {
     deleteMany?: DisbursementProofScalarWhereInput | DisbursementProofScalarWhereInput[]
   }
 
+  export type VisitLogUpdateManyWithoutPengawasNestedInput = {
+    create?: XOR<VisitLogCreateWithoutPengawasInput, VisitLogUncheckedCreateWithoutPengawasInput> | VisitLogCreateWithoutPengawasInput[] | VisitLogUncheckedCreateWithoutPengawasInput[]
+    connectOrCreate?: VisitLogCreateOrConnectWithoutPengawasInput | VisitLogCreateOrConnectWithoutPengawasInput[]
+    upsert?: VisitLogUpsertWithWhereUniqueWithoutPengawasInput | VisitLogUpsertWithWhereUniqueWithoutPengawasInput[]
+    createMany?: VisitLogCreateManyPengawasInputEnvelope
+    set?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+    disconnect?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+    delete?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+    connect?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+    update?: VisitLogUpdateWithWhereUniqueWithoutPengawasInput | VisitLogUpdateWithWhereUniqueWithoutPengawasInput[]
+    updateMany?: VisitLogUpdateManyWithWhereWithoutPengawasInput | VisitLogUpdateManyWithWhereWithoutPengawasInput[]
+    deleteMany?: VisitLogScalarWhereInput | VisitLogScalarWhereInput[]
+  }
+
+  export type AdminNoteUpdateManyWithoutPengawasNestedInput = {
+    create?: XOR<AdminNoteCreateWithoutPengawasInput, AdminNoteUncheckedCreateWithoutPengawasInput> | AdminNoteCreateWithoutPengawasInput[] | AdminNoteUncheckedCreateWithoutPengawasInput[]
+    connectOrCreate?: AdminNoteCreateOrConnectWithoutPengawasInput | AdminNoteCreateOrConnectWithoutPengawasInput[]
+    upsert?: AdminNoteUpsertWithWhereUniqueWithoutPengawasInput | AdminNoteUpsertWithWhereUniqueWithoutPengawasInput[]
+    createMany?: AdminNoteCreateManyPengawasInputEnvelope
+    set?: AdminNoteWhereUniqueInput | AdminNoteWhereUniqueInput[]
+    disconnect?: AdminNoteWhereUniqueInput | AdminNoteWhereUniqueInput[]
+    delete?: AdminNoteWhereUniqueInput | AdminNoteWhereUniqueInput[]
+    connect?: AdminNoteWhereUniqueInput | AdminNoteWhereUniqueInput[]
+    update?: AdminNoteUpdateWithWhereUniqueWithoutPengawasInput | AdminNoteUpdateWithWhereUniqueWithoutPengawasInput[]
+    updateMany?: AdminNoteUpdateManyWithWhereWithoutPengawasInput | AdminNoteUpdateManyWithWhereWithoutPengawasInput[]
+    deleteMany?: AdminNoteScalarWhereInput | AdminNoteScalarWhereInput[]
+  }
+
   export type StudentUncheckedUpdateManyWithoutPengawasNestedInput = {
     create?: XOR<StudentCreateWithoutPengawasInput, StudentUncheckedCreateWithoutPengawasInput> | StudentCreateWithoutPengawasInput[] | StudentUncheckedCreateWithoutPengawasInput[]
     connectOrCreate?: StudentCreateOrConnectWithoutPengawasInput | StudentCreateOrConnectWithoutPengawasInput[]
@@ -19008,6 +22146,34 @@ export namespace Prisma {
     update?: DisbursementProofUpdateWithWhereUniqueWithoutPengawasInput | DisbursementProofUpdateWithWhereUniqueWithoutPengawasInput[]
     updateMany?: DisbursementProofUpdateManyWithWhereWithoutPengawasInput | DisbursementProofUpdateManyWithWhereWithoutPengawasInput[]
     deleteMany?: DisbursementProofScalarWhereInput | DisbursementProofScalarWhereInput[]
+  }
+
+  export type VisitLogUncheckedUpdateManyWithoutPengawasNestedInput = {
+    create?: XOR<VisitLogCreateWithoutPengawasInput, VisitLogUncheckedCreateWithoutPengawasInput> | VisitLogCreateWithoutPengawasInput[] | VisitLogUncheckedCreateWithoutPengawasInput[]
+    connectOrCreate?: VisitLogCreateOrConnectWithoutPengawasInput | VisitLogCreateOrConnectWithoutPengawasInput[]
+    upsert?: VisitLogUpsertWithWhereUniqueWithoutPengawasInput | VisitLogUpsertWithWhereUniqueWithoutPengawasInput[]
+    createMany?: VisitLogCreateManyPengawasInputEnvelope
+    set?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+    disconnect?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+    delete?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+    connect?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+    update?: VisitLogUpdateWithWhereUniqueWithoutPengawasInput | VisitLogUpdateWithWhereUniqueWithoutPengawasInput[]
+    updateMany?: VisitLogUpdateManyWithWhereWithoutPengawasInput | VisitLogUpdateManyWithWhereWithoutPengawasInput[]
+    deleteMany?: VisitLogScalarWhereInput | VisitLogScalarWhereInput[]
+  }
+
+  export type AdminNoteUncheckedUpdateManyWithoutPengawasNestedInput = {
+    create?: XOR<AdminNoteCreateWithoutPengawasInput, AdminNoteUncheckedCreateWithoutPengawasInput> | AdminNoteCreateWithoutPengawasInput[] | AdminNoteUncheckedCreateWithoutPengawasInput[]
+    connectOrCreate?: AdminNoteCreateOrConnectWithoutPengawasInput | AdminNoteCreateOrConnectWithoutPengawasInput[]
+    upsert?: AdminNoteUpsertWithWhereUniqueWithoutPengawasInput | AdminNoteUpsertWithWhereUniqueWithoutPengawasInput[]
+    createMany?: AdminNoteCreateManyPengawasInputEnvelope
+    set?: AdminNoteWhereUniqueInput | AdminNoteWhereUniqueInput[]
+    disconnect?: AdminNoteWhereUniqueInput | AdminNoteWhereUniqueInput[]
+    delete?: AdminNoteWhereUniqueInput | AdminNoteWhereUniqueInput[]
+    connect?: AdminNoteWhereUniqueInput | AdminNoteWhereUniqueInput[]
+    update?: AdminNoteUpdateWithWhereUniqueWithoutPengawasInput | AdminNoteUpdateWithWhereUniqueWithoutPengawasInput[]
+    updateMany?: AdminNoteUpdateManyWithWhereWithoutPengawasInput | AdminNoteUpdateManyWithWhereWithoutPengawasInput[]
+    deleteMany?: AdminNoteScalarWhereInput | AdminNoteScalarWhereInput[]
   }
 
   export type PengawasCreateNestedOneWithoutStudentsInput = {
@@ -19076,6 +22242,13 @@ export namespace Prisma {
     connect?: BantuanAdjustmentWhereUniqueInput | BantuanAdjustmentWhereUniqueInput[]
   }
 
+  export type VisitLogCreateNestedManyWithoutStudentInput = {
+    create?: XOR<VisitLogCreateWithoutStudentInput, VisitLogUncheckedCreateWithoutStudentInput> | VisitLogCreateWithoutStudentInput[] | VisitLogUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: VisitLogCreateOrConnectWithoutStudentInput | VisitLogCreateOrConnectWithoutStudentInput[]
+    createMany?: VisitLogCreateManyStudentInputEnvelope
+    connect?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+  }
+
   export type FatherUncheckedCreateNestedOneWithoutStudentInput = {
     create?: XOR<FatherCreateWithoutStudentInput, FatherUncheckedCreateWithoutStudentInput>
     connectOrCreate?: FatherCreateOrConnectWithoutStudentInput
@@ -19134,6 +22307,13 @@ export namespace Prisma {
     connectOrCreate?: BantuanAdjustmentCreateOrConnectWithoutStudentInput | BantuanAdjustmentCreateOrConnectWithoutStudentInput[]
     createMany?: BantuanAdjustmentCreateManyStudentInputEnvelope
     connect?: BantuanAdjustmentWhereUniqueInput | BantuanAdjustmentWhereUniqueInput[]
+  }
+
+  export type VisitLogUncheckedCreateNestedManyWithoutStudentInput = {
+    create?: XOR<VisitLogCreateWithoutStudentInput, VisitLogUncheckedCreateWithoutStudentInput> | VisitLogCreateWithoutStudentInput[] | VisitLogUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: VisitLogCreateOrConnectWithoutStudentInput | VisitLogCreateOrConnectWithoutStudentInput[]
+    createMany?: VisitLogCreateManyStudentInputEnvelope
+    connect?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
   }
 
   export type PengawasUpdateOneRequiredWithoutStudentsNestedInput = {
@@ -19258,6 +22438,20 @@ export namespace Prisma {
     deleteMany?: BantuanAdjustmentScalarWhereInput | BantuanAdjustmentScalarWhereInput[]
   }
 
+  export type VisitLogUpdateManyWithoutStudentNestedInput = {
+    create?: XOR<VisitLogCreateWithoutStudentInput, VisitLogUncheckedCreateWithoutStudentInput> | VisitLogCreateWithoutStudentInput[] | VisitLogUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: VisitLogCreateOrConnectWithoutStudentInput | VisitLogCreateOrConnectWithoutStudentInput[]
+    upsert?: VisitLogUpsertWithWhereUniqueWithoutStudentInput | VisitLogUpsertWithWhereUniqueWithoutStudentInput[]
+    createMany?: VisitLogCreateManyStudentInputEnvelope
+    set?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+    disconnect?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+    delete?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+    connect?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+    update?: VisitLogUpdateWithWhereUniqueWithoutStudentInput | VisitLogUpdateWithWhereUniqueWithoutStudentInput[]
+    updateMany?: VisitLogUpdateManyWithWhereWithoutStudentInput | VisitLogUpdateManyWithWhereWithoutStudentInput[]
+    deleteMany?: VisitLogScalarWhereInput | VisitLogScalarWhereInput[]
+  }
+
   export type FatherUncheckedUpdateOneWithoutStudentNestedInput = {
     create?: XOR<FatherCreateWithoutStudentInput, FatherUncheckedCreateWithoutStudentInput>
     connectOrCreate?: FatherCreateOrConnectWithoutStudentInput
@@ -19372,6 +22566,20 @@ export namespace Prisma {
     deleteMany?: BantuanAdjustmentScalarWhereInput | BantuanAdjustmentScalarWhereInput[]
   }
 
+  export type VisitLogUncheckedUpdateManyWithoutStudentNestedInput = {
+    create?: XOR<VisitLogCreateWithoutStudentInput, VisitLogUncheckedCreateWithoutStudentInput> | VisitLogCreateWithoutStudentInput[] | VisitLogUncheckedCreateWithoutStudentInput[]
+    connectOrCreate?: VisitLogCreateOrConnectWithoutStudentInput | VisitLogCreateOrConnectWithoutStudentInput[]
+    upsert?: VisitLogUpsertWithWhereUniqueWithoutStudentInput | VisitLogUpsertWithWhereUniqueWithoutStudentInput[]
+    createMany?: VisitLogCreateManyStudentInputEnvelope
+    set?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+    disconnect?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+    delete?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+    connect?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
+    update?: VisitLogUpdateWithWhereUniqueWithoutStudentInput | VisitLogUpdateWithWhereUniqueWithoutStudentInput[]
+    updateMany?: VisitLogUpdateManyWithWhereWithoutStudentInput | VisitLogUpdateManyWithWhereWithoutStudentInput[]
+    deleteMany?: VisitLogScalarWhereInput | VisitLogScalarWhereInput[]
+  }
+
   export type StudentCreateNestedOneWithoutEducationCostsInput = {
     create?: XOR<StudentCreateWithoutEducationCostsInput, StudentUncheckedCreateWithoutEducationCostsInput>
     connectOrCreate?: StudentCreateOrConnectWithoutEducationCostsInput
@@ -19448,10 +22656,6 @@ export namespace Prisma {
     connect?: StudentWhereUniqueInput
   }
 
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
-  }
-
   export type StudentUpdateOneRequiredWithoutAcademicUpdatesNestedInput = {
     create?: XOR<StudentCreateWithoutAcademicUpdatesInput, StudentUncheckedCreateWithoutAcademicUpdatesInput>
     connectOrCreate?: StudentCreateOrConnectWithoutAcademicUpdatesInput
@@ -19472,8 +22676,12 @@ export namespace Prisma {
     connect?: PengawasWhereUniqueInput
   }
 
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type StudentUpdateOneRequiredWithoutDisbursementsNestedInput = {
@@ -19498,18 +22706,36 @@ export namespace Prisma {
     connect?: StudentWhereUniqueInput
   }
 
+  export type PengawasCreateNestedOneWithoutAdminNotesInput = {
+    create?: XOR<PengawasCreateWithoutAdminNotesInput, PengawasUncheckedCreateWithoutAdminNotesInput>
+    connectOrCreate?: PengawasCreateOrConnectWithoutAdminNotesInput
+    connect?: PengawasWhereUniqueInput
+  }
+
   export type AdminCreateNestedOneWithoutNotesInput = {
     create?: XOR<AdminCreateWithoutNotesInput, AdminUncheckedCreateWithoutNotesInput>
     connectOrCreate?: AdminCreateOrConnectWithoutNotesInput
     connect?: AdminWhereUniqueInput
   }
 
-  export type StudentUpdateOneRequiredWithoutAdminNotesNestedInput = {
+  export type StudentUpdateOneWithoutAdminNotesNestedInput = {
     create?: XOR<StudentCreateWithoutAdminNotesInput, StudentUncheckedCreateWithoutAdminNotesInput>
     connectOrCreate?: StudentCreateOrConnectWithoutAdminNotesInput
     upsert?: StudentUpsertWithoutAdminNotesInput
+    disconnect?: StudentWhereInput | boolean
+    delete?: StudentWhereInput | boolean
     connect?: StudentWhereUniqueInput
     update?: XOR<XOR<StudentUpdateToOneWithWhereWithoutAdminNotesInput, StudentUpdateWithoutAdminNotesInput>, StudentUncheckedUpdateWithoutAdminNotesInput>
+  }
+
+  export type PengawasUpdateOneWithoutAdminNotesNestedInput = {
+    create?: XOR<PengawasCreateWithoutAdminNotesInput, PengawasUncheckedCreateWithoutAdminNotesInput>
+    connectOrCreate?: PengawasCreateOrConnectWithoutAdminNotesInput
+    upsert?: PengawasUpsertWithoutAdminNotesInput
+    disconnect?: PengawasWhereInput | boolean
+    delete?: PengawasWhereInput | boolean
+    connect?: PengawasWhereUniqueInput
+    update?: XOR<XOR<PengawasUpdateToOneWithWhereWithoutAdminNotesInput, PengawasUpdateWithoutAdminNotesInput>, PengawasUncheckedUpdateWithoutAdminNotesInput>
   }
 
   export type AdminUpdateOneRequiredWithoutNotesNestedInput = {
@@ -19546,6 +22772,52 @@ export namespace Prisma {
     upsert?: AdminUpsertWithoutBantuanAdjustmentsInput
     connect?: AdminWhereUniqueInput
     update?: XOR<XOR<AdminUpdateToOneWithWhereWithoutBantuanAdjustmentsInput, AdminUpdateWithoutBantuanAdjustmentsInput>, AdminUncheckedUpdateWithoutBantuanAdjustmentsInput>
+  }
+
+  export type StudentCreateNestedOneWithoutVisitLogsInput = {
+    create?: XOR<StudentCreateWithoutVisitLogsInput, StudentUncheckedCreateWithoutVisitLogsInput>
+    connectOrCreate?: StudentCreateOrConnectWithoutVisitLogsInput
+    connect?: StudentWhereUniqueInput
+  }
+
+  export type PengawasCreateNestedOneWithoutVisitLogsInput = {
+    create?: XOR<PengawasCreateWithoutVisitLogsInput, PengawasUncheckedCreateWithoutVisitLogsInput>
+    connectOrCreate?: PengawasCreateOrConnectWithoutVisitLogsInput
+    connect?: PengawasWhereUniqueInput
+  }
+
+  export type AdminCreateNestedOneWithoutVisitLogsInput = {
+    create?: XOR<AdminCreateWithoutVisitLogsInput, AdminUncheckedCreateWithoutVisitLogsInput>
+    connectOrCreate?: AdminCreateOrConnectWithoutVisitLogsInput
+    connect?: AdminWhereUniqueInput
+  }
+
+  export type StudentUpdateOneRequiredWithoutVisitLogsNestedInput = {
+    create?: XOR<StudentCreateWithoutVisitLogsInput, StudentUncheckedCreateWithoutVisitLogsInput>
+    connectOrCreate?: StudentCreateOrConnectWithoutVisitLogsInput
+    upsert?: StudentUpsertWithoutVisitLogsInput
+    connect?: StudentWhereUniqueInput
+    update?: XOR<XOR<StudentUpdateToOneWithWhereWithoutVisitLogsInput, StudentUpdateWithoutVisitLogsInput>, StudentUncheckedUpdateWithoutVisitLogsInput>
+  }
+
+  export type PengawasUpdateOneWithoutVisitLogsNestedInput = {
+    create?: XOR<PengawasCreateWithoutVisitLogsInput, PengawasUncheckedCreateWithoutVisitLogsInput>
+    connectOrCreate?: PengawasCreateOrConnectWithoutVisitLogsInput
+    upsert?: PengawasUpsertWithoutVisitLogsInput
+    disconnect?: PengawasWhereInput | boolean
+    delete?: PengawasWhereInput | boolean
+    connect?: PengawasWhereUniqueInput
+    update?: XOR<XOR<PengawasUpdateToOneWithWhereWithoutVisitLogsInput, PengawasUpdateWithoutVisitLogsInput>, PengawasUncheckedUpdateWithoutVisitLogsInput>
+  }
+
+  export type AdminUpdateOneWithoutVisitLogsNestedInput = {
+    create?: XOR<AdminCreateWithoutVisitLogsInput, AdminUncheckedCreateWithoutVisitLogsInput>
+    connectOrCreate?: AdminCreateOrConnectWithoutVisitLogsInput
+    upsert?: AdminUpsertWithoutVisitLogsInput
+    disconnect?: AdminWhereInput | boolean
+    delete?: AdminWhereInput | boolean
+    connect?: AdminWhereUniqueInput
+    update?: XOR<XOR<AdminUpdateToOneWithWhereWithoutVisitLogsInput, AdminUpdateWithoutVisitLogsInput>, AdminUncheckedUpdateWithoutVisitLogsInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -19642,42 +22914,6 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
-  }
-
-  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
-    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
-    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
-    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedDateTimeNullableFilter<$PrismaModel>
-    _max?: NestedDateTimeNullableFilter<$PrismaModel>
-  }
-
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedStringNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -19690,6 +22926,17 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
   }
 
   export type NestedStringNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -19709,28 +22956,69 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type AdminNoteCreateWithoutAdminInput = {
     note: string
     createdAt?: Date | string
-    student: StudentCreateNestedOneWithoutAdminNotesInput
+    student?: StudentCreateNestedOneWithoutAdminNotesInput
+    pengawas?: PengawasCreateNestedOneWithoutAdminNotesInput
   }
 
   export type AdminNoteUncheckedCreateWithoutAdminInput = {
     id?: number
-    studentId: number
+    studentId?: number | null
+    pengawasId?: number | null
     note: string
     createdAt?: Date | string
   }
@@ -19772,6 +23060,31 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type VisitLogCreateWithoutAdminInput = {
+    tanggal?: Date | string
+    catatan?: string | null
+    student: StudentCreateNestedOneWithoutVisitLogsInput
+    pengawas?: PengawasCreateNestedOneWithoutVisitLogsInput
+  }
+
+  export type VisitLogUncheckedCreateWithoutAdminInput = {
+    id?: number
+    studentId: number
+    pengawasId?: number | null
+    tanggal?: Date | string
+    catatan?: string | null
+  }
+
+  export type VisitLogCreateOrConnectWithoutAdminInput = {
+    where: VisitLogWhereUniqueInput
+    create: XOR<VisitLogCreateWithoutAdminInput, VisitLogUncheckedCreateWithoutAdminInput>
+  }
+
+  export type VisitLogCreateManyAdminInputEnvelope = {
+    data: VisitLogCreateManyAdminInput | VisitLogCreateManyAdminInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AdminNoteUpsertWithWhereUniqueWithoutAdminInput = {
     where: AdminNoteWhereUniqueInput
     update: XOR<AdminNoteUpdateWithoutAdminInput, AdminNoteUncheckedUpdateWithoutAdminInput>
@@ -19793,7 +23106,8 @@ export namespace Prisma {
     OR?: AdminNoteScalarWhereInput[]
     NOT?: AdminNoteScalarWhereInput | AdminNoteScalarWhereInput[]
     id?: IntFilter<"AdminNote"> | number
-    studentId?: IntFilter<"AdminNote"> | number
+    studentId?: IntNullableFilter<"AdminNote"> | number | null
+    pengawasId?: IntNullableFilter<"AdminNote"> | number | null
     adminId?: IntFilter<"AdminNote"> | number
     note?: StringFilter<"AdminNote"> | string
     createdAt?: DateTimeFilter<"AdminNote"> | Date | string
@@ -19828,6 +23142,34 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"BantuanAdjustment"> | Date | string
   }
 
+  export type VisitLogUpsertWithWhereUniqueWithoutAdminInput = {
+    where: VisitLogWhereUniqueInput
+    update: XOR<VisitLogUpdateWithoutAdminInput, VisitLogUncheckedUpdateWithoutAdminInput>
+    create: XOR<VisitLogCreateWithoutAdminInput, VisitLogUncheckedCreateWithoutAdminInput>
+  }
+
+  export type VisitLogUpdateWithWhereUniqueWithoutAdminInput = {
+    where: VisitLogWhereUniqueInput
+    data: XOR<VisitLogUpdateWithoutAdminInput, VisitLogUncheckedUpdateWithoutAdminInput>
+  }
+
+  export type VisitLogUpdateManyWithWhereWithoutAdminInput = {
+    where: VisitLogScalarWhereInput
+    data: XOR<VisitLogUpdateManyMutationInput, VisitLogUncheckedUpdateManyWithoutAdminInput>
+  }
+
+  export type VisitLogScalarWhereInput = {
+    AND?: VisitLogScalarWhereInput | VisitLogScalarWhereInput[]
+    OR?: VisitLogScalarWhereInput[]
+    NOT?: VisitLogScalarWhereInput | VisitLogScalarWhereInput[]
+    id?: IntFilter<"VisitLog"> | number
+    studentId?: IntFilter<"VisitLog"> | number
+    pengawasId?: IntNullableFilter<"VisitLog"> | number | null
+    adminId?: IntNullableFilter<"VisitLog"> | number | null
+    tanggal?: DateTimeFilter<"VisitLog"> | Date | string
+    catatan?: StringNullableFilter<"VisitLog"> | string | null
+  }
+
   export type StudentCreateWithoutPengawasInput = {
     username: string
     nik: string
@@ -19856,6 +23198,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofCreateNestedManyWithoutStudentInput
     adminNotes?: AdminNoteCreateNestedManyWithoutStudentInput
     bantuanAdjustments?: BantuanAdjustmentCreateNestedManyWithoutStudentInput
+    visitLogs?: VisitLogCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateWithoutPengawasInput = {
@@ -19887,6 +23230,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofUncheckedCreateNestedManyWithoutStudentInput
     adminNotes?: AdminNoteUncheckedCreateNestedManyWithoutStudentInput
     bantuanAdjustments?: BantuanAdjustmentUncheckedCreateNestedManyWithoutStudentInput
+    visitLogs?: VisitLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentCreateOrConnectWithoutPengawasInput = {
@@ -19901,9 +23245,10 @@ export namespace Prisma {
 
   export type DisbursementProofCreateWithoutPengawasInput = {
     fileUrl: string
+    nominal?: number | null
     tanggal?: Date | string
-    verified?: boolean
-    verifiedAt?: Date | string | null
+    status?: string
+    processedAt?: Date | string | null
     student: StudentCreateNestedOneWithoutDisbursementsInput
   }
 
@@ -19911,9 +23256,10 @@ export namespace Prisma {
     id?: number
     studentId: number
     fileUrl: string
+    nominal?: number | null
     tanggal?: Date | string
-    verified?: boolean
-    verifiedAt?: Date | string | null
+    status?: string
+    processedAt?: Date | string | null
   }
 
   export type DisbursementProofCreateOrConnectWithoutPengawasInput = {
@@ -19923,6 +23269,56 @@ export namespace Prisma {
 
   export type DisbursementProofCreateManyPengawasInputEnvelope = {
     data: DisbursementProofCreateManyPengawasInput | DisbursementProofCreateManyPengawasInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type VisitLogCreateWithoutPengawasInput = {
+    tanggal?: Date | string
+    catatan?: string | null
+    student: StudentCreateNestedOneWithoutVisitLogsInput
+    admin?: AdminCreateNestedOneWithoutVisitLogsInput
+  }
+
+  export type VisitLogUncheckedCreateWithoutPengawasInput = {
+    id?: number
+    studentId: number
+    adminId?: number | null
+    tanggal?: Date | string
+    catatan?: string | null
+  }
+
+  export type VisitLogCreateOrConnectWithoutPengawasInput = {
+    where: VisitLogWhereUniqueInput
+    create: XOR<VisitLogCreateWithoutPengawasInput, VisitLogUncheckedCreateWithoutPengawasInput>
+  }
+
+  export type VisitLogCreateManyPengawasInputEnvelope = {
+    data: VisitLogCreateManyPengawasInput | VisitLogCreateManyPengawasInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AdminNoteCreateWithoutPengawasInput = {
+    note: string
+    createdAt?: Date | string
+    student?: StudentCreateNestedOneWithoutAdminNotesInput
+    admin: AdminCreateNestedOneWithoutNotesInput
+  }
+
+  export type AdminNoteUncheckedCreateWithoutPengawasInput = {
+    id?: number
+    studentId?: number | null
+    adminId: number
+    note: string
+    createdAt?: Date | string
+  }
+
+  export type AdminNoteCreateOrConnectWithoutPengawasInput = {
+    where: AdminNoteWhereUniqueInput
+    create: XOR<AdminNoteCreateWithoutPengawasInput, AdminNoteUncheckedCreateWithoutPengawasInput>
+  }
+
+  export type AdminNoteCreateManyPengawasInputEnvelope = {
+    data: AdminNoteCreateManyPengawasInput | AdminNoteCreateManyPengawasInput[]
     skipDuplicates?: boolean
   }
 
@@ -19992,9 +23388,42 @@ export namespace Prisma {
     studentId?: IntFilter<"DisbursementProof"> | number
     pengawasId?: IntFilter<"DisbursementProof"> | number
     fileUrl?: StringFilter<"DisbursementProof"> | string
+    nominal?: IntNullableFilter<"DisbursementProof"> | number | null
     tanggal?: DateTimeFilter<"DisbursementProof"> | Date | string
-    verified?: BoolFilter<"DisbursementProof"> | boolean
-    verifiedAt?: DateTimeNullableFilter<"DisbursementProof"> | Date | string | null
+    status?: StringFilter<"DisbursementProof"> | string
+    processedAt?: DateTimeNullableFilter<"DisbursementProof"> | Date | string | null
+  }
+
+  export type VisitLogUpsertWithWhereUniqueWithoutPengawasInput = {
+    where: VisitLogWhereUniqueInput
+    update: XOR<VisitLogUpdateWithoutPengawasInput, VisitLogUncheckedUpdateWithoutPengawasInput>
+    create: XOR<VisitLogCreateWithoutPengawasInput, VisitLogUncheckedCreateWithoutPengawasInput>
+  }
+
+  export type VisitLogUpdateWithWhereUniqueWithoutPengawasInput = {
+    where: VisitLogWhereUniqueInput
+    data: XOR<VisitLogUpdateWithoutPengawasInput, VisitLogUncheckedUpdateWithoutPengawasInput>
+  }
+
+  export type VisitLogUpdateManyWithWhereWithoutPengawasInput = {
+    where: VisitLogScalarWhereInput
+    data: XOR<VisitLogUpdateManyMutationInput, VisitLogUncheckedUpdateManyWithoutPengawasInput>
+  }
+
+  export type AdminNoteUpsertWithWhereUniqueWithoutPengawasInput = {
+    where: AdminNoteWhereUniqueInput
+    update: XOR<AdminNoteUpdateWithoutPengawasInput, AdminNoteUncheckedUpdateWithoutPengawasInput>
+    create: XOR<AdminNoteCreateWithoutPengawasInput, AdminNoteUncheckedCreateWithoutPengawasInput>
+  }
+
+  export type AdminNoteUpdateWithWhereUniqueWithoutPengawasInput = {
+    where: AdminNoteWhereUniqueInput
+    data: XOR<AdminNoteUpdateWithoutPengawasInput, AdminNoteUncheckedUpdateWithoutPengawasInput>
+  }
+
+  export type AdminNoteUpdateManyWithWhereWithoutPengawasInput = {
+    where: AdminNoteScalarWhereInput
+    data: XOR<AdminNoteUpdateManyMutationInput, AdminNoteUncheckedUpdateManyWithoutPengawasInput>
   }
 
   export type PengawasCreateWithoutStudentsInput = {
@@ -20002,9 +23431,13 @@ export namespace Prisma {
     password: string
     name: string
     wilayah: string
+    noHp?: string | null
+    status?: string
     failedLoginAttempts?: number
     lockedUntil?: Date | string | null
     disbursements?: DisbursementProofCreateNestedManyWithoutPengawasInput
+    visitLogs?: VisitLogCreateNestedManyWithoutPengawasInput
+    adminNotes?: AdminNoteCreateNestedManyWithoutPengawasInput
   }
 
   export type PengawasUncheckedCreateWithoutStudentsInput = {
@@ -20013,9 +23446,13 @@ export namespace Prisma {
     password: string
     name: string
     wilayah: string
+    noHp?: string | null
+    status?: string
     failedLoginAttempts?: number
     lockedUntil?: Date | string | null
     disbursements?: DisbursementProofUncheckedCreateNestedManyWithoutPengawasInput
+    visitLogs?: VisitLogUncheckedCreateNestedManyWithoutPengawasInput
+    adminNotes?: AdminNoteUncheckedCreateNestedManyWithoutPengawasInput
   }
 
   export type PengawasCreateOrConnectWithoutStudentsInput = {
@@ -20174,9 +23611,10 @@ export namespace Prisma {
 
   export type DisbursementProofCreateWithoutStudentInput = {
     fileUrl: string
+    nominal?: number | null
     tanggal?: Date | string
-    verified?: boolean
-    verifiedAt?: Date | string | null
+    status?: string
+    processedAt?: Date | string | null
     pengawas: PengawasCreateNestedOneWithoutDisbursementsInput
   }
 
@@ -20184,9 +23622,10 @@ export namespace Prisma {
     id?: number
     pengawasId: number
     fileUrl: string
+    nominal?: number | null
     tanggal?: Date | string
-    verified?: boolean
-    verifiedAt?: Date | string | null
+    status?: string
+    processedAt?: Date | string | null
   }
 
   export type DisbursementProofCreateOrConnectWithoutStudentInput = {
@@ -20202,11 +23641,13 @@ export namespace Prisma {
   export type AdminNoteCreateWithoutStudentInput = {
     note: string
     createdAt?: Date | string
+    pengawas?: PengawasCreateNestedOneWithoutAdminNotesInput
     admin: AdminCreateNestedOneWithoutNotesInput
   }
 
   export type AdminNoteUncheckedCreateWithoutStudentInput = {
     id?: number
+    pengawasId?: number | null
     adminId: number
     note: string
     createdAt?: Date | string
@@ -20249,6 +23690,31 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type VisitLogCreateWithoutStudentInput = {
+    tanggal?: Date | string
+    catatan?: string | null
+    pengawas?: PengawasCreateNestedOneWithoutVisitLogsInput
+    admin?: AdminCreateNestedOneWithoutVisitLogsInput
+  }
+
+  export type VisitLogUncheckedCreateWithoutStudentInput = {
+    id?: number
+    pengawasId?: number | null
+    adminId?: number | null
+    tanggal?: Date | string
+    catatan?: string | null
+  }
+
+  export type VisitLogCreateOrConnectWithoutStudentInput = {
+    where: VisitLogWhereUniqueInput
+    create: XOR<VisitLogCreateWithoutStudentInput, VisitLogUncheckedCreateWithoutStudentInput>
+  }
+
+  export type VisitLogCreateManyStudentInputEnvelope = {
+    data: VisitLogCreateManyStudentInput | VisitLogCreateManyStudentInput[]
+    skipDuplicates?: boolean
+  }
+
   export type PengawasUpsertWithoutStudentsInput = {
     update: XOR<PengawasUpdateWithoutStudentsInput, PengawasUncheckedUpdateWithoutStudentsInput>
     create: XOR<PengawasCreateWithoutStudentsInput, PengawasUncheckedCreateWithoutStudentsInput>
@@ -20265,9 +23731,13 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     wilayah?: StringFieldUpdateOperationsInput | string
+    noHp?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
     failedLoginAttempts?: IntFieldUpdateOperationsInput | number
     lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     disbursements?: DisbursementProofUpdateManyWithoutPengawasNestedInput
+    visitLogs?: VisitLogUpdateManyWithoutPengawasNestedInput
+    adminNotes?: AdminNoteUpdateManyWithoutPengawasNestedInput
   }
 
   export type PengawasUncheckedUpdateWithoutStudentsInput = {
@@ -20276,9 +23746,13 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     wilayah?: StringFieldUpdateOperationsInput | string
+    noHp?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
     failedLoginAttempts?: IntFieldUpdateOperationsInput | number
     lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     disbursements?: DisbursementProofUncheckedUpdateManyWithoutPengawasNestedInput
+    visitLogs?: VisitLogUncheckedUpdateManyWithoutPengawasNestedInput
+    adminNotes?: AdminNoteUncheckedUpdateManyWithoutPengawasNestedInput
   }
 
   export type FatherUpsertWithoutStudentInput = {
@@ -20507,6 +23981,22 @@ export namespace Prisma {
     data: XOR<BantuanAdjustmentUpdateManyMutationInput, BantuanAdjustmentUncheckedUpdateManyWithoutStudentInput>
   }
 
+  export type VisitLogUpsertWithWhereUniqueWithoutStudentInput = {
+    where: VisitLogWhereUniqueInput
+    update: XOR<VisitLogUpdateWithoutStudentInput, VisitLogUncheckedUpdateWithoutStudentInput>
+    create: XOR<VisitLogCreateWithoutStudentInput, VisitLogUncheckedCreateWithoutStudentInput>
+  }
+
+  export type VisitLogUpdateWithWhereUniqueWithoutStudentInput = {
+    where: VisitLogWhereUniqueInput
+    data: XOR<VisitLogUpdateWithoutStudentInput, VisitLogUncheckedUpdateWithoutStudentInput>
+  }
+
+  export type VisitLogUpdateManyWithWhereWithoutStudentInput = {
+    where: VisitLogScalarWhereInput
+    data: XOR<VisitLogUpdateManyMutationInput, VisitLogUncheckedUpdateManyWithoutStudentInput>
+  }
+
   export type StudentCreateWithoutEducationCostsInput = {
     username: string
     nik: string
@@ -20535,6 +24025,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofCreateNestedManyWithoutStudentInput
     adminNotes?: AdminNoteCreateNestedManyWithoutStudentInput
     bantuanAdjustments?: BantuanAdjustmentCreateNestedManyWithoutStudentInput
+    visitLogs?: VisitLogCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateWithoutEducationCostsInput = {
@@ -20566,6 +24057,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofUncheckedCreateNestedManyWithoutStudentInput
     adminNotes?: AdminNoteUncheckedCreateNestedManyWithoutStudentInput
     bantuanAdjustments?: BantuanAdjustmentUncheckedCreateNestedManyWithoutStudentInput
+    visitLogs?: VisitLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentCreateOrConnectWithoutEducationCostsInput = {
@@ -20612,6 +24104,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofUpdateManyWithoutStudentNestedInput
     adminNotes?: AdminNoteUpdateManyWithoutStudentNestedInput
     bantuanAdjustments?: BantuanAdjustmentUpdateManyWithoutStudentNestedInput
+    visitLogs?: VisitLogUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateWithoutEducationCostsInput = {
@@ -20643,6 +24136,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofUncheckedUpdateManyWithoutStudentNestedInput
     adminNotes?: AdminNoteUncheckedUpdateManyWithoutStudentNestedInput
     bantuanAdjustments?: BantuanAdjustmentUncheckedUpdateManyWithoutStudentNestedInput
+    visitLogs?: VisitLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentCreateWithoutFatherInput = {
@@ -20673,6 +24167,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofCreateNestedManyWithoutStudentInput
     adminNotes?: AdminNoteCreateNestedManyWithoutStudentInput
     bantuanAdjustments?: BantuanAdjustmentCreateNestedManyWithoutStudentInput
+    visitLogs?: VisitLogCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateWithoutFatherInput = {
@@ -20704,6 +24199,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofUncheckedCreateNestedManyWithoutStudentInput
     adminNotes?: AdminNoteUncheckedCreateNestedManyWithoutStudentInput
     bantuanAdjustments?: BantuanAdjustmentUncheckedCreateNestedManyWithoutStudentInput
+    visitLogs?: VisitLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentCreateOrConnectWithoutFatherInput = {
@@ -20750,6 +24246,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofUpdateManyWithoutStudentNestedInput
     adminNotes?: AdminNoteUpdateManyWithoutStudentNestedInput
     bantuanAdjustments?: BantuanAdjustmentUpdateManyWithoutStudentNestedInput
+    visitLogs?: VisitLogUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateWithoutFatherInput = {
@@ -20781,6 +24278,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofUncheckedUpdateManyWithoutStudentNestedInput
     adminNotes?: AdminNoteUncheckedUpdateManyWithoutStudentNestedInput
     bantuanAdjustments?: BantuanAdjustmentUncheckedUpdateManyWithoutStudentNestedInput
+    visitLogs?: VisitLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentCreateWithoutMotherInput = {
@@ -20811,6 +24309,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofCreateNestedManyWithoutStudentInput
     adminNotes?: AdminNoteCreateNestedManyWithoutStudentInput
     bantuanAdjustments?: BantuanAdjustmentCreateNestedManyWithoutStudentInput
+    visitLogs?: VisitLogCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateWithoutMotherInput = {
@@ -20842,6 +24341,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofUncheckedCreateNestedManyWithoutStudentInput
     adminNotes?: AdminNoteUncheckedCreateNestedManyWithoutStudentInput
     bantuanAdjustments?: BantuanAdjustmentUncheckedCreateNestedManyWithoutStudentInput
+    visitLogs?: VisitLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentCreateOrConnectWithoutMotherInput = {
@@ -20888,6 +24388,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofUpdateManyWithoutStudentNestedInput
     adminNotes?: AdminNoteUpdateManyWithoutStudentNestedInput
     bantuanAdjustments?: BantuanAdjustmentUpdateManyWithoutStudentNestedInput
+    visitLogs?: VisitLogUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateWithoutMotherInput = {
@@ -20919,6 +24420,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofUncheckedUpdateManyWithoutStudentNestedInput
     adminNotes?: AdminNoteUncheckedUpdateManyWithoutStudentNestedInput
     bantuanAdjustments?: BantuanAdjustmentUncheckedUpdateManyWithoutStudentNestedInput
+    visitLogs?: VisitLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentCreateWithoutGuardianInput = {
@@ -20949,6 +24451,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofCreateNestedManyWithoutStudentInput
     adminNotes?: AdminNoteCreateNestedManyWithoutStudentInput
     bantuanAdjustments?: BantuanAdjustmentCreateNestedManyWithoutStudentInput
+    visitLogs?: VisitLogCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateWithoutGuardianInput = {
@@ -20980,6 +24483,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofUncheckedCreateNestedManyWithoutStudentInput
     adminNotes?: AdminNoteUncheckedCreateNestedManyWithoutStudentInput
     bantuanAdjustments?: BantuanAdjustmentUncheckedCreateNestedManyWithoutStudentInput
+    visitLogs?: VisitLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentCreateOrConnectWithoutGuardianInput = {
@@ -21026,6 +24530,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofUpdateManyWithoutStudentNestedInput
     adminNotes?: AdminNoteUpdateManyWithoutStudentNestedInput
     bantuanAdjustments?: BantuanAdjustmentUpdateManyWithoutStudentNestedInput
+    visitLogs?: VisitLogUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateWithoutGuardianInput = {
@@ -21057,6 +24562,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofUncheckedUpdateManyWithoutStudentNestedInput
     adminNotes?: AdminNoteUncheckedUpdateManyWithoutStudentNestedInput
     bantuanAdjustments?: BantuanAdjustmentUncheckedUpdateManyWithoutStudentNestedInput
+    visitLogs?: VisitLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentCreateWithoutDocumentsInput = {
@@ -21087,6 +24593,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofCreateNestedManyWithoutStudentInput
     adminNotes?: AdminNoteCreateNestedManyWithoutStudentInput
     bantuanAdjustments?: BantuanAdjustmentCreateNestedManyWithoutStudentInput
+    visitLogs?: VisitLogCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateWithoutDocumentsInput = {
@@ -21118,6 +24625,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofUncheckedCreateNestedManyWithoutStudentInput
     adminNotes?: AdminNoteUncheckedCreateNestedManyWithoutStudentInput
     bantuanAdjustments?: BantuanAdjustmentUncheckedCreateNestedManyWithoutStudentInput
+    visitLogs?: VisitLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentCreateOrConnectWithoutDocumentsInput = {
@@ -21164,6 +24672,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofUpdateManyWithoutStudentNestedInput
     adminNotes?: AdminNoteUpdateManyWithoutStudentNestedInput
     bantuanAdjustments?: BantuanAdjustmentUpdateManyWithoutStudentNestedInput
+    visitLogs?: VisitLogUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateWithoutDocumentsInput = {
@@ -21195,6 +24704,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofUncheckedUpdateManyWithoutStudentNestedInput
     adminNotes?: AdminNoteUncheckedUpdateManyWithoutStudentNestedInput
     bantuanAdjustments?: BantuanAdjustmentUncheckedUpdateManyWithoutStudentNestedInput
+    visitLogs?: VisitLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentCreateWithoutAcademicUpdatesInput = {
@@ -21225,6 +24735,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofCreateNestedManyWithoutStudentInput
     adminNotes?: AdminNoteCreateNestedManyWithoutStudentInput
     bantuanAdjustments?: BantuanAdjustmentCreateNestedManyWithoutStudentInput
+    visitLogs?: VisitLogCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateWithoutAcademicUpdatesInput = {
@@ -21256,6 +24767,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofUncheckedCreateNestedManyWithoutStudentInput
     adminNotes?: AdminNoteUncheckedCreateNestedManyWithoutStudentInput
     bantuanAdjustments?: BantuanAdjustmentUncheckedCreateNestedManyWithoutStudentInput
+    visitLogs?: VisitLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentCreateOrConnectWithoutAcademicUpdatesInput = {
@@ -21302,6 +24814,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofUpdateManyWithoutStudentNestedInput
     adminNotes?: AdminNoteUpdateManyWithoutStudentNestedInput
     bantuanAdjustments?: BantuanAdjustmentUpdateManyWithoutStudentNestedInput
+    visitLogs?: VisitLogUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateWithoutAcademicUpdatesInput = {
@@ -21333,6 +24846,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofUncheckedUpdateManyWithoutStudentNestedInput
     adminNotes?: AdminNoteUncheckedUpdateManyWithoutStudentNestedInput
     bantuanAdjustments?: BantuanAdjustmentUncheckedUpdateManyWithoutStudentNestedInput
+    visitLogs?: VisitLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentCreateWithoutDisbursementsInput = {
@@ -21363,6 +24877,7 @@ export namespace Prisma {
     academicUpdates?: AcademicUpdateCreateNestedManyWithoutStudentInput
     adminNotes?: AdminNoteCreateNestedManyWithoutStudentInput
     bantuanAdjustments?: BantuanAdjustmentCreateNestedManyWithoutStudentInput
+    visitLogs?: VisitLogCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateWithoutDisbursementsInput = {
@@ -21394,6 +24909,7 @@ export namespace Prisma {
     academicUpdates?: AcademicUpdateUncheckedCreateNestedManyWithoutStudentInput
     adminNotes?: AdminNoteUncheckedCreateNestedManyWithoutStudentInput
     bantuanAdjustments?: BantuanAdjustmentUncheckedCreateNestedManyWithoutStudentInput
+    visitLogs?: VisitLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentCreateOrConnectWithoutDisbursementsInput = {
@@ -21406,9 +24922,13 @@ export namespace Prisma {
     password: string
     name: string
     wilayah: string
+    noHp?: string | null
+    status?: string
     failedLoginAttempts?: number
     lockedUntil?: Date | string | null
     students?: StudentCreateNestedManyWithoutPengawasInput
+    visitLogs?: VisitLogCreateNestedManyWithoutPengawasInput
+    adminNotes?: AdminNoteCreateNestedManyWithoutPengawasInput
   }
 
   export type PengawasUncheckedCreateWithoutDisbursementsInput = {
@@ -21417,9 +24937,13 @@ export namespace Prisma {
     password: string
     name: string
     wilayah: string
+    noHp?: string | null
+    status?: string
     failedLoginAttempts?: number
     lockedUntil?: Date | string | null
     students?: StudentUncheckedCreateNestedManyWithoutPengawasInput
+    visitLogs?: VisitLogUncheckedCreateNestedManyWithoutPengawasInput
+    adminNotes?: AdminNoteUncheckedCreateNestedManyWithoutPengawasInput
   }
 
   export type PengawasCreateOrConnectWithoutDisbursementsInput = {
@@ -21466,6 +24990,7 @@ export namespace Prisma {
     academicUpdates?: AcademicUpdateUpdateManyWithoutStudentNestedInput
     adminNotes?: AdminNoteUpdateManyWithoutStudentNestedInput
     bantuanAdjustments?: BantuanAdjustmentUpdateManyWithoutStudentNestedInput
+    visitLogs?: VisitLogUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateWithoutDisbursementsInput = {
@@ -21497,6 +25022,7 @@ export namespace Prisma {
     academicUpdates?: AcademicUpdateUncheckedUpdateManyWithoutStudentNestedInput
     adminNotes?: AdminNoteUncheckedUpdateManyWithoutStudentNestedInput
     bantuanAdjustments?: BantuanAdjustmentUncheckedUpdateManyWithoutStudentNestedInput
+    visitLogs?: VisitLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type PengawasUpsertWithoutDisbursementsInput = {
@@ -21515,9 +25041,13 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     wilayah?: StringFieldUpdateOperationsInput | string
+    noHp?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
     failedLoginAttempts?: IntFieldUpdateOperationsInput | number
     lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     students?: StudentUpdateManyWithoutPengawasNestedInput
+    visitLogs?: VisitLogUpdateManyWithoutPengawasNestedInput
+    adminNotes?: AdminNoteUpdateManyWithoutPengawasNestedInput
   }
 
   export type PengawasUncheckedUpdateWithoutDisbursementsInput = {
@@ -21526,9 +25056,13 @@ export namespace Prisma {
     password?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     wilayah?: StringFieldUpdateOperationsInput | string
+    noHp?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
     failedLoginAttempts?: IntFieldUpdateOperationsInput | number
     lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     students?: StudentUncheckedUpdateManyWithoutPengawasNestedInput
+    visitLogs?: VisitLogUncheckedUpdateManyWithoutPengawasNestedInput
+    adminNotes?: AdminNoteUncheckedUpdateManyWithoutPengawasNestedInput
   }
 
   export type StudentCreateWithoutAdminNotesInput = {
@@ -21559,6 +25093,7 @@ export namespace Prisma {
     academicUpdates?: AcademicUpdateCreateNestedManyWithoutStudentInput
     disbursements?: DisbursementProofCreateNestedManyWithoutStudentInput
     bantuanAdjustments?: BantuanAdjustmentCreateNestedManyWithoutStudentInput
+    visitLogs?: VisitLogCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateWithoutAdminNotesInput = {
@@ -21590,6 +25125,7 @@ export namespace Prisma {
     academicUpdates?: AcademicUpdateUncheckedCreateNestedManyWithoutStudentInput
     disbursements?: DisbursementProofUncheckedCreateNestedManyWithoutStudentInput
     bantuanAdjustments?: BantuanAdjustmentUncheckedCreateNestedManyWithoutStudentInput
+    visitLogs?: VisitLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentCreateOrConnectWithoutAdminNotesInput = {
@@ -21597,11 +25133,46 @@ export namespace Prisma {
     create: XOR<StudentCreateWithoutAdminNotesInput, StudentUncheckedCreateWithoutAdminNotesInput>
   }
 
+  export type PengawasCreateWithoutAdminNotesInput = {
+    username: string
+    password: string
+    name: string
+    wilayah: string
+    noHp?: string | null
+    status?: string
+    failedLoginAttempts?: number
+    lockedUntil?: Date | string | null
+    students?: StudentCreateNestedManyWithoutPengawasInput
+    disbursements?: DisbursementProofCreateNestedManyWithoutPengawasInput
+    visitLogs?: VisitLogCreateNestedManyWithoutPengawasInput
+  }
+
+  export type PengawasUncheckedCreateWithoutAdminNotesInput = {
+    id?: number
+    username: string
+    password: string
+    name: string
+    wilayah: string
+    noHp?: string | null
+    status?: string
+    failedLoginAttempts?: number
+    lockedUntil?: Date | string | null
+    students?: StudentUncheckedCreateNestedManyWithoutPengawasInput
+    disbursements?: DisbursementProofUncheckedCreateNestedManyWithoutPengawasInput
+    visitLogs?: VisitLogUncheckedCreateNestedManyWithoutPengawasInput
+  }
+
+  export type PengawasCreateOrConnectWithoutAdminNotesInput = {
+    where: PengawasWhereUniqueInput
+    create: XOR<PengawasCreateWithoutAdminNotesInput, PengawasUncheckedCreateWithoutAdminNotesInput>
+  }
+
   export type AdminCreateWithoutNotesInput = {
     email: string
     name: string
     createdAt?: Date | string
     bantuanAdjustments?: BantuanAdjustmentCreateNestedManyWithoutAdminInput
+    visitLogs?: VisitLogCreateNestedManyWithoutAdminInput
   }
 
   export type AdminUncheckedCreateWithoutNotesInput = {
@@ -21610,6 +25181,7 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     bantuanAdjustments?: BantuanAdjustmentUncheckedCreateNestedManyWithoutAdminInput
+    visitLogs?: VisitLogUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AdminCreateOrConnectWithoutNotesInput = {
@@ -21656,6 +25228,7 @@ export namespace Prisma {
     academicUpdates?: AcademicUpdateUpdateManyWithoutStudentNestedInput
     disbursements?: DisbursementProofUpdateManyWithoutStudentNestedInput
     bantuanAdjustments?: BantuanAdjustmentUpdateManyWithoutStudentNestedInput
+    visitLogs?: VisitLogUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateWithoutAdminNotesInput = {
@@ -21687,6 +25260,47 @@ export namespace Prisma {
     academicUpdates?: AcademicUpdateUncheckedUpdateManyWithoutStudentNestedInput
     disbursements?: DisbursementProofUncheckedUpdateManyWithoutStudentNestedInput
     bantuanAdjustments?: BantuanAdjustmentUncheckedUpdateManyWithoutStudentNestedInput
+    visitLogs?: VisitLogUncheckedUpdateManyWithoutStudentNestedInput
+  }
+
+  export type PengawasUpsertWithoutAdminNotesInput = {
+    update: XOR<PengawasUpdateWithoutAdminNotesInput, PengawasUncheckedUpdateWithoutAdminNotesInput>
+    create: XOR<PengawasCreateWithoutAdminNotesInput, PengawasUncheckedCreateWithoutAdminNotesInput>
+    where?: PengawasWhereInput
+  }
+
+  export type PengawasUpdateToOneWithWhereWithoutAdminNotesInput = {
+    where?: PengawasWhereInput
+    data: XOR<PengawasUpdateWithoutAdminNotesInput, PengawasUncheckedUpdateWithoutAdminNotesInput>
+  }
+
+  export type PengawasUpdateWithoutAdminNotesInput = {
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+    noHp?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    students?: StudentUpdateManyWithoutPengawasNestedInput
+    disbursements?: DisbursementProofUpdateManyWithoutPengawasNestedInput
+    visitLogs?: VisitLogUpdateManyWithoutPengawasNestedInput
+  }
+
+  export type PengawasUncheckedUpdateWithoutAdminNotesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+    noHp?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    students?: StudentUncheckedUpdateManyWithoutPengawasNestedInput
+    disbursements?: DisbursementProofUncheckedUpdateManyWithoutPengawasNestedInput
+    visitLogs?: VisitLogUncheckedUpdateManyWithoutPengawasNestedInput
   }
 
   export type AdminUpsertWithoutNotesInput = {
@@ -21705,6 +25319,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bantuanAdjustments?: BantuanAdjustmentUpdateManyWithoutAdminNestedInput
+    visitLogs?: VisitLogUpdateManyWithoutAdminNestedInput
   }
 
   export type AdminUncheckedUpdateWithoutNotesInput = {
@@ -21713,6 +25328,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bantuanAdjustments?: BantuanAdjustmentUncheckedUpdateManyWithoutAdminNestedInput
+    visitLogs?: VisitLogUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type StudentCreateWithoutBantuanAdjustmentsInput = {
@@ -21743,6 +25359,7 @@ export namespace Prisma {
     academicUpdates?: AcademicUpdateCreateNestedManyWithoutStudentInput
     disbursements?: DisbursementProofCreateNestedManyWithoutStudentInput
     adminNotes?: AdminNoteCreateNestedManyWithoutStudentInput
+    visitLogs?: VisitLogCreateNestedManyWithoutStudentInput
   }
 
   export type StudentUncheckedCreateWithoutBantuanAdjustmentsInput = {
@@ -21774,6 +25391,7 @@ export namespace Prisma {
     academicUpdates?: AcademicUpdateUncheckedCreateNestedManyWithoutStudentInput
     disbursements?: DisbursementProofUncheckedCreateNestedManyWithoutStudentInput
     adminNotes?: AdminNoteUncheckedCreateNestedManyWithoutStudentInput
+    visitLogs?: VisitLogUncheckedCreateNestedManyWithoutStudentInput
   }
 
   export type StudentCreateOrConnectWithoutBantuanAdjustmentsInput = {
@@ -21786,6 +25404,7 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     notes?: AdminNoteCreateNestedManyWithoutAdminInput
+    visitLogs?: VisitLogCreateNestedManyWithoutAdminInput
   }
 
   export type AdminUncheckedCreateWithoutBantuanAdjustmentsInput = {
@@ -21794,6 +25413,7 @@ export namespace Prisma {
     name: string
     createdAt?: Date | string
     notes?: AdminNoteUncheckedCreateNestedManyWithoutAdminInput
+    visitLogs?: VisitLogUncheckedCreateNestedManyWithoutAdminInput
   }
 
   export type AdminCreateOrConnectWithoutBantuanAdjustmentsInput = {
@@ -21840,6 +25460,7 @@ export namespace Prisma {
     academicUpdates?: AcademicUpdateUpdateManyWithoutStudentNestedInput
     disbursements?: DisbursementProofUpdateManyWithoutStudentNestedInput
     adminNotes?: AdminNoteUpdateManyWithoutStudentNestedInput
+    visitLogs?: VisitLogUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateWithoutBantuanAdjustmentsInput = {
@@ -21871,6 +25492,7 @@ export namespace Prisma {
     academicUpdates?: AcademicUpdateUncheckedUpdateManyWithoutStudentNestedInput
     disbursements?: DisbursementProofUncheckedUpdateManyWithoutStudentNestedInput
     adminNotes?: AdminNoteUncheckedUpdateManyWithoutStudentNestedInput
+    visitLogs?: VisitLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type AdminUpsertWithoutBantuanAdjustmentsInput = {
@@ -21889,6 +25511,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     notes?: AdminNoteUpdateManyWithoutAdminNestedInput
+    visitLogs?: VisitLogUpdateManyWithoutAdminNestedInput
   }
 
   export type AdminUncheckedUpdateWithoutBantuanAdjustmentsInput = {
@@ -21897,11 +25520,279 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     notes?: AdminNoteUncheckedUpdateManyWithoutAdminNestedInput
+    visitLogs?: VisitLogUncheckedUpdateManyWithoutAdminNestedInput
+  }
+
+  export type StudentCreateWithoutVisitLogsInput = {
+    username: string
+    nik: string
+    fullName: string
+    dateOfBirth: Date | string
+    gender: string
+    citaCita: string
+    wilayah: string
+    alamatLengkap: string
+    noHp: string
+    riwayatPenyakit: string
+    schoolName: string
+    gradeLevel: string
+    nilaiRataRata: string
+    jumlahSaudara: number
+    status?: string
+    failedLoginAttempts?: number
+    lockedUntil?: Date | string | null
+    createdAt?: Date | string
+    pengawas: PengawasCreateNestedOneWithoutStudentsInput
+    father?: FatherCreateNestedOneWithoutStudentInput
+    mother?: MotherCreateNestedOneWithoutStudentInput
+    guardian?: GuardianCreateNestedOneWithoutStudentInput
+    educationCosts?: EducationCostCreateNestedManyWithoutStudentInput
+    documents?: DocumentCreateNestedManyWithoutStudentInput
+    academicUpdates?: AcademicUpdateCreateNestedManyWithoutStudentInput
+    disbursements?: DisbursementProofCreateNestedManyWithoutStudentInput
+    adminNotes?: AdminNoteCreateNestedManyWithoutStudentInput
+    bantuanAdjustments?: BantuanAdjustmentCreateNestedManyWithoutStudentInput
+  }
+
+  export type StudentUncheckedCreateWithoutVisitLogsInput = {
+    id?: number
+    username: string
+    nik: string
+    fullName: string
+    dateOfBirth: Date | string
+    gender: string
+    citaCita: string
+    wilayah: string
+    pengawasId: number
+    alamatLengkap: string
+    noHp: string
+    riwayatPenyakit: string
+    schoolName: string
+    gradeLevel: string
+    nilaiRataRata: string
+    jumlahSaudara: number
+    status?: string
+    failedLoginAttempts?: number
+    lockedUntil?: Date | string | null
+    createdAt?: Date | string
+    father?: FatherUncheckedCreateNestedOneWithoutStudentInput
+    mother?: MotherUncheckedCreateNestedOneWithoutStudentInput
+    guardian?: GuardianUncheckedCreateNestedOneWithoutStudentInput
+    educationCosts?: EducationCostUncheckedCreateNestedManyWithoutStudentInput
+    documents?: DocumentUncheckedCreateNestedManyWithoutStudentInput
+    academicUpdates?: AcademicUpdateUncheckedCreateNestedManyWithoutStudentInput
+    disbursements?: DisbursementProofUncheckedCreateNestedManyWithoutStudentInput
+    adminNotes?: AdminNoteUncheckedCreateNestedManyWithoutStudentInput
+    bantuanAdjustments?: BantuanAdjustmentUncheckedCreateNestedManyWithoutStudentInput
+  }
+
+  export type StudentCreateOrConnectWithoutVisitLogsInput = {
+    where: StudentWhereUniqueInput
+    create: XOR<StudentCreateWithoutVisitLogsInput, StudentUncheckedCreateWithoutVisitLogsInput>
+  }
+
+  export type PengawasCreateWithoutVisitLogsInput = {
+    username: string
+    password: string
+    name: string
+    wilayah: string
+    noHp?: string | null
+    status?: string
+    failedLoginAttempts?: number
+    lockedUntil?: Date | string | null
+    students?: StudentCreateNestedManyWithoutPengawasInput
+    disbursements?: DisbursementProofCreateNestedManyWithoutPengawasInput
+    adminNotes?: AdminNoteCreateNestedManyWithoutPengawasInput
+  }
+
+  export type PengawasUncheckedCreateWithoutVisitLogsInput = {
+    id?: number
+    username: string
+    password: string
+    name: string
+    wilayah: string
+    noHp?: string | null
+    status?: string
+    failedLoginAttempts?: number
+    lockedUntil?: Date | string | null
+    students?: StudentUncheckedCreateNestedManyWithoutPengawasInput
+    disbursements?: DisbursementProofUncheckedCreateNestedManyWithoutPengawasInput
+    adminNotes?: AdminNoteUncheckedCreateNestedManyWithoutPengawasInput
+  }
+
+  export type PengawasCreateOrConnectWithoutVisitLogsInput = {
+    where: PengawasWhereUniqueInput
+    create: XOR<PengawasCreateWithoutVisitLogsInput, PengawasUncheckedCreateWithoutVisitLogsInput>
+  }
+
+  export type AdminCreateWithoutVisitLogsInput = {
+    email: string
+    name: string
+    createdAt?: Date | string
+    notes?: AdminNoteCreateNestedManyWithoutAdminInput
+    bantuanAdjustments?: BantuanAdjustmentCreateNestedManyWithoutAdminInput
+  }
+
+  export type AdminUncheckedCreateWithoutVisitLogsInput = {
+    id?: number
+    email: string
+    name: string
+    createdAt?: Date | string
+    notes?: AdminNoteUncheckedCreateNestedManyWithoutAdminInput
+    bantuanAdjustments?: BantuanAdjustmentUncheckedCreateNestedManyWithoutAdminInput
+  }
+
+  export type AdminCreateOrConnectWithoutVisitLogsInput = {
+    where: AdminWhereUniqueInput
+    create: XOR<AdminCreateWithoutVisitLogsInput, AdminUncheckedCreateWithoutVisitLogsInput>
+  }
+
+  export type StudentUpsertWithoutVisitLogsInput = {
+    update: XOR<StudentUpdateWithoutVisitLogsInput, StudentUncheckedUpdateWithoutVisitLogsInput>
+    create: XOR<StudentCreateWithoutVisitLogsInput, StudentUncheckedCreateWithoutVisitLogsInput>
+    where?: StudentWhereInput
+  }
+
+  export type StudentUpdateToOneWithWhereWithoutVisitLogsInput = {
+    where?: StudentWhereInput
+    data: XOR<StudentUpdateWithoutVisitLogsInput, StudentUncheckedUpdateWithoutVisitLogsInput>
+  }
+
+  export type StudentUpdateWithoutVisitLogsInput = {
+    username?: StringFieldUpdateOperationsInput | string
+    nik?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    dateOfBirth?: DateTimeFieldUpdateOperationsInput | Date | string
+    gender?: StringFieldUpdateOperationsInput | string
+    citaCita?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+    alamatLengkap?: StringFieldUpdateOperationsInput | string
+    noHp?: StringFieldUpdateOperationsInput | string
+    riwayatPenyakit?: StringFieldUpdateOperationsInput | string
+    schoolName?: StringFieldUpdateOperationsInput | string
+    gradeLevel?: StringFieldUpdateOperationsInput | string
+    nilaiRataRata?: StringFieldUpdateOperationsInput | string
+    jumlahSaudara?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pengawas?: PengawasUpdateOneRequiredWithoutStudentsNestedInput
+    father?: FatherUpdateOneWithoutStudentNestedInput
+    mother?: MotherUpdateOneWithoutStudentNestedInput
+    guardian?: GuardianUpdateOneWithoutStudentNestedInput
+    educationCosts?: EducationCostUpdateManyWithoutStudentNestedInput
+    documents?: DocumentUpdateManyWithoutStudentNestedInput
+    academicUpdates?: AcademicUpdateUpdateManyWithoutStudentNestedInput
+    disbursements?: DisbursementProofUpdateManyWithoutStudentNestedInput
+    adminNotes?: AdminNoteUpdateManyWithoutStudentNestedInput
+    bantuanAdjustments?: BantuanAdjustmentUpdateManyWithoutStudentNestedInput
+  }
+
+  export type StudentUncheckedUpdateWithoutVisitLogsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    username?: StringFieldUpdateOperationsInput | string
+    nik?: StringFieldUpdateOperationsInput | string
+    fullName?: StringFieldUpdateOperationsInput | string
+    dateOfBirth?: DateTimeFieldUpdateOperationsInput | Date | string
+    gender?: StringFieldUpdateOperationsInput | string
+    citaCita?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+    pengawasId?: IntFieldUpdateOperationsInput | number
+    alamatLengkap?: StringFieldUpdateOperationsInput | string
+    noHp?: StringFieldUpdateOperationsInput | string
+    riwayatPenyakit?: StringFieldUpdateOperationsInput | string
+    schoolName?: StringFieldUpdateOperationsInput | string
+    gradeLevel?: StringFieldUpdateOperationsInput | string
+    nilaiRataRata?: StringFieldUpdateOperationsInput | string
+    jumlahSaudara?: IntFieldUpdateOperationsInput | number
+    status?: StringFieldUpdateOperationsInput | string
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    father?: FatherUncheckedUpdateOneWithoutStudentNestedInput
+    mother?: MotherUncheckedUpdateOneWithoutStudentNestedInput
+    guardian?: GuardianUncheckedUpdateOneWithoutStudentNestedInput
+    educationCosts?: EducationCostUncheckedUpdateManyWithoutStudentNestedInput
+    documents?: DocumentUncheckedUpdateManyWithoutStudentNestedInput
+    academicUpdates?: AcademicUpdateUncheckedUpdateManyWithoutStudentNestedInput
+    disbursements?: DisbursementProofUncheckedUpdateManyWithoutStudentNestedInput
+    adminNotes?: AdminNoteUncheckedUpdateManyWithoutStudentNestedInput
+    bantuanAdjustments?: BantuanAdjustmentUncheckedUpdateManyWithoutStudentNestedInput
+  }
+
+  export type PengawasUpsertWithoutVisitLogsInput = {
+    update: XOR<PengawasUpdateWithoutVisitLogsInput, PengawasUncheckedUpdateWithoutVisitLogsInput>
+    create: XOR<PengawasCreateWithoutVisitLogsInput, PengawasUncheckedCreateWithoutVisitLogsInput>
+    where?: PengawasWhereInput
+  }
+
+  export type PengawasUpdateToOneWithWhereWithoutVisitLogsInput = {
+    where?: PengawasWhereInput
+    data: XOR<PengawasUpdateWithoutVisitLogsInput, PengawasUncheckedUpdateWithoutVisitLogsInput>
+  }
+
+  export type PengawasUpdateWithoutVisitLogsInput = {
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+    noHp?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    students?: StudentUpdateManyWithoutPengawasNestedInput
+    disbursements?: DisbursementProofUpdateManyWithoutPengawasNestedInput
+    adminNotes?: AdminNoteUpdateManyWithoutPengawasNestedInput
+  }
+
+  export type PengawasUncheckedUpdateWithoutVisitLogsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    username?: StringFieldUpdateOperationsInput | string
+    password?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    wilayah?: StringFieldUpdateOperationsInput | string
+    noHp?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    failedLoginAttempts?: IntFieldUpdateOperationsInput | number
+    lockedUntil?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    students?: StudentUncheckedUpdateManyWithoutPengawasNestedInput
+    disbursements?: DisbursementProofUncheckedUpdateManyWithoutPengawasNestedInput
+    adminNotes?: AdminNoteUncheckedUpdateManyWithoutPengawasNestedInput
+  }
+
+  export type AdminUpsertWithoutVisitLogsInput = {
+    update: XOR<AdminUpdateWithoutVisitLogsInput, AdminUncheckedUpdateWithoutVisitLogsInput>
+    create: XOR<AdminCreateWithoutVisitLogsInput, AdminUncheckedCreateWithoutVisitLogsInput>
+    where?: AdminWhereInput
+  }
+
+  export type AdminUpdateToOneWithWhereWithoutVisitLogsInput = {
+    where?: AdminWhereInput
+    data: XOR<AdminUpdateWithoutVisitLogsInput, AdminUncheckedUpdateWithoutVisitLogsInput>
+  }
+
+  export type AdminUpdateWithoutVisitLogsInput = {
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    notes?: AdminNoteUpdateManyWithoutAdminNestedInput
+    bantuanAdjustments?: BantuanAdjustmentUpdateManyWithoutAdminNestedInput
+  }
+
+  export type AdminUncheckedUpdateWithoutVisitLogsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    email?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    notes?: AdminNoteUncheckedUpdateManyWithoutAdminNestedInput
+    bantuanAdjustments?: BantuanAdjustmentUncheckedUpdateManyWithoutAdminNestedInput
   }
 
   export type AdminNoteCreateManyAdminInput = {
     id?: number
-    studentId: number
+    studentId?: number | null
+    pengawasId?: number | null
     note: string
     createdAt?: Date | string
   }
@@ -21915,22 +25806,33 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type VisitLogCreateManyAdminInput = {
+    id?: number
+    studentId: number
+    pengawasId?: number | null
+    tanggal?: Date | string
+    catatan?: string | null
+  }
+
   export type AdminNoteUpdateWithoutAdminInput = {
     note?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    student?: StudentUpdateOneRequiredWithoutAdminNotesNestedInput
+    student?: StudentUpdateOneWithoutAdminNotesNestedInput
+    pengawas?: PengawasUpdateOneWithoutAdminNotesNestedInput
   }
 
   export type AdminNoteUncheckedUpdateWithoutAdminInput = {
     id?: IntFieldUpdateOperationsInput | number
-    studentId?: IntFieldUpdateOperationsInput | number
+    studentId?: NullableIntFieldUpdateOperationsInput | number | null
+    pengawasId?: NullableIntFieldUpdateOperationsInput | number | null
     note?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AdminNoteUncheckedUpdateManyWithoutAdminInput = {
     id?: IntFieldUpdateOperationsInput | number
-    studentId?: IntFieldUpdateOperationsInput | number
+    studentId?: NullableIntFieldUpdateOperationsInput | number | null
+    pengawasId?: NullableIntFieldUpdateOperationsInput | number | null
     note?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -21961,6 +25863,29 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type VisitLogUpdateWithoutAdminInput = {
+    tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
+    catatan?: NullableStringFieldUpdateOperationsInput | string | null
+    student?: StudentUpdateOneRequiredWithoutVisitLogsNestedInput
+    pengawas?: PengawasUpdateOneWithoutVisitLogsNestedInput
+  }
+
+  export type VisitLogUncheckedUpdateWithoutAdminInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    studentId?: IntFieldUpdateOperationsInput | number
+    pengawasId?: NullableIntFieldUpdateOperationsInput | number | null
+    tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
+    catatan?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type VisitLogUncheckedUpdateManyWithoutAdminInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    studentId?: IntFieldUpdateOperationsInput | number
+    pengawasId?: NullableIntFieldUpdateOperationsInput | number | null
+    tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
+    catatan?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
   export type StudentCreateManyPengawasInput = {
     id?: number
     username: string
@@ -21987,9 +25912,26 @@ export namespace Prisma {
     id?: number
     studentId: number
     fileUrl: string
+    nominal?: number | null
     tanggal?: Date | string
-    verified?: boolean
-    verifiedAt?: Date | string | null
+    status?: string
+    processedAt?: Date | string | null
+  }
+
+  export type VisitLogCreateManyPengawasInput = {
+    id?: number
+    studentId: number
+    adminId?: number | null
+    tanggal?: Date | string
+    catatan?: string | null
+  }
+
+  export type AdminNoteCreateManyPengawasInput = {
+    id?: number
+    studentId?: number | null
+    adminId: number
+    note: string
+    createdAt?: Date | string
   }
 
   export type StudentUpdateWithoutPengawasInput = {
@@ -22020,6 +25962,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofUpdateManyWithoutStudentNestedInput
     adminNotes?: AdminNoteUpdateManyWithoutStudentNestedInput
     bantuanAdjustments?: BantuanAdjustmentUpdateManyWithoutStudentNestedInput
+    visitLogs?: VisitLogUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateWithoutPengawasInput = {
@@ -22051,6 +25994,7 @@ export namespace Prisma {
     disbursements?: DisbursementProofUncheckedUpdateManyWithoutStudentNestedInput
     adminNotes?: AdminNoteUncheckedUpdateManyWithoutStudentNestedInput
     bantuanAdjustments?: BantuanAdjustmentUncheckedUpdateManyWithoutStudentNestedInput
+    visitLogs?: VisitLogUncheckedUpdateManyWithoutStudentNestedInput
   }
 
   export type StudentUncheckedUpdateManyWithoutPengawasInput = {
@@ -22077,9 +26021,10 @@ export namespace Prisma {
 
   export type DisbursementProofUpdateWithoutPengawasInput = {
     fileUrl?: StringFieldUpdateOperationsInput | string
+    nominal?: NullableIntFieldUpdateOperationsInput | number | null
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
-    verified?: BoolFieldUpdateOperationsInput | boolean
-    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     student?: StudentUpdateOneRequiredWithoutDisbursementsNestedInput
   }
 
@@ -22087,18 +26032,66 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     studentId?: IntFieldUpdateOperationsInput | number
     fileUrl?: StringFieldUpdateOperationsInput | string
+    nominal?: NullableIntFieldUpdateOperationsInput | number | null
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
-    verified?: BoolFieldUpdateOperationsInput | boolean
-    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type DisbursementProofUncheckedUpdateManyWithoutPengawasInput = {
     id?: IntFieldUpdateOperationsInput | number
     studentId?: IntFieldUpdateOperationsInput | number
     fileUrl?: StringFieldUpdateOperationsInput | string
+    nominal?: NullableIntFieldUpdateOperationsInput | number | null
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
-    verified?: BoolFieldUpdateOperationsInput | boolean
-    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  }
+
+  export type VisitLogUpdateWithoutPengawasInput = {
+    tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
+    catatan?: NullableStringFieldUpdateOperationsInput | string | null
+    student?: StudentUpdateOneRequiredWithoutVisitLogsNestedInput
+    admin?: AdminUpdateOneWithoutVisitLogsNestedInput
+  }
+
+  export type VisitLogUncheckedUpdateWithoutPengawasInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    studentId?: IntFieldUpdateOperationsInput | number
+    adminId?: NullableIntFieldUpdateOperationsInput | number | null
+    tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
+    catatan?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type VisitLogUncheckedUpdateManyWithoutPengawasInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    studentId?: IntFieldUpdateOperationsInput | number
+    adminId?: NullableIntFieldUpdateOperationsInput | number | null
+    tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
+    catatan?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type AdminNoteUpdateWithoutPengawasInput = {
+    note?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    student?: StudentUpdateOneWithoutAdminNotesNestedInput
+    admin?: AdminUpdateOneRequiredWithoutNotesNestedInput
+  }
+
+  export type AdminNoteUncheckedUpdateWithoutPengawasInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    studentId?: NullableIntFieldUpdateOperationsInput | number | null
+    adminId?: IntFieldUpdateOperationsInput | number
+    note?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdminNoteUncheckedUpdateManyWithoutPengawasInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    studentId?: NullableIntFieldUpdateOperationsInput | number | null
+    adminId?: IntFieldUpdateOperationsInput | number
+    note?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type EducationCostCreateManyStudentInput = {
@@ -22127,13 +26120,15 @@ export namespace Prisma {
     id?: number
     pengawasId: number
     fileUrl: string
+    nominal?: number | null
     tanggal?: Date | string
-    verified?: boolean
-    verifiedAt?: Date | string | null
+    status?: string
+    processedAt?: Date | string | null
   }
 
   export type AdminNoteCreateManyStudentInput = {
     id?: number
+    pengawasId?: number | null
     adminId: number
     note: string
     createdAt?: Date | string
@@ -22146,6 +26141,14 @@ export namespace Prisma {
     nominalBaru: number
     catatan?: string | null
     createdAt?: Date | string
+  }
+
+  export type VisitLogCreateManyStudentInput = {
+    id?: number
+    pengawasId?: number | null
+    adminId?: number | null
+    tanggal?: Date | string
+    catatan?: string | null
   }
 
   export type EducationCostUpdateWithoutStudentInput = {
@@ -22213,9 +26216,10 @@ export namespace Prisma {
 
   export type DisbursementProofUpdateWithoutStudentInput = {
     fileUrl?: StringFieldUpdateOperationsInput | string
+    nominal?: NullableIntFieldUpdateOperationsInput | number | null
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
-    verified?: BoolFieldUpdateOperationsInput | boolean
-    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     pengawas?: PengawasUpdateOneRequiredWithoutDisbursementsNestedInput
   }
 
@@ -22223,28 +26227,32 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     pengawasId?: IntFieldUpdateOperationsInput | number
     fileUrl?: StringFieldUpdateOperationsInput | string
+    nominal?: NullableIntFieldUpdateOperationsInput | number | null
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
-    verified?: BoolFieldUpdateOperationsInput | boolean
-    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type DisbursementProofUncheckedUpdateManyWithoutStudentInput = {
     id?: IntFieldUpdateOperationsInput | number
     pengawasId?: IntFieldUpdateOperationsInput | number
     fileUrl?: StringFieldUpdateOperationsInput | string
+    nominal?: NullableIntFieldUpdateOperationsInput | number | null
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
-    verified?: BoolFieldUpdateOperationsInput | boolean
-    verifiedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
   export type AdminNoteUpdateWithoutStudentInput = {
     note?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    pengawas?: PengawasUpdateOneWithoutAdminNotesNestedInput
     admin?: AdminUpdateOneRequiredWithoutNotesNestedInput
   }
 
   export type AdminNoteUncheckedUpdateWithoutStudentInput = {
     id?: IntFieldUpdateOperationsInput | number
+    pengawasId?: NullableIntFieldUpdateOperationsInput | number | null
     adminId?: IntFieldUpdateOperationsInput | number
     note?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22252,6 +26260,7 @@ export namespace Prisma {
 
   export type AdminNoteUncheckedUpdateManyWithoutStudentInput = {
     id?: IntFieldUpdateOperationsInput | number
+    pengawasId?: NullableIntFieldUpdateOperationsInput | number | null
     adminId?: IntFieldUpdateOperationsInput | number
     note?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22281,6 +26290,29 @@ export namespace Prisma {
     nominalBaru?: IntFieldUpdateOperationsInput | number
     catatan?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type VisitLogUpdateWithoutStudentInput = {
+    tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
+    catatan?: NullableStringFieldUpdateOperationsInput | string | null
+    pengawas?: PengawasUpdateOneWithoutVisitLogsNestedInput
+    admin?: AdminUpdateOneWithoutVisitLogsNestedInput
+  }
+
+  export type VisitLogUncheckedUpdateWithoutStudentInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    pengawasId?: NullableIntFieldUpdateOperationsInput | number | null
+    adminId?: NullableIntFieldUpdateOperationsInput | number | null
+    tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
+    catatan?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type VisitLogUncheckedUpdateManyWithoutStudentInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    pengawasId?: NullableIntFieldUpdateOperationsInput | number | null
+    adminId?: NullableIntFieldUpdateOperationsInput | number | null
+    tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
+    catatan?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
 

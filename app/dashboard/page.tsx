@@ -21,6 +21,11 @@ export default async function DashboardPage() {
       guardian: true,
       educationCosts: true,
       documents: true,
+      academicUpdates: {
+        orderBy: {
+          tanggalInput: "desc",
+        },
+      },
     },
   })
   if (!student) redirect("/login")
@@ -33,6 +38,21 @@ export default async function DashboardPage() {
       id: d.id,
       type: d.type,
       fileUrl: await getPresignedR2Url(d.fileUrl),
+    }))
+  )
+
+  const presignedAcademicUpdates = await Promise.all(
+    student.academicUpdates.map(async (u) => ({
+      id: u.id,
+      tanggalInput: u.tanggalInput.toLocaleDateString("id-ID", {
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      }),
+      kelasSaatItu: u.kelasSaatItu,
+      nilaiRataRata: u.nilaiRataRata,
+      namaSekolahBaru: u.namaSekolahBaru,
+      dokumenRaporUrl: u.dokumenRapor ? await getPresignedR2Url(u.dokumenRapor) : null,
     }))
   )
 
@@ -104,6 +124,7 @@ export default async function DashboardPage() {
       amount: c.amount,
     })),
     documents: presignedDocuments,
+    academicUpdates: presignedAcademicUpdates,
   }
 
   return (
