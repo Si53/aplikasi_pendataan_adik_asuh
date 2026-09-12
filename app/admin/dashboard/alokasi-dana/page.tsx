@@ -85,7 +85,7 @@ export default async function AlokasiDanaDashboardPage() {
     }),
   ])
 
-  // 3. Hitung 3 Kartu Statistik (6 Bulan Terakhir)
+  // 3. Hitung 2 Kartu Statistik (6 Bulan Terakhir)
   const totalTersalurkan6Bulan = recentVerifiedRaw.reduce(
     (acc, curr) => acc + (curr.nominal || 0),
     0
@@ -95,11 +95,6 @@ export default async function AlokasiDanaDashboardPage() {
     recentVerifiedRaw.map((item) => item.studentId)
   )
   const adikAsuhMenerimaCount = distinctStudentIds6Bulan.size
-
-  const avgPerPenyaluran6Bulan =
-    recentVerifiedRaw.length > 0
-      ? Math.round(totalTersalurkan6Bulan / recentVerifiedRaw.length)
-      : 0
 
   // 4. Format data siswa untuk tabel & modal riwayat
   const students: AlokasiStudentItem[] = await Promise.all(
@@ -192,7 +187,6 @@ export default async function AlokasiDanaDashboardPage() {
         stats={{
           totalTersalurkan6Bulan,
           adikAsuhMenerimaCount,
-          avgPerPenyaluran6Bulan,
         }}
         students={students}
         wilayahList={wilayahList}

@@ -34,8 +34,12 @@ export default async function StudentDetailPage({
   })
   if (!pengawas) redirect("/login")
 
-  const student = await prisma.student.findUnique({
-    where: { id: studentId },
+  const student = await prisma.student.findFirst({
+    where: {
+      id: studentId,
+      status: "approved",
+      OR: [{ pengawasId: pengawas.id }, { wilayah: pengawas.wilayah }],
+    },
     include: {
       pengawas: true,
       father: true,

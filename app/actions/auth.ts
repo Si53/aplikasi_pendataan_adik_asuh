@@ -74,6 +74,12 @@ export async function loginAction(_prev: LoginState, formData: FormData): Promis
     }
   }
 
+  if (student.status === "alumni") {
+    return {
+      error: "Akun kamu telah terdaftar sebagai Alumni program Adik Asuh. Silakan hubungi Pengawas untuk informasi lebih lanjut.",
+    }
+  }
+
   try {
     await signIn("credentials-student", {
       identifier,
@@ -268,6 +274,7 @@ export type RegisterPayload = {
   noHp: string
   riwayatPenyakit: string
   schoolName: string
+  jenjang?: string | null
   gradeLevel: string
   nilaiRataRata: string
   jumlahSaudara: number
@@ -336,6 +343,7 @@ export async function registerAction(payload: RegisterPayload): Promise<Register
       noHp: payload.noHp.trim(),
       riwayatPenyakit: payload.riwayatPenyakit.trim() || "-",
       schoolName: payload.schoolName.trim(),
+      jenjang: payload.jenjang ? payload.jenjang.trim() : null,
       gradeLevel: payload.gradeLevel.trim(),
       nilaiRataRata: payload.nilaiRataRata.trim(),
       jumlahSaudara: Number.isFinite(payload.jumlahSaudara) ? payload.jumlahSaudara : 0,

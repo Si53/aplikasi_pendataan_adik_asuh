@@ -24,12 +24,21 @@ import {
   MapPin,
   Check,
   X,
+  Coins,
 } from "lucide-react"
 
-export interface WilayahDistributionItem {
-  wilayah: string
+export interface JenjangBudgetItem {
+  jenjang: "SD" | "SMP" | "SMA" | "SMK" | "Kuliah"
+  tarif: number
   studentCount: number
-  totalNominal: number
+  subtotal: number
+}
+
+export interface BudgetOverviewData {
+  totalAnggaran: number
+  totalApprovedStudents: number
+  unassignedCount: number
+  items: JenjangBudgetItem[]
 }
 
 export interface QuickAuditPendingItem {
@@ -63,7 +72,7 @@ interface AdminDashboardOverviewProps {
     raporBelumDiunggahCount: number
     perluPerhatianAcademicCount: number
   }
-  wilayahDistributions: WilayahDistributionItem[]
+  budgetOverview: BudgetOverviewData
   quickAuditItems: QuickAuditPendingItem[]
 }
 
@@ -74,7 +83,7 @@ function formatRupiah(amount: number): string {
 export function AdminDashboardOverview({
   adminName,
   stats,
-  wilayahDistributions,
+  budgetOverview,
   quickAuditItems,
 }: AdminDashboardOverviewProps) {
   const [exportNotice, setExportNotice] = useState(false)
@@ -97,11 +106,17 @@ export function AdminDashboardOverview({
       ["Adik Asuh Belum Ada Rapor", stats.raporBelumDiunggahCount],
       ["Adik Asuh Perlu Perhatian Akademik", stats.perluPerhatianAcademicCount],
       ["", ""],
-      ["DISTRIBUSI PER WILAYAH", "JUMLAH SISWA", "DANA TERSALURKAN (RP)"],
-      ...wilayahDistributions.map((w) => [
-        `"${w.wilayah}"`,
-        w.studentCount,
-        w.totalNominal,
+      ["KEBUTUHAN ANGGARAN BEASISWA (BULANAN)", ""],
+      ["Total Anggaran Diperlukan", formatRupiah(budgetOverview.totalAnggaran)],
+      ["Siswa Approved Terhitung", `${budgetOverview.totalApprovedStudents - budgetOverview.unassignedCount} Siswa`],
+      ["Siswa Belum Ditentukan Jenjang", `${budgetOverview.unassignedCount} Siswa`],
+      ["", ""],
+      ["RINCIAN PER JENJANG", "TARIF STANDAR (RP)", "JUMLAH SISWA", "SUBTOTAL (RP)"],
+      ...budgetOverview.items.map((b) => [
+        `"${b.jenjang}"`,
+        b.tarif,
+        b.studentCount,
+        b.subtotal,
       ]),
     ]
 
@@ -124,8 +139,8 @@ export function AdminDashboardOverview({
   }
 
   // Max student count for distribution progress bar
-  const maxStudentInWilayah = Math.max(
-    ...wilayahDistributions.map((w) => w.studentCount),
+  const maxStudentInJenjang = Math.max(
+    ...budgetOverview.items.map((w) => w.studentCount),
     1
   )
 
@@ -329,65 +344,101 @@ export function AdminDashboardOverview({
       {/* 3. TWO-COLUMN LAYOUT: Left (Distribusi Wilayah & Audit Cepat) | Right (Kondisi Akademik & Shortcuts) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* ========================================================================= */}
-        {/* KOLOM KIRI (7 Kolom): DISTRIBUSI BANTUAN PER WILAYAH */}
+        {/* KOLOM KIRI (7 Kolom): KEBUTUHAN ANGGARAN BEASISWA */}
         {/* ========================================================================= */}
         <div className="lg:col-span-7 space-y-6">
           <div className="rounded-3xl border border-stone-200/90 bg-white p-6 shadow-xs space-y-5">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-stone-100">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-stone-100">
               <div>
-                <h2 className="text-base sm:text-lg font-extrabold text-stone-900">
-                  Distribusi Bantuan per Wilayah
-                </h2>
-                <p className="text-xs text-stone-500">
-                  Sebaran jumlah anak asuh dan akumulasi dana tersalurkan per wilayah
+                <div className="flex items-center gap-2">
+                  <div className="flex size-7 items-center justify-center rounded-lg bg-orange-100 text-orange-600">
+                    <Coins className="size-4" />
+                  </div>
+                  <h2 className="text-base sm:text-lg font-extrabold text-stone-900">
+                    Kebutuhan Anggaran Beasiswa
+                  </h2>
+                </div>
+                <p className="text-xs text-stone-500 mt-0.5">
+                  Estimasi kebutuhan alokasi dana beasiswa per bulan berdasarkan jenjang siswa aktif
                 </p>
               </div>
 
-              <div className="text-left sm:text-right">
-                <span className="text-[11px] font-bold uppercase text-stone-400 block">
-                  Total Tersalurkan Terverifikasi
+              <div className="text-left sm:text-right bg-orange-50/70 border border-orange-200/80 rounded-2xl px-4 py-2.5">
+                <span className="text-[11px] font-bold uppercase text-stone-500 block">
+                  Total Anggaran Diperlukan
                 </span>
-                <span className="text-sm sm:text-base font-black text-orange-600 font-mono">
-                  {formatRupiah(stats.totalDanaVerifiedAll)}
+                <span className="text-base sm:text-xl font-black text-orange-600 font-mono">
+                  {formatRupiah(budgetOverview.totalAnggaran)}
                 </span>
               </div>
             </div>
 
-            {/* List Bar Horizontal */}
+            {/* List Breakdown per Jenjang */}
             <div className="space-y-4">
-              {wilayahDistributions.map((item) => {
-                const percentage = Math.round(
-                  (item.studentCount / maxStudentInWilayah) * 100
-                )
+              {budgetOverview.items.map((item) => {
+                const percentage =
+                  maxStudentInJenjang > 0
+                    ? Math.round((item.studentCount / maxStudentInJenjang) * 100)
+                    : 0
 
                 return (
-                  <div key={item.wilayah} className="space-y-1.5">
+                  <div key={item.jenjang} className="space-y-1.5">
                     <div className="flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-stone-900">
-                          Wilayah {item.wilayah}
+                      <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                        <span className="inline-flex items-center justify-center min-w-[52px] font-extrabold text-stone-900 bg-stone-100 px-2 py-0.5 rounded-lg border border-stone-200/80">
+                          {item.jenjang}
                         </span>
-                        <span className="rounded-md bg-stone-100 px-2 py-0.5 text-[10px] font-bold text-stone-600">
+                        <span className="text-stone-700 font-semibold">
                           {item.studentCount} Anak Asuh
+                        </span>
+                        <span className="text-stone-400">×</span>
+                        <span className="text-stone-500 font-mono text-[11px]">
+                          {formatRupiah(item.tarif)}
                         </span>
                       </div>
 
-                      <span className="font-mono font-bold text-stone-700 text-xs">
-                        {formatRupiah(item.totalNominal)}
-                      </span>
+                      <div className="flex items-center gap-1">
+                        <span className="text-stone-400 hidden sm:inline">=</span>
+                        <span className="font-mono font-bold text-stone-900 text-xs sm:text-sm">
+                          {formatRupiah(item.subtotal)}
+                        </span>
+                      </div>
                     </div>
 
                     {/* Progress Bar Container */}
                     <div className="h-2.5 w-full overflow-hidden rounded-full bg-stone-100">
                       <div
                         className="h-full rounded-full bg-gradient-to-r from-orange-400 to-amber-500 transition-all duration-500"
-                        style={{ width: `${Math.max(percentage, 4)}%` }}
+                        style={{
+                          width: `${Math.max(percentage, item.studentCount > 0 ? 6 : 0)}%`,
+                        }}
                       />
                     </div>
                   </div>
                 )
               })}
             </div>
+
+            {/* Baris tambahan jika ada siswa approved dengan jenjang = NULL */}
+            {budgetOverview.unassignedCount > 0 && (
+              <div className="rounded-2xl border border-stone-200/90 bg-stone-50/90 p-3.5 flex items-start sm:items-center gap-3 text-xs text-stone-600 animate-in fade-in">
+                <AlertCircle className="size-4.5 text-amber-500 shrink-0 mt-0.5 sm:mt-0" />
+                <div className="flex-1">
+                  <p className="font-semibold text-stone-800">
+                    Belum Ditentukan Jenjangnya:{" "}
+                    <strong className="text-amber-800 font-bold">
+                      {budgetOverview.unassignedCount} Anak Asuh
+                    </strong>{" "}
+                    <span className="text-stone-500 font-normal">
+                      (tidak termasuk dalam total anggaran)
+                    </span>
+                  </p>
+                  <p className="text-[11px] text-stone-400 mt-0.5">
+                    Data terdaftar sebelum fitur jenjang ditambahkan. Silakan lengkapi pada modul Kontrol Status / Data Anak Asuh.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* AUDIT CEPAT (WIDGET SHORTCUT 3 ITEM TERBARU) */}

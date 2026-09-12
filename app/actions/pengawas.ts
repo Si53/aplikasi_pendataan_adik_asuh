@@ -89,15 +89,16 @@ export async function createPengawasDisbursementProofAction(
     }
   }
 
-  // Verifikasi siswa berada di bawah pengawas ini atau satu wilayah
+  // Verifikasi siswa berada di bawah pengawas ini atau satu wilayah dan berstatus approved
   const student = await prisma.student.findFirst({
     where: {
       id: studentId,
+      status: "approved",
       OR: [{ pengawasId: pengawas.id }, { wilayah: pengawas.wilayah }],
     },
   })
   if (!student) {
-    return { success: false, error: "Data adik asuh tidak ditemukan pada wilayah tugas Anda." }
+    return { success: false, error: "Data adik asuh tidak ditemukan atau belum disetujui (approved) pada wilayah tugas Anda." }
   }
 
   try {

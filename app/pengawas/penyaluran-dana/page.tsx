@@ -23,9 +23,10 @@ export default async function PengawasPenyaluranDanaPage() {
   })
   if (!pengawas) redirect("/login")
 
-  // Ambil siswa binaan & wilayah tugas pengawas ini
+  // Ambil siswa binaan & wilayah tugas pengawas ini dengan status approved
   const studentsRaw = await prisma.student.findMany({
     where: {
+      status: "approved",
       OR: [{ pengawasId: pengawas.id }, { wilayah: pengawas.wilayah }],
     },
     select: {

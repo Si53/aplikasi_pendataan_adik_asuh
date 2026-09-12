@@ -5,7 +5,6 @@ import Link from "next/link"
 import {
   Wallet,
   Users,
-  TrendingUp,
   Coins,
   Search,
   Download,
@@ -76,7 +75,7 @@ interface AdminAlokasiDanaViewProps {
   stats: {
     totalTersalurkan6Bulan: number
     adikAsuhMenerimaCount: number
-    avgPerPenyaluran6Bulan: number
+    avgPerPenyaluran6Bulan?: number
   }
   students: AlokasiStudentItem[]
   wilayahList: string[]
@@ -308,8 +307,8 @@ export function AdminAlokasiDanaView({
         </div>
       )}
 
-      {/* 2. TIGA KARTU STATISTIK (6 Bulan Terakhir) */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      {/* 2. DUA KARTU STATISTIK (6 Bulan Terakhir) */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {/* Kartu 1: Total Tersalurkan (6 Bulan Terakhir) */}
         <div className="relative overflow-hidden rounded-3xl border border-orange-100 bg-white p-6 shadow-xs">
           <div className="flex items-center justify-between">
@@ -356,30 +355,6 @@ export function AdminAlokasiDanaView({
           <div className="mt-3 flex items-center gap-1.5 text-[11px] text-amber-800 font-semibold bg-amber-50/80 rounded-lg px-2.5 py-1 w-fit">
             <ShieldCheck className="size-3" />
             <span>Penerima Manfaat Aktif</span>
-          </div>
-        </div>
-
-        {/* Kartu 3: Rata-rata per Penyaluran (6 Bulan Terakhir) */}
-        <div className="relative overflow-hidden rounded-3xl border border-orange-100 bg-white p-6 shadow-xs">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-stone-400">
-              Rata-rata per Penyaluran
-            </span>
-            <div className="flex size-10 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
-              <TrendingUp className="size-5" />
-            </div>
-          </div>
-          <div className="mt-3">
-            <p className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight">
-              {formatRupiah(stats.avgPerPenyaluran6Bulan)}
-            </p>
-            <p className="mt-1 text-xs text-stone-500 font-medium">
-              Nominal rata-rata per bukti terverifikasi
-            </p>
-          </div>
-          <div className="mt-3 flex items-center gap-1.5 text-[11px] text-emerald-700 font-semibold bg-emerald-50/80 rounded-lg px-2.5 py-1 w-fit">
-            <Coins className="size-3" />
-            <span>Bantuan per Semester</span>
           </div>
         </div>
       </div>

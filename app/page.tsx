@@ -93,29 +93,39 @@ export default function LandingPage() {
 
         {/* Tombol Aksi */}
         <div className="relative z-10 flex w-full max-w-sm flex-col gap-4">
-          {/* Tombol Masuk (Primary) */}
-          <Link
-            href="/login"
-            className="group flex h-14 w-full items-center justify-center gap-3 rounded-full bg-gradient-to-r from-orange-500 via-orange-500 to-amber-500 px-6 text-lg font-bold text-white shadow-lg shadow-orange-500/25 transition-all duration-200 hover:from-orange-600 hover:to-amber-600 hover:shadow-xl hover:shadow-orange-500/35 active:scale-[0.98]"
-          >
-            <DoorOpen
-              className="size-6 transition-transform duration-200 group-hover:translate-x-0.5"
-              aria-hidden="true"
-            />
-            <span>Masuk</span>
-          </Link>
+          {/* Kelompok Masuk */}
+          <div className="space-y-1.5 text-left">
+            <p className="px-3 text-xs font-bold text-orange-700">
+              Aku sudah terdaftar
+            </p>
+            <Link
+              href="/login"
+              className="group flex h-14 w-full items-center justify-center gap-3 rounded-full bg-gradient-to-r from-orange-500 via-orange-500 to-amber-500 px-6 text-lg font-bold text-white shadow-lg shadow-orange-500/25 transition-all duration-200 hover:from-orange-600 hover:to-amber-600 hover:shadow-xl hover:shadow-orange-500/35 active:scale-[0.98]"
+            >
+              <DoorOpen
+                className="size-6 transition-transform duration-200 group-hover:translate-x-0.5"
+                aria-hidden="true"
+              />
+              <span>Masuk</span>
+            </Link>
+          </div>
 
-          {/* Tombol Daftar (Secondary) */}
-          <Link
-            href="/daftar"
-            className="group flex h-14 w-full items-center justify-center gap-3 rounded-full border-2 border-amber-400 bg-amber-50/40 px-6 text-lg font-bold text-amber-900 shadow-sm transition-all duration-200 hover:border-amber-500 hover:bg-amber-100/60 hover:shadow-md active:scale-[0.98]"
-          >
-            <Pencil
-              className="size-5 text-amber-700 transition-transform duration-200 group-hover:-rotate-12"
-              aria-hidden="true"
-            />
-            <span>Daftar</span>
-          </Link>
+          {/* Kelompok Daftar */}
+          <div className="space-y-1.5 text-left">
+            <p className="px-3 text-xs font-bold text-orange-700">
+              Aku calon adik asuh baru
+            </p>
+            <Link
+              href="/daftar"
+              className="group flex h-14 w-full items-center justify-center gap-3 rounded-full border-2 border-amber-400 bg-amber-50/40 px-6 text-lg font-bold text-amber-900 shadow-sm transition-all duration-200 hover:border-amber-500 hover:bg-amber-100/60 hover:shadow-md active:scale-[0.98]"
+            >
+              <Pencil
+                className="size-5 text-amber-700 transition-transform duration-200 group-hover:-rotate-12"
+                aria-hidden="true"
+              />
+              <span>Daftar</span>
+            </Link>
+          </div>
 
           {/* Link Cek Status Pendaftaran */}
           <div className="pt-1 text-center">

@@ -54,6 +54,7 @@ model Student {
   noHp                String    @map("no_hp")
   riwayatPenyakit     String    @map("riwayat_penyakit")
   schoolName          String    @map("school_name")
+  jenjang             String? // "SD" | "SMP" | "SMA" | "SMK" | "Kuliah" | null (belum ditentukan)
   gradeLevel          String    @map("grade_level")
   nilaiRataRata       String    @map("nilai_rata_rata")
   jumlahSaudara       Int       @map("jumlah_saudara")

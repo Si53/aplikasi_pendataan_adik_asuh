@@ -15,7 +15,11 @@ export default async function AdminDashboardLayout({
     redirect("/admin/login")
   }
 
-  const totalStudentsCount = await prisma.student.count().catch(() => 0)
+  const totalStudentsCount = await prisma.student
+    .count({
+      where: { status: "approved" },
+    })
+    .catch(() => 0)
   const adminName = session.user.name || "Administrator"
   const adminEmail = session.user.email || ""
 

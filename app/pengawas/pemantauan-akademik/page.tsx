@@ -22,9 +22,10 @@ export default async function PemantauanAkademikPage() {
   })
   if (!pengawas) redirect("/login")
 
-  // Query gabungan: siswa binaan langsung ATAU siswa di wilayah tugas pengawas ini
+  // Query gabungan: siswa binaan langsung ATAU siswa di wilayah tugas pengawas ini dengan status approved
   const rawStudents = await prisma.student.findMany({
     where: {
+      status: "approved",
       OR: [{ pengawasId: pengawas.id }, { wilayah: pengawas.wilayah }],
     },
     include: {

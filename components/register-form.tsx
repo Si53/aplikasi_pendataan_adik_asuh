@@ -181,6 +181,7 @@ type RegistrationDraft = {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: string
@@ -222,6 +223,7 @@ export function RegisterForm() {
     noHp: "",
     riwayatPenyakit: "",
     schoolName: "",
+    jenjang: "",
     gradeLevel: "",
     nilaiRataRata: "",
     jumlahSaudara: "0",
@@ -395,6 +397,11 @@ export function RegisterForm() {
 
   const handleEducationLevelChange = (lvl: "Sekolah" | "Kuliah") => {
     setEducationLevelType(lvl)
+    setData((prev) => ({
+      ...prev,
+      jenjang: lvl === "Kuliah" ? "Kuliah" : "",
+      gradeLevel: "",
+    }))
     setCosts((prev) => {
       if (prev.length === 0) {
         return [{ label: lvl === "Kuliah" ? "Biaya Kuliah per Semester" : "Biaya SPP Bulanan", amount: "" }]
@@ -525,13 +532,17 @@ export function RegisterForm() {
         return setError("Tanggal lahir lengkap (Tanggal-Bulan-Tahun) wajib dipilih.")
       }
       if (!data.gender) return setError("Silakan pilih jenis kelamin (Laki-laki / Perempuan).")
-      if (!data.wilayah) return setError("Silakan pilih wilayah tugas.")
+      if (!data.wilayah) return setError("Silakan pilih wilayah penempatan.")
+      if (!data.pengawasName.trim()) return setError("Silakan pilih pengawas wilayah.")
       if (!data.alamatLengkap.trim()) return setError("Alamat lengkap wajib diisi.")
       if (!data.noHp.trim()) return setError("Nomor WhatsApp / HP wajib diisi.")
     }
 
     // Step 3 validation
     if (step === 3) {
+      if (educationLevelType === "Sekolah" && !data.jenjang.trim()) {
+        return setError("Silakan pilih jenjang pendidikan (SD, SMP, SMA, atau SMK).")
+      }
       if (!data.schoolName.trim()) {
         return setError(
           educationLevelType === "Kuliah"
@@ -542,8 +553,8 @@ export function RegisterForm() {
       if (!data.gradeLevel.trim()) {
         return setError(
           educationLevelType === "Kuliah"
-            ? "Semester wajib diisi."
-            : "Kelas / Tingkat wajib diisi."
+            ? "Silakan pilih Semester saat ini."
+            : "Silakan pilih Kelas saat ini."
         )
       }
       if (!data.nilaiRataRata.trim()) {
@@ -602,6 +613,8 @@ export function RegisterForm() {
 
     const documentsPayload = [...singleDocsPayload, ...prestasiPayload]
 
+    const finalJenjang = educationLevelType === "Kuliah" ? "Kuliah" : (data.jenjang.trim() || null)
+
     const payload: RegisterPayload = {
       username: data.username.trim(),
       nik: data.nik.trim(),
@@ -615,6 +628,7 @@ export function RegisterForm() {
       noHp: data.noHp.trim(),
       riwayatPenyakit: data.riwayatPenyakit.trim() || "-",
       schoolName: data.schoolName.trim(),
+      jenjang: finalJenjang,
       gradeLevel: data.gradeLevel.trim(),
       nilaiRataRata: data.nilaiRataRata.trim(),
       jumlahSaudara: Number(data.jumlahSaudara) || 0,
@@ -671,12 +685,14 @@ export function RegisterForm() {
     data.birthYear &&
     data.gender &&
     data.wilayah &&
+    data.pengawasName.trim() &&
     data.alamatLengkap.trim() &&
     data.noHp.trim()
   )
 
   const isStep3Complete = Boolean(
     data.schoolName.trim() &&
+    (educationLevelType === "Kuliah" || data.jenjang.trim()) &&
     data.gradeLevel.trim() &&
     data.nilaiRataRata.trim()
   )
@@ -999,7 +1015,7 @@ export function RegisterForm() {
                   variant={data.wilayah === reg ? "default" : "outline"}
                   onClick={() => {
                     set("wilayah", reg)
-                    set("pengawasName", wilayahPengawasMap[reg]?.[0] || "")
+                    set("pengawasName", "")
                   }}
                   className={`h-12 rounded-2xl text-sm font-bold shadow-sm ${
                     data.wilayah !== reg ? "bg-white/90 hover:bg-white" : ""
@@ -1012,22 +1028,20 @@ export function RegisterForm() {
           </Field>
 
           {data.wilayah && (
-            <Field label={`Pengawas Wilayah ${data.wilayah}`}>
-              <div className="flex flex-col gap-2">
+            <Field label={`Pengawas Wilayah ${data.wilayah} *`}>
+              <select
+                value={data.pengawasName}
+                onChange={(e) => set("pengawasName", e.target.value)}
+                className="h-14 w-full rounded-2xl border border-border bg-white px-4 text-sm font-semibold text-foreground shadow-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+                aria-label={`Pilih Pengawas Wilayah ${data.wilayah}`}
+              >
+                <option value="">-- Pilih Pengawas --</option>
                 {wilayahPengawasMap[data.wilayah]?.map((pName) => (
-                  <Button
-                    key={pName}
-                    type="button"
-                    variant={data.pengawasName === pName ? "default" : "outline"}
-                    onClick={() => set("pengawasName", pName)}
-                    className={`h-12 justify-start rounded-2xl px-4 text-sm font-semibold shadow-sm ${
-                      data.pengawasName !== pName ? "bg-white/90 hover:bg-white" : ""
-                    }`}
-                  >
+                  <option key={pName} value={pName}>
                     {pName}
-                  </Button>
+                  </option>
                 ))}
-              </div>
+              </select>
             </Field>
           )}
 
@@ -1066,9 +1080,9 @@ export function RegisterForm() {
           title="3. Informasi Pendidikan & Biaya"
           note="Data pendidikan dan estimasi kebutuhan biaya pendidikan."
         >
-          {/* Radio Button Paling Atas: Sekolah vs Kuliah */}
-          <Field label="Jenjang Pendidikan *">
-            <div className="grid grid-cols-2 gap-3" role="radiogroup" aria-label="Pilih Jenjang Pendidikan">
+          {/* 1. Radio Button Paling Atas: Sekolah vs Kuliah */}
+          <Field label="Kategori Pendidikan *">
+            <div className="grid grid-cols-2 gap-3" role="radiogroup" aria-label="Pilih Kategori Pendidikan">
               {(["Sekolah", "Kuliah"] as const).map((lvl) => {
                 const isSelected = educationLevelType === lvl
                 return (
@@ -1100,7 +1114,7 @@ export function RegisterForm() {
                     <div className="flex flex-col">
                       <span className="text-sm font-bold">{lvl}</span>
                       <span className="text-[11px] text-muted-foreground font-normal">
-                        {lvl === "Sekolah" ? "SD, SMP, SMA / SMK" : "Perguruan Tinggi / Universitas"}
+                        {lvl === "Sekolah" ? "SD, SMP, SMA, atau SMK" : "Perguruan Tinggi / Universitas"}
                       </span>
                     </div>
                   </label>
@@ -1109,24 +1123,106 @@ export function RegisterForm() {
             </div>
           </Field>
 
+          {/* 2. JIKA "Sekolah" dipilih: Pilihan tombol jenjang SD, SMP, SMA, SMK */}
+          {educationLevelType === "Sekolah" && (
+            <Field label="Jenjang Sekolah *">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                {(["SD", "SMP", "SMA", "SMK"] as const).map((j) => {
+                  const isSelected = data.jenjang === j
+                  return (
+                    <button
+                      key={j}
+                      type="button"
+                      onClick={() => {
+                        set("jenjang", j)
+                        set("gradeLevel", "")
+                      }}
+                      className={`flex items-center justify-center gap-2 rounded-2xl border py-3.5 px-4 font-bold text-sm transition cursor-pointer shadow-sm ${
+                        isSelected
+                          ? "border-orange-500 bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-orange-500/25 ring-2 ring-orange-500/30"
+                          : "border-border/80 bg-white text-foreground hover:border-orange-300 hover:bg-orange-50/50"
+                      }`}
+                    >
+                      {isSelected && <Check className="size-4 stroke-[3]" />}
+                      <span>{j}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            </Field>
+          )}
+
+          {/* 3. Input Nama Sekolah / Universitas */}
           <Field label={educationLevelType === "Kuliah" ? "Nama Universitas / Perguruan Tinggi *" : "Nama Sekolah *"}>
             <Input
               value={data.schoolName}
               onChange={(e) => set("schoolName", e.target.value)}
-              placeholder={educationLevelType === "Kuliah" ? "Contoh: Universitas Diponegoro" : "Contoh: SMP Negeri 1 Pati"}
+              placeholder={
+                educationLevelType === "Kuliah"
+                  ? "Contoh: Universitas Diponegoro"
+                  : data.jenjang === "SD"
+                  ? "Contoh: SD Negeri 1 Pati"
+                  : data.jenjang === "SMP"
+                  ? "Contoh: SMP Negeri 1 Pati"
+                  : data.jenjang === "SMA"
+                  ? "Contoh: SMA Negeri 1 Pati"
+                  : data.jenjang === "SMK"
+                  ? "Contoh: SMK Negeri 1 Pati"
+                  : "Contoh: SMP Negeri 1 Pati"
+              }
               className="h-14 rounded-2xl bg-white text-base shadow-sm"
             />
           </Field>
 
-          <Field label={educationLevelType === "Kuliah" ? "Semester *" : "Kelas / Tingkat *"}>
-            <Input
-              value={data.gradeLevel}
-              onChange={(e) => set("gradeLevel", e.target.value)}
-              placeholder={educationLevelType === "Kuliah" ? "Contoh: Semester 4" : "Contoh: 7 SMP / 11 SMA"}
-              className="h-14 rounded-2xl bg-white text-base shadow-sm"
-            />
-          </Field>
+          {/* 4. Dropdown Kelas (untuk Sekolah) / Semester (untuk Kuliah) */}
+          {educationLevelType === "Sekolah" ? (
+            <Field label={`Tingkat / Kelas ${data.jenjang ? `(${data.jenjang})` : ""} *`}>
+              <select
+                disabled={!data.jenjang}
+                value={data.gradeLevel}
+                onChange={(e) => set("gradeLevel", e.target.value)}
+                className="h-14 w-full rounded-2xl border border-border bg-white px-4 text-base font-semibold text-foreground shadow-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 disabled:bg-muted/50 disabled:text-muted-foreground disabled:cursor-not-allowed cursor-pointer"
+              >
+                <option value="">
+                  {data.jenjang ? `-- Pilih Kelas (${data.jenjang}) --` : "-- Pilih Jenjang Sekolah di Atas Dulu --"}
+                </option>
+                {data.jenjang === "SD" && (
+                  <>
+                    <option value="1">Kelas 1</option>
+                    <option value="2">Kelas 2</option>
+                    <option value="3">Kelas 3</option>
+                    <option value="4">Kelas 4</option>
+                    <option value="5">Kelas 5</option>
+                    <option value="6">Kelas 6</option>
+                  </>
+                )}
+                {(data.jenjang === "SMP" || data.jenjang === "SMA" || data.jenjang === "SMK") && (
+                  <>
+                    <option value="1">Kelas 1</option>
+                    <option value="2">Kelas 2</option>
+                    <option value="3">Kelas 3</option>
+                  </>
+                )}
+              </select>
+            </Field>
+          ) : (
+            <Field label="Semester *">
+              <select
+                value={data.gradeLevel}
+                onChange={(e) => set("gradeLevel", e.target.value)}
+                className="h-14 w-full rounded-2xl border border-border bg-white px-4 text-base font-semibold text-foreground shadow-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 cursor-pointer"
+              >
+                <option value="">-- Pilih Semester Kuliah --</option>
+                {Array.from({ length: 10 }, (_, i) => i + 1).map((s) => (
+                  <option key={s} value={String(s)}>
+                    Semester {s}
+                  </option>
+                ))}
+              </select>
+            </Field>
+          )}
 
+          {/* 5. Input Nilai Rata-Rata / IPK */}
           <Field label={educationLevelType === "Kuliah" ? "IPK *" : "Nilai Rata-Rata Rapor *"}>
             <Input
               value={data.nilaiRataRata}

@@ -9,6 +9,7 @@ import {
   AdminStudentDetailData,
 } from "@/components/admin-student-detail-tabs"
 import { AdminDetailBottomBar } from "@/components/admin-detail-bottom-bar"
+import { AdminPendingApprovalActions } from "@/components/admin-pending-approval-actions"
 
 export const dynamic = "force-dynamic"
 
@@ -296,6 +297,16 @@ export default async function AdminStudentDetailPage({
                     <span className="size-1.5 rounded-full bg-emerald-500" />
                     Aktif Penuh
                   </span>
+                ) : student.status === "alumni" ? (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-semibold text-blue-700 border border-blue-200">
+                    <span className="size-1.5 rounded-full bg-blue-500" />
+                    Alumni
+                  </span>
+                ) : student.status === "nonaktif" ? (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-stone-100 px-2.5 py-0.5 text-xs font-semibold text-stone-700 border border-stone-300">
+                    <span className="size-1.5 rounded-full bg-stone-500" />
+                    Nonaktif
+                  </span>
                 ) : student.status === "pending" ? (
                   <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-semibold text-amber-700 border border-amber-200">
                     <span className="size-1.5 rounded-full bg-amber-500" />
@@ -314,6 +325,14 @@ export default async function AdminStudentDetailPage({
               </div>
             </div>
           </div>
+
+          {/* Tombol Setujui & Tolak jika status masih pending */}
+          {student.status === "pending" && (
+            <AdminPendingApprovalActions
+              studentId={student.id}
+              studentName={student.fullName}
+            />
+          )}
         </div>
       </div>
 

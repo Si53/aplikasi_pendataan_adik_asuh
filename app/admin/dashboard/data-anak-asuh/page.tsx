@@ -3,9 +3,7 @@ import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import {
   Users,
-  GraduationCap,
   AlertCircle,
-  UserCheck,
   Sparkles,
 } from "lucide-react"
 import { AdminStudentTable, StudentTableItem } from "@/components/admin-student-table"
@@ -19,10 +17,9 @@ export default async function DataAnakAsuhPage() {
     redirect("/admin/login")
   }
 
-  // 1. Fetch Real Database Statistics
-  const [totalStudents, activeStudents, needsAttentionCount, totalPengawas, studentsRaw] =
+  // 1. Fetch Real Database Statistics (Khusus status: "approved")
+  const [approvedStudentsCount, needsAttentionCount, studentsRaw] =
     await Promise.all([
-      prisma.student.count().catch(() => 0),
       prisma.student
         .count({
           where: { status: "approved" },
@@ -31,14 +28,17 @@ export default async function DataAnakAsuhPage() {
       prisma.student
         .count({
           where: {
+            status: "approved",
             academicUpdates: {
               none: {},
             },
           },
         })
         .catch(() => 0),
-      prisma.pengawas.count().catch(() => 0),
       prisma.student.findMany({
+        where: {
+          status: "approved",
+        },
         include: {
           pengawas: {
             select: {
@@ -117,101 +117,58 @@ export default async function DataAnakAsuhPage() {
             Data Anak Asuh
           </h1>
           <p className="text-xs sm:text-sm text-stone-500 max-w-2xl">
-            Kelola, pantau perkembangan akademis, dan verifikasi status anak
-            asuh secara holistik di seluruh wilayah.
+            Kelola dan pantau perkembangan akademis anak asuh aktif (Approved) secara holistik di seluruh wilayah.
           </p>
         </div>
 
         <AdminDataHeaderActions />
       </div>
 
-      {/* 2. 4 Real Database Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Card 1: Total Anak Asuh */}
-        <div className="rounded-2xl border border-stone-200/90 bg-white p-5 shadow-xs transition hover:shadow-sm">
+      {/* 2. 2 Real Database Stat Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+        {/* Card 1: Jumlah Adik Asuh (Approved) */}
+        <div className="rounded-3xl border border-stone-200/90 bg-white p-6 shadow-xs transition hover:shadow-sm">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-stone-400">
-              Total Anak Asuh
+              Jumlah Adik Asuh
             </span>
-            <div className="flex size-10 items-center justify-center rounded-xl bg-orange-50 text-orange-600">
-              <Users className="size-5" />
+            <div className="flex size-11 items-center justify-center rounded-2xl bg-orange-50 text-orange-600">
+              <Users className="size-5.5" />
             </div>
           </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-2xl sm:text-3xl font-black text-stone-900">
-              {totalStudents}
+          <div className="mt-4 flex items-baseline gap-2.5">
+            <span className="text-3xl sm:text-4xl font-black text-stone-900 tracking-tight">
+              {approvedStudentsCount}
             </span>
-            <span className="text-xs text-stone-400">Anak terdaftar</span>
-          </div>
-          <p className="mt-1 text-[11px] text-stone-500">
-            Database seluruh calon & penerima beasiswa
-          </p>
-        </div>
-
-        {/* Card 2: Aktif Beasiswa */}
-        <div className="rounded-2xl border border-stone-200/90 bg-white p-5 shadow-xs transition hover:shadow-sm">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-stone-400">
+            <span className="inline-flex items-center rounded-lg bg-emerald-50 px-2 py-0.5 text-xs font-bold text-emerald-700 border border-emerald-200/60">
               Aktif Beasiswa
             </span>
-            <div className="flex size-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
-              <GraduationCap className="size-5" />
-            </div>
           </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-2xl sm:text-3xl font-black text-stone-900">
-              {activeStudents}
-            </span>
-            <span className="text-xs font-semibold text-emerald-600">
-              Approved
-            </span>
-          </div>
-          <p className="mt-1 text-[11px] text-stone-500">
-            Anak asuh aktif menerima alokasi beasiswa
+          <p className="mt-2 text-xs text-stone-500 font-medium">
+            Total seluruh anak asuh berstatus aktif yang menerima beasiswa
           </p>
         </div>
 
-        {/* Card 3: Perlu Perhatian */}
-        <div className="rounded-2xl border border-stone-200/90 bg-white p-5 shadow-xs transition hover:shadow-sm">
+        {/* Card 2: Perlu Perhatian */}
+        <div className="rounded-3xl border border-stone-200/90 bg-white p-6 shadow-xs transition hover:shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-stone-400">
+            <span className="text-xs font-bold uppercase tracking-wider text-amber-800">
               Perlu Perhatian
             </span>
-            <div className="flex size-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
-              <AlertCircle className="size-5" />
+            <div className="flex size-11 items-center justify-center rounded-2xl bg-amber-50 text-amber-600">
+              <AlertCircle className="size-5.5" />
             </div>
           </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-2xl sm:text-3xl font-black text-stone-900">
+          <div className="mt-4 flex items-baseline gap-2.5">
+            <span className="text-3xl sm:text-4xl font-black text-stone-900 tracking-tight">
               {needsAttentionCount}
             </span>
-            <span className="text-xs font-semibold text-amber-600">
-              Belum Rapor
+            <span className="inline-flex items-center rounded-lg bg-amber-50 px-2 py-0.5 text-xs font-bold text-amber-700 border border-amber-200/60">
+              Belum Ada Rapor
             </span>
           </div>
-          <p className="mt-1 text-[11px] text-stone-500">
-            Belum pernah ada riwayat update rapor
-          </p>
-        </div>
-
-        {/* Card 4: Pengawas Aktif */}
-        <div className="rounded-2xl border border-stone-200/90 bg-white p-5 shadow-xs transition hover:shadow-sm">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-stone-400">
-              Pengawas Aktif
-            </span>
-            <div className="flex size-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
-              <UserCheck className="size-5" />
-            </div>
-          </div>
-          <div className="mt-3 flex items-baseline gap-2">
-            <span className="text-2xl sm:text-3xl font-black text-stone-900">
-              {totalPengawas}
-            </span>
-            <span className="text-xs text-stone-400">Pengawas</span>
-          </div>
-          <p className="mt-1 text-[11px] text-stone-500">
-            Penanggung jawab lapangan terdaftar
+          <p className="mt-2 text-xs text-stone-500 font-medium">
+            Adik asuh aktif yang belum memiliki riwayat pembaruan rapor
           </p>
         </div>
       </div>

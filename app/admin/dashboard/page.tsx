@@ -3,7 +3,8 @@ import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import {
   AdminDashboardOverview,
-  type WilayahDistributionItem,
+  type BudgetOverviewData,
+  type JenjangBudgetItem,
   type QuickAuditPendingItem,
 } from "@/components/admin-dashboard-overview"
 
@@ -142,43 +143,64 @@ export default async function AdminDashboardPage() {
     }
   })
 
-  // 4. Hitung Distribusi Bantuan per Wilayah
-  const defaultWilayahList = [
-    "Pati",
-    "Jepara",
-    "Ampel",
-    "Wonosobo",
-    "Sukabumi",
-    "Bandung",
+  // 4. Hitung Kebutuhan Anggaran Beasiswa Berdasarkan Jenjang
+  const TARIF_JENJANG: Record<string, number> = {
+    SD: 500000,
+    SMP: 600000,
+    SMA: 800000,
+    SMK: 800000,
+    Kuliah: 1000000,
+  }
+
+  const JENJANG_LIST: Array<"SD" | "SMP" | "SMA" | "SMK" | "Kuliah"> = [
+    "SD",
+    "SMP",
+    "SMA",
+    "SMK",
+    "Kuliah",
   ]
-  const allWilayahSet = new Set<string>(defaultWilayahList)
-  allStudentsRaw.forEach((s) => {
-    if (s.wilayah) allWilayahSet.add(s.wilayah.trim())
+
+  const approvedStudentsList = allStudentsRaw.filter((s) => s.status === "approved")
+
+  let unassignedJenjangCount = 0
+  const jenjangCounts: Record<string, number> = {
+    SD: 0,
+    SMP: 0,
+    SMA: 0,
+    SMK: 0,
+    Kuliah: 0,
+  }
+
+  approvedStudentsList.forEach((s) => {
+    const j = s.jenjang?.trim()
+    if (j && TARIF_JENJANG[j]) {
+      jenjangCounts[j]++
+    } else {
+      unassignedJenjangCount++
+    }
   })
 
-  const wilayahDistributions: WilayahDistributionItem[] = Array.from(
-    allWilayahSet
-  )
-    .map((wilayahName) => {
-      const studentCount = allStudentsRaw.filter(
-        (s) => s.wilayah?.toLowerCase().trim() === wilayahName.toLowerCase().trim()
-      ).length
+  let totalAnggaranBeasiswa = 0
+  const budgetItems: JenjangBudgetItem[] = JENJANG_LIST.map((jenjang) => {
+    const studentCount = jenjangCounts[jenjang] || 0
+    const tarif = TARIF_JENJANG[jenjang]
+    const subtotal = studentCount * tarif
+    totalAnggaranBeasiswa += subtotal
 
-      const totalNominal = allVerifiedDisbursementsRaw
-        .filter(
-          (d) =>
-            d.student?.wilayah?.toLowerCase().trim() ===
-            wilayahName.toLowerCase().trim()
-        )
-        .reduce((acc, curr) => acc + (curr.nominal || 0), 0)
+    return {
+      jenjang,
+      tarif,
+      studentCount,
+      subtotal,
+    }
+  })
 
-      return {
-        wilayah: wilayahName,
-        studentCount,
-        totalNominal,
-      }
-    })
-    .sort((a, b) => b.studentCount - a.studentCount || b.totalNominal - a.totalNominal)
+  const budgetOverview: BudgetOverviewData = {
+    totalAnggaran: totalAnggaranBeasiswa,
+    totalApprovedStudents: approvedStudentsList.length,
+    unassignedCount: unassignedJenjangCount,
+    items: budgetItems,
+  }
 
   // 5. Format 3 Berkas Pending untuk Widget Audit Cepat
   const quickAuditItems: QuickAuditPendingItem[] = pendingProofsRaw.map((p) => ({
@@ -214,7 +236,7 @@ export default async function AdminDashboardPage() {
           raporBelumDiunggahCount,
           perluPerhatianAcademicCount,
         }}
-        wilayahDistributions={wilayahDistributions}
+        budgetOverview={budgetOverview}
         quickAuditItems={quickAuditItems}
       />
     </div>

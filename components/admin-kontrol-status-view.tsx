@@ -26,6 +26,8 @@ import {
   MessageSquare,
   AlertTriangle,
   Phone,
+  Eye,
+  GraduationCap,
 } from "lucide-react"
 import {
   updateStudentStatusAction,
@@ -41,7 +43,7 @@ export interface StudentStatusItem {
   gradeLevel: string
   wilayah: string
   createdAt: string
-  status: "pending" | "approved" | "rejected" | "nonaktif" | string
+  status: "pending" | "approved" | "rejected" | "nonaktif" | "alumni" | string
   pengawasName: string
 }
 
@@ -67,8 +69,9 @@ type ModalTarget =
       id: number
       name: string
       currentStatus: string
-      targetStatus: "approved" | "nonaktif" | "rejected"
+      targetStatus: "approved" | "nonaktif" | "rejected" | "alumni"
       actionLabel: string
+      isDeactivation?: boolean
     }
   | {
       type: "pengawas"
@@ -103,6 +106,7 @@ export function AdminKontrolStatusView({
 
   // Confirmation Modal state
   const [modalTarget, setModalTarget] = useState<ModalTarget | null>(null)
+  const [deactivationType, setDeactivationType] = useState<"alumni" | "nonaktif">("alumni")
   const [reason, setReason] = useState("")
   const [isPending, startTransition] = useTransition()
   const [actionError, setActionError] = useState<string | null>(null)
@@ -112,17 +116,19 @@ export function AdminKontrolStatusView({
   const studentStats = useMemo(() => {
     let approved = 0
     let nonaktif = 0
+    let alumni = 0
     let pending = 0
     let rejected = 0
 
     students.forEach((s) => {
       if (s.status === "approved") approved++
       else if (s.status === "nonaktif") nonaktif++
+      else if (s.status === "alumni") alumni++
       else if (s.status === "pending") pending++
       else if (s.status === "rejected") rejected++
     })
 
-    return { approved, nonaktif, pending, rejected, total: students.length }
+    return { approved, nonaktif, alumni, pending, rejected, total: students.length }
   }, [students])
 
   // 2. STATISTIK PENGAWAS
@@ -215,16 +221,21 @@ export function AdminKontrolStatusView({
     setActionError(null)
     setActionSuccess(null)
 
+    const resolvedTargetStatus =
+      modalTarget.type === "student" && modalTarget.isDeactivation
+        ? deactivationType
+        : modalTarget.targetStatus
+
     startTransition(async () => {
       if (modalTarget.type === "student") {
         const res = await updateStudentStatusAction(
           modalTarget.id,
-          modalTarget.targetStatus,
+          resolvedTargetStatus,
           cleanReason
         )
         if (res.success) {
           setActionSuccess(
-            `Status adik asuh ${modalTarget.name} berhasil diperbarui menjadi "${modalTarget.targetStatus.toUpperCase()}".`
+            `Status adik asuh ${modalTarget.name} berhasil diperbarui menjadi "${resolvedTargetStatus.toUpperCase()}".`
           )
           setModalTarget(null)
           setReason("")
@@ -344,8 +355,8 @@ export function AdminKontrolStatusView({
       {/* ========================================================================= */}
       {activeTab === "student" && (
         <div className="space-y-6">
-          {/* 3 Kartu Statistik Adik Asuh */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          {/* 4 Kartu Statistik Adik Asuh */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {/* Kartu 1: Total Aktif (approved) */}
             <div className="relative overflow-hidden rounded-3xl border border-emerald-100 bg-white p-6 shadow-xs">
               <div className="flex items-center justify-between">
@@ -371,7 +382,32 @@ export function AdminKontrolStatusView({
               </div>
             </div>
 
-            {/* Kartu 2: Nonaktif */}
+            {/* Kartu 2: Alumni */}
+            <div className="relative overflow-hidden rounded-3xl border border-blue-200 bg-white p-6 shadow-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-wider text-blue-800">
+                  Alumni
+                </span>
+                <div className="flex size-10 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+                  <GraduationCap className="size-5" />
+                </div>
+              </div>
+              <div className="mt-3">
+                <p className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight">
+                  {studentStats.alumni}{" "}
+                  <span className="text-sm font-bold text-stone-400">Alumni</span>
+                </p>
+                <p className="mt-1 text-xs text-stone-500 font-medium">
+                  Lulus / menyelesaikan program
+                </p>
+              </div>
+              <div className="mt-3 flex items-center gap-1.5 text-[11px] text-blue-700 font-semibold bg-blue-50 rounded-lg px-2.5 py-1 w-fit">
+                <GraduationCap className="size-3" />
+                <span>Status Alumni</span>
+              </div>
+            </div>
+
+            {/* Kartu 3: Nonaktif */}
             <div className="relative overflow-hidden rounded-3xl border border-stone-200 bg-white p-6 shadow-xs">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold uppercase tracking-wider text-stone-400">
@@ -387,7 +423,7 @@ export function AdminKontrolStatusView({
                   <span className="text-sm font-bold text-stone-400">Adik Asuh</span>
                 </p>
                 <p className="mt-1 text-xs text-stone-500 font-medium">
-                  Bantuan dijeda atau lulus/selesai
+                  Bantuan dijeda sementara
                 </p>
               </div>
               <div className="mt-3 flex items-center gap-1.5 text-[11px] text-stone-700 font-semibold bg-stone-100 rounded-lg px-2.5 py-1 w-fit">
@@ -396,7 +432,7 @@ export function AdminKontrolStatusView({
               </div>
             </div>
 
-            {/* Kartu 3: Menunggu Persetujuan (pending) */}
+            {/* Kartu 4: Menunggu Persetujuan (pending) */}
             <div className="relative overflow-hidden rounded-3xl border border-amber-200 bg-white p-6 shadow-xs">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold uppercase tracking-wider text-amber-800">
@@ -480,6 +516,7 @@ export function AdminKontrolStatusView({
                   <option value="all">Semua Status</option>
                   <option value="pending">Menunggu Persetujuan ({studentStats.pending})</option>
                   <option value="approved">Aktif / Approved ({studentStats.approved})</option>
+                  <option value="alumni">Alumni ({studentStats.alumni})</option>
                   <option value="nonaktif">Nonaktif ({studentStats.nonaktif})</option>
                   <option value="rejected">Ditolak ({studentStats.rejected})</option>
                 </select>
@@ -515,6 +552,7 @@ export function AdminKontrolStatusView({
                     paginatedStudents.map((st) => {
                       const isPending = st.status === "pending"
                       const isApproved = st.status === "approved"
+                      const isAlumni = st.status === "alumni"
                       const isNonaktif = st.status === "nonaktif"
                       const isRejected = st.status === "rejected"
 
@@ -586,6 +624,12 @@ export function AdminKontrolStatusView({
                                 Aktif (Approved)
                               </span>
                             )}
+                            {isAlumni && (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 border border-blue-200 px-3 py-1 text-xs font-bold text-blue-700">
+                                <GraduationCap className="size-3.5 text-blue-600" />
+                                Alumni
+                              </span>
+                            )}
                             {isNonaktif && (
                               <span className="inline-flex items-center gap-1 rounded-full bg-stone-100 border border-stone-300 px-3 py-1 text-xs font-bold text-stone-600">
                                 <UserX className="size-3.5 text-stone-500" />
@@ -609,8 +653,15 @@ export function AdminKontrolStatusView({
                           {/* Kontrol Status Action */}
                           <td className="py-4 px-4 text-center">
                             {isPending ? (
-                              /* KHUSUS PENDING: Tombol Setujui & Tolak */
+                              /* KHUSUS PENDING: Tombol Lihat Detail, Setujui & Tolak */
                               <div className="inline-flex items-center gap-2">
+                                <Link
+                                  href={`/admin/dashboard/data-anak-asuh/${st.id}`}
+                                  className="inline-flex items-center gap-1.5 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 hover:text-orange-600 px-3 py-1.5 text-xs font-bold text-stone-700 shadow-2xs transition cursor-pointer"
+                                >
+                                  <Eye className="size-3.5 text-stone-400" />
+                                  <span>Lihat Detail</span>
+                                </Link>
                                 <button
                                   type="button"
                                   onClick={() => {
@@ -651,20 +702,33 @@ export function AdminKontrolStatusView({
                                 </button>
                               </div>
                             ) : (
-                              /* TOGGLE SWITCH untuk Approved / Nonaktif / Rejected */
+                              /* TOGGLE SWITCH untuk Approved / Nonaktif / Alumni / Rejected */
                               <div className="flex items-center justify-center gap-2.5">
                                 <button
                                   type="button"
                                   onClick={() => {
-                                    const nextStatus = isApproved ? "nonaktif" : "approved"
-                                    setModalTarget({
-                                      type: "student",
-                                      id: st.id,
-                                      name: st.fullName,
-                                      currentStatus: st.status,
-                                      targetStatus: nextStatus,
-                                      actionLabel: isApproved ? "Nonaktifkan Adik Asuh" : "Aktifkan Kembali Adik Asuh",
-                                    })
+                                    if (isApproved) {
+                                      setModalTarget({
+                                        type: "student",
+                                        id: st.id,
+                                        name: st.fullName,
+                                        currentStatus: st.status,
+                                        targetStatus: "alumni",
+                                        actionLabel: "Nonaktifkan / Luluskan Adik Asuh",
+                                        isDeactivation: true,
+                                      })
+                                      setDeactivationType("alumni")
+                                    } else {
+                                      setModalTarget({
+                                        type: "student",
+                                        id: st.id,
+                                        name: st.fullName,
+                                        currentStatus: st.status,
+                                        targetStatus: "approved",
+                                        actionLabel: "Aktifkan Kembali Adik Asuh",
+                                        isDeactivation: false,
+                                      })
+                                    }
                                     setReason("")
                                     setActionError(null)
                                   }}
@@ -683,10 +747,22 @@ export function AdminKontrolStatusView({
                                 </button>
                                 <span
                                   className={`text-xs font-bold ${
-                                    isApproved ? "text-emerald-700" : "text-stone-500"
+                                    isApproved
+                                      ? "text-emerald-700"
+                                      : isAlumni
+                                      ? "text-blue-700"
+                                      : isNonaktif
+                                      ? "text-stone-500"
+                                      : "text-rose-600"
                                   }`}
                                 >
-                                  {isApproved ? "Aktif" : "Nonaktif"}
+                                  {isApproved
+                                    ? "Aktif"
+                                    : isAlumni
+                                    ? "Alumni"
+                                    : isNonaktif
+                                    ? "Nonaktif"
+                                    : "Ditolak"}
                                 </span>
                               </div>
                             )}
@@ -1067,145 +1143,219 @@ export function AdminKontrolStatusView({
       {/* ========================================================================= */}
       {/* 5. MODAL KONFIRMASI PERUBAHAN STATUS (WAJIB ALASAN) */}
       {/* ========================================================================= */}
-      {modalTarget && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/60 p-4 backdrop-blur-xs animate-in fade-in"
-          onClick={() => {
-            if (!isPending) setModalTarget(null)
-          }}
-        >
+      {modalTarget && (() => {
+        const resolvedTarget =
+          modalTarget.type === "student" && modalTarget.isDeactivation
+            ? deactivationType
+            : modalTarget.targetStatus
+
+        return (
           <div
-            className="relative w-full max-w-lg rounded-3xl bg-white shadow-2xl overflow-hidden border border-stone-200 animate-in zoom-in-95"
-            onClick={(e) => e.stopPropagation()}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/60 p-4 backdrop-blur-xs animate-in fade-in"
+            onClick={() => {
+              if (!isPending) setModalTarget(null)
+            }}
           >
-            {/* Header Modal */}
-            <div className="p-6 border-b border-stone-100 bg-gradient-to-r from-orange-50/70 via-amber-50/40 to-white flex items-start gap-4">
-              <div
-                className={`flex size-12 shrink-0 items-center justify-center rounded-2xl shadow-sm text-white ${
-                  modalTarget.targetStatus === "approved" || modalTarget.targetStatus === "aktif"
-                    ? "bg-emerald-600"
-                    : modalTarget.targetStatus === "rejected"
-                    ? "bg-rose-600"
-                    : "bg-stone-700"
-                }`}
-              >
-                {modalTarget.targetStatus === "approved" || modalTarget.targetStatus === "aktif" ? (
-                  <CheckCircle2 className="size-6" />
-                ) : modalTarget.targetStatus === "rejected" ? (
-                  <XCircle className="size-6" />
-                ) : (
-                  <ShieldAlert className="size-6" />
-                )}
-              </div>
-
-              <div className="space-y-1 flex-1">
-                <h3 className="text-base sm:text-lg font-black text-stone-900">
-                  {modalTarget.actionLabel}
-                </h3>
-                <p className="text-xs text-stone-500">
-                  {modalTarget.type === "student" ? "Adik Asuh" : "Pengawas Lapangan"}:{" "}
-                  <strong className="text-stone-900">{modalTarget.name}</strong>
-                </p>
-              </div>
-
-              <button
-                type="button"
-                disabled={isPending}
-                onClick={() => setModalTarget(null)}
-                className="text-stone-400 hover:text-stone-600 p-1"
-              >
-                <X className="size-5" />
-              </button>
-            </div>
-
-            {/* Form & Body */}
-            <form onSubmit={handleConfirmStatusChange} className="p-6 space-y-5">
-              {/* Box Info Perubahan */}
-              <div className="rounded-2xl bg-stone-50 border border-stone-200/80 p-4 space-y-2 text-xs">
-                <div className="flex items-center justify-between">
-                  <span className="text-stone-500 font-medium">Status Saat Ini:</span>
-                  <span className="font-bold text-stone-800 uppercase font-mono">
-                    {modalTarget.currentStatus}
-                  </span>
+            <div
+              className="relative w-full max-w-lg rounded-3xl bg-white shadow-2xl overflow-hidden border border-stone-200 animate-in zoom-in-95"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header Modal */}
+              <div className="p-6 border-b border-stone-100 bg-gradient-to-r from-orange-50/70 via-amber-50/40 to-white flex items-start gap-4">
+                <div
+                  className={`flex size-12 shrink-0 items-center justify-center rounded-2xl shadow-sm text-white ${
+                    resolvedTarget === "approved" || resolvedTarget === "aktif"
+                      ? "bg-emerald-600"
+                      : resolvedTarget === "alumni"
+                      ? "bg-blue-600"
+                      : resolvedTarget === "rejected"
+                      ? "bg-rose-600"
+                      : "bg-stone-700"
+                  }`}
+                >
+                  {resolvedTarget === "approved" || resolvedTarget === "aktif" ? (
+                    <CheckCircle2 className="size-6" />
+                  ) : resolvedTarget === "alumni" ? (
+                    <GraduationCap className="size-6" />
+                  ) : resolvedTarget === "rejected" ? (
+                    <XCircle className="size-6" />
+                  ) : (
+                    <UserX className="size-6" />
+                  )}
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-stone-500 font-medium">Status Baru yang Dituju:</span>
-                  <span
-                    className={`font-black uppercase font-mono ${
-                      modalTarget.targetStatus === "approved" || modalTarget.targetStatus === "aktif"
-                        ? "text-emerald-700"
-                        : modalTarget.targetStatus === "rejected"
-                        ? "text-rose-700"
-                        : "text-stone-700"
-                    }`}
-                  >
-                    {modalTarget.targetStatus}
-                  </span>
+
+                <div className="space-y-1 flex-1">
+                  <h3 className="text-base sm:text-lg font-black text-stone-900">
+                    {modalTarget.actionLabel}
+                  </h3>
+                  <p className="text-xs text-stone-500">
+                    {modalTarget.type === "student" ? "Adik Asuh" : "Pengawas Lapangan"}:{" "}
+                    <strong className="text-stone-900">{modalTarget.name}</strong>
+                  </p>
                 </div>
-              </div>
 
-              {/* Textarea Alasan WAJIB */}
-              <div className="space-y-1.5">
-                <label className="text-xs sm:text-sm font-bold text-stone-800 flex items-center justify-between">
-                  <span className="flex items-center gap-1.5">
-                    <MessageSquare className="size-4 text-orange-500" />
-                    <span>Alasan Perubahan Status *</span>
-                  </span>
-                  <span className="text-[11px] font-semibold text-rose-500">Wajib Diisi</span>
-                </label>
-                <textarea
-                  rows={3}
-                  value={reason}
-                  onChange={(e) => setReason(e.target.value)}
-                  placeholder="Contoh: Penonaktifan sementara karena adik asuh telah lulus SMA / Evaluasi persetujuan berkas pendaftaran lengkap..."
-                  required
-                  className="w-full rounded-2xl border border-stone-300 bg-white p-3.5 text-xs sm:text-sm text-stone-800 placeholder:text-stone-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition resize-none"
-                />
-                <p className="text-[11px] text-stone-400">
-                  Alasan ini akan otomatis tercatat di log <strong>AdminNote</strong> sebagai riwayat audit.
-                </p>
-              </div>
-
-              {actionError && (
-                <div className="rounded-xl bg-rose-50 border border-rose-200 p-3 text-xs text-rose-800 flex items-center gap-2">
-                  <AlertCircle className="size-4 text-rose-600 shrink-0" />
-                  <span>{actionError}</span>
-                </div>
-              )}
-
-              {/* Action Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-2">
                 <button
                   type="button"
                   disabled={isPending}
                   onClick={() => setModalTarget(null)}
-                  className="rounded-2xl border border-stone-200 bg-white px-5 py-2.5 text-xs sm:text-sm font-bold text-stone-600 hover:bg-stone-50 transition"
+                  className="text-stone-400 hover:text-stone-600 p-1 rounded-lg"
                 >
-                  Batal
-                </button>
-                <button
-                  type="submit"
-                  disabled={isPending || !reason.trim()}
-                  className={`inline-flex items-center gap-2 rounded-2xl px-6 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md transition disabled:opacity-50 cursor-pointer ${
-                    modalTarget.targetStatus === "approved" || modalTarget.targetStatus === "aktif"
-                      ? "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/25"
-                      : modalTarget.targetStatus === "rejected"
-                      ? "bg-rose-600 hover:bg-rose-700 shadow-rose-600/25"
-                      : "bg-orange-500 hover:bg-orange-600 shadow-orange-500/25"
-                  }`}
-                >
-                  {isPending ? (
-                    <Loader2 className="size-4 animate-spin" />
-                  ) : (
-                    <Check className="size-4" />
-                  )}
-                  <span>{isPending ? "Memproses..." : "Konfirmasi & Simpan"}</span>
+                  <X className="size-5" />
                 </button>
               </div>
-            </form>
+
+              {/* Form & Body */}
+              <form onSubmit={handleConfirmStatusChange} className="p-6 space-y-5">
+                {/* Radio Pilihan Penonaktifan: Alumni vs Nonaktif */}
+                {modalTarget.type === "student" && modalTarget.isDeactivation && (
+                  <div className="space-y-2">
+                    <label className="text-xs sm:text-sm font-bold text-stone-800 flex items-center justify-between">
+                      <span>Alasan Penonaktifan:</span>
+                      <span className="text-[11px] font-semibold text-orange-600">Pilih salah satu</span>
+                    </label>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      <label
+                        className={`flex items-center gap-2.5 p-3 rounded-2xl border cursor-pointer transition ${
+                          deactivationType === "alumni"
+                            ? "border-blue-500 bg-blue-50/60 text-blue-900 font-bold ring-2 ring-blue-500/20"
+                            : "border-stone-200 bg-white text-stone-700 hover:bg-stone-50"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="deactivationType"
+                          value="alumni"
+                          checked={deactivationType === "alumni"}
+                          onChange={() => setDeactivationType("alumni")}
+                          className="size-4 text-blue-600 focus:ring-blue-500"
+                        />
+                        <div className="flex items-center gap-1.5 text-xs">
+                          <GraduationCap className="size-4 text-blue-600 shrink-0" />
+                          <span>Lulus / Selesai (Alumni)</span>
+                        </div>
+                      </label>
+
+                      <label
+                        className={`flex items-center gap-2.5 p-3 rounded-2xl border cursor-pointer transition ${
+                          deactivationType === "nonaktif"
+                            ? "border-stone-500 bg-stone-100 text-stone-900 font-bold ring-2 ring-stone-500/20"
+                            : "border-stone-200 bg-white text-stone-700 hover:bg-stone-50"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="deactivationType"
+                          value="nonaktif"
+                          checked={deactivationType === "nonaktif"}
+                          onChange={() => setDeactivationType("nonaktif")}
+                          className="size-4 text-stone-600 focus:ring-stone-500"
+                        />
+                        <div className="flex items-center gap-1.5 text-xs">
+                          <UserX className="size-4 text-stone-600 shrink-0" />
+                          <span>Alasan Lain (Nonaktif)</span>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                )}
+
+                {/* Box Info Perubahan */}
+                <div className="rounded-2xl bg-stone-50 border border-stone-200/80 p-4 space-y-2 text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-stone-500 font-medium">Status Saat Ini:</span>
+                    <span className="font-bold text-stone-800 uppercase font-mono">
+                      {modalTarget.currentStatus}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-stone-500 font-medium">Status Baru yang Dituju:</span>
+                    <span
+                      className={`font-black uppercase font-mono ${
+                        resolvedTarget === "approved" || resolvedTarget === "aktif"
+                          ? "text-emerald-700"
+                          : resolvedTarget === "alumni"
+                          ? "text-blue-700"
+                          : resolvedTarget === "rejected"
+                          ? "text-rose-700"
+                          : "text-stone-700"
+                      }`}
+                    >
+                      {resolvedTarget}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Textarea Alasan WAJIB */}
+                <div className="space-y-1.5">
+                  <label className="text-xs sm:text-sm font-bold text-stone-800 flex items-center justify-between">
+                    <span className="flex items-center gap-1.5">
+                      <MessageSquare className="size-4 text-orange-500" />
+                      <span>Alasan Perubahan Status *</span>
+                    </span>
+                    <span className="text-[11px] font-semibold text-rose-500">Wajib Diisi</span>
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={reason}
+                    onChange={(e) => setReason(e.target.value)}
+                    placeholder={
+                      modalTarget.type === "student" && modalTarget.isDeactivation
+                        ? deactivationType === "alumni"
+                          ? "Contoh: Telah lulus jenjang pendidikan dan menyelesaikan program beasiswa..."
+                          : "Contoh: Pindah domisili di luar wilayah jangkauan / Mengundurkan diri..."
+                        : "Contoh: Mengaktifkan kembali setelah verifikasi dokumen lanjutan lengkap..."
+                    }
+                    required
+                    className="w-full rounded-2xl border border-stone-300 bg-white p-3.5 text-xs sm:text-sm text-stone-800 placeholder:text-stone-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition resize-none"
+                  />
+                  <p className="text-[11px] text-stone-400">
+                    Alasan ini akan otomatis tercatat di log <strong>AdminNote</strong> sebagai riwayat audit.
+                  </p>
+                </div>
+
+                {actionError && (
+                  <div className="rounded-xl bg-rose-50 border border-rose-200 p-3 text-xs text-rose-800 flex items-center gap-2">
+                    <AlertCircle className="size-4 text-rose-600 shrink-0" />
+                    <span>{actionError}</span>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="flex items-center justify-end gap-3 pt-2">
+                  <button
+                    type="button"
+                    disabled={isPending}
+                    onClick={() => setModalTarget(null)}
+                    className="rounded-2xl border border-stone-200 bg-white px-5 py-2.5 text-xs sm:text-sm font-bold text-stone-600 hover:bg-stone-50 transition cursor-pointer"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isPending || !reason.trim()}
+                    className={`inline-flex items-center gap-2 rounded-2xl px-6 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md transition disabled:opacity-50 cursor-pointer ${
+                      resolvedTarget === "approved" || resolvedTarget === "aktif"
+                        ? "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/25"
+                        : resolvedTarget === "alumni"
+                        ? "bg-blue-600 hover:bg-blue-700 shadow-blue-600/25"
+                        : resolvedTarget === "rejected"
+                        ? "bg-rose-600 hover:bg-rose-700 shadow-rose-600/25"
+                        : "bg-stone-700 hover:bg-stone-800 shadow-stone-700/25"
+                    }`}
+                  >
+                    {isPending ? (
+                      <Loader2 className="size-4 animate-spin" />
+                    ) : (
+                      <Check className="size-4" />
+                    )}
+                    <span>{isPending ? "Memproses..." : "Konfirmasi & Simpan"}</span>
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
-      )}
+        )
+      })()}
     </div>
   )
 }

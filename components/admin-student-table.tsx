@@ -51,7 +51,6 @@ export function AdminStudentTable({
 }: AdminStudentTableProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedWilayah, setSelectedWilayah] = useState("all")
-  const [selectedStatus, setSelectedStatus] = useState("all")
   const [onlyNoReport, setOnlyNoReport] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
@@ -79,11 +78,6 @@ export function AdminStudentTable({
         return false
       }
 
-      // Filter Status
-      if (selectedStatus !== "all" && item.status !== selectedStatus) {
-        return false
-      }
-
       // Quick filter: Raport Belum Masuk
       if (onlyNoReport && item.hasAcademicUpdate) {
         return false
@@ -91,7 +85,7 @@ export function AdminStudentTable({
 
       return true
     })
-  }, [students, searchQuery, selectedWilayah, selectedStatus, onlyNoReport])
+  }, [students, searchQuery, selectedWilayah, onlyNoReport])
 
   // Count of students without report for badge on pill
   const noReportCount = useMemo(() => {
@@ -112,13 +106,11 @@ export function AdminStudentTable({
   const hasActiveFilters =
     searchQuery.trim() !== "" ||
     selectedWilayah !== "all" ||
-    selectedStatus !== "all" ||
     onlyNoReport
 
   const handleResetFilters = () => {
     setSearchQuery("")
     setSelectedWilayah("all")
-    setSelectedStatus("all")
     setOnlyNoReport(false)
     setCurrentPage(1)
   }
@@ -147,6 +139,10 @@ export function AdminStudentTable({
       `"${s.pengawasName}"`,
       s.status === "approved"
         ? "Aktif Penuh"
+        : s.status === "alumni"
+        ? "Alumni"
+        : s.status === "nonaktif"
+        ? "Nonaktif"
         : s.status === "pending"
         ? "Peninjauan"
         : "Ditolak",
@@ -182,6 +178,20 @@ export function AdminStudentTable({
             Aktif Penuh
           </span>
         )
+      case "alumni":
+        return (
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700 border border-blue-200/80">
+            <span className="size-1.5 rounded-full bg-blue-500" />
+            Alumni
+          </span>
+        )
+      case "nonaktif":
+        return (
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-stone-100 px-2.5 py-1 text-xs font-semibold text-stone-600 border border-stone-300">
+            <span className="size-1.5 rounded-full bg-stone-500" />
+            Nonaktif
+          </span>
+        )
       case "pending":
         return (
           <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700 border border-amber-200/80">
@@ -213,7 +223,7 @@ export function AdminStudentTable({
           {/* Top Row: Search & Dropdowns */}
           <div className="grid grid-cols-1 gap-3 md:grid-cols-12">
             {/* Search Bar */}
-            <div className="relative md:col-span-6">
+            <div className="relative md:col-span-8">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 size-4.5 text-stone-400" />
               <input
                 type="text"
@@ -237,7 +247,7 @@ export function AdminStudentTable({
             </div>
 
             {/* Wilayah Dropdown */}
-            <div className="md:col-span-3">
+            <div className="md:col-span-4">
               <select
                 value={selectedWilayah}
                 onChange={(e) => {
@@ -252,23 +262,6 @@ export function AdminStudentTable({
                     Wilayah: {w}
                   </option>
                 ))}
-              </select>
-            </div>
-
-            {/* Status Dropdown */}
-            <div className="md:col-span-3">
-              <select
-                value={selectedStatus}
-                onChange={(e) => {
-                  setSelectedStatus(e.target.value)
-                  setCurrentPage(1)
-                }}
-                className="w-full rounded-xl border border-stone-200 bg-stone-50/50 px-3.5 py-2.5 text-sm text-stone-700 focus:border-orange-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition cursor-pointer"
-              >
-                <option value="all">Semua Status</option>
-                <option value="approved">Aktif Penuh (Approved)</option>
-                <option value="pending">Peninjauan (Pending)</option>
-                <option value="rejected">Ditolak (Rejected)</option>
               </select>
             </div>
           </div>

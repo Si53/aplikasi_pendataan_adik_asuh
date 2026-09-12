@@ -4666,6 +4666,7 @@ export namespace Prisma {
     noHp: string | null
     riwayatPenyakit: string | null
     schoolName: string | null
+    jenjang: string | null
     gradeLevel: string | null
     nilaiRataRata: string | null
     jumlahSaudara: number | null
@@ -4689,6 +4690,7 @@ export namespace Prisma {
     noHp: string | null
     riwayatPenyakit: string | null
     schoolName: string | null
+    jenjang: string | null
     gradeLevel: string | null
     nilaiRataRata: string | null
     jumlahSaudara: number | null
@@ -4712,6 +4714,7 @@ export namespace Prisma {
     noHp: number
     riwayatPenyakit: number
     schoolName: number
+    jenjang: number
     gradeLevel: number
     nilaiRataRata: number
     jumlahSaudara: number
@@ -4751,6 +4754,7 @@ export namespace Prisma {
     noHp?: true
     riwayatPenyakit?: true
     schoolName?: true
+    jenjang?: true
     gradeLevel?: true
     nilaiRataRata?: true
     jumlahSaudara?: true
@@ -4774,6 +4778,7 @@ export namespace Prisma {
     noHp?: true
     riwayatPenyakit?: true
     schoolName?: true
+    jenjang?: true
     gradeLevel?: true
     nilaiRataRata?: true
     jumlahSaudara?: true
@@ -4797,6 +4802,7 @@ export namespace Prisma {
     noHp?: true
     riwayatPenyakit?: true
     schoolName?: true
+    jenjang?: true
     gradeLevel?: true
     nilaiRataRata?: true
     jumlahSaudara?: true
@@ -4907,6 +4913,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -4949,6 +4956,7 @@ export namespace Prisma {
     noHp?: boolean
     riwayatPenyakit?: boolean
     schoolName?: boolean
+    jenjang?: boolean
     gradeLevel?: boolean
     nilaiRataRata?: boolean
     jumlahSaudara?: boolean
@@ -4984,6 +4992,7 @@ export namespace Prisma {
     noHp?: boolean
     riwayatPenyakit?: boolean
     schoolName?: boolean
+    jenjang?: boolean
     gradeLevel?: boolean
     nilaiRataRata?: boolean
     jumlahSaudara?: boolean
@@ -5008,6 +5017,7 @@ export namespace Prisma {
     noHp?: boolean
     riwayatPenyakit?: boolean
     schoolName?: boolean
+    jenjang?: boolean
     gradeLevel?: boolean
     nilaiRataRata?: boolean
     jumlahSaudara?: boolean
@@ -5032,6 +5042,7 @@ export namespace Prisma {
     noHp?: boolean
     riwayatPenyakit?: boolean
     schoolName?: boolean
+    jenjang?: boolean
     gradeLevel?: boolean
     nilaiRataRata?: boolean
     jumlahSaudara?: boolean
@@ -5041,7 +5052,7 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-  export type StudentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "nik" | "fullName" | "dateOfBirth" | "gender" | "citaCita" | "wilayah" | "pengawasId" | "alamatLengkap" | "noHp" | "riwayatPenyakit" | "schoolName" | "gradeLevel" | "nilaiRataRata" | "jumlahSaudara" | "status" | "failedLoginAttempts" | "lockedUntil" | "createdAt", ExtArgs["result"]["student"]>
+  export type StudentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "nik" | "fullName" | "dateOfBirth" | "gender" | "citaCita" | "wilayah" | "pengawasId" | "alamatLengkap" | "noHp" | "riwayatPenyakit" | "schoolName" | "jenjang" | "gradeLevel" | "nilaiRataRata" | "jumlahSaudara" | "status" | "failedLoginAttempts" | "lockedUntil" | "createdAt", ExtArgs["result"]["student"]>
   export type StudentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     pengawas?: boolean | PengawasDefaultArgs<ExtArgs>
     father?: boolean | Student$fatherArgs<ExtArgs>
@@ -5092,6 +5103,7 @@ export namespace Prisma {
       noHp: string
       riwayatPenyakit: string
       schoolName: string
+      jenjang: string | null
       gradeLevel: string
       nilaiRataRata: string
       jumlahSaudara: number
@@ -5546,6 +5558,7 @@ export namespace Prisma {
     readonly noHp: FieldRef<"Student", 'String'>
     readonly riwayatPenyakit: FieldRef<"Student", 'String'>
     readonly schoolName: FieldRef<"Student", 'String'>
+    readonly jenjang: FieldRef<"Student", 'String'>
     readonly gradeLevel: FieldRef<"Student", 'String'>
     readonly nilaiRataRata: FieldRef<"Student", 'String'>
     readonly jumlahSaudara: FieldRef<"Student", 'Int'>
@@ -18632,6 +18645,7 @@ export namespace Prisma {
     noHp: 'noHp',
     riwayatPenyakit: 'riwayatPenyakit',
     schoolName: 'schoolName',
+    jenjang: 'jenjang',
     gradeLevel: 'gradeLevel',
     nilaiRataRata: 'nilaiRataRata',
     jumlahSaudara: 'jumlahSaudara',
@@ -19032,6 +19046,7 @@ export namespace Prisma {
     noHp?: StringFilter<"Student"> | string
     riwayatPenyakit?: StringFilter<"Student"> | string
     schoolName?: StringFilter<"Student"> | string
+    jenjang?: StringNullableFilter<"Student"> | string | null
     gradeLevel?: StringFilter<"Student"> | string
     nilaiRataRata?: StringFilter<"Student"> | string
     jumlahSaudara?: IntFilter<"Student"> | number
@@ -19066,6 +19081,7 @@ export namespace Prisma {
     noHp?: SortOrder
     riwayatPenyakit?: SortOrder
     schoolName?: SortOrder
+    jenjang?: SortOrderInput | SortOrder
     gradeLevel?: SortOrder
     nilaiRataRata?: SortOrder
     jumlahSaudara?: SortOrder
@@ -19103,6 +19119,7 @@ export namespace Prisma {
     noHp?: StringFilter<"Student"> | string
     riwayatPenyakit?: StringFilter<"Student"> | string
     schoolName?: StringFilter<"Student"> | string
+    jenjang?: StringNullableFilter<"Student"> | string | null
     gradeLevel?: StringFilter<"Student"> | string
     nilaiRataRata?: StringFilter<"Student"> | string
     jumlahSaudara?: IntFilter<"Student"> | number
@@ -19137,6 +19154,7 @@ export namespace Prisma {
     noHp?: SortOrder
     riwayatPenyakit?: SortOrder
     schoolName?: SortOrder
+    jenjang?: SortOrderInput | SortOrder
     gradeLevel?: SortOrder
     nilaiRataRata?: SortOrder
     jumlahSaudara?: SortOrder
@@ -19168,6 +19186,7 @@ export namespace Prisma {
     noHp?: StringWithAggregatesFilter<"Student"> | string
     riwayatPenyakit?: StringWithAggregatesFilter<"Student"> | string
     schoolName?: StringWithAggregatesFilter<"Student"> | string
+    jenjang?: StringNullableWithAggregatesFilter<"Student"> | string | null
     gradeLevel?: StringWithAggregatesFilter<"Student"> | string
     nilaiRataRata?: StringWithAggregatesFilter<"Student"> | string
     jumlahSaudara?: IntWithAggregatesFilter<"Student"> | number
@@ -20076,6 +20095,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -20110,6 +20130,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -20141,6 +20162,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -20175,6 +20197,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -20208,6 +20231,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -20229,6 +20253,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -20252,6 +20277,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -21291,6 +21317,7 @@ export namespace Prisma {
     noHp?: SortOrder
     riwayatPenyakit?: SortOrder
     schoolName?: SortOrder
+    jenjang?: SortOrder
     gradeLevel?: SortOrder
     nilaiRataRata?: SortOrder
     jumlahSaudara?: SortOrder
@@ -21321,6 +21348,7 @@ export namespace Prisma {
     noHp?: SortOrder
     riwayatPenyakit?: SortOrder
     schoolName?: SortOrder
+    jenjang?: SortOrder
     gradeLevel?: SortOrder
     nilaiRataRata?: SortOrder
     jumlahSaudara?: SortOrder
@@ -21344,6 +21372,7 @@ export namespace Prisma {
     noHp?: SortOrder
     riwayatPenyakit?: SortOrder
     schoolName?: SortOrder
+    jenjang?: SortOrder
     gradeLevel?: SortOrder
     nilaiRataRata?: SortOrder
     jumlahSaudara?: SortOrder
@@ -23182,6 +23211,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -23214,6 +23244,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -23355,6 +23386,7 @@ export namespace Prisma {
     noHp?: StringFilter<"Student"> | string
     riwayatPenyakit?: StringFilter<"Student"> | string
     schoolName?: StringFilter<"Student"> | string
+    jenjang?: StringNullableFilter<"Student"> | string | null
     gradeLevel?: StringFilter<"Student"> | string
     nilaiRataRata?: StringFilter<"Student"> | string
     jumlahSaudara?: IntFilter<"Student"> | number
@@ -24009,6 +24041,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -24042,6 +24075,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -24088,6 +24122,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -24121,6 +24156,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -24151,6 +24187,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -24184,6 +24221,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -24230,6 +24268,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -24263,6 +24302,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -24293,6 +24333,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -24326,6 +24367,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -24372,6 +24414,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -24405,6 +24448,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -24435,6 +24479,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -24468,6 +24513,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -24514,6 +24560,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -24547,6 +24594,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -24577,6 +24625,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -24610,6 +24659,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -24656,6 +24706,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -24689,6 +24740,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -24719,6 +24771,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -24752,6 +24805,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -24798,6 +24852,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -24831,6 +24886,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -24861,6 +24917,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -24894,6 +24951,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -24974,6 +25032,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -25007,6 +25066,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -25077,6 +25137,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -25110,6 +25171,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -25212,6 +25274,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -25245,6 +25308,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -25343,6 +25407,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -25376,6 +25441,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -25444,6 +25510,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -25477,6 +25544,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -25535,6 +25603,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -25568,6 +25637,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -25670,6 +25740,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -25703,6 +25774,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -25899,6 +25971,7 @@ export namespace Prisma {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
     nilaiRataRata: string
     jumlahSaudara: number
@@ -25946,6 +26019,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -25978,6 +26052,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
@@ -26010,6 +26085,7 @@ export namespace Prisma {
     noHp?: StringFieldUpdateOperationsInput | string
     riwayatPenyakit?: StringFieldUpdateOperationsInput | string
     schoolName?: StringFieldUpdateOperationsInput | string
+    jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number

@@ -252,7 +252,7 @@ export default function CekStatusPage() {
                 </div>
 
                 <h1 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight">
-                  Pendaftaran Kamu SUDAH DISETUJUI!
+                  Pendaftaran Kamu SUDAH DISETUJUI !
                 </h1>
 
                 <p className="text-sm sm:text-base leading-relaxed text-stone-600 max-w-md mx-auto">
@@ -326,7 +326,7 @@ export default function CekStatusPage() {
                 </div>
 
                 <h1 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight">
-                  {result.status === "rejected" ? "Pendaftaran Belum Diterima" : "Akun Sedang Dinonaktifkan"}
+                  {result.status === "rejected" ? "Pendaftaran Ditolak" : "Akun Sedang Dinonaktifkan"}
                 </h1>
 
                 <p className="text-sm sm:text-base leading-relaxed text-stone-600 max-w-md mx-auto">
