@@ -5,7 +5,6 @@ import Link from "next/link"
 import {
   Users,
   Clock,
-  ShieldCheck,
   ReceiptText,
   AlertCircle,
   CheckCircle2,
@@ -193,8 +192,8 @@ export function AdminDashboardOverview({
         </div>
       )}
 
-      {/* 2. 4 KARTU STATISTIK UTAMA */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* 2. 2 KARTU STATISTIK UTAMA */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {/* Kartu 1: Adik Asuh Aktif */}
         <div className="relative overflow-hidden rounded-3xl border border-emerald-100 bg-white p-5.5 shadow-xs flex flex-col justify-between">
           <div className="flex items-center justify-between">
@@ -263,79 +262,6 @@ export function AdminDashboardOverview({
             <span className="text-amber-800 font-semibold">Kontrol Status</span>
             <span className="font-bold text-amber-700 group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
               Buka Review <ArrowRight className="size-3" />
-            </span>
-          </div>
-        </Link>
-
-        {/* Kartu 3: Pengawas Wilayah */}
-        <div className="relative overflow-hidden rounded-3xl border border-stone-200/90 bg-white p-5.5 shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-stone-400">
-              Pengawas Wilayah
-            </span>
-            <div className="flex size-10 items-center justify-center rounded-2xl bg-orange-50 text-orange-600">
-              <ShieldCheck className="size-5" />
-            </div>
-          </div>
-
-          <div className="mt-4 space-y-1">
-            <p className="text-3xl font-black text-stone-900 tracking-tight">
-              {stats.totalPengawas}
-            </p>
-            <p className="text-xs text-stone-500 font-medium">
-              Mencakup <strong>{stats.distinctWilayahCount}</strong> wilayah tugas
-            </p>
-          </div>
-
-          <div className="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between text-[11px] text-stone-500">
-            <span>Petugas Lapangan</span>
-            <Link
-              href="/admin/dashboard/kontrol-status"
-              className="font-bold text-orange-600 hover:underline flex items-center gap-0.5"
-            >
-              Cek Status <ArrowRight className="size-3" />
-            </Link>
-          </div>
-        </div>
-
-        {/* Kartu 4: Audit Finansial (CLICKABLE -> Audit Finansial) */}
-        <Link
-          href="/admin/dashboard/audit-finansial"
-          className="group relative overflow-hidden rounded-3xl border border-orange-200/90 bg-white p-5.5 shadow-xs flex flex-col justify-between transition hover:border-orange-400 hover:shadow-md cursor-pointer"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-stone-500">
-              Audit Finansial
-            </span>
-            <div className="flex size-10 items-center justify-center rounded-2xl bg-orange-50 text-orange-600">
-              <ReceiptText className="size-5" />
-            </div>
-          </div>
-
-          <div className="mt-4 space-y-1">
-            <div className="flex items-baseline gap-2">
-              <p className="text-3xl font-black text-stone-900 tracking-tight">
-                {stats.pendingAuditCount}
-              </p>
-              {stats.pendingAuditCount > 5 ? (
-                <span className="rounded-full bg-rose-500 text-white px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide animate-pulse">
-                  Urgen
-                </span>
-              ) : stats.pendingAuditCount > 0 ? (
-                <span className="rounded-full bg-orange-100 text-orange-800 px-2 py-0.5 text-[10px] font-bold">
-                  Antrean
-                </span>
-              ) : null}
-            </div>
-            <p className="text-xs text-stone-500 font-medium">
-              Bukti transfer menunggu audit Admin
-            </p>
-          </div>
-
-          <div className="mt-4 pt-3 border-t border-stone-100 flex items-center justify-between text-[11px]">
-            <span className="text-orange-700 font-semibold">Tindakan Diperlukan</span>
-            <span className="font-bold text-orange-600 group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
-              Validasi Sekarang <ArrowRight className="size-3" />
             </span>
           </div>
         </Link>

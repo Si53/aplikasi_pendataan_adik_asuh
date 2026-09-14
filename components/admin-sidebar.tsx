@@ -46,7 +46,7 @@ export function AdminSidebar({
 
   const navItems = [
     {
-      label: "Dashboard",
+      label: "Beranda",
       href: "/admin/dashboard",
       icon: LayoutDashboard,
       exact: true,

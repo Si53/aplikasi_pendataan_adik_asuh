@@ -1,17 +1,13 @@
 import { redirect, notFound } from "next/navigation"
 import Link from "next/link"
-import Image from "next/image"
 import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { getPresignedR2Url } from "@/lib/r2"
+import { ArrowLeft, MapPin } from "lucide-react"
 import {
-  ArrowLeft,
-  BookOpen,
-  GraduationCap,
-  MapPin,
-  Phone,
-  Users,
-} from "lucide-react"
+  PengawasStudentDetailTabs,
+  type StudentDetailFull,
+} from "@/components/pengawas-student-detail-tabs"
 
 export default async function StudentDetailPage({
   params,
@@ -47,6 +43,19 @@ export default async function StudentDetailPage({
       guardian: true,
       educationCosts: true,
       documents: true,
+      academicUpdates: {
+        orderBy: {
+          tanggalInput: "desc",
+        },
+      },
+      disbursements: {
+        where: {
+          pengawasId: pengawas.id,
+        },
+        orderBy: {
+          tanggal: "desc",
+        },
+      },
     },
   })
 
@@ -57,7 +66,40 @@ export default async function StudentDetailPage({
   const isBinaan = student.pengawasId === pengawas.id
   const fotoDoc = student.documents.find((d) => d.type === "FOTO_ANAK")
   const presignedFotoUrl = fotoDoc?.fileUrl ? await getPresignedR2Url(fotoDoc.fileUrl) : null
-  const totalCost = student.educationCosts.reduce((sum, c) => sum + c.amount, 0)
+
+  // Presign academic updates rapor URLs
+  const academicUpdates = await Promise.all(
+    student.academicUpdates.map(async (u) => {
+      const presigned = u.dokumenRapor ? await getPresignedR2Url(u.dokumenRapor) : null
+      return {
+        id: u.id,
+        tanggalInput: u.tanggalInput.toLocaleDateString("id-ID", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        }),
+        kelasSaatItu: u.kelasSaatItu,
+        nilaiRataRata: u.nilaiRataRata,
+        namaSekolahBaru: u.namaSekolahBaru,
+        dokumenRaporUrl: presigned,
+      }
+    })
+  )
+
+  // Presign disbursement proof URLs
+  const disbursementHistory = await Promise.all(
+    student.disbursements.map(async (item) => {
+      const presigned = await getPresignedR2Url(item.fileUrl)
+      return {
+        id: item.id,
+        tanggal: item.tanggal.toISOString(),
+        fileUrl: presigned,
+        nominal: item.nominal,
+        status: item.status,
+        processedAt: item.processedAt ? item.processedAt.toISOString() : null,
+      }
+    })
+  )
 
   // Inisial untuk avatar fallback
   const initials = student.fullName
@@ -66,6 +108,70 @@ export default async function StudentDetailPage({
     .map((w) => w[0])
     .join("")
     .toUpperCase()
+
+  const studentData: StudentDetailFull = {
+    id: student.id,
+    fullName: student.fullName,
+    nik: student.nik,
+    gender: student.gender,
+    dateOfBirth: student.dateOfBirth.toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }),
+    alamatLengkap: student.alamatLengkap,
+    noHp: student.noHp,
+    schoolName: student.schoolName,
+    gradeLevel: student.gradeLevel,
+    nilaiAwal: student.nilaiRataRata,
+    citaCita: student.citaCita,
+    wilayah: student.wilayah,
+    riwayatPenyakit: student.riwayatPenyakit,
+    jumlahSaudara: student.jumlahSaudara,
+    isBinaan,
+    pengawasName: student.pengawas?.name || pengawas.name,
+    fotoUrl: presignedFotoUrl,
+    father: student.father
+      ? {
+          name: student.father.name,
+          status: student.father.status,
+          occupation: student.father.occupation,
+          incomePerMonth: student.father.incomePerMonth,
+          phone: student.father.phone,
+          address: student.father.address,
+          medicalHistory: student.father.medicalHistory,
+        }
+      : null,
+    mother: student.mother
+      ? {
+          name: student.mother.name,
+          status: student.mother.status,
+          occupation: student.mother.occupation,
+          incomePerMonth: student.mother.incomePerMonth,
+          phone: student.mother.phone,
+          address: student.mother.address,
+          medicalHistory: student.mother.medicalHistory,
+        }
+      : null,
+    guardian: student.guardian
+      ? {
+          name: student.guardian.name,
+          status: student.guardian.status,
+          occupation: student.guardian.occupation,
+          incomePerMonth: student.guardian.incomePerMonth,
+          phone: student.guardian.phone,
+          address: student.guardian.address,
+          medicalHistory: student.guardian.medicalHistory,
+        }
+      : null,
+    educationCosts: student.educationCosts.map((c) => ({
+      id: c.id,
+      label: c.label,
+      amount: c.amount,
+    })),
+    academicUpdates,
+    disbursementHistory,
+  }
 
   return (
     <div className="relative min-h-dvh w-full">
@@ -85,6 +191,7 @@ export default async function StudentDetailPage({
               height="120"
               patternUnits="userSpaceOnUse"
             >
+              {/* Dharmachakra */}
               <g transform="translate(30, 30)">
                 <circle cx="0" cy="0" r="14" fill="none" stroke="currentColor" strokeWidth="2.5" />
                 <circle cx="0" cy="0" r="4.5" fill="currentColor" />
@@ -93,6 +200,8 @@ export default async function StudentDetailPage({
                 <line x1="-10" y1="-10" x2="10" y2="10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                 <line x1="-10" y1="10" x2="10" y2="-10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
               </g>
+
+              {/* Bunga Teratai (Lotus) */}
               <g transform="translate(90, 90)">
                 <path d="M0,6 C-3.5,-1 -3.5,-11 0,-15 C3.5,-11 3.5,-1 0,6" />
                 <path d="M-1.5,5 C-8,1 -11,-7 -8,-12 C-5,-13 -2.5,-6 -1.5,5" />
@@ -119,10 +228,10 @@ export default async function StudentDetailPage({
           </Link>
           <div className="flex items-center gap-2">
             <span
-              className={`rounded-full px-3 py-1 text-xs font-extrabold ${
+              className={`rounded-full px-3.5 py-1 text-xs font-extrabold ${
                 isBinaan
-                  ? "bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-sm"
-                  : "bg-white/90 text-orange-900 border border-orange-200"
+                  ? "bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-sm shadow-orange-500/20"
+                  : "bg-white/90 text-orange-900 border border-orange-200 shadow-2xs"
               }`}
             >
               {isBinaan ? "Binaan Langsung Saya" : `Wilayah: ${student.wilayah}`}
@@ -130,7 +239,7 @@ export default async function StudentDetailPage({
           </div>
         </header>
 
-        {/* Banner Profil Siswa (Foto Asli Tetap Ditampilkan) */}
+        {/* Banner Profil Siswa */}
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 rounded-3xl bg-white/90 p-6 shadow-md backdrop-blur-md border border-orange-100/80">
           <div className="relative size-24 shrink-0 overflow-hidden rounded-2xl bg-gradient-to-br from-orange-100 to-amber-100 border-2 border-orange-200 shadow-sm">
             {presignedFotoUrl ? (
@@ -153,7 +262,7 @@ export default async function StudentDetailPage({
             </h1>
             <p className="text-sm font-semibold text-orange-700 flex items-center gap-1.5">
               <MapPin className="size-4" />
-              Wilayah {student.wilayah} • Pengawas: {student.pengawas?.name || "-"}
+              Wilayah {student.wilayah} • Pengawas: {student.pengawas?.name || pengawas.name}
             </p>
             <div className="mt-2 flex flex-wrap items-center justify-center sm:justify-start gap-2">
               <span className="rounded-full bg-orange-50 px-3 py-1 text-xs font-bold text-orange-800 border border-orange-200">
@@ -162,232 +271,19 @@ export default async function StudentDetailPage({
               <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-800 border border-amber-200">
                 Cita-cita: {student.citaCita || "-"}
               </span>
+              <span className="rounded-full bg-stone-100 px-3 py-1 text-xs font-bold text-stone-700">
+                {student.schoolName} ({student.gradeLevel})
+              </span>
             </div>
           </div>
         </div>
 
-        {/* MODUL 1: PEMANTAUAN AKADEMIK */}
-        <section className="flex flex-col gap-4">
-          <div className="flex items-center gap-2 border-l-4 border-orange-500 pl-3">
-            <GraduationCap className="size-5 text-orange-500" />
-            <h2 className="text-xl font-extrabold text-foreground">
-              Modul 1: Pemantauan Akademik
-            </h2>
-          </div>
-
-          <div className={`grid grid-cols-1 gap-4 ${isBinaan ? "sm:grid-cols-2" : ""}`}>
-            {/* Informasi Sekolah & Jenjang */}
-            <div className="flex flex-col gap-3 rounded-3xl bg-white/90 p-5 shadow-sm backdrop-blur-md border border-orange-100/80">
-              <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
-                <BookOpen className="size-4 text-orange-500" />
-                Informasi Sekolah & Jenjang
-              </h3>
-              <div className="flex flex-col gap-2 text-sm">
-                <div className="rounded-xl bg-orange-50/60 p-3">
-                  <span className="text-xs text-muted-foreground">Nama Sekolah / Universitas</span>
-                  <p className="font-bold text-foreground text-base">{student.schoolName || "-"}</p>
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="rounded-xl bg-orange-50/60 p-3">
-                    <span className="text-xs text-muted-foreground">Kelas / Semester</span>
-                    <p className="font-bold text-foreground">{student.gradeLevel || "-"}</p>
-                  </div>
-                  <div className="rounded-xl bg-amber-50/80 border border-amber-200/80 p-3">
-                    <span className="text-xs text-amber-900 font-semibold">Nilai Rata-rata / IPK</span>
-                    <p className="font-extrabold text-orange-600 text-base">{student.nilaiRataRata || "-"}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Rincian Kebutuhan Biaya Pendidikan (KHUSUS Adik Asuh Binaan Saya) */}
-            {isBinaan && (
-              <div className="flex flex-col gap-3 rounded-3xl bg-white/90 p-5 shadow-sm backdrop-blur-md border border-orange-100/80">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-bold text-foreground">Estimasi Biaya Pendidikan</h3>
-                  <span className="text-xs font-bold text-orange-600">
-                    {student.educationCosts.length} Komponen
-                  </span>
-                </div>
-                <div className="flex flex-col divide-y divide-border/60 text-sm">
-                  {student.educationCosts.length > 0 ? (
-                    student.educationCosts.map((cost) => (
-                      <div key={cost.id} className="flex justify-between py-2">
-                        <span className="text-muted-foreground">{cost.label}</span>
-                        <span className="font-bold text-foreground">
-                          Rp {cost.amount.toLocaleString("id-ID")}
-                        </span>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="py-2 text-xs text-muted-foreground">
-                      Tidak ada rincian biaya khusus.
-                    </p>
-                  )}
-                  <div className="flex justify-between pt-2 text-base font-extrabold text-orange-600">
-                    <span>Total Biaya</span>
-                    <span>Rp {totalCost.toLocaleString("id-ID")}</span>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </section>
-
-        {/* MODUL 2: PEMANTAUAN DATA ADIK ASUH (PRIBADI & KELUARGA) */}
-        <section className="flex flex-col gap-4">
-          <div className="flex items-center gap-2 border-l-4 border-amber-500 pl-3">
-            <Users className="size-5 text-amber-500" />
-            <h2 className="text-xl font-extrabold text-foreground">
-              Modul 2: Pemantauan Data Adik Asuh
-            </h2>
-          </div>
-
-          {/* Data Pribadi & Kontak */}
-          <div className="rounded-3xl bg-white/90 p-5 sm:p-6 shadow-sm backdrop-blur-md border border-orange-100/80 flex flex-col gap-4">
-            <h3 className="text-sm font-bold text-foreground">Identitas & Kontak Pribadi</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 text-sm">
-              <div className="rounded-xl bg-orange-50/50 p-3">
-                <span className="text-xs text-muted-foreground">Tanggal Lahir</span>
-                <p className="font-bold text-foreground">
-                  {student.dateOfBirth.toLocaleDateString("id-ID", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </p>
-              </div>
-              <div className="rounded-xl bg-orange-50/50 p-3">
-                <span className="text-xs text-muted-foreground">Jenis Kelamin</span>
-                <p className="font-bold text-foreground">{student.gender}</p>
-              </div>
-              <div className="rounded-xl bg-orange-50/50 p-3">
-                <span className="text-xs text-muted-foreground">Jumlah Saudara</span>
-                <p className="font-bold text-foreground">{student.jumlahSaudara} orang</p>
-              </div>
-              <div className="rounded-xl bg-orange-50/50 p-3">
-                <span className="text-xs text-muted-foreground">Nomor WhatsApp / HP</span>
-                <p className="font-bold text-foreground flex items-center gap-1">
-                  <Phone className="size-3.5 text-orange-500" />
-                  {student.noHp || "-"}
-                </p>
-              </div>
-              <div className="rounded-xl bg-orange-50/50 p-3 sm:col-span-2">
-                <span className="text-xs text-muted-foreground">Riwayat Penyakit</span>
-                <p className="font-bold text-foreground">{student.riwayatPenyakit || "-"}</p>
-              </div>
-              <div className="rounded-xl bg-orange-50/50 p-3 sm:col-span-3">
-                <span className="text-xs text-muted-foreground">Alamat Domisili</span>
-                <p className="font-bold text-foreground">{student.alamatLengkap || "-"}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Data Keluarga */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {/* Ayah */}
-            <div className="rounded-3xl bg-white/90 p-5 shadow-sm backdrop-blur-md border border-orange-100/80 flex flex-col gap-3">
-              <div className="flex items-center justify-between border-b border-border/60 pb-2">
-                <h4 className="font-bold text-foreground">Data Ayah</h4>
-                <span className="rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-bold text-orange-800">
-                  {student.father?.status || "-"}
-                </span>
-              </div>
-              {student.father ? (
-                <div className="flex flex-col gap-2 text-xs">
-                  <div>
-                    <span className="text-muted-foreground">Nama:</span>{" "}
-                    <strong className="text-foreground">{student.father.name}</strong>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">Pekerjaan:</span>{" "}
-                    <strong className="text-foreground">{student.father.occupation || "-"}</strong>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">Penghasilan:</span>{" "}
-                    <strong className="text-foreground">{student.father.incomePerMonth || "-"}</strong>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">No HP:</span>{" "}
-                    <strong className="text-foreground">{student.father.phone || "-"}</strong>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">Alamat:</span>{" "}
-                    <span className="text-foreground">{student.father.address || "-"}</span>
-                  </div>
-                </div>
-              ) : (
-                <p className="text-xs text-muted-foreground">Data belum diisi.</p>
-              )}
-            </div>
-
-            {/* Ibu */}
-            <div className="rounded-3xl bg-white/90 p-5 shadow-sm backdrop-blur-md border border-orange-100/80 flex flex-col gap-3">
-              <div className="flex items-center justify-between border-b border-border/60 pb-2">
-                <h4 className="font-bold text-foreground">Data Ibu</h4>
-                <span className="rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-bold text-orange-800">
-                  {student.mother?.status || "-"}
-                </span>
-              </div>
-              {student.mother ? (
-                <div className="flex flex-col gap-2 text-xs">
-                  <div>
-                    <span className="text-muted-foreground">Nama:</span>{" "}
-                    <strong className="text-foreground">{student.mother.name}</strong>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">Pekerjaan:</span>{" "}
-                    <strong className="text-foreground">{student.mother.occupation || "-"}</strong>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">Penghasilan:</span>{" "}
-                    <strong className="text-foreground">{student.mother.incomePerMonth || "-"}</strong>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">No HP:</span>{" "}
-                    <strong className="text-foreground">{student.mother.phone || "-"}</strong>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">Alamat:</span>{" "}
-                    <span className="text-foreground">{student.mother.address || "-"}</span>
-                  </div>
-                </div>
-              ) : (
-                <p className="text-xs text-muted-foreground">Data belum diisi.</p>
-              )}
-            </div>
-
-            {/* Wali jika ada */}
-            {student.guardian && student.guardian.name && (
-              <div className="rounded-3xl bg-white/90 p-5 shadow-sm backdrop-blur-md border border-orange-100/80 flex flex-col gap-3 sm:col-span-2">
-                <div className="flex items-center justify-between border-b border-border/60 pb-2">
-                  <h4 className="font-bold text-foreground">Data Wali</h4>
-                  <span className="rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-bold text-orange-800">
-                    {student.guardian.status}
-                  </span>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                  <div>
-                    <span className="text-muted-foreground">Nama:</span>{" "}
-                    <strong className="text-foreground">{student.guardian.name}</strong>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">Pekerjaan:</span>{" "}
-                    <strong className="text-foreground">{student.guardian.occupation || "-"}</strong>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">Penghasilan:</span>{" "}
-                    <strong className="text-foreground">{student.guardian.incomePerMonth || "-"}</strong>
-                  </div>
-                  <div>
-                    <span className="text-muted-foreground">No HP:</span>{" "}
-                    <strong className="text-foreground">{student.guardian.phone || "-"}</strong>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </section>
+        {/* 2 TAB DETAIL: PEMANTAUAN AKADEMIK & INPUT PENYALURAN DANA */}
+        <PengawasStudentDetailTabs
+          student={studentData}
+          pengawasName={pengawas.name}
+          wilayah={pengawas.wilayah}
+        />
       </main>
     </div>
   )

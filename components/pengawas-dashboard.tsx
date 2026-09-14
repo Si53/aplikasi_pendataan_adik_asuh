@@ -6,14 +6,10 @@ import Image from "next/image"
 import {
   Search,
   Users,
-  GraduationCap,
   MapPin,
   ArrowRight,
-  BookOpen,
-  X,
-  Award,
-  Sparkles,
   UploadCloud,
+  X,
   ChevronDown,
 } from "lucide-react"
 
@@ -111,110 +107,34 @@ export function PengawasDashboard({
 
   return (
     <div className="flex flex-col gap-6">
-      {/* 3. DUA KARTU STATISTIK BERSEBELAHAN (Gradient Oranye dengan Angka Besar) */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {/* Kartu 1: Adik Asuh Binaan Saya */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-orange-500 via-orange-500 to-amber-500 p-6 text-white shadow-lg shadow-orange-500/20">
-          <div className="relative z-10 flex items-start justify-between">
-            <div className="flex flex-col gap-1">
-              <span className="text-sm font-semibold tracking-wide text-white/90">
-                Adik Asuh Binaan Saya
+      {/* ACTION BANNER: Input Bukti Penyaluran Dana */}
+      <div className="relative overflow-hidden rounded-3xl border border-orange-200/80 bg-gradient-to-br from-orange-500 via-orange-500 to-amber-500 p-5 sm:p-6 text-white shadow-md shadow-orange-500/15 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex items-start gap-4">
+          <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-md text-white shadow-inner">
+            <UploadCloud className="size-6" />
+          </div>
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="rounded-full bg-white/25 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white">
+                Audit
               </span>
-              <p className="text-4xl sm:text-5xl font-black tracking-tight drop-shadow-sm">
-                {binaanStudents.length}
-              </p>
-              <p className="text-xs text-white/80 mt-1">Bimbingan langsung Anda</p>
+              <h3 className="text-base sm:text-lg font-black tracking-tight text-white">
+                Input Penyaluran Dana
+              </h3>
             </div>
-            <div className="flex size-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-md text-white shadow-inner">
-              <Users className="size-7" />
-            </div>
+            <p className="text-xs sm:text-sm text-white/90 max-w-xl">
+              Unggah bukti struk/nota dan nominal bantuan yang telah diserahkan ke adik asuh.
+            </p>
           </div>
-          {/* Subtle Decorative Circle */}
-          <div className="pointer-events-none absolute -bottom-6 -right-6 size-28 rounded-full bg-white/10" />
         </div>
 
-        {/* Kartu 2: Total Adik Asuh di Wilayah */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-amber-500 via-orange-500 to-orange-600 p-6 text-white shadow-lg shadow-amber-500/20">
-          <div className="relative z-10 flex items-start justify-between">
-            <div className="flex flex-col gap-1">
-              <span className="text-sm font-semibold tracking-wide text-white/90">
-                Total Adik Asuh di Wilayah {wilayah}
-              </span>
-              <p className="text-4xl sm:text-5xl font-black tracking-tight drop-shadow-sm">
-                {allWilayahStudents.length}
-              </p>
-              <p className="text-xs text-white/80 mt-1">Seluruh pengawas di wilayah ini</p>
-            </div>
-            <div className="flex size-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-md text-white shadow-inner">
-              <GraduationCap className="size-7" />
-            </div>
-          </div>
-          {/* Subtle Decorative Circle */}
-          <div className="pointer-events-none absolute -bottom-6 -right-6 size-28 rounded-full bg-white/10" />
-        </div>
-      </div>
-
-      {/* ACTION BANNERS: Quick Links to Penyaluran Dana & Pemantauan Akademik */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Banner 1: Pemantauan Akademik */}
-        <div className="relative overflow-hidden rounded-3xl border border-orange-200/80 bg-gradient-to-br from-amber-500 via-orange-500 to-orange-600 p-5 sm:p-6 text-white shadow-md shadow-amber-500/15 flex flex-col justify-between gap-4">
-          <div className="flex items-start gap-4">
-            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-md text-white shadow-inner">
-              <BookOpen className="size-6" />
-            </div>
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="rounded-full bg-white/25 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white">
-                  Monitoring
-                </span>
-                <h3 className="text-base sm:text-lg font-black tracking-tight text-white">
-                  Pemantauan Akademik
-                </h3>
-              </div>
-              <p className="text-xs sm:text-sm text-white/90">
-                Pantau nilai awal pendaftaran, perkembangan semester, dan berkas rapor adik asuh.
-              </p>
-            </div>
-          </div>
-
-          <Link
-            href="/pengawas/pemantauan-akademik"
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-2.5 text-xs sm:text-sm font-black text-orange-600 hover:bg-orange-50 transition shadow-sm shrink-0 group self-start sm:self-auto w-full sm:w-auto"
-          >
-            <span>Buka Pemantauan</span>
-            <ArrowRight className="size-4 group-hover:translate-x-0.5 transition-transform" />
-          </Link>
-        </div>
-
-        {/* Banner 2: Input Bukti Penyaluran Dana */}
-        <div className="relative overflow-hidden rounded-3xl border border-orange-200/80 bg-gradient-to-br from-orange-500 via-orange-500 to-amber-500 p-5 sm:p-6 text-white shadow-md shadow-orange-500/15 flex flex-col justify-between gap-4">
-          <div className="flex items-start gap-4">
-            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-md text-white shadow-inner">
-              <UploadCloud className="size-6" />
-            </div>
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="rounded-full bg-white/25 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white">
-                  Audit
-                </span>
-                <h3 className="text-base sm:text-lg font-black tracking-tight text-white">
-                  Input Penyaluran Dana
-                </h3>
-              </div>
-              <p className="text-xs sm:text-sm text-white/90">
-                Unggah bukti struk/nota dan nominal bantuan yang telah diserahkan ke adik asuh.
-              </p>
-            </div>
-          </div>
-
-          <Link
-            href="/pengawas/penyaluran-dana"
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-2.5 text-xs sm:text-sm font-black text-orange-600 hover:bg-orange-50 transition shadow-sm shrink-0 group self-start sm:self-auto w-full sm:w-auto"
-          >
-            <span>Unggah Bukti</span>
-            <ArrowRight className="size-4 group-hover:translate-x-0.5 transition-transform" />
-          </Link>
-        </div>
+        <Link
+          href="/pengawas/penyaluran-dana"
+          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-2.5 text-xs sm:text-sm font-black text-orange-600 hover:bg-orange-50 transition shadow-sm shrink-0 group self-start sm:self-auto w-full sm:w-auto"
+        >
+          <span>Unggah Bukti</span>
+          <ArrowRight className="size-4 group-hover:translate-x-0.5 transition-transform" />
+        </Link>
       </div>
 
       {/* 4. SEARCH BAR (Pencarian Real-time Nama, Sekolah, Cita-cita) */}

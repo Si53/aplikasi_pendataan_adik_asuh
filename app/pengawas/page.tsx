@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation"
 import Image from "next/image"
-import Link from "next/link"
-import { Bell, MapPin, ShieldCheck, UploadCloud, BookOpen } from "lucide-react"
+import { Bell, MapPin, ShieldCheck } from "lucide-react"
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/auth"
 import { getPresignedR2Url } from "@/lib/r2"
@@ -211,22 +210,6 @@ export default async function PengawasPage() {
           </div>
 
           <div className="flex items-center gap-2.5">
-            <Link
-              href="/pengawas/pemantauan-akademik"
-              className="inline-flex items-center gap-1.5 rounded-2xl bg-orange-50 px-3.5 py-2 text-xs font-bold text-orange-800 hover:bg-orange-100 border border-orange-200/80 transition shadow-2xs"
-            >
-              <BookOpen className="size-3.5 text-orange-600" />
-              <span className="hidden sm:inline">Pemantauan Akademik</span>
-            </Link>
-
-            <Link
-              href="/pengawas/penyaluran-dana"
-              className="inline-flex items-center gap-1.5 rounded-2xl bg-orange-500 px-3.5 py-2 text-xs font-bold text-white hover:bg-orange-600 transition shadow-xs shadow-orange-500/20"
-            >
-              <UploadCloud className="size-3.5" />
-              <span className="hidden sm:inline">Input Penyaluran</span>
-            </Link>
-
             {/* Bell Notifikasi dengan Badge Kecil */}
             <div className="relative">
               <button

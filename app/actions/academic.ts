@@ -150,7 +150,7 @@ export async function createStudentAcademicUpdateAction(
 
     revalidatePath("/dashboard")
     revalidatePath("/pengawas")
-    revalidatePath("/pengawas/pemantauan-akademik")
+    revalidatePath(`/pengawas/students/${student.id}`)
     revalidatePath(`/admin/dashboard/data-anak-asuh/${student.id}`)
 
     return {

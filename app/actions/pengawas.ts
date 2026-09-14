@@ -135,6 +135,7 @@ export async function createPengawasDisbursementProofAction(
 
     revalidatePath("/pengawas")
     revalidatePath("/pengawas/penyaluran-dana")
+    revalidatePath(`/pengawas/students/${studentId}`)
     revalidatePath("/admin/dashboard/audit-finansial")
     revalidatePath(`/admin/dashboard/data-anak-asuh/${studentId}`)
 

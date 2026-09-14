@@ -58,7 +58,7 @@ model Student {
   gradeLevel          String    @map("grade_level")
   nilaiRataRata       String    @map("nilai_rata_rata")
   jumlahSaudara       Int       @map("jumlah_saudara")
-  status              String    @default("pending") // "pending" | "approved" | "rejected"
+  status              String    @default("pending") // "pending" | "approved" | "rejected" | "nonaktif" | "alumni"
   failedLoginAttempts Int       @default(0) @map("failed_login_attempts")
   lockedUntil         DateTime? @map("locked_until")
 
