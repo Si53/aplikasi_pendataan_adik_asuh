@@ -43,7 +43,7 @@ export interface StudentStatusItem {
   gradeLevel: string
   wilayah: string
   createdAt: string
-  status: "pending" | "approved" | "rejected" | "nonaktif" | "alumni" | string
+  status: "pending" | "approved" | "rejected" | "nonaktif" | "alumni" | "perlu_revisi" | string
   pengawasName: string
 }
 
@@ -69,7 +69,7 @@ type ModalTarget =
       id: number
       name: string
       currentStatus: string
-      targetStatus: "approved" | "nonaktif" | "rejected" | "alumni"
+      targetStatus: "approved" | "nonaktif" | "rejected" | "alumni" | "perlu_revisi"
       actionLabel: string
       isDeactivation?: boolean
     }
@@ -119,6 +119,7 @@ export function AdminKontrolStatusView({
     let alumni = 0
     let pending = 0
     let rejected = 0
+    let perluRevisi = 0
 
     students.forEach((s) => {
       if (s.status === "approved") approved++
@@ -126,9 +127,10 @@ export function AdminKontrolStatusView({
       else if (s.status === "alumni") alumni++
       else if (s.status === "pending") pending++
       else if (s.status === "rejected") rejected++
+      else if (s.status === "perlu_revisi") perluRevisi++
     })
 
-    return { approved, nonaktif, alumni, pending, rejected, total: students.length }
+    return { approved, nonaktif, alumni, pending, rejected, perluRevisi, total: students.length }
   }, [students])
 
   // 2. STATISTIK PENGAWAS
@@ -515,6 +517,7 @@ export function AdminKontrolStatusView({
                 >
                   <option value="all">Semua Status</option>
                   <option value="pending">Menunggu Persetujuan ({studentStats.pending})</option>
+                  <option value="perlu_revisi">Perlu Revisi ({studentStats.perluRevisi})</option>
                   <option value="approved">Aktif / Approved ({studentStats.approved})</option>
                   <option value="alumni">Alumni ({studentStats.alumni})</option>
                   <option value="nonaktif">Nonaktif ({studentStats.nonaktif})</option>
@@ -529,16 +532,15 @@ export function AdminKontrolStatusView({
                 <thead className="bg-stone-50 border-b border-stone-200 text-stone-600 font-bold uppercase tracking-wider text-[11px]">
                   <tr>
                     <th className="py-3.5 px-4">Nama Adik Asuh</th>
-                    <th className="py-3.5 px-4">Sekolah & Jenjang</th>
                     <th className="py-3.5 px-4">Tanggal Daftar</th>
                     <th className="py-3.5 px-4 text-center">Status Saat Ini</th>
-                    <th className="py-3.5 px-4 text-center">Kontrol Status</th>
+                    <th className="py-3.5 px-4 text-center min-w-[340px] xl:min-w-[500px]">Kontrol Status</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-stone-100 bg-white">
                   {paginatedStudents.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="py-12 text-center text-stone-400">
+                      <td colSpan={4} className="py-12 text-center text-stone-400">
                         <Users className="size-8 text-stone-300 mx-auto mb-2" />
                         <p className="font-bold text-stone-600 text-sm">
                           Tidak ada data adik asuh
@@ -555,6 +557,7 @@ export function AdminKontrolStatusView({
                       const isAlumni = st.status === "alumni"
                       const isNonaktif = st.status === "nonaktif"
                       const isRejected = st.status === "rejected"
+                      const isPerluRevisi = st.status === "perlu_revisi"
 
                       const initials = st.fullName
                         .split(" ")
@@ -588,18 +591,6 @@ export function AdminKontrolStatusView({
                             </div>
                           </td>
 
-                          {/* Sekolah & Jenjang */}
-                          <td className="py-4 px-4">
-                            <div className="space-y-0.5">
-                              <p className="font-semibold text-stone-800 truncate max-w-[200px]">
-                                {st.schoolName}
-                              </p>
-                              <p className="text-[11px] text-stone-500">
-                                Kelas: {st.gradeLevel} • Wilayah {st.wilayah}
-                              </p>
-                            </div>
-                          </td>
-
                           {/* Tanggal Daftar */}
                           <td className="py-4 px-4">
                             <div className="space-y-0.5">
@@ -630,6 +621,12 @@ export function AdminKontrolStatusView({
                                 Alumni
                               </span>
                             )}
+                            {isPerluRevisi && (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 border border-blue-200 px-3 py-1 text-xs font-bold text-blue-700">
+                                <AlertCircle className="size-3.5 text-blue-600" />
+                                Perlu Revisi
+                              </span>
+                            )}
                             {isNonaktif && (
                               <span className="inline-flex items-center gap-1 rounded-full bg-stone-100 border border-stone-300 px-3 py-1 text-xs font-bold text-stone-600">
                                 <UserX className="size-3.5 text-stone-500" />
@@ -652,55 +649,174 @@ export function AdminKontrolStatusView({
 
                           {/* Kontrol Status Action */}
                           <td className="py-4 px-4 text-center">
-                            {isPending ? (
-                              /* KHUSUS PENDING: Tombol Lihat Detail, Setujui & Tolak */
-                              <div className="inline-flex items-center gap-2">
-                                <Link
-                                  href={`/admin/dashboard/data-anak-asuh/${st.id}`}
-                                  className="inline-flex items-center gap-1.5 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 hover:text-orange-600 px-3 py-1.5 text-xs font-bold text-stone-700 shadow-2xs transition cursor-pointer"
-                                >
-                                  <Eye className="size-3.5 text-stone-400" />
-                                  <span>Lihat Detail</span>
-                                </Link>
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    setModalTarget({
-                                      type: "student",
-                                      id: st.id,
-                                      name: st.fullName,
-                                      currentStatus: "pending",
-                                      targetStatus: "approved",
-                                      actionLabel: "Setujui Pendaftaran",
-                                    })
-                                    setReason("")
-                                    setActionError(null)
-                                  }}
-                                  className="inline-flex items-center gap-1 rounded-xl bg-emerald-600 hover:bg-emerald-700 px-3 py-1.5 text-xs font-bold text-white shadow-2xs transition cursor-pointer"
-                                >
-                                  <Check className="size-3.5" />
-                                  <span>Setujui</span>
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={() => {
-                                    setModalTarget({
-                                      type: "student",
-                                      id: st.id,
-                                      name: st.fullName,
-                                      currentStatus: "pending",
-                                      targetStatus: "rejected",
-                                      actionLabel: "Tolak Pendaftaran",
-                                    })
-                                    setReason("")
-                                    setActionError(null)
-                                  }}
-                                  className="inline-flex items-center gap-1 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 px-3 py-1.5 text-xs font-bold text-rose-700 transition cursor-pointer"
-                                >
-                                  <X className="size-3.5" />
-                                  <span>Tolak</span>
-                                </button>
-                              </div>
+                            {isPending || isPerluRevisi ? (
+                              <>
+                                {/* DESKTOP (xl:inline-flex): Satu baris sejajar dengan vertical divider */}
+                                <div className="hidden xl:inline-flex items-center justify-center gap-2.5">
+                                  <Link
+                                    href={`/admin/dashboard/data-anak-asuh/${st.id}`}
+                                    className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-stone-300 bg-white hover:bg-stone-50 hover:border-stone-400 hover:text-stone-900 px-4 py-2.5 text-xs sm:text-[13px] font-bold text-stone-700 shadow-2xs transition-all cursor-pointer whitespace-nowrap active:scale-95 min-h-[42px]"
+                                  >
+                                    <Eye className="size-4 text-stone-500 shrink-0" />
+                                    <span>Lihat Detail</span>
+                                  </Link>
+
+                                  {/* Divider Vertikal 1 */}
+                                  <div className="h-7 w-px bg-stone-300/80 shrink-0" aria-hidden="true" />
+
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setModalTarget({
+                                        type: "student",
+                                        id: st.id,
+                                        name: st.fullName,
+                                        currentStatus: st.status,
+                                        targetStatus: "approved",
+                                        actionLabel: "Setujui Pendaftaran",
+                                      })
+                                      setReason("")
+                                      setActionError(null)
+                                    }}
+                                    className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 px-4 py-2.5 text-xs sm:text-[13px] font-bold text-white shadow-xs shadow-emerald-600/20 transition-all cursor-pointer whitespace-nowrap active:scale-95 min-h-[42px]"
+                                  >
+                                    <Check className="size-4 stroke-[2.5] shrink-0" />
+                                    <span>Setujui</span>
+                                  </button>
+
+                                  {/* Divider Vertikal 2 */}
+                                  <div className="h-7 w-px bg-stone-300/80 shrink-0" aria-hidden="true" />
+
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setModalTarget({
+                                        type: "student",
+                                        id: st.id,
+                                        name: st.fullName,
+                                        currentStatus: st.status,
+                                        targetStatus: "perlu_revisi",
+                                        actionLabel: "Minta Revisi Pendaftaran",
+                                      })
+                                      setReason("")
+                                      setActionError(null)
+                                    }}
+                                    className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 px-4 py-2.5 text-xs sm:text-[13px] font-bold text-white shadow-xs shadow-blue-600/20 transition-all cursor-pointer whitespace-nowrap active:scale-95 min-h-[42px]"
+                                  >
+                                    <MessageSquare className="size-4 shrink-0" />
+                                    <span>Minta Revisi</span>
+                                  </button>
+
+                                  {/* Divider Vertikal 3 */}
+                                  <div className="h-7 w-px bg-stone-300/80 shrink-0" aria-hidden="true" />
+
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      setModalTarget({
+                                        type: "student",
+                                        id: st.id,
+                                        name: st.fullName,
+                                        currentStatus: st.status,
+                                        targetStatus: "rejected",
+                                        actionLabel: "Tolak Pendaftaran",
+                                      })
+                                      setReason("")
+                                      setActionError(null)
+                                    }}
+                                    className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 hover:border-rose-300 px-4 py-2.5 text-xs sm:text-[13px] font-bold text-rose-700 shadow-2xs transition-all cursor-pointer whitespace-nowrap active:scale-95 min-h-[42px]"
+                                  >
+                                    <X className="size-4 stroke-[2.5] shrink-0" />
+                                    <span>Tolak</span>
+                                  </button>
+                                </div>
+
+                                {/* MOBILE / LAYAR KECIL (< xl): Layout 2x2 tanpa background abu-abu, dengan divider horizontal & vertikal */}
+                                <div className="flex xl:hidden flex-col items-center justify-center w-full max-w-[340px] mx-auto p-1 bg-transparent">
+                                  {/* Baris Atas: Lihat Detail [Divider Vertikal] Setujui */}
+                                  <div className="flex items-center w-full gap-2">
+                                    <Link
+                                      href={`/admin/dashboard/data-anak-asuh/${st.id}`}
+                                      className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl border border-stone-300 bg-white hover:bg-stone-50 hover:border-stone-400 hover:text-stone-900 px-3.5 py-2.5 text-xs font-bold text-stone-700 shadow-2xs transition-all cursor-pointer whitespace-nowrap active:scale-95 min-h-[42px]"
+                                    >
+                                      <Eye className="size-4 text-stone-500 shrink-0" />
+                                      <span>Lihat Detail</span>
+                                    </Link>
+
+                                    {/* Pembatas Vertikal Baris Atas */}
+                                    <div className="h-7 w-px bg-stone-300/80 shrink-0" aria-hidden="true" />
+
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setModalTarget({
+                                          type: "student",
+                                          id: st.id,
+                                          name: st.fullName,
+                                          currentStatus: st.status,
+                                          targetStatus: "approved",
+                                          actionLabel: "Setujui Pendaftaran",
+                                        })
+                                        setReason("")
+                                        setActionError(null)
+                                      }}
+                                      className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 px-3.5 py-2.5 text-xs font-bold text-white shadow-xs shadow-emerald-600/20 transition-all cursor-pointer whitespace-nowrap active:scale-95 min-h-[42px]"
+                                    >
+                                      <Check className="size-4 stroke-[2.5] shrink-0" />
+                                      <span>Setujui</span>
+                                    </button>
+                                  </div>
+
+                                  {/* Pembatas Horizontal Antara Baris Atas dan Bawah */}
+                                  <div className="my-2 h-px w-full bg-stone-200" aria-hidden="true" />
+
+                                  {/* Baris Bawah: Minta Revisi [Divider Vertikal] Tolak */}
+                                  <div className="flex items-center w-full gap-2">
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setModalTarget({
+                                          type: "student",
+                                          id: st.id,
+                                          name: st.fullName,
+                                          currentStatus: st.status,
+                                          targetStatus: "perlu_revisi",
+                                          actionLabel: "Minta Revisi Pendaftaran",
+                                        })
+                                        setReason("")
+                                        setActionError(null)
+                                      }}
+                                      className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 px-3.5 py-2.5 text-xs font-bold text-white shadow-xs shadow-blue-600/20 transition-all cursor-pointer whitespace-nowrap active:scale-95 min-h-[42px]"
+                                    >
+                                      <MessageSquare className="size-4 shrink-0" />
+                                      <span>Minta Revisi</span>
+                                    </button>
+
+                                    {/* Pembatas Vertikal Baris Bawah */}
+                                    <div className="h-7 w-px bg-stone-300/80 shrink-0" aria-hidden="true" />
+
+                                    <button
+                                      type="button"
+                                      onClick={() => {
+                                        setModalTarget({
+                                          type: "student",
+                                          id: st.id,
+                                          name: st.fullName,
+                                          currentStatus: st.status,
+                                          targetStatus: "rejected",
+                                          actionLabel: "Tolak Pendaftaran",
+                                        })
+                                        setReason("")
+                                        setActionError(null)
+                                      }}
+                                      className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 hover:border-rose-300 px-3.5 py-2.5 text-xs font-bold text-rose-700 shadow-2xs transition-all cursor-pointer whitespace-nowrap active:scale-95 min-h-[42px]"
+                                    >
+                                      <X className="size-4 stroke-[2.5] shrink-0" />
+                                      <span>Tolak</span>
+                                    </button>
+                                  </div>
+                                </div>
+                              </>
                             ) : (
                               /* TOGGLE SWITCH untuk Approved / Nonaktif / Alumni / Rejected */
                               <div className="flex items-center justify-center gap-2.5">
@@ -1149,6 +1265,8 @@ export function AdminKontrolStatusView({
             ? deactivationType
             : modalTarget.targetStatus
 
+        const isRevisionModal = resolvedTarget === "perlu_revisi"
+
         return (
           <div
             className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/60 p-4 backdrop-blur-xs animate-in fade-in"
@@ -1166,6 +1284,8 @@ export function AdminKontrolStatusView({
                   className={`flex size-12 shrink-0 items-center justify-center rounded-2xl shadow-sm text-white ${
                     resolvedTarget === "approved" || resolvedTarget === "aktif"
                       ? "bg-emerald-600"
+                      : isRevisionModal
+                      ? "bg-blue-600"
                       : resolvedTarget === "alumni"
                       ? "bg-blue-600"
                       : resolvedTarget === "rejected"
@@ -1175,6 +1295,8 @@ export function AdminKontrolStatusView({
                 >
                   {resolvedTarget === "approved" || resolvedTarget === "aktif" ? (
                     <CheckCircle2 className="size-6" />
+                  ) : isRevisionModal ? (
+                    <MessageSquare className="size-6" />
                   ) : resolvedTarget === "alumni" ? (
                     <GraduationCap className="size-6" />
                   ) : resolvedTarget === "rejected" ? (
@@ -1273,6 +1395,8 @@ export function AdminKontrolStatusView({
                       className={`font-black uppercase font-mono ${
                         resolvedTarget === "approved" || resolvedTarget === "aktif"
                           ? "text-emerald-700"
+                          : isRevisionModal
+                          ? "text-blue-700"
                           : resolvedTarget === "alumni"
                           ? "text-blue-700"
                           : resolvedTarget === "rejected"
@@ -1280,17 +1404,21 @@ export function AdminKontrolStatusView({
                           : "text-stone-700"
                       }`}
                     >
-                      {resolvedTarget}
+                      {resolvedTarget === "perlu_revisi" ? "PERLU REVISI" : resolvedTarget}
                     </span>
                   </div>
                 </div>
 
-                {/* Textarea Alasan WAJIB */}
+                {/* Textarea Alasan / Catatan Revisi WAJIB */}
                 <div className="space-y-1.5">
                   <label className="text-xs sm:text-sm font-bold text-stone-800 flex items-center justify-between">
                     <span className="flex items-center gap-1.5">
                       <MessageSquare className="size-4 text-orange-500" />
-                      <span>Alasan Perubahan Status *</span>
+                      <span>
+                        {isRevisionModal
+                          ? "Catatan Revisi (jelaskan apa yang perlu diperbaiki)"
+                          : "Alasan Perubahan Status *"}
+                      </span>
                     </span>
                     <span className="text-[11px] font-semibold text-rose-500">Wajib Diisi</span>
                   </label>
@@ -1299,7 +1427,9 @@ export function AdminKontrolStatusView({
                     value={reason}
                     onChange={(e) => setReason(e.target.value)}
                     placeholder={
-                      modalTarget.type === "student" && modalTarget.isDeactivation
+                      isRevisionModal
+                        ? "Contoh: Foto SKTM buram, mohon upload ulang"
+                        : modalTarget.type === "student" && modalTarget.isDeactivation
                         ? deactivationType === "alumni"
                           ? "Contoh: Telah lulus jenjang pendidikan dan menyelesaikan program beasiswa..."
                           : "Contoh: Pindah domisili di luar wilayah jangkauan / Mengundurkan diri..."
@@ -1309,7 +1439,9 @@ export function AdminKontrolStatusView({
                     className="w-full rounded-2xl border border-stone-300 bg-white p-3.5 text-xs sm:text-sm text-stone-800 placeholder:text-stone-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition resize-none"
                   />
                   <p className="text-[11px] text-stone-400">
-                    Alasan ini akan otomatis tercatat di log <strong>AdminNote</strong> sebagai riwayat audit.
+                    {isRevisionModal
+                      ? "Catatan ini akan otomatis tersimpan sebagai AdminNote dan menjadi instruksi perbaikan."
+                      : "Alasan ini akan otomatis tercatat di log AdminNote sebagai riwayat audit."}
                   </p>
                 </div>
 
@@ -1336,6 +1468,8 @@ export function AdminKontrolStatusView({
                     className={`inline-flex items-center gap-2 rounded-2xl px-6 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md transition disabled:opacity-50 cursor-pointer ${
                       resolvedTarget === "approved" || resolvedTarget === "aktif"
                         ? "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/25"
+                        : isRevisionModal
+                        ? "bg-blue-600 hover:bg-blue-700 shadow-blue-600/25"
                         : resolvedTarget === "alumni"
                         ? "bg-blue-600 hover:bg-blue-700 shadow-blue-600/25"
                         : resolvedTarget === "rejected"
@@ -1348,7 +1482,15 @@ export function AdminKontrolStatusView({
                     ) : (
                       <Check className="size-4" />
                     )}
-                    <span>{isPending ? "Memproses..." : "Konfirmasi & Simpan"}</span>
+                    <span>
+                      {isPending
+                        ? isRevisionModal
+                          ? "Mengirim..."
+                          : "Memproses..."
+                        : isRevisionModal
+                        ? "Kirim Catatan Revisi"
+                        : "Konfirmasi & Simpan"}
+                    </span>
                   </button>
                 </div>
               </form>

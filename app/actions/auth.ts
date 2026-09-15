@@ -5,6 +5,7 @@ import { signIn, signOut } from "@/auth"
 import { AuthError } from "next-auth"
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
+import { revalidatePath } from "next/cache"
 
 import { getClientIp } from "@/lib/ip"
 
@@ -59,6 +60,12 @@ export async function loginAction(_prev: LoginState, formData: FormData): Promis
   if (student.status === "pending") {
     redirect(
       `/daftar/sukses?name=${encodeURIComponent(student.fullName)}&username=${encodeURIComponent(student.username)}`
+    )
+  }
+
+  if (student.status === "perlu_revisi") {
+    redirect(
+      `/cek-status?identifier=${encodeURIComponent(student.username)}`
     )
   }
 
@@ -148,11 +155,13 @@ export type CheckStatusResult = {
   found: boolean
   status?: string
   student?: {
+    id: number
     fullName: string
     username: string
     wilayah: string
     schoolName: string
     createdAt: Date
+    revisionNote?: string | null
   }
   error?: string
 }
@@ -171,12 +180,21 @@ export async function checkRegistrationStatusAction(identifier: string): Promise
       ],
     },
     select: {
+      id: true,
       fullName: true,
       username: true,
       status: true,
       wilayah: true,
       schoolName: true,
       createdAt: true,
+      adminNotes: {
+        orderBy: { createdAt: "desc" },
+        take: 1,
+        select: {
+          note: true,
+          createdAt: true,
+        },
+      },
     },
   })
 
@@ -187,15 +205,19 @@ export async function checkRegistrationStatusAction(identifier: string): Promise
     }
   }
 
+  const latestNote = student.adminNotes?.[0]?.note || null
+
   return {
     found: true,
     status: student.status,
     student: {
+      id: student.id,
       fullName: student.fullName,
       username: student.username,
       wilayah: student.wilayah,
       schoolName: student.schoolName,
       createdAt: student.createdAt,
+      revisionNote: latestNote,
     },
   }
 }
@@ -379,6 +401,221 @@ export async function registerAction(payload: RegisterPayload): Promise<Register
         : {}),
     },
   })
+
+  return {}
+}
+
+export type UpdateRegisterPayload = RegisterPayload & {
+  studentId?: number
+  originalIdentifier?: string
+}
+
+export async function updateStudentRegistrationAction(
+  payload: UpdateRegisterPayload
+): Promise<RegisterState> {
+  const required = [
+    payload.username,
+    payload.nik,
+    payload.fullName,
+    payload.dateOfBirth,
+    payload.gender,
+    payload.wilayah,
+    payload.schoolName,
+    payload.gradeLevel,
+  ]
+  if (required.some((value) => !String(value).trim())) return { error: "Beberapa data wajib belum lengkap." }
+  if (!/^\d{16}$/.test(payload.nik.trim())) return { error: "NIK harus terdiri dari 16 angka." }
+
+  // 1. Cari student yang mau diupdate
+  const existing = await prisma.student.findFirst({
+    where: {
+      OR: [
+        ...(payload.studentId ? [{ id: payload.studentId }] : []),
+        ...(payload.originalIdentifier
+          ? [{ username: payload.originalIdentifier.trim() }, { nik: payload.originalIdentifier.trim() }]
+          : [{ username: payload.username.trim() }, { nik: payload.nik.trim() }]),
+      ],
+    },
+  })
+
+  if (!existing) {
+    return { error: "Data pendaftaran tidak ditemukan." }
+  }
+
+  if (existing.status !== "perlu_revisi") {
+    return { error: "Pendaftaran ini tidak dalam status perlu revisi." }
+  }
+
+  // 2. Jika username atau NIK diganti, cek duplikat dengan akun siswa lain
+  if (payload.username.trim() !== existing.username || payload.nik.trim() !== existing.nik) {
+    const duplicate = await prisma.student.findFirst({
+      where: {
+        id: { not: existing.id },
+        OR: [{ username: payload.username.trim() }, { nik: payload.nik.trim() }],
+      },
+    })
+    if (duplicate) {
+      return { error: "Username atau NIK baru sudah digunakan oleh akun lain." }
+    }
+  }
+
+  // 3. Tentukan pengawas
+  let pengawas = null
+  if (payload.pengawasId) {
+    pengawas = await prisma.pengawas.findUnique({ where: { id: payload.pengawasId } })
+  } else if (payload.pengawasName) {
+    pengawas = await prisma.pengawas.findFirst({
+      where: {
+        name: payload.pengawasName.trim(),
+        wilayah: payload.wilayah.trim(),
+      },
+    })
+  }
+
+  if (!pengawas) {
+    pengawas = await prisma.pengawas.findFirst({
+      where: { wilayah: payload.wilayah.trim() },
+    })
+  }
+  if (!pengawas) return { error: "Wilayah belum memiliki Pengawas." }
+
+  // 4. Update dalam transaction: Student, Father, Mother, Guardian, EducationCost, Documents
+  await prisma.$transaction(async (tx) => {
+    // Update student & reset status to pending
+    await tx.student.update({
+      where: { id: existing.id },
+      data: {
+        username: payload.username.trim(),
+        nik: payload.nik.trim(),
+        fullName: payload.fullName.trim(),
+        dateOfBirth: new Date(payload.dateOfBirth),
+        gender: payload.gender,
+        citaCita: payload.citaCita.trim(),
+        wilayah: payload.wilayah.trim(),
+        pengawasId: pengawas.id,
+        alamatLengkap: payload.alamatLengkap.trim(),
+        noHp: payload.noHp.trim(),
+        riwayatPenyakit: payload.riwayatPenyakit.trim() || "-",
+        schoolName: payload.schoolName.trim(),
+        jenjang: payload.jenjang ? payload.jenjang.trim() : null,
+        gradeLevel: payload.gradeLevel.trim(),
+        nilaiRataRata: payload.nilaiRataRata.trim(),
+        jumlahSaudara: Number.isFinite(payload.jumlahSaudara) ? payload.jumlahSaudara : 0,
+        status: "pending",
+      },
+    })
+
+    // Upsert father
+    await tx.father.upsert({
+      where: { studentId: existing.id },
+      create: {
+        studentId: existing.id,
+        name: payload.father.name.trim(),
+        status: payload.father.status || "Sehat",
+        occupation: payload.father.occupation.trim() || "-",
+        incomePerMonth: payload.father.incomePerMonth.trim() || "-",
+        address: payload.father.address.trim() || "-",
+        phone: payload.father.phone.trim() || "-",
+        medicalHistory: payload.father.medicalHistory.trim() || "-",
+      },
+      update: {
+        name: payload.father.name.trim(),
+        status: payload.father.status || "Sehat",
+        occupation: payload.father.occupation.trim() || "-",
+        incomePerMonth: payload.father.incomePerMonth.trim() || "-",
+        address: payload.father.address.trim() || "-",
+        phone: payload.father.phone.trim() || "-",
+        medicalHistory: payload.father.medicalHistory.trim() || "-",
+      },
+    })
+
+    // Upsert mother
+    await tx.mother.upsert({
+      where: { studentId: existing.id },
+      create: {
+        studentId: existing.id,
+        name: payload.mother.name.trim(),
+        status: payload.mother.status || "Sehat",
+        occupation: payload.mother.occupation.trim() || "-",
+        incomePerMonth: payload.mother.incomePerMonth.trim() || "-",
+        address: payload.mother.address.trim() || "-",
+        phone: payload.mother.phone.trim() || "-",
+        medicalHistory: payload.mother.medicalHistory.trim() || "-",
+      },
+      update: {
+        name: payload.mother.name.trim(),
+        status: payload.mother.status || "Sehat",
+        occupation: payload.mother.occupation.trim() || "-",
+        incomePerMonth: payload.mother.incomePerMonth.trim() || "-",
+        address: payload.mother.address.trim() || "-",
+        phone: payload.mother.phone.trim() || "-",
+        medicalHistory: payload.mother.medicalHistory.trim() || "-",
+      },
+    })
+
+    // Upsert or delete guardian
+    if (hasFamilyData(payload.guardian)) {
+      await tx.guardian.upsert({
+        where: { studentId: existing.id },
+        create: {
+          studentId: existing.id,
+          name: payload.guardian.name.trim(),
+          status: payload.guardian.status || "Sehat",
+          occupation: payload.guardian.occupation.trim() || "-",
+          incomePerMonth: payload.guardian.incomePerMonth.trim() || "-",
+          address: payload.guardian.address.trim() || "-",
+          phone: payload.guardian.phone.trim() || "-",
+          medicalHistory: payload.guardian.medicalHistory.trim() || "-",
+        },
+        update: {
+          name: payload.guardian.name.trim(),
+          status: payload.guardian.status || "Sehat",
+          occupation: payload.guardian.occupation.trim() || "-",
+          incomePerMonth: payload.guardian.incomePerMonth.trim() || "-",
+          address: payload.guardian.address.trim() || "-",
+          phone: payload.guardian.phone.trim() || "-",
+          medicalHistory: payload.guardian.medicalHistory.trim() || "-",
+        },
+      })
+    } else {
+      await tx.guardian.deleteMany({
+        where: { studentId: existing.id },
+      })
+    }
+
+    // Replace education costs
+    await tx.educationCost.deleteMany({
+      where: { studentId: existing.id },
+    })
+    const validCosts = payload.educationCosts.filter((item) => item.label.trim() && item.amount > 0)
+    if (validCosts.length > 0) {
+      await tx.educationCost.createMany({
+        data: validCosts.map((item) => ({
+          studentId: existing.id,
+          label: item.label.trim(),
+          amount: item.amount,
+        })),
+      })
+    }
+
+    // Replace documents if provided
+    if (payload.documents && payload.documents.length > 0) {
+      await tx.document.deleteMany({
+        where: { studentId: existing.id },
+      })
+      await tx.document.createMany({
+        data: payload.documents.map((doc) => ({
+          studentId: existing.id,
+          type: doc.type,
+          fileUrl: doc.fileUrl,
+        })),
+      })
+    }
+  })
+
+  revalidatePath("/cek-status")
+  revalidatePath("/admin/kontrol-status")
+  revalidatePath("/admin/dashboard")
 
   return {}
 }

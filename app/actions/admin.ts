@@ -212,7 +212,10 @@ export async function updateStudentStatusAction(
       }
     }
 
-    const noteText = `Perubahan status ke ${newStatus.toUpperCase()}: ${cleanReason}`
+    const noteText =
+      newStatus === "perlu_revisi"
+        ? cleanReason
+        : `Perubahan status ke ${newStatus.toUpperCase()}: ${cleanReason}`
 
     await prisma.$transaction([
       prisma.student.update({

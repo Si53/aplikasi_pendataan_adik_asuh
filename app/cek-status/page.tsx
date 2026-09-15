@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { Suspense, useState, useEffect, useTransition } from "react"
+import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import {
@@ -20,12 +21,27 @@ import {
   Loader2,
   RefreshCw,
   Sparkles,
+  MessageSquare,
+  FileEdit,
 } from "lucide-react"
 
-export default function CekStatusPage() {
-  const [identifier, setIdentifier] = useState("")
+function CekStatusContent() {
+  const searchParams = useSearchParams()
+  const initialIdentifier = searchParams.get("identifier") || searchParams.get("username") || ""
+
+  const [identifier, setIdentifier] = useState(initialIdentifier)
   const [pending, startTransition] = useTransition()
   const [result, setResult] = useState<CheckStatusResult | null>(null)
+
+  useEffect(() => {
+    if (initialIdentifier && !result) {
+      setIdentifier(initialIdentifier)
+      startTransition(async () => {
+        const res = await checkRegistrationStatusAction(initialIdentifier)
+        setResult(res)
+      })
+    }
+  }, [initialIdentifier])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -238,7 +254,108 @@ export default function CekStatusPage() {
             </div>
           )}
 
-          {/* STATE 3: HASIL DITEMUKAN - STATUS "APPROVED" (SUDAH DISETUJUI) */}
+          {/* STATE 3: HASIL DITEMUKAN - STATUS "PERLU_REVISI" (PERLU PERBAIKAN) */}
+          {result && result.found && result.status === "perlu_revisi" && (
+            <div className="flex flex-col items-center gap-6 animate-in fade-in">
+              <div className="flex size-24 sm:size-28 items-center justify-center rounded-3xl bg-blue-100 text-blue-600 shadow-inner border-2 border-blue-200">
+                <AlertCircle className="size-12 sm:size-14 stroke-[2.2]" />
+              </div>
+
+              <div className="space-y-3">
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-blue-100 px-3.5 py-1.5 text-xs sm:text-sm font-bold text-blue-800 border border-blue-300 shadow-xs">
+                  <Sparkles className="size-3.5 text-blue-600" />
+                  <span>Perlu Revisi</span>
+                </div>
+
+                <h1 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight">
+                  Ada Beberapa Hal yang Perlu Diperbaiki
+                </h1>
+
+                <p className="text-sm sm:text-base leading-relaxed text-stone-600 max-w-md mx-auto">
+                  Kakak Asuh telah meninjau pendaftaran kamu. Silakan baca catatan di bawah dan perbaiki data pendaftaran kamu agar bisa segera diverifikasi dan disetujui.
+                </p>
+              </div>
+
+              {/* Box Catatan Revisi dari Admin */}
+              <div className="w-full rounded-2xl bg-blue-50/80 border border-blue-200 p-4 text-left space-y-2 shadow-xs">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-blue-950 uppercase tracking-wider">
+                  <MessageSquare className="size-3.5 text-blue-600" />
+                  <span>Catatan Revisi dari Admin:</span>
+                </div>
+                <div className="rounded-xl bg-white/90 border border-blue-200/70 p-3.5 text-xs sm:text-sm text-blue-950 font-medium leading-relaxed whitespace-pre-wrap">
+                  {result.student?.revisionNote || "Mohon periksa dan perbaiki berkas atau data pendaftaran Anda."}
+                </div>
+              </div>
+
+              {/* Ringkasan Data Siswa */}
+              {result.student && (
+                <div className="w-full rounded-2xl bg-orange-50/70 border border-orange-200/80 p-4 text-left space-y-2.5 shadow-xs">
+                  <div className="flex items-center justify-between border-b border-orange-200/60 pb-2">
+                    <span className="text-xs font-bold text-orange-950 uppercase tracking-wider flex items-center gap-1.5">
+                      <User className="size-3.5 text-orange-600" /> Data Pendaftar
+                    </span>
+                    <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-0.5 text-[11px] font-bold text-blue-700 border border-blue-200">
+                      Perlu Revisi
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm">
+                    <div>
+                      <p className="text-muted-foreground text-[11px] font-medium">Nama Lengkap</p>
+                      <p className="font-bold text-foreground truncate">{result.student.fullName}</p>
+                    </div>
+                    <div>
+                      <p className="text-muted-foreground text-[11px] font-medium">Username</p>
+                      <p className="font-bold text-foreground truncate">@{result.student.username}</p>
+                    </div>
+                    {result.student.schoolName && (
+                      <div>
+                        <p className="text-muted-foreground text-[11px] font-medium">Sekolah / Kampus</p>
+                        <p className="font-semibold text-foreground truncate">{result.student.schoolName}</p>
+                      </div>
+                    )}
+                    {result.student.wilayah && (
+                      <div>
+                        <p className="text-muted-foreground text-[11px] font-medium">Wilayah</p>
+                        <p className="font-semibold text-foreground truncate">{result.student.wilayah}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Tombol Aksi */}
+              <div className="w-full space-y-2.5 pt-2">
+                <Button
+                  size="lg"
+                  nativeButton={false}
+                  className="h-14 w-full rounded-2xl bg-blue-600 hover:bg-blue-700 text-base font-extrabold text-white shadow-lg shadow-blue-600/25 cursor-pointer"
+                  render={
+                    <Link
+                      href={result.student ? `/daftar/edit/${encodeURIComponent(result.student.username)}` : "/cek-status"}
+                      className="flex items-center justify-center gap-2"
+                    >
+                      <FileEdit className="size-5" />
+                      <span>Perbaiki Pendaftaran Saya</span>
+                    </Link>
+                  }
+                />
+
+                <Button
+                  type="button"
+                  size="lg"
+                  variant="ghost"
+                  onClick={handleReset}
+                  className="h-12 w-full rounded-2xl text-sm font-bold text-stone-600 hover:text-foreground hover:bg-stone-100 cursor-pointer"
+                >
+                  <RefreshCw className="size-4 mr-2" />
+                  <span>Cek Data / Siswa Lain</span>
+                </Button>
+              </div>
+            </div>
+          )}
+
+          {/* STATE 4: HASIL DITEMUKAN - STATUS "APPROVED" (SUDAH DISETUJUI) */}
           {result && result.found && result.status === "approved" && (
             <div className="flex flex-col items-center gap-6 animate-in fade-in">
               <div className="flex size-24 sm:size-28 items-center justify-center rounded-3xl bg-emerald-100 text-emerald-600 shadow-inner border-2 border-emerald-200">
@@ -313,8 +430,8 @@ export default function CekStatusPage() {
             </div>
           )}
 
-          {/* STATE 4: HASIL DITEMUKAN - STATUS "REJECTED" ATAU "NONAKTIF" */}
-          {result && result.found && result.status !== "pending" && result.status !== "approved" && (
+          {/* STATE 5: HASIL DITEMUKAN - STATUS "REJECTED" ATAU "NONAKTIF" */}
+          {result && result.found && result.status !== "pending" && result.status !== "approved" && result.status !== "perlu_revisi" && (
             <div className="flex flex-col items-center gap-6 animate-in fade-in">
               <div className="flex size-24 sm:size-28 items-center justify-center rounded-3xl bg-amber-100 text-amber-700 shadow-inner border-2 border-amber-200">
                 <AlertCircle className="size-12 sm:size-14 stroke-[2.2]" />
@@ -367,5 +484,19 @@ export default function CekStatusPage() {
         </div>
       </main>
     </div>
+  )
+}
+
+export default function CekStatusPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-dvh flex items-center justify-center">
+          <Loader2 className="size-8 animate-spin text-orange-500" />
+        </div>
+      }
+    >
+      <CekStatusContent />
+    </Suspense>
   )
 }

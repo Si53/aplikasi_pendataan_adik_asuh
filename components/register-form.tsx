@@ -3,7 +3,7 @@
 import { useState, useEffect, useTransition } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { registerAction, type RegisterPayload } from "@/app/actions/auth"
+import { registerAction, updateStudentRegistrationAction, type RegisterPayload } from "@/app/actions/auth"
 import { uploadRegistrationDocumentAction } from "@/app/actions/documents"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -195,43 +195,123 @@ type RegistrationDraft = {
   savedAt: number
 }
 
-export function RegisterForm() {
+export type RegisterFormProps = {
+  isEditMode?: boolean
+  originalIdentifier?: string
+  revisionNote?: string | null
+  initialStudentData?: {
+    id: number
+    username: string
+    nik: string
+    fullName: string
+    dateOfBirth: Date | string
+    gender: string
+    citaCita?: string | null
+    wilayah: string
+    pengawasId?: number | null
+    pengawas?: { name: string } | null
+    alamatLengkap: string
+    noHp: string
+    riwayatPenyakit?: string | null
+    schoolName: string
+    jenjang?: string | null
+    gradeLevel: string
+    nilaiRataRata: string
+    jumlahSaudara?: number | null
+    father?: Family | null
+    mother?: Family | null
+    guardian?: Family | null
+    educationCosts?: { label: string; amount: number }[]
+    documents?: { type: string; fileUrl: string }[]
+  }
+}
+
+export function RegisterForm({
+  isEditMode = false,
+  originalIdentifier,
+  revisionNote,
+  initialStudentData,
+}: RegisterFormProps = {}) {
   const router = useRouter()
   const [pending, startTransition] = useTransition()
   const [step, setStep] = useState(1)
   const [error, setError] = useState("")
-  const [educationLevelType, setEducationLevelType] = useState<"Sekolah" | "Kuliah">("Sekolah")
+
+  const initDate = initialStudentData?.dateOfBirth ? new Date(initialStudentData.dateOfBirth) : null
+  const isValidDate = Boolean(initDate && !isNaN(initDate.getTime()))
+
+  const [educationLevelType, setEducationLevelType] = useState<"Sekolah" | "Kuliah">(
+    initialStudentData?.jenjang === "Kuliah" ? "Kuliah" : "Sekolah"
+  )
 
   // Draft storage states
   const [pendingDraft, setPendingDraft] = useState<RegistrationDraft | null>(null)
   const [showResumeBanner, setShowResumeBanner] = useState(false)
-  const [hasLoadedDraft, setHasLoadedDraft] = useState(false)
+  const [hasLoadedDraft, setHasLoadedDraft] = useState(isEditMode)
 
   // Form state
   const [data, setData] = useState({
-    username: "",
-    nik: "",
-    fullName: "",
-    birthDay: "1",
-    birthMonth: "Januari",
-    birthYear: "2010",
-    gender: "",
-    citaCita: "",
-    wilayah: "",
-    pengawasName: "",
-    alamatLengkap: "",
-    noHp: "",
-    riwayatPenyakit: "",
-    schoolName: "",
-    jenjang: "",
-    gradeLevel: "",
-    nilaiRataRata: "",
-    jumlahSaudara: "0",
+    username: initialStudentData?.username || "",
+    nik: initialStudentData?.nik || "",
+    fullName: initialStudentData?.fullName || "",
+    birthDay: isValidDate ? String(initDate!.getDate()) : "1",
+    birthMonth: isValidDate ? months[initDate!.getMonth()] || "Januari" : "Januari",
+    birthYear: isValidDate ? String(initDate!.getFullYear()) : "2010",
+    gender: initialStudentData?.gender || "",
+    citaCita: initialStudentData?.citaCita || "",
+    wilayah: initialStudentData?.wilayah || "",
+    pengawasName: initialStudentData?.pengawas?.name || "",
+    alamatLengkap: initialStudentData?.alamatLengkap || "",
+    noHp: initialStudentData?.noHp || "",
+    riwayatPenyakit: initialStudentData?.riwayatPenyakit || "",
+    schoolName: initialStudentData?.schoolName || "",
+    jenjang: initialStudentData?.jenjang || "",
+    gradeLevel: initialStudentData?.gradeLevel || "",
+    nilaiRataRata: initialStudentData?.nilaiRataRata || "",
+    jumlahSaudara: String(initialStudentData?.jumlahSaudara ?? "0"),
   })
 
-  const [father, setFather] = useState(emptyFamily())
-  const [mother, setMother] = useState(emptyFamily())
-  const [guardian, setGuardian] = useState(emptyFamily())
+  const [father, setFather] = useState<Family>(
+    initialStudentData?.father
+      ? {
+          name: initialStudentData.father.name || "",
+          status: initialStudentData.father.status || "Hidup",
+          occupation: initialStudentData.father.occupation || "",
+          incomePerMonth: initialStudentData.father.incomePerMonth || "",
+          address: initialStudentData.father.address || "",
+          phone: initialStudentData.father.phone || "",
+          medicalHistory: initialStudentData.father.medicalHistory || "",
+        }
+      : emptyFamily()
+  )
+
+  const [mother, setMother] = useState<Family>(
+    initialStudentData?.mother
+      ? {
+          name: initialStudentData.mother.name || "",
+          status: initialStudentData.mother.status || "Hidup",
+          occupation: initialStudentData.mother.occupation || "",
+          incomePerMonth: initialStudentData.mother.incomePerMonth || "",
+          address: initialStudentData.mother.address || "",
+          phone: initialStudentData.mother.phone || "",
+          medicalHistory: initialStudentData.mother.medicalHistory || "",
+        }
+      : emptyFamily()
+  )
+
+  const [guardian, setGuardian] = useState<Family>(
+    initialStudentData?.guardian
+      ? {
+          name: initialStudentData.guardian.name || "",
+          status: initialStudentData.guardian.status || "Hidup",
+          occupation: initialStudentData.guardian.occupation || "",
+          incomePerMonth: initialStudentData.guardian.incomePerMonth || "",
+          address: initialStudentData.guardian.address || "",
+          phone: initialStudentData.guardian.phone || "",
+          medicalHistory: initialStudentData.guardian.medicalHistory || "",
+        }
+      : emptyFamily()
+  )
 
   // Accordion state untuk Langkah 4 (Data Keluarga) - default Ayah terbuka
   const [openFamilyAccordions, setOpenFamilyAccordions] = useState<{
@@ -240,8 +320,8 @@ export function RegisterForm() {
     guardian: boolean
   }>({
     father: true,
-    mother: false,
-    guardian: false,
+    mother: Boolean(initialStudentData?.mother?.name),
+    guardian: Boolean(initialStudentData?.guardian?.name),
   })
 
   const toggleFamilyAccordion = (key: "father" | "mother" | "guardian") => {
@@ -251,10 +331,17 @@ export function RegisterForm() {
     }))
   }
 
-  const [costs, setCosts] = useState<Cost[]>([
-    { label: "Biaya SPP Bulanan", amount: "" },
-    { label: "Uang Buku & Seragam", amount: "" },
-  ])
+  const [costs, setCosts] = useState<Cost[]>(
+    initialStudentData?.educationCosts && initialStudentData.educationCosts.length > 0
+      ? initialStudentData.educationCosts.map((c) => ({
+          label: c.label,
+          amount: String(c.amount),
+        }))
+      : [
+          { label: "Biaya SPP Bulanan", amount: "" },
+          { label: "Uang Buku & Seragam", amount: "" },
+        ]
+  )
 
   type PrestasiItem = {
     id: string
@@ -262,16 +349,43 @@ export function RegisterForm() {
     url: string
     uploading: boolean
   }
+
+  const initialDocsMap: {
+    [key in "KK" | "RAPOR" | "FOTO_ANAK" | "SKTM"]?: { name: string; url: string; uploading: boolean }
+  } = {}
+  if (initialStudentData?.documents) {
+    for (const doc of initialStudentData.documents) {
+      if (doc.type === "KK" || doc.type === "RAPOR" || doc.type === "FOTO_ANAK" || doc.type === "SKTM") {
+        initialDocsMap[doc.type] = {
+          name: `${doc.type}_terlampir.file`,
+          url: doc.fileUrl,
+          uploading: false,
+        }
+      }
+    }
+  }
+
   const [uploadedFiles, setUploadedFiles] = useState<{
     [key in "KK" | "RAPOR" | "FOTO_ANAK" | "SKTM"]?: { name: string; url: string; uploading: boolean }
-  }>({})
-  const [prestasiFiles, setPrestasiFiles] = useState<PrestasiItem[]>([])
-  const [consentAgreed, setConsentAgreed] = useState(false)
+  }>(initialDocsMap)
+
+  const initialPrestasiItems: PrestasiItem[] = (initialStudentData?.documents || [])
+    .filter((d) => d.type === "PRESTASI")
+    .map((d, index) => ({
+      id: `existing-prestasi-${index}-${d.fileUrl.slice(-6)}`,
+      name: `Sertifikat Prestasi ${index + 1}`,
+      url: d.fileUrl,
+      uploading: false,
+    }))
+
+  const [prestasiFiles, setPrestasiFiles] = useState<PrestasiItem[]>(initialPrestasiItems)
+  const [consentAgreed, setConsentAgreed] = useState(isEditMode)
 
   const set = (key: string, value: string) => setData((d) => ({ ...d, [key]: value }))
 
-  // 1. Cek draft di localStorage saat halaman pertama kali dibuka
+  // 1. Cek draft di localStorage saat halaman pertama kali dibuka (HANYA jika BUKAN mode edit)
   useEffect(() => {
+    if (isEditMode) return
     if (typeof window === "undefined") return
 
     try {
@@ -298,7 +412,7 @@ export function RegisterForm() {
       console.warn("Failed to check draft from localStorage", err)
       setHasLoadedDraft(true)
     }
-  }, [])
+  }, [isEditMode])
 
   const handleResumeDraft = () => {
     if (!pendingDraft) return
@@ -343,8 +457,9 @@ export function RegisterForm() {
     setHasLoadedDraft(true)
   }
 
-  // 2. Auto-save ke localStorage dengan debounce 800ms
+  // 2. Auto-save ke localStorage dengan debounce 800ms (HANYA jika BUKAN mode edit)
   useEffect(() => {
+    if (isEditMode) return
     if (!hasLoadedDraft) return
 
     const timer = setTimeout(() => {
@@ -384,6 +499,7 @@ export function RegisterForm() {
 
     return () => clearTimeout(timer)
   }, [
+    isEditMode,
     hasLoadedDraft,
     step,
     data,
@@ -645,16 +761,28 @@ export function RegisterForm() {
     }
 
     startTransition(async () => {
-      const result = await registerAction(payload)
+      let result
+      if (isEditMode) {
+        result = await updateStudentRegistrationAction({
+          ...payload,
+          studentId: initialStudentData?.id,
+          originalIdentifier: originalIdentifier || initialStudentData?.username,
+        })
+      } else {
+        result = await registerAction(payload)
+      }
+
       if (result.error) {
         setError(result.error)
       } else {
-        try {
-          if (typeof window !== "undefined") {
-            localStorage.removeItem(DRAFT_STORAGE_KEY)
+        if (!isEditMode) {
+          try {
+            if (typeof window !== "undefined") {
+              localStorage.removeItem(DRAFT_STORAGE_KEY)
+            }
+          } catch {
+            // ignore
           }
-        } catch {
-          // ignore
         }
         router.push(
           `/daftar/sukses?name=${encodeURIComponent(payload.fullName)}&username=${encodeURIComponent(payload.username)}`
@@ -719,8 +847,44 @@ export function RegisterForm() {
 
   return (
     <div className="flex flex-1 flex-col gap-5 px-4 sm:px-5 py-4">
-      {/* BANNER RESUME DRAFT (Tampil ramah jika ada draft belum selesai < 7 hari) */}
-      {showResumeBanner && pendingDraft && (
+      {/* BANNER CATATAN REVISI DARI ADMIN (Hanya tampil saat mode perbaikan pendaftaran) */}
+      {isEditMode && (
+        <div
+          role="region"
+          aria-label="Catatan revisi dari admin"
+          className="relative overflow-hidden rounded-3xl border-2 border-blue-400/80 bg-gradient-to-br from-blue-50/95 via-sky-50/90 to-blue-100/80 p-5 sm:p-6 shadow-lg shadow-blue-500/10 backdrop-blur-md animate-in fade-in slide-in-from-top-3 duration-300"
+        >
+          <div className="pointer-events-none absolute -right-6 -top-6 size-24 rounded-full bg-blue-500/10 blur-xl" />
+
+          <div className="relative z-10 flex flex-col gap-3.5">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-600 px-3 py-1 text-xs font-black uppercase tracking-wider text-white shadow-xs">
+                <Info className="size-3.5" />
+                <span>Catatan Revisi dari Admin</span>
+              </span>
+              <span className="rounded-full bg-white/85 px-2.5 py-0.5 text-xs font-bold text-blue-900 border border-blue-200">
+                Mode Perbaikan Data
+              </span>
+            </div>
+
+            <div className="rounded-2xl border border-blue-200/90 bg-white/90 p-4 shadow-xs">
+              <p className="text-sm sm:text-base font-bold text-blue-950 leading-relaxed whitespace-pre-wrap">
+                &ldquo;{revisionNote || "Mohon periksa dan perbaiki kelengkapan formulir pendaftaran kamu."}&rdquo;
+              </p>
+            </div>
+
+            <p className="text-xs font-medium text-blue-950/80 flex items-start sm:items-center gap-1.5">
+              <span className="shrink-0 text-blue-600 font-bold">💡</span>
+              <span>
+                Kamu bebas memperbaiki data di setiap langkah (1–5) atau mengunggah ulang dokumen, lalu klik <strong>&ldquo;Kirim Perbaikan&rdquo;</strong> di langkah terakhir.
+              </span>
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* BANNER RESUME DRAFT (Tampil ramah jika ada draft belum selesai < 7 hari dan bukan mode edit) */}
+      {!isEditMode && showResumeBanner && pendingDraft && (
         <div
           role="region"
           aria-label="Pemulihan draft pendaftaran"
@@ -1634,15 +1798,20 @@ export function RegisterForm() {
               size="lg"
               onClick={submitRegistration}
               disabled={pending || !consentAgreed}
-              className="h-14 rounded-2xl text-base font-bold bg-emerald-600 hover:bg-emerald-700 text-white shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+              className={`h-14 rounded-2xl text-base font-bold text-white shadow-md disabled:opacity-50 disabled:cursor-not-allowed ${
+                isEditMode
+                  ? "bg-blue-600 hover:bg-blue-700 shadow-blue-500/25"
+                  : "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-500/25"
+              }`}
             >
               {pending ? (
                 <span className="flex items-center gap-2">
-                  <Loader2 className="size-5 animate-spin" /> Sedang Mendaftarkan...
+                  <Loader2 className="size-5 animate-spin" />{" "}
+                  {isEditMode ? "Sedang Mengirim Perbaikan..." : "Sedang Mendaftarkan..."}
                 </span>
               ) : (
                 <span className="flex items-center gap-2">
-                  <Check className="size-5" /> Selesaikan Pendaftaran
+                  <Check className="size-5" /> {isEditMode ? "Kirim Perbaikan" : "Selesaikan Pendaftaran"}
                 </span>
               )}
             </Button>
@@ -1664,7 +1833,11 @@ export function RegisterForm() {
               size="lg"
               variant="ghost"
               nativeButton={false}
-              render={<Link href="/">Batal & Kembali ke Beranda</Link>}
+              render={
+                <Link href={isEditMode ? "/cek-status" : "/"}>
+                  {isEditMode ? "Batal & Cek Status" : "Batal & Kembali ke Beranda"}
+                </Link>
+              }
               className="h-12 rounded-2xl text-sm font-semibold text-muted-foreground hover:text-foreground"
             />
           )}
