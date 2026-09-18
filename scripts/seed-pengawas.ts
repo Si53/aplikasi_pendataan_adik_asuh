@@ -13,6 +13,7 @@ const pengawas = [
   { username: "wonosobo-narman", name: "Pak Narman", wilayah: "Wonosobo" },
   { username: "sukabumi-deasy", name: "Ibu Deasy", wilayah: "Sukabumi" },
   { username: "bandung-sutrisno", name: "Pak Sutrisno", wilayah: "Bandung" },
+  
 ]
 
 async function main() {

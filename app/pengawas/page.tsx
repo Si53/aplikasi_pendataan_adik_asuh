@@ -19,11 +19,14 @@ export default async function PengawasPage() {
   if (!pengawas) redirect("/login")
 
   // Query Data Asli Prisma:
-  // Section 1: Adik Asuh Binaan (pengawasId = pengawas.id)
-  // Section 2: Adik Asuh di Wilayah (wilayah = pengawas.wilayah, mencakup semua siswa di wilayah ini)
+  // Section 1: Adik Asuh Binaan (pengawasId = pengawas.id, status = "approved")
+  // Section 2: Adik Asuh di Wilayah (wilayah = pengawas.wilayah, status = "approved")
   const [binaanStudentsRaw, allWilayahStudentsRaw] = await Promise.all([
     prisma.student.findMany({
-      where: { pengawasId: pengawas.id },
+      where: {
+        pengawasId: pengawas.id,
+        status: "approved",
+      },
       include: {
         father: true,
         mother: true,
@@ -37,6 +40,7 @@ export default async function PengawasPage() {
     prisma.student.findMany({
       where: {
         wilayah: pengawas.wilayah,
+        status: "approved",
       },
       include: {
         father: true,
