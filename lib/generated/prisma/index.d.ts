@@ -4668,6 +4668,7 @@ export namespace Prisma {
     schoolName: string | null
     jenjang: string | null
     gradeLevel: string | null
+    programAkselerasi: boolean | null
     nilaiRataRata: string | null
     jumlahSaudara: number | null
     status: string | null
@@ -4692,6 +4693,7 @@ export namespace Prisma {
     schoolName: string | null
     jenjang: string | null
     gradeLevel: string | null
+    programAkselerasi: boolean | null
     nilaiRataRata: string | null
     jumlahSaudara: number | null
     status: string | null
@@ -4716,6 +4718,7 @@ export namespace Prisma {
     schoolName: number
     jenjang: number
     gradeLevel: number
+    programAkselerasi: number
     nilaiRataRata: number
     jumlahSaudara: number
     status: number
@@ -4756,6 +4759,7 @@ export namespace Prisma {
     schoolName?: true
     jenjang?: true
     gradeLevel?: true
+    programAkselerasi?: true
     nilaiRataRata?: true
     jumlahSaudara?: true
     status?: true
@@ -4780,6 +4784,7 @@ export namespace Prisma {
     schoolName?: true
     jenjang?: true
     gradeLevel?: true
+    programAkselerasi?: true
     nilaiRataRata?: true
     jumlahSaudara?: true
     status?: true
@@ -4804,6 +4809,7 @@ export namespace Prisma {
     schoolName?: true
     jenjang?: true
     gradeLevel?: true
+    programAkselerasi?: true
     nilaiRataRata?: true
     jumlahSaudara?: true
     status?: true
@@ -4915,6 +4921,7 @@ export namespace Prisma {
     schoolName: string
     jenjang: string | null
     gradeLevel: string
+    programAkselerasi: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status: string
@@ -4958,6 +4965,7 @@ export namespace Prisma {
     schoolName?: boolean
     jenjang?: boolean
     gradeLevel?: boolean
+    programAkselerasi?: boolean
     nilaiRataRata?: boolean
     jumlahSaudara?: boolean
     status?: boolean
@@ -4994,6 +5002,7 @@ export namespace Prisma {
     schoolName?: boolean
     jenjang?: boolean
     gradeLevel?: boolean
+    programAkselerasi?: boolean
     nilaiRataRata?: boolean
     jumlahSaudara?: boolean
     status?: boolean
@@ -5019,6 +5028,7 @@ export namespace Prisma {
     schoolName?: boolean
     jenjang?: boolean
     gradeLevel?: boolean
+    programAkselerasi?: boolean
     nilaiRataRata?: boolean
     jumlahSaudara?: boolean
     status?: boolean
@@ -5044,6 +5054,7 @@ export namespace Prisma {
     schoolName?: boolean
     jenjang?: boolean
     gradeLevel?: boolean
+    programAkselerasi?: boolean
     nilaiRataRata?: boolean
     jumlahSaudara?: boolean
     status?: boolean
@@ -5052,7 +5063,7 @@ export namespace Prisma {
     createdAt?: boolean
   }
 
-  export type StudentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "nik" | "fullName" | "dateOfBirth" | "gender" | "citaCita" | "wilayah" | "pengawasId" | "alamatLengkap" | "noHp" | "riwayatPenyakit" | "schoolName" | "jenjang" | "gradeLevel" | "nilaiRataRata" | "jumlahSaudara" | "status" | "failedLoginAttempts" | "lockedUntil" | "createdAt", ExtArgs["result"]["student"]>
+  export type StudentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "nik" | "fullName" | "dateOfBirth" | "gender" | "citaCita" | "wilayah" | "pengawasId" | "alamatLengkap" | "noHp" | "riwayatPenyakit" | "schoolName" | "jenjang" | "gradeLevel" | "programAkselerasi" | "nilaiRataRata" | "jumlahSaudara" | "status" | "failedLoginAttempts" | "lockedUntil" | "createdAt", ExtArgs["result"]["student"]>
   export type StudentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     pengawas?: boolean | PengawasDefaultArgs<ExtArgs>
     father?: boolean | Student$fatherArgs<ExtArgs>
@@ -5105,6 +5116,7 @@ export namespace Prisma {
       schoolName: string
       jenjang: string | null
       gradeLevel: string
+      programAkselerasi: boolean
       nilaiRataRata: string
       jumlahSaudara: number
       status: string
@@ -5560,6 +5572,7 @@ export namespace Prisma {
     readonly schoolName: FieldRef<"Student", 'String'>
     readonly jenjang: FieldRef<"Student", 'String'>
     readonly gradeLevel: FieldRef<"Student", 'String'>
+    readonly programAkselerasi: FieldRef<"Student", 'Boolean'>
     readonly nilaiRataRata: FieldRef<"Student", 'String'>
     readonly jumlahSaudara: FieldRef<"Student", 'Int'>
     readonly status: FieldRef<"Student", 'String'>
@@ -11859,6 +11872,7 @@ export namespace Prisma {
     studentId: number | null
     tanggalInput: Date | null
     kelasSaatItu: string | null
+    semester: string | null
     nilaiRataRata: string | null
     namaSekolahBaru: string | null
     dokumenRapor: string | null
@@ -11869,6 +11883,7 @@ export namespace Prisma {
     studentId: number | null
     tanggalInput: Date | null
     kelasSaatItu: string | null
+    semester: string | null
     nilaiRataRata: string | null
     namaSekolahBaru: string | null
     dokumenRapor: string | null
@@ -11879,6 +11894,7 @@ export namespace Prisma {
     studentId: number
     tanggalInput: number
     kelasSaatItu: number
+    semester: number
     nilaiRataRata: number
     namaSekolahBaru: number
     dokumenRapor: number
@@ -11901,6 +11917,7 @@ export namespace Prisma {
     studentId?: true
     tanggalInput?: true
     kelasSaatItu?: true
+    semester?: true
     nilaiRataRata?: true
     namaSekolahBaru?: true
     dokumenRapor?: true
@@ -11911,6 +11928,7 @@ export namespace Prisma {
     studentId?: true
     tanggalInput?: true
     kelasSaatItu?: true
+    semester?: true
     nilaiRataRata?: true
     namaSekolahBaru?: true
     dokumenRapor?: true
@@ -11921,6 +11939,7 @@ export namespace Prisma {
     studentId?: true
     tanggalInput?: true
     kelasSaatItu?: true
+    semester?: true
     nilaiRataRata?: true
     namaSekolahBaru?: true
     dokumenRapor?: true
@@ -12018,6 +12037,7 @@ export namespace Prisma {
     studentId: number
     tanggalInput: Date
     kelasSaatItu: string
+    semester: string | null
     nilaiRataRata: string
     namaSekolahBaru: string | null
     dokumenRapor: string | null
@@ -12047,6 +12067,7 @@ export namespace Prisma {
     studentId?: boolean
     tanggalInput?: boolean
     kelasSaatItu?: boolean
+    semester?: boolean
     nilaiRataRata?: boolean
     namaSekolahBaru?: boolean
     dokumenRapor?: boolean
@@ -12058,6 +12079,7 @@ export namespace Prisma {
     studentId?: boolean
     tanggalInput?: boolean
     kelasSaatItu?: boolean
+    semester?: boolean
     nilaiRataRata?: boolean
     namaSekolahBaru?: boolean
     dokumenRapor?: boolean
@@ -12069,6 +12091,7 @@ export namespace Prisma {
     studentId?: boolean
     tanggalInput?: boolean
     kelasSaatItu?: boolean
+    semester?: boolean
     nilaiRataRata?: boolean
     namaSekolahBaru?: boolean
     dokumenRapor?: boolean
@@ -12080,12 +12103,13 @@ export namespace Prisma {
     studentId?: boolean
     tanggalInput?: boolean
     kelasSaatItu?: boolean
+    semester?: boolean
     nilaiRataRata?: boolean
     namaSekolahBaru?: boolean
     dokumenRapor?: boolean
   }
 
-  export type AcademicUpdateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "tanggalInput" | "kelasSaatItu" | "nilaiRataRata" | "namaSekolahBaru" | "dokumenRapor", ExtArgs["result"]["academicUpdate"]>
+  export type AcademicUpdateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "tanggalInput" | "kelasSaatItu" | "semester" | "nilaiRataRata" | "namaSekolahBaru" | "dokumenRapor", ExtArgs["result"]["academicUpdate"]>
   export type AcademicUpdateInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     student?: boolean | StudentDefaultArgs<ExtArgs>
   }
@@ -12106,6 +12130,7 @@ export namespace Prisma {
       studentId: number
       tanggalInput: Date
       kelasSaatItu: string
+      semester: string | null
       nilaiRataRata: string
       namaSekolahBaru: string | null
       dokumenRapor: string | null
@@ -12537,6 +12562,7 @@ export namespace Prisma {
     readonly studentId: FieldRef<"AcademicUpdate", 'Int'>
     readonly tanggalInput: FieldRef<"AcademicUpdate", 'DateTime'>
     readonly kelasSaatItu: FieldRef<"AcademicUpdate", 'String'>
+    readonly semester: FieldRef<"AcademicUpdate", 'String'>
     readonly nilaiRataRata: FieldRef<"AcademicUpdate", 'String'>
     readonly namaSekolahBaru: FieldRef<"AcademicUpdate", 'String'>
     readonly dokumenRapor: FieldRef<"AcademicUpdate", 'String'>
@@ -18647,6 +18673,7 @@ export namespace Prisma {
     schoolName: 'schoolName',
     jenjang: 'jenjang',
     gradeLevel: 'gradeLevel',
+    programAkselerasi: 'programAkselerasi',
     nilaiRataRata: 'nilaiRataRata',
     jumlahSaudara: 'jumlahSaudara',
     status: 'status',
@@ -18729,6 +18756,7 @@ export namespace Prisma {
     studentId: 'studentId',
     tanggalInput: 'tanggalInput',
     kelasSaatItu: 'kelasSaatItu',
+    semester: 'semester',
     nilaiRataRata: 'nilaiRataRata',
     namaSekolahBaru: 'namaSekolahBaru',
     dokumenRapor: 'dokumenRapor'
@@ -18865,6 +18893,13 @@ export namespace Prisma {
    * Reference to a field of type 'DateTime[]'
    */
   export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -19048,6 +19083,7 @@ export namespace Prisma {
     schoolName?: StringFilter<"Student"> | string
     jenjang?: StringNullableFilter<"Student"> | string | null
     gradeLevel?: StringFilter<"Student"> | string
+    programAkselerasi?: BoolFilter<"Student"> | boolean
     nilaiRataRata?: StringFilter<"Student"> | string
     jumlahSaudara?: IntFilter<"Student"> | number
     status?: StringFilter<"Student"> | string
@@ -19083,6 +19119,7 @@ export namespace Prisma {
     schoolName?: SortOrder
     jenjang?: SortOrderInput | SortOrder
     gradeLevel?: SortOrder
+    programAkselerasi?: SortOrder
     nilaiRataRata?: SortOrder
     jumlahSaudara?: SortOrder
     status?: SortOrder
@@ -19121,6 +19158,7 @@ export namespace Prisma {
     schoolName?: StringFilter<"Student"> | string
     jenjang?: StringNullableFilter<"Student"> | string | null
     gradeLevel?: StringFilter<"Student"> | string
+    programAkselerasi?: BoolFilter<"Student"> | boolean
     nilaiRataRata?: StringFilter<"Student"> | string
     jumlahSaudara?: IntFilter<"Student"> | number
     status?: StringFilter<"Student"> | string
@@ -19156,6 +19194,7 @@ export namespace Prisma {
     schoolName?: SortOrder
     jenjang?: SortOrderInput | SortOrder
     gradeLevel?: SortOrder
+    programAkselerasi?: SortOrder
     nilaiRataRata?: SortOrder
     jumlahSaudara?: SortOrder
     status?: SortOrder
@@ -19188,6 +19227,7 @@ export namespace Prisma {
     schoolName?: StringWithAggregatesFilter<"Student"> | string
     jenjang?: StringNullableWithAggregatesFilter<"Student"> | string | null
     gradeLevel?: StringWithAggregatesFilter<"Student"> | string
+    programAkselerasi?: BoolWithAggregatesFilter<"Student"> | boolean
     nilaiRataRata?: StringWithAggregatesFilter<"Student"> | string
     jumlahSaudara?: IntWithAggregatesFilter<"Student"> | number
     status?: StringWithAggregatesFilter<"Student"> | string
@@ -19544,6 +19584,7 @@ export namespace Prisma {
     studentId?: IntFilter<"AcademicUpdate"> | number
     tanggalInput?: DateTimeFilter<"AcademicUpdate"> | Date | string
     kelasSaatItu?: StringFilter<"AcademicUpdate"> | string
+    semester?: StringNullableFilter<"AcademicUpdate"> | string | null
     nilaiRataRata?: StringFilter<"AcademicUpdate"> | string
     namaSekolahBaru?: StringNullableFilter<"AcademicUpdate"> | string | null
     dokumenRapor?: StringNullableFilter<"AcademicUpdate"> | string | null
@@ -19555,6 +19596,7 @@ export namespace Prisma {
     studentId?: SortOrder
     tanggalInput?: SortOrder
     kelasSaatItu?: SortOrder
+    semester?: SortOrderInput | SortOrder
     nilaiRataRata?: SortOrder
     namaSekolahBaru?: SortOrderInput | SortOrder
     dokumenRapor?: SortOrderInput | SortOrder
@@ -19569,6 +19611,7 @@ export namespace Prisma {
     studentId?: IntFilter<"AcademicUpdate"> | number
     tanggalInput?: DateTimeFilter<"AcademicUpdate"> | Date | string
     kelasSaatItu?: StringFilter<"AcademicUpdate"> | string
+    semester?: StringNullableFilter<"AcademicUpdate"> | string | null
     nilaiRataRata?: StringFilter<"AcademicUpdate"> | string
     namaSekolahBaru?: StringNullableFilter<"AcademicUpdate"> | string | null
     dokumenRapor?: StringNullableFilter<"AcademicUpdate"> | string | null
@@ -19580,6 +19623,7 @@ export namespace Prisma {
     studentId?: SortOrder
     tanggalInput?: SortOrder
     kelasSaatItu?: SortOrder
+    semester?: SortOrderInput | SortOrder
     nilaiRataRata?: SortOrder
     namaSekolahBaru?: SortOrderInput | SortOrder
     dokumenRapor?: SortOrderInput | SortOrder
@@ -19598,6 +19642,7 @@ export namespace Prisma {
     studentId?: IntWithAggregatesFilter<"AcademicUpdate"> | number
     tanggalInput?: DateTimeWithAggregatesFilter<"AcademicUpdate"> | Date | string
     kelasSaatItu?: StringWithAggregatesFilter<"AcademicUpdate"> | string
+    semester?: StringNullableWithAggregatesFilter<"AcademicUpdate"> | string | null
     nilaiRataRata?: StringWithAggregatesFilter<"AcademicUpdate"> | string
     namaSekolahBaru?: StringNullableWithAggregatesFilter<"AcademicUpdate"> | string | null
     dokumenRapor?: StringNullableWithAggregatesFilter<"AcademicUpdate"> | string | null
@@ -20097,6 +20142,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -20132,6 +20178,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -20164,6 +20211,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -20199,6 +20247,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -20233,6 +20282,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -20255,6 +20305,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -20279,6 +20330,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -20627,6 +20679,7 @@ export namespace Prisma {
   export type AcademicUpdateCreateInput = {
     tanggalInput?: Date | string
     kelasSaatItu: string
+    semester?: string | null
     nilaiRataRata: string
     namaSekolahBaru?: string | null
     dokumenRapor?: string | null
@@ -20638,6 +20691,7 @@ export namespace Prisma {
     studentId: number
     tanggalInput?: Date | string
     kelasSaatItu: string
+    semester?: string | null
     nilaiRataRata: string
     namaSekolahBaru?: string | null
     dokumenRapor?: string | null
@@ -20646,6 +20700,7 @@ export namespace Prisma {
   export type AcademicUpdateUpdateInput = {
     tanggalInput?: DateTimeFieldUpdateOperationsInput | Date | string
     kelasSaatItu?: StringFieldUpdateOperationsInput | string
+    semester?: NullableStringFieldUpdateOperationsInput | string | null
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     namaSekolahBaru?: NullableStringFieldUpdateOperationsInput | string | null
     dokumenRapor?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20657,6 +20712,7 @@ export namespace Prisma {
     studentId?: IntFieldUpdateOperationsInput | number
     tanggalInput?: DateTimeFieldUpdateOperationsInput | Date | string
     kelasSaatItu?: StringFieldUpdateOperationsInput | string
+    semester?: NullableStringFieldUpdateOperationsInput | string | null
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     namaSekolahBaru?: NullableStringFieldUpdateOperationsInput | string | null
     dokumenRapor?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20667,6 +20723,7 @@ export namespace Prisma {
     studentId: number
     tanggalInput?: Date | string
     kelasSaatItu: string
+    semester?: string | null
     nilaiRataRata: string
     namaSekolahBaru?: string | null
     dokumenRapor?: string | null
@@ -20675,6 +20732,7 @@ export namespace Prisma {
   export type AcademicUpdateUpdateManyMutationInput = {
     tanggalInput?: DateTimeFieldUpdateOperationsInput | Date | string
     kelasSaatItu?: StringFieldUpdateOperationsInput | string
+    semester?: NullableStringFieldUpdateOperationsInput | string | null
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     namaSekolahBaru?: NullableStringFieldUpdateOperationsInput | string | null
     dokumenRapor?: NullableStringFieldUpdateOperationsInput | string | null
@@ -20685,6 +20743,7 @@ export namespace Prisma {
     studentId?: IntFieldUpdateOperationsInput | number
     tanggalInput?: DateTimeFieldUpdateOperationsInput | Date | string
     kelasSaatItu?: StringFieldUpdateOperationsInput | string
+    semester?: NullableStringFieldUpdateOperationsInput | string | null
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     namaSekolahBaru?: NullableStringFieldUpdateOperationsInput | string | null
     dokumenRapor?: NullableStringFieldUpdateOperationsInput | string | null
@@ -21253,6 +21312,11 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type PengawasScalarRelationFilter = {
     is?: PengawasWhereInput
     isNot?: PengawasWhereInput
@@ -21319,6 +21383,7 @@ export namespace Prisma {
     schoolName?: SortOrder
     jenjang?: SortOrder
     gradeLevel?: SortOrder
+    programAkselerasi?: SortOrder
     nilaiRataRata?: SortOrder
     jumlahSaudara?: SortOrder
     status?: SortOrder
@@ -21350,6 +21415,7 @@ export namespace Prisma {
     schoolName?: SortOrder
     jenjang?: SortOrder
     gradeLevel?: SortOrder
+    programAkselerasi?: SortOrder
     nilaiRataRata?: SortOrder
     jumlahSaudara?: SortOrder
     status?: SortOrder
@@ -21374,6 +21440,7 @@ export namespace Prisma {
     schoolName?: SortOrder
     jenjang?: SortOrder
     gradeLevel?: SortOrder
+    programAkselerasi?: SortOrder
     nilaiRataRata?: SortOrder
     jumlahSaudara?: SortOrder
     status?: SortOrder
@@ -21387,6 +21454,14 @@ export namespace Prisma {
     pengawasId?: SortOrder
     jumlahSaudara?: SortOrder
     failedLoginAttempts?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type StudentScalarRelationFilter = {
@@ -21604,6 +21679,7 @@ export namespace Prisma {
     studentId?: SortOrder
     tanggalInput?: SortOrder
     kelasSaatItu?: SortOrder
+    semester?: SortOrder
     nilaiRataRata?: SortOrder
     namaSekolahBaru?: SortOrder
     dokumenRapor?: SortOrder
@@ -21619,6 +21695,7 @@ export namespace Prisma {
     studentId?: SortOrder
     tanggalInput?: SortOrder
     kelasSaatItu?: SortOrder
+    semester?: SortOrder
     nilaiRataRata?: SortOrder
     namaSekolahBaru?: SortOrder
     dokumenRapor?: SortOrder
@@ -21629,6 +21706,7 @@ export namespace Prisma {
     studentId?: SortOrder
     tanggalInput?: SortOrder
     kelasSaatItu?: SortOrder
+    semester?: SortOrder
     nilaiRataRata?: SortOrder
     namaSekolahBaru?: SortOrder
     dokumenRapor?: SortOrder
@@ -22345,6 +22423,10 @@ export namespace Prisma {
     connect?: VisitLogWhereUniqueInput | VisitLogWhereUniqueInput[]
   }
 
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
   export type PengawasUpdateOneRequiredWithoutStudentsNestedInput = {
     create?: XOR<PengawasCreateWithoutStudentsInput, PengawasUncheckedCreateWithoutStudentsInput>
     connectOrCreate?: PengawasCreateOrConnectWithoutStudentsInput
@@ -23010,6 +23092,19 @@ export namespace Prisma {
     _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
   export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel> | null
     in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
@@ -23213,6 +23308,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -23246,6 +23342,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -23388,6 +23485,7 @@ export namespace Prisma {
     schoolName?: StringFilter<"Student"> | string
     jenjang?: StringNullableFilter<"Student"> | string | null
     gradeLevel?: StringFilter<"Student"> | string
+    programAkselerasi?: BoolFilter<"Student"> | boolean
     nilaiRataRata?: StringFilter<"Student"> | string
     jumlahSaudara?: IntFilter<"Student"> | number
     status?: StringFilter<"Student"> | string
@@ -23617,6 +23715,7 @@ export namespace Prisma {
   export type AcademicUpdateCreateWithoutStudentInput = {
     tanggalInput?: Date | string
     kelasSaatItu: string
+    semester?: string | null
     nilaiRataRata: string
     namaSekolahBaru?: string | null
     dokumenRapor?: string | null
@@ -23626,6 +23725,7 @@ export namespace Prisma {
     id?: number
     tanggalInput?: Date | string
     kelasSaatItu: string
+    semester?: string | null
     nilaiRataRata: string
     namaSekolahBaru?: string | null
     dokumenRapor?: string | null
@@ -23960,6 +24060,7 @@ export namespace Prisma {
     studentId?: IntFilter<"AcademicUpdate"> | number
     tanggalInput?: DateTimeFilter<"AcademicUpdate"> | Date | string
     kelasSaatItu?: StringFilter<"AcademicUpdate"> | string
+    semester?: StringNullableFilter<"AcademicUpdate"> | string | null
     nilaiRataRata?: StringFilter<"AcademicUpdate"> | string
     namaSekolahBaru?: StringNullableFilter<"AcademicUpdate"> | string | null
     dokumenRapor?: StringNullableFilter<"AcademicUpdate"> | string | null
@@ -24043,6 +24144,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -24077,6 +24179,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -24124,6 +24227,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -24158,6 +24262,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -24189,6 +24294,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -24223,6 +24329,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -24270,6 +24377,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -24304,6 +24412,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -24335,6 +24444,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -24369,6 +24479,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -24416,6 +24527,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -24450,6 +24562,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -24481,6 +24594,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -24515,6 +24629,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -24562,6 +24677,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -24596,6 +24712,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -24627,6 +24744,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -24661,6 +24779,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -24708,6 +24827,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -24742,6 +24862,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -24773,6 +24894,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -24807,6 +24929,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -24854,6 +24977,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -24888,6 +25012,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -24919,6 +25044,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -24953,6 +25079,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -25034,6 +25161,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -25068,6 +25196,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -25139,6 +25268,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -25173,6 +25303,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -25276,6 +25407,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -25310,6 +25442,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -25409,6 +25542,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -25443,6 +25577,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -25512,6 +25647,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -25546,6 +25682,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -25605,6 +25742,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -25639,6 +25777,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -25742,6 +25881,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -25776,6 +25916,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -25973,6 +26114,7 @@ export namespace Prisma {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status?: string
@@ -26021,6 +26163,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -26054,6 +26197,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -26087,6 +26231,7 @@ export namespace Prisma {
     schoolName?: StringFieldUpdateOperationsInput | string
     jenjang?: NullableStringFieldUpdateOperationsInput | string | null
     gradeLevel?: StringFieldUpdateOperationsInput | string
+    programAkselerasi?: BoolFieldUpdateOperationsInput | boolean
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     jumlahSaudara?: IntFieldUpdateOperationsInput | number
     status?: StringFieldUpdateOperationsInput | string
@@ -26187,6 +26332,7 @@ export namespace Prisma {
     id?: number
     tanggalInput?: Date | string
     kelasSaatItu: string
+    semester?: string | null
     nilaiRataRata: string
     namaSekolahBaru?: string | null
     dokumenRapor?: string | null
@@ -26267,6 +26413,7 @@ export namespace Prisma {
   export type AcademicUpdateUpdateWithoutStudentInput = {
     tanggalInput?: DateTimeFieldUpdateOperationsInput | Date | string
     kelasSaatItu?: StringFieldUpdateOperationsInput | string
+    semester?: NullableStringFieldUpdateOperationsInput | string | null
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     namaSekolahBaru?: NullableStringFieldUpdateOperationsInput | string | null
     dokumenRapor?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26276,6 +26423,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     tanggalInput?: DateTimeFieldUpdateOperationsInput | Date | string
     kelasSaatItu?: StringFieldUpdateOperationsInput | string
+    semester?: NullableStringFieldUpdateOperationsInput | string | null
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     namaSekolahBaru?: NullableStringFieldUpdateOperationsInput | string | null
     dokumenRapor?: NullableStringFieldUpdateOperationsInput | string | null
@@ -26285,6 +26433,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     tanggalInput?: DateTimeFieldUpdateOperationsInput | Date | string
     kelasSaatItu?: StringFieldUpdateOperationsInput | string
+    semester?: NullableStringFieldUpdateOperationsInput | string | null
     nilaiRataRata?: StringFieldUpdateOperationsInput | string
     namaSekolahBaru?: NullableStringFieldUpdateOperationsInput | string | null
     dokumenRapor?: NullableStringFieldUpdateOperationsInput | string | null

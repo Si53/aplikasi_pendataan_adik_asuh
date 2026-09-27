@@ -1,15 +1,8 @@
 import Link from "next/link"
-import { auth } from "@/auth"
-import { logoutAction } from "@/app/actions/auth"
-import { PageHeader } from "@/components/page-header"
 import { LoginForm } from "@/components/login-form"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { LogOut, ArrowRight, UserCheck, ShieldCheck, ArrowLeft } from "lucide-react"
+import { ArrowLeft } from "lucide-react"
 
-export default async function LoginPage() {
-  const session = await auth()
-
+export default function LoginPage() {
   return (
     <div className="relative min-h-dvh w-full flex flex-col justify-between">
       {/* 1. Background: Gradient Cream/Peach dengan Motif Lotus dan Awan/Roda Dharma Oriental */}
@@ -70,46 +63,6 @@ export default async function LoginPage() {
       </div>
 
       <main className="mx-auto flex w-full max-w-md flex-1 flex-col items-center justify-center px-4 py-6">
-        {/* Banner Jika User Sudah Login */}
-        {session?.user && (
-          <div className="mb-6 w-full rounded-3xl border border-orange-200/80 bg-white/90 p-4 shadow-md backdrop-blur-md animate-in fade-in">
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-2 text-xs font-bold text-orange-600">
-                {session.user.role === "PENGAWAS" ? (
-                  <ShieldCheck className="size-4" />
-                ) : (
-                  <UserCheck className="size-4" />
-                )}
-                <span>
-                  Sedang Masuk sebagai {session.user.role === "PENGAWAS" ? "Pengawas" : "Adik Asuh"}
-                </span>
-              </div>
-              <div>
-                <p className="text-base font-extrabold text-foreground">{session.user.name}</p>
-                <p className="text-xs text-muted-foreground">Username: {session.user.username}</p>
-              </div>
-              <div className="flex items-center gap-2 pt-1">
-                <Link
-                  href={session.user.role === "PENGAWAS" ? "/pengawas" : "/dashboard"}
-                  className="flex flex-1 items-center justify-center gap-1 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 py-2 text-xs font-bold text-white shadow-sm hover:from-orange-600 hover:to-amber-600"
-                >
-                  <span>Buka Dashboard</span>
-                  <ArrowRight className="size-3.5" />
-                </Link>
-                <form action={logoutAction} className="shrink-0">
-                  <button
-                    type="submit"
-                    className="flex items-center gap-1 rounded-2xl border border-border bg-white px-3 py-2 text-xs font-bold text-destructive hover:bg-destructive/10"
-                  >
-                    <LogOut className="size-3.5" />
-                    <span>Keluar</span>
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Form Login Utama */}
         <LoginForm />
       </main>

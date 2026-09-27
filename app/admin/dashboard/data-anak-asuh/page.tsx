@@ -97,6 +97,7 @@ export default async function DataAnakAsuhPage() {
       latestAcademicDate: latestAcademic?.tanggalInput
         ? latestAcademic.tanggalInput.toISOString()
         : null,
+      programAkselerasi: s.programAkselerasi,
       pengawasName: s.pengawas?.name || "Belum Ditugaskan",
       createdAt: s.createdAt.toISOString(),
     }

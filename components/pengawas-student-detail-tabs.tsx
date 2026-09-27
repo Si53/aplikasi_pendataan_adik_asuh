@@ -31,9 +31,11 @@ export type AcademicUpdateItem = {
   id: number
   tanggalInput: string
   kelasSaatItu: string
+  semester?: string | null
   nilaiRataRata: string
   namaSekolahBaru: string | null
   dokumenRaporUrl: string | null
+  dokumenRaporUrls?: string[]
 }
 
 export type DisbursementHistoryItem = {
@@ -55,6 +57,7 @@ export type StudentDetailFull = {
   noHp: string
   schoolName: string
   gradeLevel: string
+  programAkselerasi?: boolean
   nilaiAwal: string
   citaCita: string
   wilayah: string
@@ -479,7 +482,14 @@ export function PengawasStudentDetailTabs({
                 <div className="grid grid-cols-2 gap-2">
                   <div className="rounded-xl bg-orange-50/60 p-3">
                     <span className="text-xs text-muted-foreground">Kelas / Semester</span>
-                    <p className="font-bold text-foreground">{student.gradeLevel || "-"}</p>
+                    <div className="flex items-center gap-1.5 flex-wrap mt-0.5">
+                      <p className="font-bold text-foreground">{student.gradeLevel || "-"}</p>
+                      {student.programAkselerasi && (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-purple-100 text-purple-700">
+                          Akselerasi (1 Thn 3 Smt)
+                        </span>
+                      )}
+                    </div>
                   </div>
                   <div className="rounded-xl bg-amber-50/80 border border-amber-200/80 p-3">
                     <span className="text-xs text-amber-900 font-semibold">Nilai Rapor / IPK</span>
@@ -569,7 +579,9 @@ export function PengawasStudentDetailTabs({
                     <div className="space-y-1.5 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="rounded-lg bg-orange-500 px-2.5 py-0.5 text-xs font-bold text-white shadow-2xs">
-                          {update.kelasSaatItu}
+                          {update.semester
+                            ? `${update.kelasSaatItu} - Semester ${update.semester}`
+                            : update.kelasSaatItu}
                         </span>
                         <span className="flex items-center gap-1 text-xs text-muted-foreground font-medium">
                           <Calendar className="size-3 text-orange-500" />
@@ -599,7 +611,27 @@ export function PengawasStudentDetailTabs({
 
                     {/* Tombol Lihat Rapor Presigned URL */}
                     <div className="self-end sm:self-center shrink-0">
-                      {update.dokumenRaporUrl ? (
+                      {update.dokumenRaporUrls && update.dokumenRaporUrls.length > 0 ? (
+                        <div className="flex flex-wrap gap-1.5 justify-end">
+                          {update.dokumenRaporUrls.map((url, uIdx) => (
+                            <a
+                              key={uIdx}
+                              href={url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 rounded-xl bg-white px-3 py-1.5 text-xs font-bold text-orange-700 hover:bg-orange-100 hover:text-orange-900 border border-orange-300 shadow-2xs transition"
+                            >
+                              <FileText className="size-3" />
+                              <span>
+                                {update.dokumenRaporUrls!.length > 1
+                                  ? `Rapor ${uIdx + 1}`
+                                  : "Lihat Rapor"}
+                              </span>
+                              <ExternalLink className="size-2.5 opacity-70" />
+                            </a>
+                          ))}
+                        </div>
+                      ) : update.dokumenRaporUrl ? (
                         <a
                           href={update.dokumenRaporUrl}
                           target="_blank"

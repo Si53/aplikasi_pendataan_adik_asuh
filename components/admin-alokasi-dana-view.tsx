@@ -29,6 +29,17 @@ import {
   Info,
 } from "lucide-react"
 import { createBantuanAdjustmentAction } from "@/app/actions/admin"
+import {
+  getAvailablePeriodeList,
+  getCurrentPeriode,
+  isDateInPeriode,
+} from "@/lib/periode"
+
+export interface VerifiedDisbursementSummary {
+  id?: number
+  nominal: number
+  tanggal: string
+}
 
 export interface AlokasiDisbursementItem {
   id: number
@@ -72,11 +83,8 @@ export interface AlokasiStudentItem {
 }
 
 interface AdminAlokasiDanaViewProps {
-  stats: {
-    totalTersalurkan6Bulan: number
-    adikAsuhMenerimaCount: number
-    avgPerPenyaluran6Bulan?: number
-  }
+  totalAnggaranDiperlukan: number
+  verifiedDisbursements: VerifiedDisbursementSummary[]
   students: AlokasiStudentItem[]
   wilayahList: string[]
 }
@@ -93,10 +101,29 @@ function formatNominalInput(val: string | number): string {
 }
 
 export function AdminAlokasiDanaView({
-  stats,
+  totalAnggaranDiperlukan,
+  verifiedDisbursements,
   students,
   wilayahList,
 }: AdminAlokasiDanaViewProps) {
+  // Periode state (dropdown dari 2026 Ganjil s.d. periode saat ini)
+  const availablePeriodeList = useMemo(() => getAvailablePeriodeList(), [])
+  const [selectedPeriode, setSelectedPeriode] = useState<string>(
+    () => availablePeriodeList[0] || getCurrentPeriode()
+  )
+
+  // Hitung DEBIT (nominal yang SUDAH disalurkan pada periode yang dipilih)
+  const debitAmount = useMemo(() => {
+    return verifiedDisbursements
+      .filter((d) => isDateInPeriode(d.tanggal, selectedPeriode))
+      .reduce((sum, d) => sum + (d.nominal || 0), 0)
+  }, [verifiedDisbursements, selectedPeriode])
+
+  // Hitung KREDIT = Total Anggaran Diperlukan - DEBIT (minimal Rp 0 jika debit > anggaran)
+  const kreditAmount = useMemo(() => {
+    return Math.max(0, totalAnggaranDiperlukan - debitAmount)
+  }, [totalAnggaranDiperlukan, debitAmount])
+
   // Table state
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedWilayah, setSelectedWilayah] = useState("all")
@@ -276,7 +303,7 @@ export function AdminAlokasiDanaView({
               AKUMULASI DANA TERVERIFIKASI
             </span>
             <span className="rounded-full bg-stone-100 px-2.5 py-0.5 text-[11px] font-semibold text-stone-600">
-              Siklus 6 Bulan
+              Periode {selectedPeriode}
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">
@@ -288,7 +315,26 @@ export function AdminAlokasiDanaView({
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Dropdown Periode */}
+          <div className="flex items-center gap-2">
+            <label htmlFor="periode-select" className="text-xs font-bold text-stone-600 shrink-0">
+              Pilih Periode:
+            </label>
+            <select
+              id="periode-select"
+              value={selectedPeriode}
+              onChange={(e) => setSelectedPeriode(e.target.value)}
+              className="h-10.5 rounded-2xl border border-stone-200 bg-white px-3.5 text-xs sm:text-sm font-bold text-stone-800 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 shadow-2xs transition cursor-pointer"
+            >
+              {availablePeriodeList.map((p) => (
+                <option key={p} value={p}>
+                  Periode {p}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <button
             type="button"
             onClick={handleExportCSV}
@@ -307,54 +353,53 @@ export function AdminAlokasiDanaView({
         </div>
       )}
 
-      {/* 2. DUA KARTU STATISTIK (6 Bulan Terakhir) */}
+      {/* 2. DUA KARTU STATISTIK: DEBIT & KREDIT */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {/* Kartu 1: Total Tersalurkan (6 Bulan Terakhir) */}
-        <div className="relative overflow-hidden rounded-3xl border border-orange-100 bg-white p-6 shadow-xs">
+        {/* KIRI: DEBIT (Warna Hijau - Nominal yang SUDAH disalurkan) */}
+        <div className="relative overflow-hidden rounded-3xl border border-emerald-100 bg-white p-6 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-stone-400">
-              Total Tersalurkan
+            <span className="text-xs font-bold uppercase tracking-wider text-emerald-800">
+              Debit
             </span>
-            <div className="flex size-10 items-center justify-center rounded-2xl bg-orange-50 text-orange-600">
+            <div className="flex size-10 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
               <Wallet className="size-5" />
             </div>
           </div>
           <div className="mt-3">
             <p className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight">
-              {formatRupiah(stats.totalTersalurkan6Bulan)}
+              {formatRupiah(debitAmount)}
             </p>
             <p className="mt-1 text-xs text-stone-500 font-medium">
-              6 Bulan Terakhir (Terverifikasi)
+              Sudah disalurkan periode {selectedPeriode}
             </p>
           </div>
-          <div className="mt-3 flex items-center gap-1.5 text-[11px] text-orange-700 font-semibold bg-orange-50/80 rounded-lg px-2.5 py-1 w-fit">
-            <Calendar className="size-3" />
-            <span>Penyaluran Semester Berjalan</span>
+          <div className="mt-3 flex items-center gap-1.5 text-[11px] text-emerald-700 font-semibold bg-emerald-50/80 rounded-lg px-2.5 py-1 w-fit">
+            <CheckCircle2 className="size-3" />
+            <span>Penyaluran Terverifikasi</span>
           </div>
         </div>
 
-        {/* Kartu 2: Adik Asuh Menerima (6 Bulan Terakhir) */}
-        <div className="relative overflow-hidden rounded-3xl border border-orange-100 bg-white p-6 shadow-xs">
+        {/* KANAN: KREDIT (Warna Merah/Oranye - Nominal yang BELUM disalurkan) */}
+        <div className="relative overflow-hidden rounded-3xl border border-rose-100 bg-white p-6 shadow-xs">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-stone-400">
-              Adik Asuh Menerima
+            <span className="text-xs font-bold uppercase tracking-wider text-rose-800">
+              Kredit
             </span>
-            <div className="flex size-10 items-center justify-center rounded-2xl bg-amber-50 text-amber-600">
-              <Users className="size-5" />
+            <div className="flex size-10 items-center justify-center rounded-2xl bg-rose-50 text-rose-600">
+              <Clock className="size-5" />
             </div>
           </div>
           <div className="mt-3">
             <p className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight">
-              {stats.adikAsuhMenerimaCount}{" "}
-              <span className="text-base font-bold text-stone-400">Siswa</span>
+              {formatRupiah(kreditAmount)}
             </p>
             <p className="mt-1 text-xs text-stone-500 font-medium">
-              Minimal 1x penyaluran dalam 6 bulan
+              Belum disalurkan periode {selectedPeriode}
             </p>
           </div>
-          <div className="mt-3 flex items-center gap-1.5 text-[11px] text-amber-800 font-semibold bg-amber-50/80 rounded-lg px-2.5 py-1 w-fit">
-            <ShieldCheck className="size-3" />
-            <span>Penerima Manfaat Aktif</span>
+          <div className="mt-3 flex items-center gap-1.5 text-[11px] text-rose-700 font-semibold bg-rose-50/80 rounded-lg px-2.5 py-1 w-fit">
+            <AlertCircle className="size-3" />
+            <span>Sisa Kebutuhan Anggaran</span>
           </div>
         </div>
       </div>

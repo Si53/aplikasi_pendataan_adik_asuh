@@ -128,13 +128,21 @@ export default function LandingPage() {
           </div>
 
           {/* Link Cek Status Pendaftaran */}
-          <div className="pt-1 text-center">
+          <div className="pt-1 text-center flex flex-col items-center gap-2">
             <Link
               href="/cek-status"
               className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-orange-700 hover:text-orange-950 underline-offset-4 hover:underline transition-colors"
             >
               <span>Sudah daftar? Cek status pendaftaran di sini</span>
             </Link>
+            <a
+              href="https://youtu.be/iDFN1KWRLqU?si=A3vfXsEIu632xXWP"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-orange-700 hover:text-orange-950 underline-offset-4 hover:underline transition-colors"
+            >
+              <span>Klik Video Tutorial !!!</span>
+            </a>
           </div>
         </div>
       </section>

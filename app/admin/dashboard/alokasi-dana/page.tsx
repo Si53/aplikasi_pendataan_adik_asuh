@@ -7,6 +7,7 @@ import {
   type AlokasiStudentItem,
   type AlokasiYearlySummary,
 } from "@/components/admin-alokasi-dana-view"
+import { calculateTotalAnggaranDiperlukan } from "@/lib/budget"
 
 export const dynamic = "force-dynamic"
 
@@ -16,24 +17,15 @@ export default async function AlokasiDanaDashboardPage() {
     redirect("/admin/login")
   }
 
-  // 1. Batas waktu 6 bulan terakhir untuk statistik semester berjalan
-  const now = new Date()
-  const sixMonthsAgo = new Date(now)
-  sixMonthsAgo.setMonth(now.getMonth() - 6)
-
-  // 2. Fetch data dari database secara paralel
-  const [recentVerifiedRaw, studentsRaw] = await Promise.all([
-    // Ambil semua bukti terverifikasi dalam 6 bulan terakhir
+  // 1. Fetch data dari database secara paralel
+  const [allVerifiedDisbursementsRaw, studentsRaw] = await Promise.all([
+    // Ambil seluruh bukti penyaluran berstatus terverifikasi
     prisma.disbursementProof.findMany({
       where: {
         status: "verified",
-        tanggal: {
-          gte: sixMonthsAgo,
-        },
       },
       select: {
         id: true,
-        studentId: true,
         nominal: true,
         tanggal: true,
       },
@@ -85,16 +77,15 @@ export default async function AlokasiDanaDashboardPage() {
     }),
   ])
 
-  // 3. Hitung 2 Kartu Statistik (6 Bulan Terakhir)
-  const totalTersalurkan6Bulan = recentVerifiedRaw.reduce(
-    (acc, curr) => acc + (curr.nominal || 0),
-    0
-  )
+  // 2. Hitung Total Anggaran Diperlukan (Menggunakan shared helper dari lib/budget)
+  const totalAnggaranDiperlukan = calculateTotalAnggaranDiperlukan(studentsRaw)
 
-  const distinctStudentIds6Bulan = new Set(
-    recentVerifiedRaw.map((item) => item.studentId)
-  )
-  const adikAsuhMenerimaCount = distinctStudentIds6Bulan.size
+  // 3. Format seluruh bukti terverifikasi untuk perhitungan Debit dinamis per periode
+  const verifiedDisbursements = allVerifiedDisbursementsRaw.map((d) => ({
+    id: d.id,
+    nominal: d.nominal || 0,
+    tanggal: d.tanggal.toISOString(),
+  }))
 
   // 4. Format data siswa untuk tabel & modal riwayat
   const students: AlokasiStudentItem[] = await Promise.all(
@@ -184,10 +175,8 @@ export default async function AlokasiDanaDashboardPage() {
   return (
     <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
       <AdminAlokasiDanaView
-        stats={{
-          totalTersalurkan6Bulan,
-          adikAsuhMenerimaCount,
-        }}
+        totalAnggaranDiperlukan={totalAnggaranDiperlukan}
+        verifiedDisbursements={verifiedDisbursements}
         students={students}
         wilayahList={wilayahList}
       />

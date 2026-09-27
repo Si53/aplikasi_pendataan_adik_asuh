@@ -41,7 +41,9 @@ export interface AdminStudentDetailData {
     noHp: string
     riwayatPenyakit: string
     schoolName: string
+    jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara: number
     status: string
@@ -87,9 +89,11 @@ export interface AdminStudentDetailData {
     id: number
     tanggalInput: string
     kelasSaatItu: string
+    semester?: string | null
     nilaiRataRata: string
     namaSekolahBaru: string | null
     dokumenRaporUrl: string | null
+    dokumenRaporUrls?: string[]
   }>
   disbursements: Array<{
     id: number
@@ -220,6 +224,15 @@ export function AdminStudentDetailTabs({
       {/* ========================================================================= */}
       {activeTab === "ringkasan" && (
         <div className="space-y-6">
+          {data.student.programAkselerasi && (
+            <div className="flex items-center gap-2.5 p-3.5 rounded-xl bg-purple-50 border border-purple-200 text-purple-800 text-xs sm:text-sm font-semibold">
+              <Sparkles className="size-4 text-purple-600 shrink-0" />
+              <span>
+                Anak Asuh ini terdaftar dalam <strong>Program Akselerasi (1 Tahun 3 Semester)</strong>.
+              </span>
+            </div>
+          )}
+
           {/* 3 Metric Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* 1. Rata-rata Semester */}
@@ -451,7 +464,14 @@ export function AdminStudentDetailTabs({
               </div>
               <div className="p-3 rounded-xl bg-stone-50 border border-stone-200/60">
                 <span className="text-stone-400 text-xs block">Jenjang / Kelas</span>
-                <strong className="text-stone-800">{data.student.gradeLevel}</strong>
+                <div className="flex items-center gap-1.5 flex-wrap mt-0.5">
+                  <strong className="text-stone-800">{data.student.gradeLevel}</strong>
+                  {data.student.programAkselerasi && (
+                    <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-purple-100 text-purple-700">
+                      Akselerasi (1 Thn 3 Smt)
+                    </span>
+                  )}
+                </div>
               </div>
               <div className="p-3 rounded-xl bg-stone-50 border border-stone-200/60">
                 <span className="text-stone-400 text-xs block">Nilai Awal</span>
@@ -491,7 +511,9 @@ export function AdminStudentDetailTabs({
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
                         <span className="rounded-md bg-orange-100 px-2 py-0.5 text-xs font-bold text-orange-800">
-                          {item.kelasSaatItu}
+                          {item.semester
+                            ? `${item.kelasSaatItu} - Semester ${item.semester}`
+                            : item.kelasSaatItu}
                         </span>
                         {idx === 0 && (
                           <span className="rounded-md bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">
@@ -523,7 +545,27 @@ export function AdminStudentDetailTabs({
                         </span>
                       </div>
 
-                      {item.dokumenRaporUrl ? (
+                      {item.dokumenRaporUrls && item.dokumenRaporUrls.length > 0 ? (
+                        <div className="flex flex-wrap gap-1.5 justify-end">
+                          {item.dokumenRaporUrls.map((url, uIdx) => (
+                            <a
+                              key={uIdx}
+                              href={url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 rounded-xl bg-orange-50 border border-orange-200 px-2.5 py-1.5 text-xs font-bold text-orange-700 hover:bg-orange-100 transition shadow-2xs"
+                            >
+                              <FileText className="size-3" />
+                              <span>
+                                {item.dokumenRaporUrls!.length > 1
+                                  ? `Rapor ${uIdx + 1}`
+                                  : "Lihat Rapor"}
+                              </span>
+                              <ExternalLink className="size-2.5 text-orange-500" />
+                            </a>
+                          ))}
+                        </div>
+                      ) : item.dokumenRaporUrl ? (
                         <a
                           href={item.dokumenRaporUrl}
                           target="_blank"

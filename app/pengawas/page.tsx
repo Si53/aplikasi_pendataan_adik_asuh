@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 import Image from "next/image"
-import { Bell, MapPin, ShieldCheck } from "lucide-react"
+import { MapPin, ShieldCheck } from "lucide-react"
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/auth"
 import { getPresignedR2Url } from "@/lib/r2"
@@ -187,7 +187,7 @@ export default async function PengawasPage() {
       </div>
 
       <main className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col gap-6 px-4 py-6 sm:px-6 sm:py-8">
-        {/* 1. HEADER (Logo Kecil di Kiri, Judul Oranye Bold, Ikon Bell Notifikasi + Logout) */}
+        {/* 1. HEADER (Logo Kecil di Kiri, Judul Oranye Bold, Logout) */}
         <header className="flex items-center justify-between gap-4 rounded-3xl bg-white/85 px-5 py-3.5 shadow-sm backdrop-blur-md border border-orange-100/80">
           <div className="flex items-center gap-3">
             <div className="relative size-10 overflow-hidden rounded-full border border-orange-200 shadow-sm">
@@ -210,19 +210,6 @@ export default async function PengawasPage() {
           </div>
 
           <div className="flex items-center gap-2.5">
-            {/* Bell Notifikasi dengan Badge Kecil */}
-            <div className="relative">
-              <button
-                type="button"
-                className="flex size-10 items-center justify-center rounded-2xl bg-orange-50 text-orange-700 transition hover:bg-orange-100/80 border border-orange-200/60"
-                aria-label="Notifikasi"
-              >
-                <Bell className="size-5" />
-              </button>
-              {/* Badge dot kecil */}
-              <span className="absolute top-1.5 right-1.5 size-2.5 rounded-full bg-orange-500 ring-2 ring-white" />
-            </div>
-
             <LogoutButton />
           </div>
         </header>

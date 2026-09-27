@@ -36,6 +36,7 @@ export interface StudentTableItem {
   latestNilai: string
   hasAcademicUpdate: boolean
   latestAcademicDate: string | null
+  programAkselerasi?: boolean
   pengawasName: string
   createdAt: string
 }
@@ -52,6 +53,7 @@ export function AdminStudentTable({
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedWilayah, setSelectedWilayah] = useState("all")
   const [onlyNoReport, setOnlyNoReport] = useState(false)
+  const [onlyAkselerasi, setOnlyAkselerasi] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
 
@@ -83,13 +85,23 @@ export function AdminStudentTable({
         return false
       }
 
+      // Quick filter: Program Akselerasi
+      if (onlyAkselerasi && !item.programAkselerasi) {
+        return false
+      }
+
       return true
     })
-  }, [students, searchQuery, selectedWilayah, onlyNoReport])
+  }, [students, searchQuery, selectedWilayah, onlyNoReport, onlyAkselerasi])
 
   // Count of students without report for badge on pill
   const noReportCount = useMemo(() => {
     return students.filter((s) => !s.hasAcademicUpdate).length
+  }, [students])
+
+  // Count of students with program akselerasi
+  const akselerasiCount = useMemo(() => {
+    return students.filter((s) => Boolean(s.programAkselerasi)).length
   }, [students])
 
   // Pagination Logic
@@ -106,12 +118,14 @@ export function AdminStudentTable({
   const hasActiveFilters =
     searchQuery.trim() !== "" ||
     selectedWilayah !== "all" ||
-    onlyNoReport
+    onlyNoReport ||
+    onlyAkselerasi
 
   const handleResetFilters = () => {
     setSearchQuery("")
     setSelectedWilayah("all")
     setOnlyNoReport(false)
+    setOnlyAkselerasi(false)
     setCurrentPage(1)
   }
 
@@ -298,6 +312,32 @@ export function AdminStudentTable({
                   {noReportCount}
                 </span>
               </button>
+
+              {/* Pill: Program Akselerasi */}
+              <button
+                type="button"
+                onClick={() => {
+                  setOnlyAkselerasi(!onlyAkselerasi)
+                  setCurrentPage(1)
+                }}
+                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition cursor-pointer ${
+                  onlyAkselerasi
+                    ? "bg-purple-600 text-white shadow-xs shadow-purple-600/25"
+                    : "bg-purple-50 text-purple-700 hover:bg-purple-100 hover:text-purple-900 border border-purple-200/70"
+                }`}
+              >
+                <Sparkles className="size-3.5" />
+                <span>Program Akselerasi</span>
+                <span
+                  className={`rounded-full px-1.5 py-0.2 text-[10px] font-bold ${
+                    onlyAkselerasi
+                      ? "bg-purple-700 text-white"
+                      : "bg-purple-200/80 text-purple-900"
+                  }`}
+                >
+                  {akselerasiCount}
+                </span>
+              </button>
             </div>
 
             {/* Reset Filters */}
@@ -329,51 +369,33 @@ export function AdminStudentTable({
       {/* Table Card */}
       <div className="overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-xs">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-stone-700 border-collapse">
-            <thead className="bg-stone-50/80 text-[11px] font-bold uppercase tracking-wider text-stone-500 border-b border-stone-200/80">
-              <tr>
-                <th scope="col" className="px-5 py-3.5">
-                  Anak Asuh
-                </th>
-                <th scope="col" className="px-5 py-3.5">
-                  Jenjang & Sekolah
-                </th>
-                <th scope="col" className="px-5 py-3.5">
-                  Wilayah / Pengawas
-                </th>
-                <th scope="col" className="px-5 py-3.5">
-                  Status
-                </th>
-                <th scope="col" className="px-5 py-3.5">
-                  Nilai Rata-rata
-                </th>
-                <th scope="col" className="px-5 py-3.5 text-right">
-                  Aksi
-                </th>
+          <table className="w-full text-left border-collapse">
+            <thead>
+              <tr className="border-b border-stone-200/90 bg-stone-50/70 text-[11px] font-bold uppercase tracking-wider text-stone-500">
+                <th className="px-5 py-3.5">Anak Asuh</th>
+                <th className="px-5 py-3.5">Jenjang & Sekolah</th>
+                <th className="px-5 py-3.5">Wilayah</th>
+                <th className="px-5 py-3.5">Status</th>
+                <th className="px-5 py-3.5">Nilai Rata-rata</th>
+                <th className="px-5 py-3.5 text-right">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100">
+            <tbody className="divide-y divide-stone-100 text-xs">
               {paginatedStudents.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center">
-                    <div className="flex flex-col items-center justify-center max-w-sm mx-auto text-stone-500">
-                      <div className="size-12 rounded-2xl bg-stone-100 flex items-center justify-center text-stone-400 mb-3">
-                        <Search className="size-6" />
-                      </div>
-                      <p className="font-bold text-stone-800 text-base">
-                        Tidak Ada Data Ditemukan
-                      </p>
-                      <p className="mt-1 text-xs text-stone-500">
-                        Tidak ditemukan data anak asuh yang cocok dengan filter
-                        atau pencarian Anda.
+                  <td colSpan={6} className="px-5 py-12 text-center text-stone-400">
+                    <div className="flex flex-col items-center justify-center gap-2">
+                      <AlertCircle className="size-8 text-stone-300" />
+                      <p className="font-semibold text-stone-600">
+                        Tidak ada data adik asuh yang sesuai kriteria filter.
                       </p>
                       {hasActiveFilters && (
                         <button
                           type="button"
                           onClick={handleResetFilters}
-                          className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-orange-500 px-4 py-2 text-xs font-bold text-white hover:bg-orange-600 transition"
+                          className="mt-1 text-xs font-bold text-orange-600 hover:underline cursor-pointer"
                         >
-                          Reset Filter
+                          Reset Semua Filter
                         </button>
                       )}
                     </div>
@@ -406,13 +428,19 @@ export function AdminStudentTable({
 
                       {/* 2. Jenjang & Sekolah */}
                       <td className="px-5 py-4">
-                        <div className="flex flex-col">
+                        <div className="flex flex-col gap-0.5">
                           <span className="font-semibold text-stone-800 text-xs sm:text-sm">
                             {item.schoolName}
                           </span>
                           <span className="text-xs text-stone-500">
                             {item.gradeLevel}
                           </span>
+                          {item.programAkselerasi && (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-purple-50 px-2 py-0.5 text-[10px] font-bold text-purple-700 border border-purple-200/80 w-fit mt-0.5">
+                              <Sparkles className="size-2.5 text-purple-600" />
+                              Program Akselerasi (1 Tahun 3 Semester)
+                            </span>
+                          )}
                         </div>
                       </td>
 

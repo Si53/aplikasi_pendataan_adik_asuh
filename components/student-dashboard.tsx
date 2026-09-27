@@ -23,6 +23,10 @@ import {
   ArrowRight,
   X,
   Clock,
+  Plus,
+  Trash2,
+  FileCheck,
+  Check,
 } from "lucide-react"
 import { createStudentAcademicUpdateAction } from "@/app/actions/academic"
 
@@ -30,9 +34,11 @@ export type StudentAcademicUpdate = {
   id: number
   tanggalInput: string
   kelasSaatItu: string
+  semester?: string | null
   nilaiRataRata: string
   namaSekolahBaru: string | null
   dokumenRaporUrl: string | null
+  dokumenRaporUrls?: string[]
 }
 
 export type StudentData = {
@@ -44,7 +50,9 @@ export type StudentData = {
   alamatLengkap: string
   noHp: string
   schoolName: string
+  jenjang?: string | null
   gradeLevel: string
+  programAkselerasi?: boolean
   nilaiRataRata: string
   citaCita: string
   wilayah: string
@@ -84,52 +92,127 @@ export type StudentData = {
   academicUpdates: StudentAcademicUpdate[]
 }
 
+const JENJANG_SEKOLAH_OPTIONS = ["SD", "SMP", "SMA"] as const
+
+const KELAS_SD_OPTIONS = [
+  { value: "1", label: "Kelas 1" },
+  { value: "2", label: "Kelas 2" },
+  { value: "3", label: "Kelas 3" },
+  { value: "4", label: "Kelas 4" },
+  { value: "5", label: "Kelas 5" },
+  { value: "6", label: "Kelas 6" },
+]
+
+const KELAS_SMP_SMA_OPTIONS = [
+  { value: "1", label: "Kelas 1" },
+  { value: "2", label: "Kelas 2" },
+  { value: "3", label: "Kelas 3" },
+]
+
+const KULIAH_OPTIONS = [
+  "Semester 1",
+  "Semester 2",
+  "Semester 3",
+  "Semester 4",
+  "Semester 5",
+  "Semester 6",
+  "Semester 7",
+  "Semester 8",
+  "Semester 9",
+  "Semester 10",
+]
+
 export function StudentDashboard({ student }: { student: StudentData }) {
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<"beranda" | "akademik" | "profil" | "dokumen">("beranda")
   const [isPending, startTransition] = useTransition()
 
-  // Form State untuk Update Nilai & Rapor
-  const defaultKelas =
-    student.academicUpdates && student.academicUpdates.length > 0
-      ? student.academicUpdates[0].kelasSaatItu
-      : student.gradeLevel || ""
+  // 1. Kategori Pendidikan (Sekolah vs Kuliah) - Default SELALU "Sekolah"
+  const [educationLevelType, setEducationLevelType] = useState<"Sekolah" | "Kuliah">("Sekolah")
 
-  const [kelasSaatItu, setKelasSaatItu] = useState(defaultKelas)
+  // 2. Dropdown Bertingkat & Semester untuk Sekolah
+  const [jenjangSekolah, setJenjangSekolah] = useState<string>("")
+  const [kelasSekolah, setKelasSekolah] = useState<string>("")
+  const [semesterSekolah, setSemesterSekolah] = useState<"Ganjil" | "Genap" | "">("")
+
+  // 3. Dropdown untuk Kuliah
+  const [semesterKuliah, setSemesterKuliah] = useState<string>("Semester 1")
+
+  // 4. Program Akselerasi (Khusus Kuliah)
+  const [programAkselerasi, setProgramAkselerasi] = useState<boolean>(
+    Boolean(student.programAkselerasi)
+  )
+
   const [isPindahJenjang, setIsPindahJenjang] = useState(false)
   const [namaSekolahBaru, setNamaSekolahBaru] = useState("")
   const [nilaiRataRata, setNilaiRataRata] = useState("")
-  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+
+  // 5. Multi-upload Dokumen Rapor
+  const [raporFiles, setRaporFiles] = useState<
+    Array<{ id: string; file: File; name: string; size: number }>
+  >([])
   const [fileError, setFileError] = useState("")
   const [formFeedback, setFormFeedback] = useState<{
     type: "success" | "error"
     text: string
   } | null>(null)
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLevelTypeChange = (type: "Sekolah" | "Kuliah") => {
+    setEducationLevelType(type)
+    setFileError("")
+    setFormFeedback(null)
+    if (type === "Kuliah") {
+      setSemesterSekolah("")
+    }
+  }
+
+  const handleJenjangSekolahChange = (val: string) => {
+    setJenjangSekolah(val)
+    setKelasSekolah("")
+  }
+
+  const handleAddRaporFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setFileError("")
     const file = e.target.files?.[0]
-    if (!file) {
-      setSelectedFile(null)
-      return
-    }
+    if (!file) return
 
     if (file.size > 15 * 1024 * 1024) {
       setFileError(`Ukuran file "${file.name}" terlalu besar (maksimal 15 MB). Silakan pilih file yang lebih kecil.`)
-      setSelectedFile(null)
+      e.target.value = ""
       return
     }
 
     try {
-      if (file.type.startsWith("image/") && !file.type.includes("pdf") && file.size > 500 * 1024) {
-        const compressed = await compressImageClientSide(file)
-        setSelectedFile(compressed)
-      } else {
-        setSelectedFile(file)
-      }
+      const processedFile =
+        file.type.startsWith("image/") && !file.type.includes("pdf") && file.size > 500 * 1024
+          ? await compressImageClientSide(file)
+          : file
+
+      setRaporFiles((prev) => [
+        ...prev,
+        {
+          id: `rapor-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+          file: processedFile,
+          name: file.name,
+          size: processedFile.size,
+        },
+      ])
     } catch {
-      setSelectedFile(file)
+      setRaporFiles((prev) => [
+        ...prev,
+        {
+          id: `rapor-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+          file,
+          name: file.name,
+          size: file.size,
+        },
+      ])
     }
+    e.target.value = ""
+  }
+
+  const handleRemoveRaporFile = (id: string) => {
+    setRaporFiles((prev) => prev.filter((item) => item.id !== id))
   }
 
   const handleAcademicSubmit = (e: React.FormEvent) => {
@@ -138,13 +221,51 @@ export function StudentDashboard({ student }: { student: StudentData }) {
     setFileError("")
 
     // Validasi input
-    if (!kelasSaatItu.trim()) {
-      setFormFeedback({ type: "error", text: "Kelas / Tingkat Saat Ini wajib diisi." })
-      return
+    if (educationLevelType === "Sekolah") {
+      if (!jenjangSekolah) {
+        setFormFeedback({
+          type: "error",
+          text: "Silakan pilih jenjang pendidikan (SD, SMP, atau SMA).",
+        })
+        return
+      }
+      if (!kelasSekolah) {
+        setFormFeedback({
+          type: "error",
+          text: `Silakan pilih kelas Anda saat ini (${jenjangSekolah}).`,
+        })
+        return
+      }
+      if (!semesterSekolah) {
+        setFormFeedback({
+          type: "error",
+          text: "Silakan pilih Semester (Semester Ganjil atau Semester Genap).",
+        })
+        return
+      }
+    } else {
+      if (!semesterKuliah) {
+        setFormFeedback({
+          type: "error",
+          text: "Silakan pilih semester Anda saat ini.",
+        })
+        return
+      }
     }
 
     if (!nilaiRataRata.trim()) {
-      setFormFeedback({ type: "error", text: "Nilai Rata-Rata / IPK Terbaru wajib diisi." })
+      setFormFeedback({
+        type: "error",
+        text: educationLevelType === "Kuliah" ? "IPK Terbaru wajib diisi." : "Nilai Rata-Rata Terbaru wajib diisi.",
+      })
+      return
+    }
+
+    if (raporFiles.length === 0) {
+      setFormFeedback({
+        type: "error",
+        text: "Dokumen rapor wajib diunggah (minimal 1 berkas foto/PDF).",
+      })
       return
     }
 
@@ -157,24 +278,39 @@ export function StudentDashboard({ student }: { student: StudentData }) {
     }
 
     const formData = new FormData()
-    formData.append("kelasSaatItu", kelasSaatItu.trim())
+    formData.append("kategoriPendidikan", educationLevelType)
+    if (educationLevelType === "Sekolah") {
+      formData.append("jenjang", jenjangSekolah)
+      formData.append("gradeLevel", kelasSekolah)
+      formData.append("semester", semesterSekolah)
+      formData.append("kelasSaatItu", `Kelas ${kelasSekolah} ${jenjangSekolah}`)
+    } else {
+      formData.append("jenjang", "Kuliah")
+      formData.append("gradeLevel", semesterKuliah)
+      formData.append("kelasSaatItu", semesterKuliah)
+      formData.append("programAkselerasi", programAkselerasi ? "true" : "false")
+    }
     formData.append("nilaiRataRata", nilaiRataRata.trim())
     formData.append("isPindahJenjang", isPindahJenjang ? "true" : "false")
     if (isPindahJenjang && namaSekolahBaru.trim()) {
       formData.append("namaSekolahBaru", namaSekolahBaru.trim())
     }
-    if (selectedFile) {
-      formData.append("file", selectedFile)
-    }
+    raporFiles.forEach((item) => {
+      formData.append("files", item.file)
+    })
 
     startTransition(async () => {
       const res = await createStudentAcademicUpdateAction(formData)
       if (res.success) {
         setFormFeedback({ type: "success", text: res.message })
+        if (educationLevelType === "Sekolah") {
+          setKelasSekolah("")
+          setSemesterSekolah("")
+        }
         setNilaiRataRata("")
         setIsPindahJenjang(false)
         setNamaSekolahBaru("")
-        setSelectedFile(null)
+        setRaporFiles([])
         router.refresh()
       } else {
         setFormFeedback({ type: "error", text: res.error })
@@ -200,35 +336,84 @@ export function StudentDashboard({ student }: { student: StudentData }) {
                 alt="Ilustrasi Biksu dan Anak"
                 fill
                 priority
-                sizes="(max-width: 768px) 200px, 220px"
-                className="object-cover"
+                sizes="(max-width: 768px) 200px, 200px"
+                className="object-contain"
               />
             </div>
 
-            {/* Sisi Kanan: Teks Sambutan & Info Pengawas */}
-            <div className="flex flex-1 flex-col justify-center text-center md:text-left gap-3 w-full">
-              <div className="space-y-1">
-                <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-orange-800">
-                  <Sparkles className="size-3" /> Program Bantuan Dana Pendidikan
+            {/* Sisi Kanan: Teks Sambutan Hangat & Profil Singkat */}
+            <div className="flex flex-1 flex-col gap-3 text-left">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-orange-700">
+                  <Sparkles className="size-3.5 text-orange-600" />
+                  PORTAL ADIK ASUH
                 </span>
-                <h2 className="text-xl sm:text-2xl font-black text-foreground tracking-tight">
-                  Selamat datang di Program Adik Asuh!
+                <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800">
+                  Aktif
+                </span>
+              </div>
+
+              <div>
+                <h2 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight">
+                  Halo, {student.fullName}!
                 </h2>
-                <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground font-medium">
-                  Bersama Vihara Vimala Dharma, raih cita-cita setinggi mungkin melalui
-                  pendidikan yang berkelanjutan.
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1 leading-relaxed">
+                  Selamat datang di portal informasi beasiswa adik asuh Vihara Vimala Dharma. Tetap semangat dalam menuntut ilmu dan meraih cita-citamu!
                 </p>
               </div>
 
-              {/* Info Pengawas Pendamping Asli dari Relasi Database */}
-              <div className="rounded-2xl bg-orange-50/80 p-4 border border-orange-200/80 text-left">
-                <span className="text-xs font-bold text-orange-900 block">
-                  Pengawas Pendamping Wilayah {student.wilayah}:
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-2 border-t border-orange-100/80">
+                <div className="rounded-2xl bg-orange-50/60 p-3 border border-orange-100/80">
+                  <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Jenjang & Kelas</p>
+                  <p className="text-sm font-black text-foreground truncate mt-0.5">{student.gradeLevel || "-"}</p>
+                </div>
+                <div className="rounded-2xl bg-orange-50/60 p-3 border border-orange-100/80">
+                  <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Wilayah Asal</p>
+                  <p className="text-sm font-black text-foreground truncate mt-0.5">{student.wilayah || "-"}</p>
+                </div>
+                <div className="col-span-2 sm:col-span-1 rounded-2xl bg-orange-50/60 p-3 border border-orange-100/80">
+                  <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Nilai Rata-rata</p>
+                  <p className="text-sm font-black text-orange-600 truncate mt-0.5">{student.nilaiRataRata || "-"}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Kartu Profil Singkat & Pengawas Pendamping */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {/* Sekolah / Institusi */}
+            <div className="rounded-3xl bg-white/95 p-5 shadow-md backdrop-blur-md border border-orange-100/90 flex flex-col justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex size-11 items-center justify-center rounded-2xl bg-orange-100 text-orange-600 shadow-2xs">
+                  <Building2 className="size-5.5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Institusi Pendidikan</h3>
+                  <p className="text-base sm:text-lg font-black text-foreground mt-0.5">{student.schoolName || "-"}</p>
+                </div>
+              </div>
+              <div className="mt-4 pt-3 border-t border-orange-100/80 flex items-center justify-between text-xs text-muted-foreground">
+                <span>Tingkat: <strong className="text-foreground">{student.gradeLevel}</strong></span>
+                <span>Cita-cita: <strong className="text-orange-600">{student.citaCita || "-"}</strong></span>
+              </div>
+            </div>
+
+            {/* Pengawas Pendamping */}
+            <div className="rounded-3xl bg-white/95 p-5 shadow-md backdrop-blur-md border border-orange-100/90 flex flex-col justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex size-11 items-center justify-center rounded-2xl bg-amber-100 text-amber-700 shadow-2xs">
+                  <UserRound className="size-5.5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Kakak Pengawas</h3>
+                  <p className="text-base sm:text-lg font-black text-foreground mt-0.5">{student.pengawasName}</p>
+                </div>
+              </div>
+              <div className="mt-4 pt-3 border-t border-orange-100/80 flex items-center justify-between text-xs text-muted-foreground">
+                <span className="flex items-center gap-1">
+                  <MapPin className="size-3 text-orange-500" /> Wilayah {student.wilayah}
                 </span>
-                <p className="mt-1 text-base sm:text-lg font-extrabold text-orange-600 flex items-center gap-1.5">
-                  <MapPin className="size-4 shrink-0 text-orange-500" />
-                  <span>{student.pengawasName}</span>
-                </p>
+                <span className="text-emerald-600 font-bold">Siap Mendampingi</span>
               </div>
             </div>
           </div>
@@ -307,7 +492,7 @@ export function StudentDashboard({ student }: { student: StudentData }) {
               </div>
             </div>
 
-            <form onSubmit={handleAcademicSubmit} className="flex flex-col gap-4">
+            <form onSubmit={handleAcademicSubmit} className="flex flex-col gap-4.5">
               {/* Feedback Alert */}
               {formFeedback && (
                 <div
@@ -327,23 +512,177 @@ export function StudentDashboard({ student }: { student: StudentData }) {
                 </div>
               )}
 
-              {/* Field 1: Kelas / Tingkat Saat Ini */}
+              {/* 1. Radio Button: Sekolah vs Kuliah */}
               <div className="flex flex-col gap-1.5 text-left">
-                <label htmlFor="kelasSaatItu" className="text-xs font-bold text-orange-950/80">
-                  Kelas / Tingkat Saat Ini <span className="text-red-500 font-extrabold">*</span>
+                <label className="text-xs font-bold text-orange-950/80">
+                  Kategori Pendidikan <span className="text-red-500 font-extrabold">*</span>
                 </label>
-                <input
-                  id="kelasSaatItu"
-                  type="text"
-                  value={kelasSaatItu}
-                  onChange={(e) => setKelasSaatItu(e.target.value)}
-                  placeholder="Contoh: Kelas 8 SMP atau Semester 3"
-                  className="h-12 w-full rounded-2xl border border-orange-200/80 bg-orange-50/30 px-4 text-sm font-semibold text-foreground placeholder:text-muted-foreground focus:border-orange-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20"
-                  required
-                />
+                <div className="grid grid-cols-2 gap-3" role="radiogroup" aria-label="Pilih Kategori Pendidikan">
+                  {(["Sekolah", "Kuliah"] as const).map((lvl) => {
+                    const isSelected = educationLevelType === lvl
+                    return (
+                      <label
+                        key={lvl}
+                        className={`flex items-center gap-3 rounded-2xl border p-3.5 transition cursor-pointer shadow-xs select-none ${
+                          isSelected
+                            ? "border-orange-500 bg-orange-50/80 text-orange-950 font-bold ring-2 ring-orange-500/20"
+                            : "border-orange-200/60 bg-white/90 text-foreground hover:bg-orange-50/30"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="educationLevelType"
+                          value={lvl}
+                          checked={isSelected}
+                          onChange={() => handleLevelTypeChange(lvl)}
+                          className="sr-only"
+                        />
+                        <div
+                          className={`flex size-5 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
+                            isSelected
+                              ? "border-orange-500 bg-orange-500"
+                              : "border-stone-300 bg-white"
+                          }`}
+                        >
+                          {isSelected && <span className="size-2 rounded-full bg-white shadow-xs" />}
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-xs sm:text-sm font-bold">{lvl}</span>
+                          <span className="text-[10px] text-muted-foreground font-normal">
+                            {lvl === "Sekolah" ? "SD, SMP, atau SMA" : "Perguruan Tinggi / Universitas"}
+                          </span>
+                        </div>
+                      </label>
+                    )
+                  })}
+                </div>
               </div>
 
-              {/* Field 2: Checkbox Pindah Jenjang Sekolah */}
+              {/* 2. DROPDOWN PILIHAN TINGKAT & SEMESTER */}
+              {educationLevelType === "Sekolah" ? (
+                <div className="flex flex-col gap-3.5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    {/* Dropdown 1 - Jenjang */}
+                    <div className="flex flex-col gap-1.5 text-left">
+                      <label htmlFor="jenjangSekolah" className="text-xs font-bold text-orange-950/80">
+                        Jenjang Sekolah <span className="text-red-500 font-extrabold">*</span>
+                      </label>
+                      <select
+                        id="jenjangSekolah"
+                        value={jenjangSekolah}
+                        onChange={(e) => handleJenjangSekolahChange(e.target.value)}
+                        className="h-12 w-full rounded-2xl border border-orange-200/80 bg-white px-4 text-sm font-semibold text-foreground focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 cursor-pointer shadow-xs"
+                        required
+                      >
+                        <option value="">-- Pilih Jenjang (SD / SMP / SMA) --</option>
+                        {JENJANG_SEKOLAH_OPTIONS.map((j) => (
+                          <option key={j} value={j}>
+                            {j}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Dropdown 2 - Kelas (Muncul SETELAH Dropdown 1 dipilih) */}
+                    {jenjangSekolah ? (
+                      <div className="flex flex-col gap-1.5 text-left animate-in fade-in slide-in-from-top-1 duration-200">
+                        <label htmlFor="kelasSekolah" className="text-xs font-bold text-orange-950/80">
+                          Kelas ({jenjangSekolah}) <span className="text-red-500 font-extrabold">*</span>
+                        </label>
+                        <select
+                          id="kelasSekolah"
+                          value={kelasSekolah}
+                          onChange={(e) => setKelasSekolah(e.target.value)}
+                          className="h-12 w-full rounded-2xl border border-orange-200/80 bg-white px-4 text-sm font-semibold text-foreground focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 cursor-pointer shadow-xs"
+                          required
+                        >
+                          <option value="">-- Pilih Kelas ({jenjangSekolah}) --</option>
+                          {(jenjangSekolah === "SD" ? KELAS_SD_OPTIONS : KELAS_SMP_SMA_OPTIONS).map((opt) => (
+                            <option key={opt.value} value={opt.value}>
+                              {opt.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    ) : (
+                      <div className="hidden sm:flex flex-col justify-end pb-3 text-xs text-muted-foreground italic">
+                        Pilih jenjang sekolah terlebih dahulu untuk memilih kelas.
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Tombol Pilihan Semester (Khusus Sekolah - Button Group Pill-Shape) */}
+                  <div className="flex flex-col gap-1.5 text-left">
+                    <label className="text-xs font-bold text-orange-950/80">
+                      Semester <span className="text-red-500 font-extrabold">*</span>
+                    </label>
+                    <div className="grid grid-cols-2 gap-3" role="radiogroup" aria-label="Pilih Semester">
+                      {(["Ganjil", "Genap"] as const).map((sem) => {
+                        const isSelected = semesterSekolah === sem
+                        return (
+                          <button
+                            key={sem}
+                            type="button"
+                            onClick={() => setSemesterSekolah(sem)}
+                            className={`h-11 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer border shadow-xs ${
+                              isSelected
+                                ? "border-orange-500 bg-orange-500 text-white shadow-orange-500/20"
+                                : "border-orange-200/80 bg-white text-foreground hover:bg-orange-50/50"
+                            }`}
+                          >
+                            Semester {sem}
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* Dropdown Semester untuk Kuliah */
+                <div className="flex flex-col gap-1.5 text-left">
+                  <label htmlFor="semesterKuliah" className="text-xs font-bold text-orange-950/80">
+                    Semester Saat Ini <span className="text-red-500 font-extrabold">*</span>
+                  </label>
+                  <select
+                    id="semesterKuliah"
+                    value={semesterKuliah}
+                    onChange={(e) => setSemesterKuliah(e.target.value)}
+                    className="h-12 w-full rounded-2xl border border-orange-200/80 bg-white px-4 text-sm font-semibold text-foreground focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 cursor-pointer shadow-xs"
+                    required
+                  >
+                    <option value="">-- Pilih Semester --</option>
+                    {KULIAH_OPTIONS.map((opt) => (
+                      <option key={opt} value={opt}>
+                        {opt}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {/* 2b. Checkbox Program Akselerasi (Khusus Kuliah) */}
+              {educationLevelType === "Kuliah" && (
+                <div className="rounded-2xl border border-purple-200 bg-purple-50/60 p-4 transition animate-in fade-in slide-in-from-top-2 duration-200 shadow-xs">
+                  <label className="flex items-start gap-3 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={programAkselerasi}
+                      onChange={(e) => setProgramAkselerasi(e.target.checked)}
+                      className="mt-0.5 size-4 rounded-md border-purple-300 text-purple-600 focus:ring-purple-500/20 cursor-pointer"
+                    />
+                    <div className="space-y-0.5">
+                      <span className="text-xs sm:text-sm font-bold text-purple-950 block">
+                        Saya mengikuti program percepatan 1 Tahun 3 Semester
+                      </span>
+                      <span className="text-[11px] text-purple-700 block">
+                        Centang opsi ini jika kampus kamu menerapkan kurikulum akselerasi/trimester (3 semester per tahun akademik).
+                      </span>
+                    </div>
+                  </label>
+                </div>
+              )}
+
+              {/* 3. Checkbox Pindah Jenjang Sekolah */}
               <div className="rounded-2xl border border-orange-200/70 bg-orange-50/40 p-4 transition">
                 <label className="flex items-start gap-3 cursor-pointer select-none">
                   <input
@@ -354,7 +693,7 @@ export function StudentDashboard({ student }: { student: StudentData }) {
                   />
                   <div className="space-y-0.5">
                     <span className="text-xs sm:text-sm font-bold text-foreground block">
-                      Saya pindah jenjang sekolah baru (misal dari SD ke SMP, SMP ke SMA, dll)
+                      Saya pindah jenjang sekolah / kampus baru (misal dari SD ke SMP, SMP ke SMA, SMA ke Kuliah)
                     </span>
                     <span className="text-[11px] text-muted-foreground block">
                       Centang opsi ini jika kamu melanjutkan ke sekolah/universitas yang baru.
@@ -362,7 +701,7 @@ export function StudentDashboard({ student }: { student: StudentData }) {
                   </div>
                 </label>
 
-                {/* Field 2b: Nama Sekolah Baru (Muncul jika checkbox dicentang) */}
+                {/* 3b. Nama Sekolah Baru (Muncul jika checkbox dicentang) */}
                 {isPindahJenjang && (
                   <div className="mt-3 pt-3 border-t border-orange-200/60 flex flex-col gap-1.5 animate-in fade-in slide-in-from-top-2 duration-200">
                     <label htmlFor="namaSekolahBaru" className="text-xs font-bold text-orange-950/80 flex items-center gap-1.5">
@@ -383,62 +722,94 @@ export function StudentDashboard({ student }: { student: StudentData }) {
                 )}
               </div>
 
-              {/* Field 3: Nilai Rata-Rata Terbaru */}
+              {/* 4. Nilai Rata-Rata / IPK Terbaru */}
               <div className="flex flex-col gap-1.5 text-left">
                 <label htmlFor="nilaiRataRata" className="text-xs font-bold text-orange-950/80">
-                  Nilai Rata-Rata / IPK Terbaru <span className="text-red-500 font-extrabold">*</span>
+                  {educationLevelType === "Kuliah" ? "IPK Terbaru" : "Nilai Rata-Rata Terbaru"}{" "}
+                  <span className="text-red-500 font-extrabold">*</span>
                 </label>
                 <input
                   id="nilaiRataRata"
                   type="text"
                   value={nilaiRataRata}
                   onChange={(e) => setNilaiRataRata(e.target.value)}
-                  placeholder="Contoh: 88.5 atau 3.75"
-                  className="h-12 w-full rounded-2xl border border-orange-200/80 bg-orange-50/30 px-4 text-sm font-semibold text-foreground placeholder:text-muted-foreground focus:border-orange-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+                  placeholder={
+                    educationLevelType === "Kuliah"
+                      ? "Contoh: 3.75 (Skala IPK 0.00 - 4.00)"
+                      : "Contoh: 85.5 (Skala Rapor 0 - 100)"
+                  }
+                  className="h-12 w-full rounded-2xl border border-orange-200/80 bg-orange-50/30 px-4 text-sm font-semibold text-foreground placeholder:text-muted-foreground focus:border-orange-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 shadow-xs"
                   required
                 />
               </div>
 
-              {/* Field 4: Upload Dokumen Rapor (Opsional) */}
-              <div className="flex flex-col gap-1.5 text-left">
-                <label className="text-xs font-bold text-orange-950/80 flex items-center justify-between">
-                  <span>Upload Dokumen Rapor (Opsional)</span>
-                  <span className="text-[11px] font-normal text-muted-foreground">Format JPG/PNG/PDF (Maks 15 MB)</span>
-                </label>
+              {/* 5. Upload Dokumen Rapor (WAJIB - MULTI-UPLOAD) */}
+              <div className="flex flex-col gap-3 rounded-2xl border border-orange-200/80 bg-orange-50/30 p-4 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <label className="text-xs font-bold text-orange-950/80 block">
+                      Dokumen Rapor / KHS / Transkrip <span className="text-red-500 font-extrabold">*</span>
+                    </label>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                      Wajib — Unggah foto halaman rapor atau KHS semester terbaru (dapat lebih dari 1 file).
+                    </p>
+                  </div>
+                  <span className="rounded-full bg-orange-100 px-2.5 py-0.5 text-[10px] font-bold text-orange-800 border border-orange-200 shrink-0">
+                    Wajib
+                  </span>
+                </div>
 
-                <div className="relative">
+                {/* Daftar File Rapor Terpilih */}
+                {raporFiles.length > 0 && (
+                  <div className="space-y-2 pt-1">
+                    {raporFiles.map((item, idx) => (
+                      <div
+                        key={item.id}
+                        className="flex items-center justify-between gap-2 rounded-xl border border-orange-200/80 bg-white p-3 shadow-xs"
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-700">
+                            <FileCheck className="size-4 text-emerald-600" />
+                          </div>
+                          <div className="min-w-0 space-y-0.5">
+                            <p className="text-xs font-semibold text-foreground truncate max-w-xs sm:max-w-md">
+                              {idx + 1}. {item.name}
+                            </p>
+                            <p className="text-[11px] text-muted-foreground">
+                              Ukuran: {(item.size / 1024).toFixed(0)} KB • Siap diunggah
+                            </p>
+                          </div>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveRaporFile(item.id)}
+                          className="size-8 p-0 text-muted-foreground hover:text-destructive hover:bg-red-50 rounded-lg shrink-0 flex items-center justify-center cursor-pointer transition"
+                          title="Hapus file ini"
+                        >
+                          <Trash2 className="size-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Tombol Tambah File Rapor */}
+                <div>
                   <input
                     id="dokumenRaporInput"
                     type="file"
-                    accept="image/*,application/pdf"
-                    onChange={handleFileChange}
-                    className="sr-only"
+                    accept="image/*,.pdf"
+                    className="hidden"
+                    onChange={handleAddRaporFile}
                   />
                   <label
                     htmlFor="dokumenRaporInput"
-                    className="flex flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-orange-200/90 bg-orange-50/30 p-4 text-center cursor-pointer hover:bg-orange-50/60 hover:border-orange-300 transition"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-orange-500 bg-orange-500/10 px-4 py-2.5 text-xs sm:text-sm font-bold text-orange-700 hover:bg-orange-500/20 cursor-pointer transition shadow-xs"
                   >
-                    <UploadCloud className="size-6 text-orange-500" />
-                    <span className="text-xs font-bold text-orange-800">
-                      {selectedFile ? selectedFile.name : "Klik untuk pilih foto rapor atau dokumen PDF"}
-                    </span>
-                    <span className="text-[10px] text-muted-foreground">
-                      {selectedFile
-                        ? `Ukuran: ${(selectedFile.size / 1024).toFixed(0)} KB • Klik untuk ganti file`
-                        : "Bisa foto langsung dari HP atau upload scan PDF"}
-                    </span>
+                    <Plus className="size-4 text-orange-600" />
+                    <span>Tambah File Rapor</span>
                   </label>
-
-                  {selectedFile && (
-                    <button
-                      type="button"
-                      onClick={() => setSelectedFile(null)}
-                      className="absolute right-3 top-3 rounded-full bg-stone-100 p-1 text-stone-500 hover:bg-stone-200 hover:text-stone-800"
-                      aria-label="Hapus file terpilih"
-                    >
-                      <X className="size-3.5" />
-                    </button>
-                  )}
                 </div>
 
                 {fileError && (
@@ -512,7 +883,9 @@ export function StudentDashboard({ student }: { student: StudentData }) {
                     <div className="space-y-1.5 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="rounded-lg bg-orange-500 px-2.5 py-0.5 text-xs font-bold text-white shadow-2xs">
-                          {update.kelasSaatItu}
+                          {update.semester
+                            ? `${update.kelasSaatItu} - Semester ${update.semester}`
+                            : update.kelasSaatItu}
                         </span>
                         <span className="flex items-center gap-1 text-xs text-muted-foreground font-medium">
                           <Calendar className="size-3 text-orange-500" />
@@ -540,14 +913,32 @@ export function StudentDashboard({ student }: { student: StudentData }) {
                       )}
                     </div>
 
-                    {/* Tombol Lihat Rapor Presigned URL */}
-                    <div className="self-end sm:self-center shrink-0">
-                      {update.dokumenRaporUrl ? (
+                    {/* Tombol Lihat Rapor Presigned URL(s) */}
+                    <div className="self-end sm:self-center shrink-0 flex flex-wrap items-center gap-2">
+                      {update.dokumenRaporUrls && update.dokumenRaporUrls.length > 0 ? (
+                        update.dokumenRaporUrls.map((url, urlIdx) => (
+                          <a
+                            key={urlIdx}
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 rounded-xl bg-white px-3.5 py-1.5 text-xs font-bold text-orange-700 hover:bg-orange-100 hover:text-orange-900 border border-orange-300 shadow-2xs transition"
+                          >
+                            <FileText className="size-3.5" />
+                            <span>
+                              {update.dokumenRaporUrls && update.dokumenRaporUrls.length > 1
+                                ? `Rapor ${urlIdx + 1}`
+                                : "Lihat Rapor"}
+                            </span>
+                            <ExternalLink className="size-3 opacity-70" />
+                          </a>
+                        ))
+                      ) : update.dokumenRaporUrl ? (
                         <a
                           href={update.dokumenRaporUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 rounded-xl bg-white px-4 py-2 text-xs font-bold text-orange-700 hover:bg-orange-100 hover:text-orange-900 border border-orange-300 shadow-2xs transition"
+                          className="inline-flex items-center gap-1.5 rounded-xl bg-white px-3.5 py-1.5 text-xs font-bold text-orange-700 hover:bg-orange-100 hover:text-orange-900 border border-orange-300 shadow-2xs transition"
                         >
                           <FileText className="size-3.5" />
                           <span>Lihat Rapor</span>
@@ -608,7 +999,17 @@ export function StudentDashboard({ student }: { student: StudentData }) {
           {/* Data Pribadi & Kontak */}
           <div className="rounded-3xl bg-white/90 p-5 sm:p-6 shadow-md backdrop-blur-md border border-orange-100/80">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-              <Info label="Nomor Induk Kependudukan (NIK)" value={student.nik} />
+              <Info
+                label="Nomor Induk Kependudukan (NIK)"
+                value={
+                  student.nik
+                    ? student.nik.trim().length <= 4
+                      ? student.nik
+                      : "*".repeat(Math.max(12, student.nik.trim().length - 4)) +
+                        student.nik.trim().slice(-4)
+                    : "-"
+                }
+              />
               <Info label="Tanggal Lahir" value={student.dateOfBirth} />
               <Info label="Jenis Kelamin" value={student.gender} />
               <Info label="Cita-cita" value={student.citaCita} />
@@ -624,6 +1025,20 @@ export function StudentDashboard({ student }: { student: StudentData }) {
               <div className="sm:col-span-2">
                 <Info label="Riwayat Penyakit" value={student.riwayatPenyakit} />
               </div>
+            </div>
+          </div>
+
+          {/* Data Orang Tua & Wali (Hanya Menampilkan Nama) */}
+          <div className="rounded-3xl bg-white/90 p-5 sm:p-6 shadow-md backdrop-blur-md border border-orange-100/80 flex flex-col gap-3">
+            <h3 className="text-base font-bold text-foreground">Data Orang Tua & Wali</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+              <Info label="Nama Ayah" value={student.father?.name || "-"} />
+              <Info label="Nama Ibu" value={student.mother?.name || "-"} />
+              {student.guardian?.name && student.guardian.name.trim() !== "" && student.guardian.name.trim() !== "-" && (
+                <div className="sm:col-span-2">
+                  <Info label="Nama Wali" value={student.guardian.name} />
+                </div>
+              )}
             </div>
           </div>
 

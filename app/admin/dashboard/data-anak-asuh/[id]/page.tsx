@@ -90,16 +90,31 @@ export default async function AdminStudentDetailPage({
     : Promise.resolve(null)
 
   const academicPromises = student.academicUpdates.map(async (item) => {
-    const url = item.dokumenRapor
-      ? await getPresignedR2Url(item.dokumenRapor)
-      : null
+    let rawUrls: string[] = []
+    if (item.dokumenRapor) {
+      try {
+        const parsed = JSON.parse(item.dokumenRapor)
+        if (Array.isArray(parsed)) {
+          rawUrls = parsed
+        } else if (typeof parsed === "string") {
+          rawUrls = [parsed]
+        }
+      } catch {
+        rawUrls = [item.dokumenRapor]
+      }
+    }
+    const presignedUrls = await Promise.all(
+      rawUrls.map((url) => getPresignedR2Url(url))
+    )
     return {
       id: item.id,
       tanggalInput: item.tanggalInput.toISOString(),
       kelasSaatItu: item.kelasSaatItu,
+      semester: item.semester,
       nilaiRataRata: item.nilaiRataRata,
       namaSekolahBaru: item.namaSekolahBaru,
-      dokumenRaporUrl: url,
+      dokumenRaporUrl: presignedUrls[0] || null,
+      dokumenRaporUrls: presignedUrls,
     }
   })
 
@@ -156,7 +171,9 @@ export default async function AdminStudentDetailPage({
       noHp: student.noHp,
       riwayatPenyakit: student.riwayatPenyakit,
       schoolName: student.schoolName,
+      jenjang: student.jenjang,
       gradeLevel: student.gradeLevel,
+      programAkselerasi: student.programAkselerasi,
       nilaiRataRata: student.nilaiRataRata,
       jumlahSaudara: student.jumlahSaudara,
       status: student.status,
@@ -316,6 +333,13 @@ export default async function AdminStudentDetailPage({
                   <span className="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2.5 py-0.5 text-xs font-semibold text-rose-700 border border-rose-200">
                     <span className="size-1.5 rounded-full bg-rose-500" />
                     Ditolak
+                  </span>
+                )}
+
+                {student.programAkselerasi && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-purple-50 px-2.5 py-0.5 text-xs font-semibold text-purple-700 border border-purple-200">
+                    <Sparkles className="size-3 text-purple-600" />
+                    Program Akselerasi (1 Tahun 3 Semester)
                   </span>
                 )}
 

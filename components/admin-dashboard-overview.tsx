@@ -26,18 +26,8 @@ import {
   Coins,
 } from "lucide-react"
 
-export interface WilayahBudgetItem {
-  wilayah: string
-  studentCount: number
-  subtotal: number
-}
-
-export interface BudgetOverviewData {
-  totalAnggaran: number
-  totalApprovedStudents: number
-  unassignedCount: number
-  items: WilayahBudgetItem[]
-}
+import type { WilayahBudgetItem, BudgetOverviewData } from "@/lib/budget"
+export type { WilayahBudgetItem, BudgetOverviewData }
 
 export interface QuickAuditPendingItem {
   id: number

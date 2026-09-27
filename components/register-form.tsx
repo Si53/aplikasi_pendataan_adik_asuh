@@ -20,6 +20,7 @@ import {
   Info,
   Loader2,
   LogIn,
+  MessageCircle,
   PartyPopper,
   Plus,
   RotateCcw,
@@ -1841,7 +1842,18 @@ export function RegisterForm({
               className="h-12 rounded-2xl text-sm font-semibold text-muted-foreground hover:text-foreground"
             />
           )}
-        </div>
+      </div>
+
+      {/* Tombol Hubungi Kami (WhatsApp) - Dipisah dari section navigasi utama */}
+      <a
+        href="https://wa.me/6282129741793?text=Halo%2C%20saya%20ingin%20bertanya%20mengenai%20pendaftaran%20Adik%20Asuh"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-1 flex h-13 sm:h-14 w-full items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-[#00A859] to-[#10D361] hover:brightness-105 text-white text-sm sm:text-base font-bold shadow-md shadow-emerald-600/20 transition active:scale-[0.98] cursor-pointer"
+      >
+        <MessageCircle className="size-5 text-white" />
+        <span>Hubungi Kami</span>
+      </a>
     </div>
   )
 }
@@ -2082,9 +2094,9 @@ function FamilyAccordionSection({
           <Field label='Riwayat Penyakit (isi dengan " - " bila tidak ada)'>
             <Textarea
               disabled={isDeceased}
-              value={isDeceased ? "-" : value.medicalHistory}
+              value={isDeceased ? "" : value.medicalHistory}
               onChange={(e) => setVal({ medicalHistory: e.target.value })}
-              placeholder={isDeceased ? "Tidak berlaku" : 'Isi " - " jika tidak ada riwayat penyakit berat'}
+              placeholder={isDeceased ? "Tidak berlaku" : ''}
               className="min-h-16 rounded-xl bg-white text-sm shadow-sm disabled:bg-muted/60 disabled:text-muted-foreground disabled:cursor-not-allowed"
             />
           </Field>

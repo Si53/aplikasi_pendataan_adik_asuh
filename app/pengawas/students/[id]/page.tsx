@@ -70,7 +70,22 @@ export default async function StudentDetailPage({
   // Presign academic updates rapor URLs
   const academicUpdates = await Promise.all(
     student.academicUpdates.map(async (u) => {
-      const presigned = u.dokumenRapor ? await getPresignedR2Url(u.dokumenRapor) : null
+      let rawUrls: string[] = []
+      if (u.dokumenRapor) {
+        try {
+          const parsed = JSON.parse(u.dokumenRapor)
+          if (Array.isArray(parsed)) {
+            rawUrls = parsed
+          } else if (typeof parsed === "string") {
+            rawUrls = [parsed]
+          }
+        } catch {
+          rawUrls = [u.dokumenRapor]
+        }
+      }
+      const presignedUrls = await Promise.all(
+        rawUrls.map((url) => getPresignedR2Url(url))
+      )
       return {
         id: u.id,
         tanggalInput: u.tanggalInput.toLocaleDateString("id-ID", {
@@ -79,9 +94,11 @@ export default async function StudentDetailPage({
           year: "numeric",
         }),
         kelasSaatItu: u.kelasSaatItu,
+        semester: u.semester,
         nilaiRataRata: u.nilaiRataRata,
         namaSekolahBaru: u.namaSekolahBaru,
-        dokumenRaporUrl: presigned,
+        dokumenRaporUrl: presignedUrls[0] || null,
+        dokumenRaporUrls: presignedUrls,
       }
     })
   )
@@ -123,6 +140,7 @@ export default async function StudentDetailPage({
     noHp: student.noHp,
     schoolName: student.schoolName,
     gradeLevel: student.gradeLevel,
+    programAkselerasi: student.programAkselerasi,
     nilaiAwal: student.nilaiRataRata,
     citaCita: student.citaCita,
     wilayah: student.wilayah,
