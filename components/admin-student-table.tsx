@@ -246,7 +246,7 @@ export function AdminStudentTable({
                   setSearchQuery(e.target.value)
                   setCurrentPage(1)
                 }}
-                placeholder="Cari nama anak asuh, NIK, atau nama sekolah..."
+                placeholder="Cari nama adik asuh, NIK, atau nama sekolah..."
                 className="w-full rounded-xl border border-stone-200 bg-stone-50/50 pl-10 pr-9 py-2.5 text-sm text-stone-800 placeholder-stone-400 focus:border-orange-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition"
               />
               {searchQuery && (
@@ -372,7 +372,7 @@ export function AdminStudentTable({
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-stone-200/90 bg-stone-50/70 text-[11px] font-bold uppercase tracking-wider text-stone-500">
-                <th className="px-5 py-3.5">Anak Asuh</th>
+                <th className="px-5 py-3.5">Adik Asuh</th>
                 <th className="px-5 py-3.5">Jenjang & Sekolah</th>
                 <th className="px-5 py-3.5">Wilayah</th>
                 <th className="px-5 py-3.5">Status</th>
@@ -508,7 +508,7 @@ export function AdminStudentTable({
               </strong>{" "}
               dari{" "}
               <strong className="font-bold text-stone-900">{totalItems}</strong>{" "}
-              anak asuh
+              adik asuh
             </span>
 
             <div className="hidden sm:flex items-center gap-1.5">

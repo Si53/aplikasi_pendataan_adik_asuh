@@ -214,15 +214,15 @@ export function AdminAuditFinansialView({
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-bold text-orange-700">
-              <Sparkles className="size-3 text-orange-600" />
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/20 backdrop-blur-xs px-2.5 py-0.5 text-xs font-bold text-white border border-white/30">
+              <Sparkles className="size-3 text-amber-200" />
               PENGAWASAN KEUANGAN & BUKTI BAYAR
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight drop-shadow-xs">
             Audit Finansial
           </h1>
-          <p className="text-xs sm:text-sm text-stone-500 max-w-2xl">
+          <p className="text-xs sm:text-sm text-white/90 max-w-2xl font-medium">
             Verifikasi dan audit bukti transfer penyaluran dana beasiswa dari
             pengawas wilayah ke masing-masing adik asuh.
           </p>

@@ -228,7 +228,7 @@ export function AdminStudentDetailTabs({
             <div className="flex items-center gap-2.5 p-3.5 rounded-xl bg-purple-50 border border-purple-200 text-purple-800 text-xs sm:text-sm font-semibold">
               <Sparkles className="size-4 text-purple-600 shrink-0" />
               <span>
-                Anak Asuh ini terdaftar dalam <strong>Program Akselerasi (1 Tahun 3 Semester)</strong>.
+                Adik Asuh ini terdaftar dalam <strong>Program Akselerasi (1 Tahun 3 Semester)</strong>.
               </span>
             </div>
           )}

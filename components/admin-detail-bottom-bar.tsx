@@ -31,7 +31,7 @@ export function AdminDetailBottomBar({
     <div className="sticky bottom-0 z-20 mt-8 -mx-4 sm:-mx-6 lg:-mx-8 border-t border-stone-200/90 bg-[#F9F6EE]/95 px-4 sm:px-6 lg:px-8 py-4 backdrop-blur-md shadow-lg print:hidden">
       <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
         <div className="text-xs text-stone-500 text-center sm:text-left">
-          <span className="font-semibold text-stone-800">Lembar Monitoring Anak Asuh:</span>{" "}
+          <span className="font-semibold text-stone-800">Lembar Monitoring Adik Asuh:</span>{" "}
           Data terintegrasi secara holistik dari Pengawas & Admin.
         </div>
 

@@ -298,18 +298,18 @@ export function AdminAlokasiDanaView({
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-bold text-orange-700">
-              <Sparkles className="size-3 text-orange-600" />
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/20 backdrop-blur-xs px-2.5 py-0.5 text-xs font-bold text-white border border-white/30">
+              <Sparkles className="size-3 text-amber-200" />
               AKUMULASI DANA TERVERIFIKASI
             </span>
-            <span className="rounded-full bg-stone-100 px-2.5 py-0.5 text-[11px] font-semibold text-stone-600">
+            <span className="rounded-full bg-white/20 backdrop-blur-xs px-2.5 py-0.5 text-[11px] font-semibold text-white border border-white/30">
               Periode {selectedPeriode}
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight drop-shadow-xs">
             Alokasi Dana
           </h1>
-          <p className="text-xs sm:text-sm text-stone-500 max-w-2xl">
+          <p className="text-xs sm:text-sm text-white/90 max-w-2xl font-medium">
             Laporan akumulasi dana beasiswa yang telah diverifikasi disalurkan kepada
             masing-masing adik asuh per periode semester dan sepanjang waktu.
           </p>
@@ -318,7 +318,7 @@ export function AdminAlokasiDanaView({
         <div className="flex flex-wrap items-center gap-3">
           {/* Dropdown Periode */}
           <div className="flex items-center gap-2">
-            <label htmlFor="periode-select" className="text-xs font-bold text-stone-600 shrink-0">
+            <label htmlFor="periode-select" className="text-xs font-bold text-white shrink-0">
               Pilih Periode:
             </label>
             <select

@@ -109,15 +109,15 @@ export default async function DataAnakAsuhPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-bold text-orange-700">
-              <Sparkles className="size-3 text-orange-600" />
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/20 backdrop-blur-xs px-2.5 py-0.5 text-xs font-bold text-white border border-white/30">
+              <Sparkles className="size-3 text-amber-200" />
               AKSES HOLISTIK
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">
-            Data Anak Asuh
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight drop-shadow-xs">
+            Data Adik Asuh
           </h1>
-          <p className="text-xs sm:text-sm text-stone-500 max-w-2xl">
+          <p className="text-xs sm:text-sm text-white/90 max-w-2xl font-medium">
             Kelola dan pantau perkembangan akademis anak asuh aktif (Approved) secara holistik di seluruh wilayah.
           </p>
         </div>
@@ -146,7 +146,7 @@ export default async function DataAnakAsuhPage() {
             </span>
           </div>
           <p className="mt-2 text-xs text-stone-500 font-medium">
-            Total seluruh anak asuh berstatus aktif yang menerima beasiswa
+            Total seluruh adik asuh berstatus aktif yang menerima beasiswa
           </p>
         </div>
 

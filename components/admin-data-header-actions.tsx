@@ -33,7 +33,7 @@ export function AdminDataHeaderActions() {
           className="inline-flex items-center gap-2 rounded-xl bg-orange-500 px-4 py-2 text-xs sm:text-sm font-semibold text-white hover:bg-orange-600 shadow-xs shadow-orange-500/25 transition cursor-pointer"
         >
           <Plus className="size-4" />
-          <span>Tambah Anak Asuh</span>
+          <span>Tambah Adik Asuh</span>
         </button>
       </div>
 
@@ -48,7 +48,7 @@ export function AdminDataHeaderActions() {
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-stone-900">
-                    Tambah Anak Asuh
+                    Tambah Adik Asuh
                   </h3>
                   <p className="text-xs text-stone-500">
                     Form Pendaftaran Baru oleh Admin
