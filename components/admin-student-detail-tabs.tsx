@@ -898,65 +898,6 @@ export function AdminStudentDetailTabs({
             )}
           </div>
 
-          {/* Riwayat Penyesuaian Bantuan (BantuanAdjustment) */}
-          <div className="rounded-2xl border border-stone-200/90 bg-white p-6 shadow-xs space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-base font-bold text-stone-900">
-                  Riwayat Penyesuaian Nominal Bantuan
-                </h3>
-                <p className="text-xs text-stone-500">
-                  Catatan perubahan alokasi dana beasiswa oleh Administrator
-                </p>
-              </div>
-              <span className="rounded-full bg-stone-100 px-2.5 py-0.5 text-xs font-bold text-stone-600">
-                {data.bantuanAdjustments.length} Riwayat
-              </span>
-            </div>
-
-            {data.bantuanAdjustments.length === 0 ? (
-              <div className="py-8 text-center text-xs text-stone-400">
-                Belum ada catatan perubahan nominal bantuan untuk siswa ini.
-              </div>
-            ) : (
-              <div className="divide-y divide-stone-100 border border-stone-200/80 rounded-xl overflow-hidden">
-                {data.bantuanAdjustments.map((adj) => (
-                  <div key={adj.id} className="p-4 space-y-1.5">
-                    <div className="flex items-center justify-between text-xs">
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-stone-900">
-                          {adj.adminName}
-                        </span>
-                        <span className="text-stone-400">•</span>
-                        <span className="text-stone-500 font-mono">
-                          {new Date(adj.createdAt).toLocaleDateString("id-ID", {
-                            day: "numeric",
-                            month: "long",
-                            year: "numeric",
-                          })}
-                        </span>
-                      </div>
-
-                      <div className="font-semibold text-xs">
-                        <span className="line-through text-stone-400 mr-2">
-                          Rp {adj.nominalLama.toLocaleString("id-ID")}
-                        </span>
-                        <span className="text-emerald-600 font-bold">
-                          Rp {adj.nominalBaru.toLocaleString("id-ID")}
-                        </span>
-                      </div>
-                    </div>
-
-                    {adj.catatan && (
-                      <p className="text-xs text-stone-600 italic">
-                        Catatan: &quot;{adj.catatan}&quot;
-                      </p>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
         </div>
       )}
     </div>

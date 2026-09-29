@@ -250,7 +250,6 @@ export default async function AdminStudentDetailPage({
   }
 
   const initial = student.fullName.charAt(0).toUpperCase() || "A"
-  const studentCode = `AKA-2024-${student.id.toString().padStart(4, "0")}`
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto">
@@ -263,10 +262,6 @@ export default async function AdminStudentDetailPage({
           <ArrowLeft className="size-4 text-stone-400" />
           <span>Kembali ke Data Anak Asuh</span>
         </Link>
-
-        <span className="text-xs font-mono font-bold text-stone-500 bg-stone-100 px-3 py-1 rounded-lg border border-stone-200/80">
-          {studentCode}
-        </span>
       </div>
 
       {/* 2. Main Header Profile Card */}
@@ -291,9 +286,6 @@ export default async function AdminStudentDetailPage({
                 <h1 className="text-xl sm:text-2xl font-black text-stone-900 tracking-tight">
                   {student.fullName}
                 </h1>
-                <span className="rounded-md bg-stone-100 px-2 py-0.5 text-xs font-mono font-bold text-stone-600">
-                  {studentCode}
-                </span>
               </div>
 
               <p className="text-xs sm:text-sm text-stone-600 flex items-center gap-1.5 font-medium">

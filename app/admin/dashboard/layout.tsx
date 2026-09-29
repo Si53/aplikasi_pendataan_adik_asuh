@@ -24,7 +24,7 @@ export default async function AdminDashboardLayout({
   const adminEmail = session.user.email || ""
 
   return (
-    <div className="relative min-h-screen text-stone-800 antialiased selection:bg-orange-500 selection:text-white">
+    <div className="admin-dashboard-root relative min-h-screen text-stone-800 antialiased selection:bg-orange-500 selection:text-white">
       {/* 1. Background Fixed Fullscreen: Gradient Merah-Oranye Pekat & Motif Teratai/Roda Dharma */}
       <div
         className="fixed inset-0 -z-10 bg-gradient-to-br from-orange-600 via-orange-500 to-amber-400 pointer-events-none"

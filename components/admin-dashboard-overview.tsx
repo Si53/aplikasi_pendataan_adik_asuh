@@ -255,96 +255,102 @@ export function AdminDashboardOverview({
         </Link>
       </div>
 
-      {/* 3. TWO-COLUMN LAYOUT: Left (Audit Cepat & Anggaran Wilayah) | Right (Kondisi Akademik & Shortcuts) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* ========================================================================= */}
-        {/* KOLOM KIRI (7 Kolom): AUDIT CEPAT TERLEBIH DAHULU, KEMUDIAN KEBUTUHAN ANGGARAN */}
-        {/* ========================================================================= */}
-        <div className="lg:col-span-7 space-y-6">
-          {/* 1. AUDIT CEPAT (WIDGET SHORTCUT 3 ITEM TERBARU) */}
-          <div className="rounded-3xl border border-stone-200/90 bg-white p-6 shadow-xs space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-stone-100">
-              <div className="flex items-center gap-2.5">
-                <div className="flex size-8 items-center justify-center rounded-xl bg-orange-100 text-orange-600">
-                  <ReceiptText className="size-4" />
-                </div>
-                <div>
-                  <h3 className="text-sm sm:text-base font-bold text-stone-900">
-                    Audit Cepat Bukti Transfer
-                  </h3>
-                  <p className="text-xs text-stone-500">
-                    3 berkas penyaluran dana pending terbaru
-                  </p>
-                </div>
-              </div>
-
-              <span className="rounded-full bg-orange-50 border border-orange-200 px-2.5 py-0.5 text-xs font-bold text-orange-700">
-                {stats.pendingAuditCount} Pending
-              </span>
+      {/* 3. AUDIT CEPAT BUKTI TRANSFER (FULL WIDTH LEBAR KE KANAN) */}
+      <div className="rounded-3xl border border-stone-200/90 bg-white p-6 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-stone-100">
+          <div className="flex items-center gap-2.5">
+            <div className="flex size-8 items-center justify-center rounded-xl bg-orange-100 text-orange-600">
+              <ReceiptText className="size-4" />
             </div>
-
-            {quickAuditItems.length === 0 ? (
-              <div className="py-8 text-center text-xs text-stone-400 rounded-2xl bg-stone-50 border border-dashed border-stone-200">
-                <CheckCircle2 className="size-7 text-emerald-500 mx-auto mb-1.5" />
-                <p className="font-bold text-stone-800 text-sm">
-                  Semua Bukti Telah Diaudit
-                </p>
-                <p className="text-stone-400 mt-0.5">
-                  Tidak ada antrean verifikasi bukti transfer saat ini.
-                </p>
-              </div>
-            ) : (
-              <div className="divide-y divide-stone-100">
-                {quickAuditItems.map((item) => (
-                  <div
-                    key={item.id}
-                    className="py-3.5 flex items-center justify-between gap-3 hover:bg-orange-50/30 transition rounded-xl px-2 -mx-2"
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-orange-400 to-amber-500 text-white font-bold text-xs shadow-2xs">
-                        {item.student.fullName.charAt(0).toUpperCase()}
-                      </div>
-                      <div className="space-y-0.5 min-w-0">
-                        <p className="text-xs font-bold text-stone-900 truncate">
-                          {item.student.fullName}
-                        </p>
-                        <p className="text-[11px] text-stone-500">
-                          {item.pengawas.name} • Wilayah {item.student.wilayah}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-3 shrink-0">
-                      <span className="font-mono font-bold text-xs text-orange-600">
-                        {item.nominal ? formatRupiah(item.nominal) : "-"}
-                      </span>
-                      <Link
-                        href="/admin/dashboard/audit-finansial"
-                        className="inline-flex items-center gap-1 rounded-xl bg-orange-500 hover:bg-orange-600 px-3 py-1.5 text-xs font-bold text-white shadow-2xs transition cursor-pointer"
-                      >
-                        <span>Validasi</span>
-                        <ArrowRight className="size-3" />
-                      </Link>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Bottom Link to Full Audit */}
-            <div className="pt-2 text-center border-t border-stone-100">
-              <Link
-                href="/admin/dashboard/audit-finansial"
-                className="text-xs font-bold text-orange-600 hover:text-orange-700 inline-flex items-center gap-1.5"
-              >
-                <span>Lihat Seluruh {stats.pendingAuditCount} Berkas Pending</span>
-                <ArrowRight className="size-3" />
-              </Link>
+            <div>
+              <h3 className="text-sm sm:text-base font-bold text-stone-900">
+                Audit Cepat Bukti Transfer
+              </h3>
+              <p className="text-xs text-stone-500">
+                3 berkas penyaluran dana pending terbaru
+              </p>
             </div>
           </div>
 
-          {/* 2. KEBUTUHAN ANGGARAN BEASISWA (BREAKDOWN PER WILAYAH) */}
-          <div className="rounded-3xl border border-stone-200/90 bg-white p-6 shadow-xs space-y-5">
+          <div className="flex items-center gap-3">
+            <span className="rounded-full bg-orange-50 border border-orange-200 px-2.5 py-0.5 text-xs font-bold text-orange-700">
+              {stats.pendingAuditCount} Pending
+            </span>
+            <Link
+              href="/admin/dashboard/audit-finansial"
+              className="text-xs font-bold text-orange-600 hover:text-orange-700 hidden sm:inline-flex items-center gap-1.5"
+            >
+              <span>Lihat Seluruh Berkas</span>
+              <ArrowRight className="size-3" />
+            </Link>
+          </div>
+        </div>
+
+        {quickAuditItems.length === 0 ? (
+          <div className="py-8 text-center text-xs text-stone-400 rounded-2xl bg-stone-50 border border-dashed border-stone-200">
+            <CheckCircle2 className="size-7 text-emerald-500 mx-auto mb-1.5" />
+            <p className="font-bold text-stone-800 text-sm">
+              Semua Bukti Telah Diaudit
+            </p>
+            <p className="text-stone-400 mt-0.5">
+              Tidak ada antrean verifikasi bukti transfer saat ini.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+            {quickAuditItems.map((item) => (
+              <div
+                key={item.id}
+                className="p-4 rounded-2xl border border-stone-200/80 bg-stone-50/50 hover:bg-orange-50/40 transition flex flex-col justify-between gap-3"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-orange-400 to-amber-500 text-white font-bold text-sm shadow-2xs">
+                    {item.student.fullName.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="space-y-0.5 min-w-0 flex-1">
+                    <p className="text-xs sm:text-sm font-bold text-stone-900 truncate">
+                      {item.student.fullName}
+                    </p>
+                    <p className="text-[11px] text-stone-500 truncate">
+                      {item.pengawas.name} • Wilayah {item.student.wilayah}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between pt-2.5 border-t border-stone-200/60">
+                  <span className="font-mono font-bold text-xs sm:text-sm text-orange-600">
+                    {item.nominal ? formatRupiah(item.nominal) : "-"}
+                  </span>
+                  <Link
+                    href="/admin/dashboard/audit-finansial"
+                    className="inline-flex items-center gap-1 rounded-xl bg-orange-500 hover:bg-orange-600 px-3 py-1.5 text-xs font-bold text-white shadow-2xs transition cursor-pointer"
+                  >
+                    <span>Validasi</span>
+                    <ArrowRight className="size-3" />
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Bottom Link to Full Audit on Mobile */}
+        <div className="pt-2 text-center border-t border-stone-100 sm:hidden">
+          <Link
+            href="/admin/dashboard/audit-finansial"
+            className="text-xs font-bold text-orange-600 hover:text-orange-700 inline-flex items-center gap-1.5"
+          >
+            <span>Lihat Seluruh {stats.pendingAuditCount} Berkas Pending</span>
+            <ArrowRight className="size-3" />
+          </Link>
+        </div>
+      </div>
+
+      {/* 4. SEJAJAR DESKTOP: Kebutuhan Anggaran Beasiswa (Kiri) & Kondisi & Status Binaan (Kanan) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        {/* KEBUTUHAN ANGGARAN BEASISWA (BREAKDOWN PER WILAYAH) */}
+        <div className="lg:col-span-7 rounded-3xl border border-stone-200/90 bg-white p-6 shadow-xs space-y-5 flex flex-col justify-between">
+          <div className="space-y-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-stone-100">
               <div>
                 <div className="flex items-center gap-2">
@@ -360,7 +366,7 @@ export function AdminDashboardOverview({
                 </p>
               </div>
 
-              <div className="text-left sm:text-right bg-orange-50/70 border border-orange-200/80 rounded-2xl px-4 py-2.5">
+              <div className="text-left sm:text-right bg-orange-50/70 border border-orange-200/80 rounded-2xl px-4 py-2.5 shrink-0">
                 <span className="text-[11px] font-bold uppercase text-stone-500 block">
                   Total Anggaran Diperlukan
                 </span>
@@ -410,36 +416,33 @@ export function AdminDashboardOverview({
                 )
               })}
             </div>
-
-            {/* Baris tambahan jika ada siswa approved dengan jenjang = NULL */}
-            {budgetOverview.unassignedCount > 0 && (
-              <div className="rounded-2xl border border-stone-200/90 bg-stone-50/90 p-3.5 flex items-start sm:items-center gap-3 text-xs text-stone-600 animate-in fade-in">
-                <AlertCircle className="size-4.5 text-amber-500 shrink-0 mt-0.5 sm:mt-0" />
-                <div className="flex-1">
-                  <p className="font-semibold text-stone-800">
-                    Belum Ditentukan Jenjangnya:{" "}
-                    <strong className="text-amber-800 font-bold">
-                      {budgetOverview.unassignedCount} Anak Asuh
-                    </strong>{" "}
-                    <span className="text-stone-500 font-normal">
-                      (tidak termasuk dalam total anggaran)
-                    </span>
-                  </p>
-                  <p className="text-[11px] text-stone-400 mt-0.5">
-                    Data terdaftar sebelum fitur jenjang ditambahkan. Silakan lengkapi pada modul Kontrol Status / Data Anak Asuh.
-                  </p>
-                </div>
-              </div>
-            )}
           </div>
+
+          {/* Baris tambahan jika ada siswa approved dengan jenjang = NULL */}
+          {budgetOverview.unassignedCount > 0 && (
+            <div className="rounded-2xl border border-stone-200/90 bg-stone-50/90 p-3.5 flex items-start sm:items-center gap-3 text-xs text-stone-600 animate-in fade-in mt-4">
+              <AlertCircle className="size-4.5 text-amber-500 shrink-0 mt-0.5 sm:mt-0" />
+              <div className="flex-1">
+                <p className="font-semibold text-stone-800">
+                  Belum Ditentukan Jenjangnya:{" "}
+                  <strong className="text-amber-800 font-bold">
+                    {budgetOverview.unassignedCount} Anak Asuh
+                  </strong>{" "}
+                  <span className="text-stone-500 font-normal">
+                    (tidak termasuk dalam total anggaran)
+                  </span>
+                </p>
+                <p className="text-[11px] text-stone-400 mt-0.5">
+                  Data terdaftar sebelum fitur jenjang ditambahkan. Silakan lengkapi pada modul Kontrol Status / Data Anak Asuh.
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* ========================================================================= */}
-        {/* KOLOM KANAN (5 Kolom): KONDISI & STATUS BINAAN + PANDUAN CEPAT */}
-        {/* ========================================================================= */}
-        <div className="lg:col-span-5 space-y-6">
-          {/* KONDISI & STATUS BINAAN */}
-          <div className="rounded-3xl border border-stone-200/90 bg-white p-6 shadow-xs space-y-5">
+        {/* KONDISI & STATUS BINAAN */}
+        <div className="lg:col-span-5 rounded-3xl border border-stone-200/90 bg-white p-6 shadow-xs space-y-5 flex flex-col justify-between">
+          <div className="space-y-5">
             <div>
               <h2 className="text-base sm:text-lg font-extrabold text-stone-900">
                 Kondisi & Status Binaan
@@ -486,16 +489,16 @@ export function AdminDashboardOverview({
                 </p>
               </div>
             </div>
+          </div>
 
-            <div className="pt-2">
-              <Link
-                href="/admin/dashboard/kontrol-status"
-                className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-stone-900 hover:bg-stone-800 py-3 text-xs sm:text-sm font-bold text-white shadow-sm transition"
-              >
-                <span>Buka Kontrol Status</span>
-                <ArrowRight className="size-4" />
-              </Link>
-            </div>
+          <div className="pt-2">
+            <Link
+              href="/admin/dashboard/kontrol-status"
+              className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-stone-900 hover:bg-stone-800 py-3 text-xs sm:text-sm font-bold text-white shadow-sm transition"
+            >
+              <span>Buka Kontrol Status</span>
+              <ArrowRight className="size-4" />
+            </Link>
           </div>
         </div>
       </div>

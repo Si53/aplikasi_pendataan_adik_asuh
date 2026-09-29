@@ -118,7 +118,7 @@ export default async function DataAnakAsuhPage() {
             Data Adik Asuh
           </h1>
           <p className="text-xs sm:text-sm text-white/90 max-w-2xl font-medium">
-            Kelola dan pantau perkembangan akademis anak asuh aktif (Approved) secara holistik di seluruh wilayah.
+            Kelola dan pantau perkembangan akademis adik asuh aktif (Approved) secara holistik di seluruh wilayah.
           </p>
         </div>
 
@@ -127,30 +127,7 @@ export default async function DataAnakAsuhPage() {
 
       {/* 2. 2 Real Database Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
-        {/* Card 1: Jumlah Adik Asuh (Approved) */}
-        <div className="rounded-3xl border border-stone-200/90 bg-white p-6 shadow-xs transition hover:shadow-sm">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-stone-400">
-              Jumlah Adik Asuh
-            </span>
-            <div className="flex size-11 items-center justify-center rounded-2xl bg-orange-50 text-orange-600">
-              <Users className="size-5.5" />
-            </div>
-          </div>
-          <div className="mt-4 flex items-baseline gap-2.5">
-            <span className="text-3xl sm:text-4xl font-black text-stone-900 tracking-tight">
-              {approvedStudentsCount}
-            </span>
-            <span className="inline-flex items-center rounded-lg bg-emerald-50 px-2 py-0.5 text-xs font-bold text-emerald-700 border border-emerald-200/60">
-              Aktif Beasiswa
-            </span>
-          </div>
-          <p className="mt-2 text-xs text-stone-500 font-medium">
-            Total seluruh adik asuh berstatus aktif yang menerima beasiswa
-          </p>
-        </div>
-
-        {/* Card 2: Perlu Perhatian */}
+        {/* Card 1: Perlu Perhatian */}
         <div className="rounded-3xl border border-stone-200/90 bg-white p-6 shadow-xs transition hover:shadow-sm">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-amber-800">
@@ -170,6 +147,29 @@ export default async function DataAnakAsuhPage() {
           </div>
           <p className="mt-2 text-xs text-stone-500 font-medium">
             Adik asuh aktif yang belum memiliki riwayat pembaruan rapor
+          </p>
+        </div>
+
+        {/* Card 2: Jumlah Adik Asuh (Approved) */}
+        <div className="rounded-3xl border border-stone-200/90 bg-white p-6 shadow-xs transition hover:shadow-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-stone-400">
+              Jumlah Adik Asuh
+            </span>
+            <div className="flex size-11 items-center justify-center rounded-2xl bg-orange-50 text-orange-600">
+              <Users className="size-5.5" />
+            </div>
+          </div>
+          <div className="mt-4 flex items-baseline gap-2.5">
+            <span className="text-3xl sm:text-4xl font-black text-stone-900 tracking-tight">
+              {approvedStudentsCount}
+            </span>
+            <span className="inline-flex items-center rounded-lg bg-emerald-50 px-2 py-0.5 text-xs font-bold text-emerald-700 border border-emerald-200/60">
+              Aktif Beasiswa
+            </span>
+          </div>
+          <p className="mt-2 text-xs text-stone-500 font-medium">
+            Total seluruh adik asuh berstatus aktif yang menerima beasiswa
           </p>
         </div>
       </div>
