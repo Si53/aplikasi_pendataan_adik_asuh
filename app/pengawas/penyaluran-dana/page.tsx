@@ -143,11 +143,11 @@ export default async function PengawasPenyaluranDanaPage() {
             <div>
               <Link
                 href="/pengawas"
-                className="text-lg sm:text-xl font-extrabold text-orange-600 tracking-tight hover:underline flex items-center gap-1.5"
+                className="text-xl sm:text-2xl font-extrabold text-orange-600 tracking-tight hover:underline flex items-center gap-1.5"
               >
                 <span>Dashboard Pengawas</span>
               </Link>
-              <p className="text-[11px] font-semibold text-muted-foreground flex items-center gap-1">
+              <p className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
                 <ShieldCheck className="size-3 text-orange-500" /> Vihara Vimala Dharma
               </p>
             </div>
@@ -156,7 +156,7 @@ export default async function PengawasPenyaluranDanaPage() {
           <div className="flex items-center gap-2.5">
             <Link
               href="/pengawas"
-              className="inline-flex items-center gap-1.5 rounded-2xl bg-orange-50 px-3.5 py-2 text-xs font-bold text-orange-800 hover:bg-orange-100 border border-orange-200/80 transition shadow-2xs"
+              className="inline-flex items-center gap-1.5 rounded-2xl bg-orange-50 px-3.5 py-2 text-sm font-bold text-orange-800 hover:bg-orange-100 border border-orange-200/80 transition shadow-2xs"
             >
               <ArrowLeft className="size-3.5 text-orange-600" />
               <span className="hidden sm:inline">Kembali</span>

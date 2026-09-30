@@ -344,7 +344,7 @@ export function RegisterForm({
         ]
   )
 
-  type PrestasiItem = {
+  type DocumentItem = {
     id: string
     name: string
     url: string
@@ -352,11 +352,11 @@ export function RegisterForm({
   }
 
   const initialDocsMap: {
-    [key in "KK" | "RAPOR" | "FOTO_ANAK" | "SKTM"]?: { name: string; url: string; uploading: boolean }
+    [key in "KK" | "FOTO_ANAK" | "SKTM"]?: { name: string; url: string; uploading: boolean }
   } = {}
   if (initialStudentData?.documents) {
     for (const doc of initialStudentData.documents) {
-      if (doc.type === "KK" || doc.type === "RAPOR" || doc.type === "FOTO_ANAK" || doc.type === "SKTM") {
+      if (doc.type === "KK" || doc.type === "FOTO_ANAK" || doc.type === "SKTM") {
         initialDocsMap[doc.type] = {
           name: `${doc.type}_terlampir.file`,
           url: doc.fileUrl,
@@ -367,10 +367,21 @@ export function RegisterForm({
   }
 
   const [uploadedFiles, setUploadedFiles] = useState<{
-    [key in "KK" | "RAPOR" | "FOTO_ANAK" | "SKTM"]?: { name: string; url: string; uploading: boolean }
+    [key in "KK" | "FOTO_ANAK" | "SKTM"]?: { name: string; url: string; uploading: boolean }
   }>(initialDocsMap)
 
-  const initialPrestasiItems: PrestasiItem[] = (initialStudentData?.documents || [])
+  const initialRaporItems: DocumentItem[] = (initialStudentData?.documents || [])
+    .filter((d) => d.type === "RAPOR")
+    .map((d, index) => ({
+      id: `existing-rapor-${index}-${d.fileUrl.slice(-6)}`,
+      name: `Rapor Terlampir ${index + 1}`,
+      url: d.fileUrl,
+      uploading: false,
+    }))
+
+  const [raporFiles, setRaporFiles] = useState<DocumentItem[]>(initialRaporItems)
+
+  const initialPrestasiItems: DocumentItem[] = (initialStudentData?.documents || [])
     .filter((d) => d.type === "PRESTASI")
     .map((d, index) => ({
       id: `existing-prestasi-${index}-${d.fileUrl.slice(-6)}`,
@@ -379,7 +390,7 @@ export function RegisterForm({
       uploading: false,
     }))
 
-  const [prestasiFiles, setPrestasiFiles] = useState<PrestasiItem[]>(initialPrestasiItems)
+  const [prestasiFiles, setPrestasiFiles] = useState<DocumentItem[]>(initialPrestasiItems)
   const [consentAgreed, setConsentAgreed] = useState(isEditMode)
 
   const set = (key: string, value: string) => setData((d) => ({ ...d, [key]: value }))
@@ -540,7 +551,7 @@ export function RegisterForm({
     })
   }
 
-  const handleFileUpload = async (type: "KK" | "RAPOR" | "FOTO_ANAK" | "SKTM", file: File) => {
+  const handleFileUpload = async (type: "KK" | "FOTO_ANAK" | "SKTM", file: File) => {
     setError("")
 
     if (file.size > 15 * 1024 * 1024) {
@@ -585,6 +596,49 @@ export function RegisterForm({
         return copy
       })
     }
+  }
+
+  const handleRaporUpload = async (file: File) => {
+    setError("")
+
+    if (file.size > 15 * 1024 * 1024) {
+      setError(`Ukuran file "${file.name}" terlalu besar (maksimal 15 MB). Silakan pilih file yang lebih kecil atau kompres terlebih dahulu.`)
+      return
+    }
+
+    const tempId = `rapor-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
+    setRaporFiles((prev) => [
+      ...prev,
+      { id: tempId, name: file.name, url: "", uploading: true },
+    ])
+
+    try {
+      const processedFile = await compressImageClientSide(file)
+      const formData = new FormData()
+      formData.append("type", "RAPOR")
+      formData.append("username", data.username.trim() || "temp")
+      formData.append("file", processedFile)
+
+      const res = await uploadRegistrationDocumentAction(formData)
+      if (res.success) {
+        setRaporFiles((prev) =>
+          prev.map((item) =>
+            item.id === tempId ? { ...item, url: res.fileUrl, uploading: false } : item
+          )
+        )
+      } else {
+        setError(res.error || "Gagal mengunggah berkas rapor. Silakan coba lagi.")
+        setRaporFiles((prev) => prev.filter((item) => item.id !== tempId))
+      }
+    } catch (err) {
+      console.error("Upload rapor failed", err)
+      setError("Gagal mengunggah berkas rapor. Periksa koneksi internet Anda.")
+      setRaporFiles((prev) => prev.filter((item) => item.id !== tempId))
+    }
+  }
+
+  const handleRemoveRapor = (id: string) => {
+    setRaporFiles((prev) => prev.filter((item) => item.id !== id))
   }
 
   const handlePrestasiUpload = async (file: File) => {
@@ -697,8 +751,9 @@ export function RegisterForm({
     setError("")
 
     // Step 5 validation: seluruh dokumen wajib diupload
-    if (!uploadedFiles.KK?.url || !uploadedFiles.RAPOR?.url || !uploadedFiles.FOTO_ANAK?.url || !uploadedFiles.SKTM?.url) {
-      return setError("Seluruh berkas wajib (Kartu Keluarga, Raport Terakhir, Foto Anak, dan SKTM) wajib diunggah.")
+    const validRaporFiles = raporFiles.filter((item) => item.url)
+    if (!uploadedFiles.KK?.url || validRaporFiles.length === 0 || !uploadedFiles.FOTO_ANAK?.url || !uploadedFiles.SKTM?.url) {
+      return setError("Seluruh berkas wajib (Kartu Keluarga, Rapor Terakhir, Foto Anak, dan SKTM) wajib diunggah.")
     }
 
     if (!consentAgreed) {
@@ -721,6 +776,11 @@ export function RegisterForm({
         fileUrl: item!.url,
       }))
 
+    const raporPayload = validRaporFiles.map((item) => ({
+      type: "RAPOR",
+      fileUrl: item.url,
+    }))
+
     const prestasiPayload = prestasiFiles
       .filter((item) => item.url)
       .map((item) => ({
@@ -728,7 +788,7 @@ export function RegisterForm({
         fileUrl: item.url,
       }))
 
-    const documentsPayload = [...singleDocsPayload, ...prestasiPayload]
+    const documentsPayload = [...singleDocsPayload, ...raporPayload, ...prestasiPayload]
 
     const finalJenjang = educationLevelType === "Kuliah" ? "Kuliah" : (data.jenjang.trim() || null)
 
@@ -832,7 +892,7 @@ export function RegisterForm({
 
   const isStep5Complete = Boolean(
     uploadedFiles.KK?.url &&
-    uploadedFiles.RAPOR?.url &&
+    raporFiles.some((f) => f.url && !f.uploading) &&
     uploadedFiles.FOTO_ANAK?.url &&
     uploadedFiles.SKTM?.url &&
     consentAgreed
@@ -1563,10 +1623,173 @@ export function RegisterForm({
             </span>
           }
         >
+          {/* 1. KARTU KELUARGA (KK) */}
+          {(() => {
+            const item = uploadedFiles.KK
+            const inputId = "file-upload-KK"
+            return (
+              <div
+                className={`flex flex-col gap-3 rounded-2xl border p-4 transition shadow-sm ${
+                  item?.url
+                    ? "border-emerald-500/50 bg-emerald-50/70"
+                    : "border-border/80 bg-white/80"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <Label htmlFor={inputId} className="font-bold text-foreground text-sm cursor-pointer">
+                    {renderLabelWithAsterisk("1. Kartu Keluarga (KK) *")}
+                  </Label>
+                  {item?.url ? (
+                    <span className="flex items-center gap-1 text-xs font-bold text-emerald-600">
+                      <CheckCircle2 className="size-4" /> Terunggah
+                    </span>
+                  ) : (
+                    <span className="text-[11px] font-semibold text-destructive">Wajib diunggah</span>
+                  )}
+                </div>
+
+                {/* Hidden file input */}
+                <input
+                  id={inputId}
+                  type="file"
+                  accept="image/*,.pdf"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0]
+                    if (file) handleFileUpload("KK", file)
+                  }}
+                />
+
+                {/* Custom upload button (+) */}
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center justify-between">
+                  <label
+                    htmlFor={inputId}
+                    className={`flex items-center justify-center gap-2 rounded-xl border px-4 py-3 text-xs sm:text-sm font-bold cursor-pointer transition shadow-sm ${
+                      item?.url
+                        ? "border-emerald-500 bg-emerald-100/80 text-emerald-800 hover:bg-emerald-100"
+                        : "border-primary bg-primary/10 text-primary hover:bg-primary/20"
+                    }`}
+                  >
+                    {item?.uploading ? (
+                      <span className="flex items-center gap-2">
+                        <Loader2 className="size-4 animate-spin" /> Sedang Mengunggah...
+                      </span>
+                    ) : item?.url ? (
+                      <span className="flex items-center gap-2">
+                        <FileCheck className="size-4" /> Ganti Berkas ({item.name})
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-2">
+                        <Plus className="size-4" /> Pilih & Unggah Berkas
+                      </span>
+                    )}
+                  </label>
+
+                  {item?.name && !item.uploading && (
+                    <p className="truncate text-xs text-muted-foreground font-medium max-w-xs">
+                      {item.name}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )
+          })()}
+
+          {/* 2. DOKUMEN RAPOR (WAJIB - MULTI-UPLOAD) */}
+          <div
+            className={`flex flex-col gap-3 rounded-2xl border p-4 shadow-sm transition ${
+              raporFiles.some((f) => f.url && !f.uploading)
+                ? "border-emerald-500/50 bg-emerald-50/70"
+                : "border-border/80 bg-white/80"
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <Label className="font-bold text-foreground text-sm">
+                  {renderLabelWithAsterisk("2. Foto Raport Terakhir (Halaman Nilai & Identitas) *")}
+                </Label>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Wajib — Unggah foto halaman rapor atau KHS semester terakhir (dapat lebih dari 1 file).
+                </p>
+              </div>
+              {raporFiles.some((f) => f.url && !f.uploading) ? (
+                <span className="flex items-center gap-1 text-xs font-bold text-emerald-600">
+                  <CheckCircle2 className="size-4" /> Terunggah ({raporFiles.filter((f) => f.url).length})
+                </span>
+              ) : (
+                <span className="text-[11px] font-semibold text-destructive">Wajib diunggah</span>
+              )}
+            </div>
+
+            {/* Daftar Berkas Rapor Terunggah */}
+            {raporFiles.length > 0 && (
+              <div className="space-y-2 pt-1">
+                {raporFiles.map((item, idx) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between gap-2 rounded-xl border border-border/70 bg-white p-3 shadow-xs"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-700">
+                        {item.uploading ? (
+                          <Loader2 className="size-4 animate-spin" />
+                        ) : (
+                          <FileCheck className="size-4 text-emerald-600" />
+                        )}
+                      </div>
+                      <div className="min-w-0 space-y-0.5">
+                        <p className="text-xs font-semibold text-foreground truncate max-w-xs sm:max-w-md">
+                          {idx + 1}. {item.name}
+                        </p>
+                        <p className="text-[11px] text-muted-foreground">
+                          {item.uploading ? "Sedang mengunggah..." : "Siap dikirim"}
+                        </p>
+                      </div>
+                    </div>
+
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => handleRemoveRapor(item.id)}
+                      disabled={item.uploading}
+                      className="size-8 p-0 text-muted-foreground hover:text-destructive hover:bg-red-50 rounded-lg shrink-0 cursor-pointer"
+                      title="Hapus file ini"
+                    >
+                      <Trash2 className="size-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Tombol Tambah File Rapor */}
+            <div>
+              <input
+                id="file-upload-rapor"
+                type="file"
+                accept="image/*,.pdf"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0]
+                  if (file) {
+                    handleRaporUpload(file)
+                    e.target.value = ""
+                  }
+                }}
+              />
+              <label
+                htmlFor="file-upload-rapor"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-primary bg-primary/10 px-4 py-2.5 text-xs sm:text-sm font-bold text-primary hover:bg-primary/20 cursor-pointer transition shadow-sm"
+              >
+                <Plus className="size-4" /> Tambah File Rapor
+              </label>
+            </div>
+          </div>
+
+          {/* 3. FOTO ANAK & 4. SKTM */}
           {(
             [
-              ["KK", "1. Kartu Keluarga (KK) *"],
-              ["RAPOR", "2. Foto Raport Terakhir (Halaman Nilai & Identitas) *"],
               ["FOTO_ANAK", "3. Foto Anak (Formal / Bebas) *"],
               ["SKTM", "4. Surat Keterangan Tidak Mampu (SKTM) *"],
             ] as const

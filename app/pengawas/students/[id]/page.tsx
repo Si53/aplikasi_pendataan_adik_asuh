@@ -239,14 +239,14 @@ export default async function StudentDetailPage({
         <header className="flex items-center justify-between gap-4">
           <Link
             href="/pengawas"
-            className="flex items-center gap-2 rounded-2xl bg-white/90 px-4 py-2.5 text-sm font-bold text-orange-950 shadow-sm border border-orange-200/80 backdrop-blur-md transition hover:bg-white hover:border-orange-300"
+            className="flex items-center gap-2 rounded-2xl bg-white/90 px-4 py-2.5 text-base font-bold text-orange-950 shadow-sm border border-orange-200/80 backdrop-blur-md transition hover:bg-white hover:border-orange-300"
           >
-            <ArrowLeft className="size-4" />
+            <ArrowLeft className="size-4.5" />
             <span>Kembali ke Dashboard</span>
           </Link>
           <div className="flex items-center gap-2">
             <span
-              className={`rounded-full px-3.5 py-1 text-xs font-extrabold ${
+              className={`rounded-full px-3.5 py-1 text-sm font-extrabold ${
                 isBinaan
                   ? "bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-sm shadow-orange-500/20"
                   : "bg-white/90 text-orange-900 border border-orange-200 shadow-2xs"
@@ -268,28 +268,28 @@ export default async function StudentDetailPage({
                 className="size-full object-cover"
               />
             ) : (
-              <div className="flex size-full items-center justify-center font-extrabold text-2xl text-orange-600">
+              <div className="flex size-full items-center justify-center font-extrabold text-3xl text-orange-600">
                 {initials}
               </div>
             )}
           </div>
 
           <div className="flex flex-1 flex-col items-center sm:items-start text-center sm:text-left gap-1">
-            <h1 className="text-2xl font-extrabold text-foreground sm:text-3xl">
+            <h1 className="text-3xl font-extrabold text-foreground sm:text-4xl">
               {student.fullName}
             </h1>
-            <p className="text-sm font-semibold text-orange-700 flex items-center gap-1.5">
-              <MapPin className="size-4" />
+            <p className="text-base font-semibold text-orange-700 flex items-center gap-1.5">
+              <MapPin className="size-4.5" />
               Wilayah {student.wilayah} • Pengawas: {student.pengawas?.name || pengawas.name}
             </p>
             <div className="mt-2 flex flex-wrap items-center justify-center sm:justify-start gap-2">
-              <span className="rounded-full bg-orange-50 px-3 py-1 text-xs font-bold text-orange-800 border border-orange-200">
+              <span className="rounded-full bg-orange-50 px-3 py-1 text-sm font-bold text-orange-800 border border-orange-200">
                 NIK: {student.nik}
               </span>
-              <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-800 border border-amber-200">
+              <span className="rounded-full bg-amber-50 px-3 py-1 text-sm font-bold text-amber-800 border border-amber-200">
                 Cita-cita: {student.citaCita || "-"}
               </span>
-              <span className="rounded-full bg-stone-100 px-3 py-1 text-xs font-bold text-stone-700">
+              <span className="rounded-full bg-stone-100 px-3 py-1 text-sm font-bold text-stone-700">
                 {student.schoolName} ({student.gradeLevel})
               </span>
             </div>

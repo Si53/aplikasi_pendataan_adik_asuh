@@ -200,11 +200,11 @@ export default async function PengawasPage() {
               />
             </div>
             <div>
-              <h1 className="text-lg sm:text-xl font-extrabold text-orange-600 tracking-tight">
+              <h1 className="text-xl sm:text-2xl font-extrabold text-orange-600 tracking-tight">
                 Dashboard Pengawas
               </h1>
-              <p className="text-[11px] font-semibold text-muted-foreground flex items-center gap-1">
-                <ShieldCheck className="size-3 text-orange-500" /> Vihara Vimala Dharma
+              <p className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
+                <ShieldCheck className="size-3.5 text-orange-500" /> Vihara Vimala Dharma
               </p>
             </div>
           </div>
@@ -217,17 +217,17 @@ export default async function PengawasPage() {
         {/* 2. KARTU PROFIL PENGAWAS */}
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 rounded-3xl bg-white/90 p-5 sm:p-6 shadow-md backdrop-blur-md border border-orange-100/80">
           {/* Avatar Inisial */}
-          <div className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 font-extrabold text-xl text-white shadow-md shadow-orange-500/20">
+          <div className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 font-extrabold text-2xl text-white shadow-md shadow-orange-500/20">
             {pengawasInitials}
           </div>
 
           {/* Info Pengawas */}
           <div className="flex flex-1 flex-col items-center sm:items-start text-center sm:text-left gap-1">
-            <h2 className="text-xl sm:text-2xl font-black text-foreground">
+            <h2 className="text-2xl sm:text-3xl font-black text-foreground">
               Halo, {pengawas.name}
             </h2>
-            <div className="mt-1 flex items-center gap-1.5 rounded-full bg-orange-50 px-3.5 py-1 text-xs font-bold text-orange-800 border border-orange-200">
-              <MapPin className="size-3.5 text-orange-600" />
+            <div className="mt-1 flex items-center gap-1.5 rounded-full bg-orange-50 px-3.5 py-1 text-sm font-bold text-orange-800 border border-orange-200">
+              <MapPin className="size-4 text-orange-600" />
               <span>Wilayah Tugas: <strong>{pengawas.wilayah}</strong></span>
             </div>
           </div>

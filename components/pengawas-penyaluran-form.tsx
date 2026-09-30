@@ -158,20 +158,20 @@ export function PengawasPenyaluranForm({
           <div className="flex items-center gap-2">
             <Link
               href="/pengawas"
-              className="inline-flex items-center gap-1.5 rounded-xl bg-white/90 border border-orange-200/80 px-3 py-1.5 text-xs font-bold text-orange-950 hover:bg-white shadow-2xs transition"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-white/90 border border-orange-200/80 px-3 py-1.5 text-sm font-bold text-orange-950 hover:bg-white shadow-2xs transition"
             >
               <ArrowLeft className="size-3.5 text-orange-600" />
               <span>Kembali ke Dashboard</span>
             </Link>
-            <span className="rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-bold text-orange-800">
+            <span className="rounded-full bg-orange-100 px-2.5 py-0.5 text-sm font-bold text-orange-800">
               Wilayah {wilayah}
             </span>
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight pt-1">
+          <h1 className="text-3xl sm:text-4xl font-black text-foreground tracking-tight pt-1">
             Input Bukti Penyaluran Dana
           </h1>
-          <p className="text-xs sm:text-sm text-muted-foreground max-w-2xl">
+          <p className="text-sm sm:text-base text-muted-foreground max-w-2xl">
             Unggah bukti penyerahan atau transfer dana beasiswa untuk adik asuh
             binaan Anda guna diverifikasi oleh Administrator Pusat.
           </p>
@@ -180,7 +180,7 @@ export function PengawasPenyaluranForm({
 
       {/* Success Notification */}
       {successMessage && (
-        <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-5 text-xs sm:text-sm text-emerald-900 flex items-start justify-between gap-3 shadow-xs animate-in fade-in">
+        <div className="rounded-2xl bg-emerald-50 border border-emerald-200 p-5 text-sm sm:text-base text-emerald-900 flex items-start justify-between gap-3 shadow-xs animate-in fade-in">
           <div className="flex items-start gap-3">
             <CheckCircle2 className="size-5 text-emerald-600 shrink-0 mt-0.5" />
             <div className="space-y-1">
@@ -194,7 +194,7 @@ export function PengawasPenyaluranForm({
           </div>
           <Link
             href="/pengawas"
-            className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-2 text-xs font-bold text-white hover:bg-emerald-500 transition shrink-0 shadow-2xs"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-2 text-sm font-bold text-white hover:bg-emerald-500 transition shrink-0 shadow-2xs"
           >
             <span>Ke Dashboard</span>
           </Link>
@@ -203,7 +203,7 @@ export function PengawasPenyaluranForm({
 
       {/* Error Notification */}
       {errorMessage && (
-        <div className="rounded-2xl bg-rose-50 border border-rose-200 p-4 text-xs sm:text-sm text-rose-900 flex items-start gap-3 shadow-xs animate-in fade-in">
+        <div className="rounded-2xl bg-rose-50 border border-rose-200 p-4 text-sm sm:text-base text-rose-900 flex items-start gap-3 shadow-xs animate-in fade-in">
           <AlertCircle className="size-5 text-rose-600 shrink-0 mt-0.5" />
           <div className="space-y-0.5">
             <p className="font-bold text-rose-950">Perhatian</p>
@@ -219,10 +219,10 @@ export function PengawasPenyaluranForm({
             <UploadCloud className="size-5" />
           </div>
           <div>
-            <h2 className="text-base sm:text-lg font-bold text-foreground">
+            <h2 className="text-lg sm:text-xl font-bold text-foreground">
               Formulir Penyerahan Dana
             </h2>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               Lengkapi data penerima, nominal, dan lampiran bukti penyerahan
             </p>
           </div>
@@ -231,14 +231,14 @@ export function PengawasPenyaluranForm({
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* 1. Dropdown Pilih Adik Asuh */}
           <div className="space-y-1.5">
-            <label className="text-xs sm:text-sm font-bold text-foreground flex items-center gap-1">
+            <label className="text-sm sm:text-base font-bold text-foreground flex items-center gap-1">
               <UserCheck className="size-4 text-orange-500" />
               <span>Pilih Adik Asuh Penerima Dana *</span>
             </label>
             <select
               value={selectedStudentId}
               onChange={(e) => setSelectedStudentId(e.target.value)}
-              className="w-full h-13 rounded-2xl border border-orange-200/80 bg-orange-50/30 px-4 text-sm font-semibold text-foreground focus:border-orange-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition cursor-pointer"
+              className="w-full h-13 rounded-2xl border border-orange-200/80 bg-orange-50/30 px-4 text-base font-semibold text-foreground focus:border-orange-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition cursor-pointer"
               required
             >
               <option value="">-- Pilih Adik Asuh Binaan --</option>
@@ -248,19 +248,19 @@ export function PengawasPenyaluranForm({
                 </option>
               ))}
             </select>
-            <p className="text-[11px] text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               Menampilkan adik asuh binaan di wilayah tugas {wilayah}.
             </p>
           </div>
 
           {/* 2. Input Nominal Format Rupiah Otomatis */}
           <div className="space-y-1.5">
-            <label className="text-xs sm:text-sm font-bold text-foreground flex items-center gap-1">
+            <label className="text-sm sm:text-base font-bold text-foreground flex items-center gap-1">
               <Coins className="size-4 text-orange-500" />
               <span>Nominal Dana yang Diserahkan *</span>
             </label>
             <div className="relative">
-              <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm font-bold text-orange-600">
+              <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-base font-bold text-orange-600">
                 Rp
               </span>
               <input
@@ -272,18 +272,18 @@ export function PengawasPenyaluranForm({
                   setNominalRaw(raw)
                 }}
                 placeholder="Contoh: 500.000"
-                className="w-full h-13 rounded-2xl border border-orange-200/80 bg-orange-50/30 pl-12 pr-4 text-base font-bold text-foreground focus:border-orange-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition"
+                className="w-full h-13 rounded-2xl border border-orange-200/80 bg-orange-50/30 pl-12 pr-4 text-lg font-bold text-foreground focus:border-orange-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition"
                 required
               />
             </div>
-            <p className="text-[11px] text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               Ketik angka nominal murni, tanda titik otomatis diformat.
             </p>
           </div>
 
           {/* 3. Upload File / Foto Bukti Transfer */}
           <div className="space-y-1.5">
-            <label className="text-xs sm:text-sm font-bold text-foreground flex items-center gap-1">
+            <label className="text-sm sm:text-base font-bold text-foreground flex items-center gap-1">
               <FileCheck className="size-4 text-orange-500" />
               <span>Upload Foto / Dokumen Bukti Transfer *</span>
             </label>
@@ -306,10 +306,10 @@ export function PengawasPenyaluranForm({
                   <UploadCloud className="size-6" />
                 </div>
                 <div className="space-y-0.5">
-                  <p className="text-xs sm:text-sm font-bold text-foreground">
+                  <p className="text-sm sm:text-base font-bold text-foreground">
                     Klik untuk memilih foto struk transfer / nota / PDF
                   </p>
-                  <p className="text-[11px] text-muted-foreground">
+                  <p className="text-xs text-muted-foreground">
                     Mendukung JPG, PNG, WEBP, atau PDF (Maksimal 15 MB)
                   </p>
                 </div>
@@ -327,16 +327,16 @@ export function PengawasPenyaluranForm({
                       />
                     </div>
                   ) : (
-                    <div className="flex size-14 shrink-0 items-center justify-center rounded-xl bg-orange-100 text-orange-600 font-bold text-xs">
+                    <div className="flex size-14 shrink-0 items-center justify-center rounded-xl bg-orange-100 text-orange-600 font-bold text-sm">
                       <FileText className="size-6" />
                     </div>
                   )}
 
                   <div className="min-w-0 space-y-0.5">
-                    <p className="text-xs sm:text-sm font-bold text-foreground truncate">
+                    <p className="text-sm sm:text-base font-bold text-foreground truncate">
                       {selectedFile.name}
                     </p>
-                    <p className="text-[11px] text-muted-foreground font-mono">
+                    <p className="text-xs text-muted-foreground font-mono">
                       {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB • Siap Dikirim
                     </p>
                   </div>
@@ -345,7 +345,7 @@ export function PengawasPenyaluranForm({
                 <button
                   type="button"
                   onClick={handleRemoveFile}
-                  className="inline-flex items-center gap-1 text-xs font-bold text-rose-600 hover:text-rose-700 hover:bg-rose-50 px-3 py-1.5 rounded-xl transition cursor-pointer"
+                  className="inline-flex items-center gap-1 text-sm font-bold text-rose-600 hover:text-rose-700 hover:bg-rose-50 px-3 py-1.5 rounded-xl transition cursor-pointer"
                 >
                   <X className="size-3.5" />
                   <span>Ganti File</span>
@@ -358,7 +358,7 @@ export function PengawasPenyaluranForm({
           <div className="pt-3 flex items-center justify-end gap-3">
             <Link
               href="/pengawas"
-              className="rounded-2xl border border-orange-200/80 bg-white px-5 py-3 text-xs sm:text-sm font-bold text-muted-foreground hover:bg-orange-50 hover:text-foreground transition"
+              className="rounded-2xl border border-orange-200/80 bg-white px-5 py-3 text-sm sm:text-base font-bold text-muted-foreground hover:bg-orange-50 hover:text-foreground transition"
             >
               Batal
             </Link>
@@ -366,7 +366,7 @@ export function PengawasPenyaluranForm({
             <button
               type="submit"
               disabled={isPending}
-              className="inline-flex items-center gap-2 rounded-2xl bg-orange-500 hover:bg-orange-600 px-6 py-3 text-xs sm:text-sm font-bold text-white shadow-md shadow-orange-500/25 transition disabled:opacity-50 cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-2xl bg-orange-500 hover:bg-orange-600 px-6 py-3 text-sm sm:text-base font-bold text-white shadow-md shadow-orange-500/25 transition disabled:opacity-50 cursor-pointer"
             >
               {isPending ? (
                 <Loader2 className="size-4 animate-spin" />
@@ -383,22 +383,22 @@ export function PengawasPenyaluranForm({
       <div className="rounded-3xl border border-orange-100/90 bg-white/95 p-6 sm:p-8 shadow-md backdrop-blur-md space-y-5">
         <div className="flex items-center justify-between pb-3 border-b border-orange-100">
           <div className="space-y-0.5">
-            <h2 className="text-base sm:text-lg font-bold text-foreground">
+            <h2 className="text-lg sm:text-xl font-bold text-foreground">
               Riwayat Pengajuan Bukti Anda
             </h2>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               Pantau status audit dan persetujuan berkas yang telah Anda kirimkan
             </p>
           </div>
-          <span className="rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-orange-800">
+          <span className="rounded-full bg-orange-100 px-3 py-1 text-sm font-bold text-orange-800">
             {history.length} Berkas
           </span>
         </div>
 
         {history.length === 0 ? (
-          <div className="py-10 text-center text-xs text-muted-foreground rounded-2xl bg-orange-50/30 border border-dashed border-orange-200">
+          <div className="py-10 text-center text-sm text-muted-foreground rounded-2xl bg-orange-50/30 border border-dashed border-orange-200">
             <Clock className="size-8 text-orange-300 mx-auto mb-2" />
-            <p className="font-bold text-foreground text-sm">
+            <p className="font-bold text-foreground text-base">
               Belum Ada Bukti Diunggah
             </p>
             <p className="mt-1">
@@ -414,22 +414,22 @@ export function PengawasPenyaluranForm({
               >
                 <div className="space-y-1.5 min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-bold text-foreground text-sm">
+                    <span className="font-bold text-foreground text-base">
                       {item.student.fullName}
                     </span>
-                    <span className="text-xs text-muted-foreground font-mono">
+                    <span className="text-sm text-muted-foreground font-mono">
                       ({item.student.schoolName})
                     </span>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                    <span className="font-bold text-orange-600 font-mono text-sm">
+                  <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                    <span className="font-bold text-orange-600 font-mono text-base sm:text-lg">
                       {item.nominal
                         ? `Rp ${item.nominal.toLocaleString("id-ID")}`
                         : "-"}
                     </span>
                     <span>•</span>
-                    <span className="font-mono text-[11px]">
+                    <span className="font-mono text-xs">
                       Diajukan:{" "}
                       {new Date(item.tanggal).toLocaleDateString("id-ID", {
                         day: "numeric",
@@ -440,7 +440,7 @@ export function PengawasPenyaluranForm({
                     {item.processedAt && (
                       <>
                         <span>•</span>
-                        <span className="font-mono text-[11px]">
+                        <span className="font-mono text-xs">
                           Diproses:{" "}
                           {new Date(item.processedAt).toLocaleDateString("id-ID", {
                             day: "numeric",
@@ -456,17 +456,17 @@ export function PengawasPenyaluranForm({
                 <div className="flex items-center gap-3 shrink-0">
                   {/* Status Badge */}
                   {item.status === "verified" ? (
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700 border border-emerald-200">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-sm font-bold text-emerald-700 border border-emerald-200">
                       <CheckCircle2 className="size-3.5 text-emerald-500" />
                       Terverifikasi
                     </span>
                   ) : item.status === "rejected" ? (
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-50 px-3 py-1 text-xs font-bold text-rose-700 border border-rose-200">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-50 px-3 py-1 text-sm font-bold text-rose-700 border border-rose-200">
                       <XCircle className="size-3.5 text-rose-500" />
                       Ditolak
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-700 border border-amber-200">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-sm font-bold text-amber-700 border border-amber-200">
                       <Clock className="size-3.5 text-amber-500" />
                       Menunggu Verifikasi
                     </span>
@@ -478,7 +478,7 @@ export function PengawasPenyaluranForm({
                       href={item.fileUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 rounded-xl bg-white border border-orange-200 px-3 py-1.5 text-xs font-bold text-orange-950 hover:bg-orange-50 transition shadow-2xs"
+                      className="inline-flex items-center gap-1 rounded-xl bg-white border border-orange-200 px-3 py-1.5 text-sm font-bold text-orange-950 hover:bg-orange-50 transition shadow-2xs"
                     >
                       <FileText className="size-3.5 text-orange-600" />
                       <span>Lihat Bukti</span>
