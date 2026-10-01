@@ -188,6 +188,7 @@ type RegistrationDraft = {
     jumlahSaudara: string
   }
   educationLevelType: "Sekolah" | "Kuliah"
+  programAkselerasi?: boolean
   father: Family
   mother: Family
   guardian: Family
@@ -217,6 +218,7 @@ export type RegisterFormProps = {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara?: number | null
     father?: Family | null
@@ -243,6 +245,10 @@ export function RegisterForm({
 
   const [educationLevelType, setEducationLevelType] = useState<"Sekolah" | "Kuliah">(
     initialStudentData?.jenjang === "Kuliah" ? "Kuliah" : "Sekolah"
+  )
+
+  const [programAkselerasi, setProgramAkselerasi] = useState<boolean>(
+    Boolean(initialStudentData?.programAkselerasi)
   )
 
   // Draft storage states
@@ -434,6 +440,9 @@ export function RegisterForm({
     if (pendingDraft.educationLevelType) {
       setEducationLevelType(pendingDraft.educationLevelType)
     }
+    if (typeof pendingDraft.programAkselerasi === "boolean") {
+      setProgramAkselerasi(pendingDraft.programAkselerasi)
+    }
     if (pendingDraft.father) {
       setFather(pendingDraft.father)
     }
@@ -495,6 +504,7 @@ export function RegisterForm({
           step,
           data,
           educationLevelType,
+          programAkselerasi,
           father,
           mother,
           guardian,
@@ -516,6 +526,7 @@ export function RegisterForm({
     step,
     data,
     educationLevelType,
+    programAkselerasi,
     father,
     mother,
     guardian,
@@ -525,6 +536,9 @@ export function RegisterForm({
 
   const handleEducationLevelChange = (lvl: "Sekolah" | "Kuliah") => {
     setEducationLevelType(lvl)
+    if (lvl === "Sekolah") {
+      setProgramAkselerasi(false)
+    }
     setData((prev) => ({
       ...prev,
       jenjang: lvl === "Kuliah" ? "Kuliah" : "",
@@ -691,6 +705,13 @@ export function RegisterForm({
     if (step === 1) {
       if (!data.username.trim()) return setError("Username wajib diisi.")
       if (/\s/.test(data.username)) return setError("Username tidak boleh mengandung spasi.")
+      const usernameDigits = (data.username.match(/\d/g) || []).length
+      if (usernameDigits === 0) {
+        return setError(`Username wajib menyertakan minimal 2 angka (contoh: ${data.username || "budi"}01).`)
+      }
+      if (usernameDigits < 2) {
+        return setError(`Username wajib menyertakan minimal 2 angka (saat ini baru ${usernameDigits} angka).`)
+      }
       if (!/^\d{16}$/.test(data.nik.trim())) {
         return setError(`NIK harus terdiri dari 16 angka (saat ini ${data.nik.length} angka).`)
       }
@@ -735,6 +756,20 @@ export function RegisterForm({
             : "Nilai Rata-Rata Rapor wajib diisi."
         )
       }
+      const parsedNilai = Number(data.nilaiRataRata.trim().replace(",", "."))
+      if (isNaN(parsedNilai)) {
+        return setError(
+          educationLevelType === "Kuliah"
+            ? "IPK harus berupa angka yang valid (contoh: 3.80)."
+            : "Nilai Rata-Rata Rapor harus berupa angka yang valid (contoh: 88.5)."
+        )
+      }
+      if (educationLevelType === "Kuliah" && (parsedNilai < 0 || parsedNilai > 4)) {
+        return setError(`IPK harus berada di antara 0 sampai 4.00 (saat ini ${data.nilaiRataRata}).`)
+      }
+      if (educationLevelType === "Sekolah" && (parsedNilai < 0 || parsedNilai > 100)) {
+        return setError(`Nilai Rata-Rata Rapor harus berada di antara 0 sampai 100 (saat ini ${data.nilaiRataRata}).`)
+      }
     }
 
     // Step 4 validation
@@ -749,6 +784,26 @@ export function RegisterForm({
 
   const submitRegistration = () => {
     setError("")
+
+    const usernameDigits = (data.username.match(/\d/g) || []).length
+    if (usernameDigits < 2) {
+      return setError("Username wajib menyertakan minimal 2 angka (contoh: budi01).")
+    }
+
+    const parsedNilai = Number(data.nilaiRataRata.trim().replace(",", "."))
+    if (isNaN(parsedNilai)) {
+      return setError(
+        educationLevelType === "Kuliah"
+          ? "IPK harus berupa angka yang valid (contoh: 3.80)."
+          : "Nilai Rata-Rata Rapor harus berupa angka yang valid (contoh: 88.5)."
+      )
+    }
+    if (educationLevelType === "Kuliah" && (parsedNilai < 0 || parsedNilai > 4)) {
+      return setError("IPK harus berada di antara 0 sampai 4.00.")
+    }
+    if (educationLevelType === "Sekolah" && (parsedNilai < 0 || parsedNilai > 100)) {
+      return setError("Nilai Rata-Rata Rapor harus berada di antara 0 sampai 100.")
+    }
 
     // Step 5 validation: seluruh dokumen wajib diupload
     const validRaporFiles = raporFiles.filter((item) => item.url)
@@ -807,6 +862,7 @@ export function RegisterForm({
       schoolName: data.schoolName.trim(),
       jenjang: finalJenjang,
       gradeLevel: data.gradeLevel.trim(),
+      programAkselerasi: educationLevelType === "Kuliah" ? programAkselerasi : false,
       nilaiRataRata: data.nilaiRataRata.trim(),
       jumlahSaudara: Number(data.jumlahSaudara) || 0,
       educationCosts: costs
@@ -861,9 +917,12 @@ export function RegisterForm({
     "Unggah Dokumen",
   ]
 
+  const usernameDigitCount = (data.username.match(/\d/g) || []).length
+
   const isStep1Complete = Boolean(
     data.username.trim() &&
     !/\s/.test(data.username) &&
+    usernameDigitCount >= 2 &&
     /^\d{16}$/.test(data.nik.trim())
   )
 
@@ -879,11 +938,19 @@ export function RegisterForm({
     data.noHp.trim()
   )
 
+  const parsedNilai = Number(data.nilaiRataRata.trim().replace(",", "."))
+  const isNilaiValid =
+    Boolean(data.nilaiRataRata.trim()) &&
+    !isNaN(parsedNilai) &&
+    (educationLevelType === "Kuliah"
+      ? parsedNilai >= 0 && parsedNilai <= 4
+      : parsedNilai >= 0 && parsedNilai <= 100)
+
   const isStep3Complete = Boolean(
     data.schoolName.trim() &&
     (educationLevelType === "Kuliah" || data.jenjang.trim()) &&
     data.gradeLevel.trim() &&
-    data.nilaiRataRata.trim()
+    isNilaiValid
   )
 
   const isStep4Complete = Boolean(
@@ -1087,14 +1154,49 @@ export function RegisterForm({
           title="1. Informasi Akun"
           note="Data yang akan digunakan untuk masuk ke aplikasi nanti."
         >
-          <Field label="Username *">
-            <Input
-              value={data.username}
-              onChange={(e) => set("username", e.target.value.replace(/\s+/g, "").toLowerCase())}
-              placeholder="Contoh: yuhen01"
-              className="h-14 rounded-2xl bg-white text-base shadow-sm"
-              required
-            />
+          <Field label="Username  *">
+            <div className="flex flex-col gap-1.5">
+              <Input
+                value={data.username}
+                onChange={(e) => set("username", e.target.value.replace(/\s+/g, "").toLowerCase())}
+                placeholder="Contoh: yuhen01"
+                className="h-14 rounded-2xl bg-white text-base shadow-sm"
+                required
+              />
+              {/* Indikator / Pemberitahuan jumlah angka di username */}
+              <div className="flex items-center justify-between text-xs font-semibold">
+                {(() => {
+                  const numDigits = (data.username.match(/\d/g) || []).length
+                  if (!data.username) {
+                    return (
+                      <span className="text-muted-foreground">
+                        Wajib sertakan minimal 2 angka (contoh: budi01)
+                      </span>
+                    )
+                  }
+                  if (numDigits === 0) {
+                    return (
+                      <span className="flex items-center gap-1 text-red-600 font-bold">
+                        <AlertCircle className="size-3.5" /> Belum ada angka (wajib sertakan minimal 2 angka)
+                      </span>
+                    )
+                  }
+                  if (numDigits < 2) {
+                    return (
+                      <span className="flex items-center gap-1 text-amber-600 font-bold">
+                        <AlertCircle className="size-3.5" /> Baru {numDigits} angka (tambahkan 1 angka lagi, misal: {data.username}1)
+                      </span>
+                    )
+                  }
+                  return (
+                    <span className="flex items-center gap-1 text-emerald-600 font-bold">
+                      <Check className="size-3.5" /> Sudah menyertakan {numDigits} angka
+                    </span>
+                  )
+                })()}
+                <span className="text-muted-foreground">Min. 2 angka</span>
+              </div>
+            </div>
           </Field>
 
           <Field label="Nomor Induk Kependudukan (NIK) *">
@@ -1431,31 +1533,110 @@ export function RegisterForm({
               </select>
             </Field>
           ) : (
-            <Field label="Semester *">
-              <select
-                value={data.gradeLevel}
-                onChange={(e) => set("gradeLevel", e.target.value)}
-                className="h-14 w-full rounded-2xl border border-border bg-white px-4 text-base font-semibold text-foreground shadow-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 cursor-pointer"
-              >
-                <option value="">-- Pilih Semester Kuliah --</option>
-                {Array.from({ length: 10 }, (_, i) => i + 1).map((s) => (
-                  <option key={s} value={String(s)}>
-                    Semester {s}
-                  </option>
-                ))}
-              </select>
-            </Field>
+            <>
+              <Field label="Semester *">
+                <select
+                  value={data.gradeLevel}
+                  onChange={(e) => set("gradeLevel", e.target.value)}
+                  className="h-14 w-full rounded-2xl border border-border bg-white px-4 text-base font-semibold text-foreground shadow-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 cursor-pointer"
+                >
+                  <option value="">-- Pilih Semester Kuliah --</option>
+                  {Array.from({ length: 10 }, (_, i) => i + 1).map((s) => (
+                    <option key={s} value={String(s)}>
+                      Semester {s}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+
+              {/* Checkbox Program Akselerasi (Khusus Kuliah) */}
+              <div className="rounded-2xl border border-purple-200 bg-purple-50/60 p-4 transition animate-in fade-in slide-in-from-top-2 duration-200 shadow-xs">
+                <label className="flex items-start gap-3 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={programAkselerasi}
+                    onChange={(e) => setProgramAkselerasi(e.target.checked)}
+                    className="mt-0.5 size-4 rounded-md border-purple-300 text-purple-600 focus:ring-purple-500/20 cursor-pointer"
+                  />
+                  <div className="space-y-0.5">
+                    <span className="text-xs sm:text-sm font-bold text-purple-950 block">
+                      Saya mengikuti program percepatan 1 Tahun 3 Semester
+                    </span>
+                    <span className="text-[11px] text-purple-700 block">
+                      Centang opsi ini jika kampus kamu menerapkan kurikulum akselerasi/trimester (3 semester per tahun akademik).
+                    </span>
+                  </div>
+                </label>
+              </div>
+            </>
           )}
 
           {/* 5. Input Nilai Rata-Rata / IPK */}
-          <Field label={educationLevelType === "Kuliah" ? "IPK *" : "Nilai Rata-Rata Rapor *"}>
-            <Input
-              value={data.nilaiRataRata}
-              onChange={(e) => set("nilaiRataRata", e.target.value)}
-              placeholder={educationLevelType === "Kuliah" ? "Contoh: 3.80" : "Contoh: 88.5"}
-              className="h-14 rounded-2xl bg-white text-base shadow-sm"
-              required
-            />
+          <Field label={educationLevelType === "Kuliah" ? "IPK (Rentang 0 - 4.00) *" : "Nilai Rata-Rata Rapor (Rentang 0 - 100) *"}>
+            <div className="flex flex-col gap-1.5">
+              <Input
+                type="text"
+                inputMode="decimal"
+                value={data.nilaiRataRata}
+                onChange={(e) => set("nilaiRataRata", e.target.value.replace(/\s+/g, ""))}
+                placeholder={educationLevelType === "Kuliah" ? "Contoh: 3.80" : "Contoh: 88.5"}
+                className="h-14 rounded-2xl bg-white text-base shadow-sm"
+                required
+              />
+              {/* Indikator / Pemberitahuan nilai */}
+              <div className="flex items-center justify-between text-xs font-semibold">
+                {(() => {
+                  const raw = data.nilaiRataRata.trim()
+                  if (!raw) {
+                    return (
+                      <span className="text-muted-foreground">
+                        {educationLevelType === "Kuliah"
+                          ? "Masukkan IPK antara 0.00 sampai 4.00"
+                          : "Masukkan nilai antara 0 sampai 100"}
+                      </span>
+                    )
+                  }
+                  const num = Number(raw.replace(",", "."))
+                  if (isNaN(num)) {
+                    return (
+                      <span className="flex items-center gap-1 text-red-600 font-bold">
+                        <AlertCircle className="size-3.5" /> Format angka tidak valid (contoh: {educationLevelType === "Kuliah" ? "3.80" : "88.5"})
+                      </span>
+                    )
+                  }
+                  if (educationLevelType === "Kuliah") {
+                    if (num < 0 || num > 4) {
+                      return (
+                        <span className="flex items-center gap-1 text-red-600 font-bold">
+                          <AlertCircle className="size-3.5" /> IPK harus antara 0 sampai 4.00 (saat ini {raw})
+                        </span>
+                      )
+                    }
+                    return (
+                      <span className="flex items-center gap-1 text-emerald-600 font-bold">
+                        <Check className="size-3.5" /> IPK valid ({num.toFixed(2)})
+                      </span>
+                    )
+                  } else {
+                    if (num < 0 || num > 100) {
+                      return (
+                        <span className="flex items-center gap-1 text-red-600 font-bold">
+                          <AlertCircle className="size-3.5" /> Nilai rapor harus antara 0 sampai 100 (saat ini {raw})
+                        </span>
+                      )
+                    }
+                    return (
+                      <span className="flex items-center gap-1 text-emerald-600 font-bold">
+                        <Check className="size-3.5" /> Nilai rapor valid ({num})
+                      </span>
+                    )
+                  }
+                })()}
+                <span className="text-muted-foreground">
+                  {educationLevelType === "Kuliah" ? "Maks. 4.00" : "Maks. 100"}
+                </span>
+              </div>
+            </div>
           </Field>
 
           {/* Rincian Biaya Pendidikan dengan Format Nominal Titik */}

@@ -23,7 +23,7 @@ export function AdminDetailBottomBar({
     : null
 
   const waMessage = encodeURIComponent(
-    `Halo ${pengawasName || "Pengawas"}, kami dari Admin Portal Kakak Asuh PVVD ingin berkoordinasi mengenai anak asuh ${studentName}.`
+    `Halo ${pengawasName || "Pengawas"}, kami dari Admin Portal Kakak Asuh PVVD ingin berkoordinasi mengenai adik asuh ${studentName}.`
   )
   const waUrl = cleanPhone ? `https://wa.me/${cleanPhone}?text=${waMessage}` : null
 

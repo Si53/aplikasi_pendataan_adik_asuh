@@ -298,6 +298,7 @@ export type RegisterPayload = {
   schoolName: string
   jenjang?: string | null
   gradeLevel: string
+  programAkselerasi?: boolean
   nilaiRataRata: string
   jumlahSaudara: number
   educationCosts: EducationCostInput[]
@@ -323,7 +324,24 @@ export async function registerAction(payload: RegisterPayload): Promise<Register
     payload.gradeLevel,
   ]
   if (required.some((value) => !String(value).trim())) return { error: "Beberapa data wajib belum lengkap." }
+  if (/\s/.test(payload.username)) return { error: "Username tidak boleh mengandung spasi." }
+  const usernameDigits = (payload.username.match(/\d/g) || []).length
+  if (usernameDigits < 2) return { error: "Username wajib menyertakan minimal 2 angka (contoh: budi01)." }
   if (!/^\d{16}$/.test(payload.nik.trim())) return { error: "NIK harus terdiri dari 16 angka." }
+
+  const parsedNilai = Number(String(payload.nilaiRataRata ?? "").trim().replace(",", "."))
+  if (isNaN(parsedNilai)) {
+    return { error: "Nilai rata-rata rapor atau IPK harus berupa angka yang valid." }
+  }
+  if (payload.jenjang === "Kuliah") {
+    if (parsedNilai < 0 || parsedNilai > 4) {
+      return { error: "IPK harus berada di antara 0 sampai 4.00." }
+    }
+  } else {
+    if (parsedNilai < 0 || parsedNilai > 100) {
+      return { error: "Nilai Rata-Rata Rapor harus berada di antara 0 sampai 100." }
+    }
+  }
 
   const existing = await prisma.student.findFirst({
     where: {
@@ -367,6 +385,7 @@ export async function registerAction(payload: RegisterPayload): Promise<Register
       schoolName: payload.schoolName.trim(),
       jenjang: payload.jenjang ? payload.jenjang.trim() : null,
       gradeLevel: payload.gradeLevel.trim(),
+      programAkselerasi: payload.jenjang === "Kuliah" ? Boolean(payload.programAkselerasi) : false,
       nilaiRataRata: payload.nilaiRataRata.trim(),
       jumlahSaudara: Number.isFinite(payload.jumlahSaudara) ? payload.jumlahSaudara : 0,
       educationCosts: {
@@ -424,7 +443,24 @@ export async function updateStudentRegistrationAction(
     payload.gradeLevel,
   ]
   if (required.some((value) => !String(value).trim())) return { error: "Beberapa data wajib belum lengkap." }
+  if (/\s/.test(payload.username)) return { error: "Username tidak boleh mengandung spasi." }
+  const usernameDigits = (payload.username.match(/\d/g) || []).length
+  if (usernameDigits < 2) return { error: "Username wajib menyertakan minimal 2 angka (contoh: budi01)." }
   if (!/^\d{16}$/.test(payload.nik.trim())) return { error: "NIK harus terdiri dari 16 angka." }
+
+  const parsedNilai = Number(String(payload.nilaiRataRata ?? "").trim().replace(",", "."))
+  if (isNaN(parsedNilai)) {
+    return { error: "Nilai rata-rata rapor atau IPK harus berupa angka yang valid." }
+  }
+  if (payload.jenjang === "Kuliah") {
+    if (parsedNilai < 0 || parsedNilai > 4) {
+      return { error: "IPK harus berada di antara 0 sampai 4.00." }
+    }
+  } else {
+    if (parsedNilai < 0 || parsedNilai > 100) {
+      return { error: "Nilai Rata-Rata Rapor harus berada di antara 0 sampai 100." }
+    }
+  }
 
   // 1. Cari student yang mau diupdate
   const existing = await prisma.student.findFirst({
@@ -499,6 +535,7 @@ export async function updateStudentRegistrationAction(
         schoolName: payload.schoolName.trim(),
         jenjang: payload.jenjang ? payload.jenjang.trim() : null,
         gradeLevel: payload.gradeLevel.trim(),
+        programAkselerasi: payload.jenjang === "Kuliah" ? Boolean(payload.programAkselerasi) : false,
         nilaiRataRata: payload.nilaiRataRata.trim(),
         jumlahSaudara: Number.isFinite(payload.jumlahSaudara) ? payload.jumlahSaudara : 0,
         status: "pending",
