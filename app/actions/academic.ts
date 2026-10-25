@@ -10,6 +10,7 @@ import {
   getAllowedJenjang,
   isNaikJenjang,
   isValidJenjangTransition,
+  isValidEducationStepTransition,
 } from "@/lib/academic"
 
 const allowedMimeTypes = new Set([
@@ -102,11 +103,10 @@ export async function createStudentAcademicUpdateAction(
       }
     }
 
-    if (!isValidJenjangTransition(currentPos.jenjang, targetJenjang)) {
-      const allowed = getAllowedJenjang(currentPos.jenjang)
+    if (!isValidEducationStepTransition(currentPos, targetJenjang, gradeLevelInput)) {
       return {
         success: false,
-        error: `Pilihan jenjang tidak valid. Data terakhir kamu adalah ${currentPos.labelDisplay}. Pilihan yang diperbolehkan hanya ${allowed.join(" atau ")}.`,
+        error: `Pilihan jenjang atau kelas tidak valid. Data terakhir kamu adalah ${currentPos.labelDisplay}. Kamu hanya dapat memperbarui data maksimal 1 tingkat ke atas atau 1 tingkat ke bawah.`,
       }
     }
   }

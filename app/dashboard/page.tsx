@@ -36,10 +36,43 @@ export default async function DashboardPage() {
   const presignedDocuments = await Promise.all(
     student.documents.map(async (d) => {
       const isRestrictedForStudent = d.type === "KK" || d.type === "SKTM"
+
+      let docKelas: string | null = null
+      let docJenjang: string | null = null
+      let docSemester: string | null = null
+
+      if (d.type === "RAPOR") {
+        const matchingUpdate = student.academicUpdates.find((u) => {
+          if (!u.dokumenRapor) return false
+          try {
+            const parsed = JSON.parse(u.dokumenRapor)
+            if (Array.isArray(parsed)) return parsed.includes(d.fileUrl)
+            if (typeof parsed === "string") return parsed === d.fileUrl
+          } catch {
+            return u.dokumenRapor === d.fileUrl || u.dokumenRapor.includes(d.fileUrl)
+          }
+          return false
+        })
+
+        if (matchingUpdate) {
+          docKelas = matchingUpdate.kelasSaatItu
+          docJenjang = student.jenjang
+          docSemester = matchingUpdate.semester
+            ? `Semester ${matchingUpdate.semester}`
+            : null
+        } else {
+          docKelas = student.gradeLevel
+          docJenjang = student.jenjang
+        }
+      }
+
       return {
         id: d.id,
         type: d.type,
         fileUrl: isRestrictedForStudent ? "" : await getPresignedR2Url(d.fileUrl),
+        kelas: docKelas,
+        jenjang: docJenjang,
+        semester: docSemester,
       }
     })
   )

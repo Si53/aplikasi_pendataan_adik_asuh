@@ -67,14 +67,8 @@ export async function createPengawasBatchDisbursementAction(
     return { success: false, error: "Akun pengawas tidak ditemukan." }
   }
 
-  // 1. Keterangan wajib diisi
-  const keterangan = String(formData.get("keterangan") ?? "").trim()
-  if (!keterangan) {
-    return {
-      success: false,
-      error: "Keterangan wajib diisi (misal: Beasiswa semester ganjil 2026).",
-    }
-  }
+  // 1. Keterangan bersifat opsional (tidak wajib diisi)
+  const keterangan = String(formData.get("keterangan") ?? "").trim() || null
 
   // 2. Ambil list studentIds
   const rawStudentIds = formData
@@ -113,10 +107,12 @@ export async function createPengawasBatchDisbursementAction(
 
   const studentMap = new Map(validStudents.map((s) => [s.id, s.fullName]))
 
-  // 3b. Validasi pencegahan ganda di periode berjalan: tidak boleh ada bukti pending/verified
-  const currentPeriode = getCurrentPeriode()
-  const { start: periodStart, end: periodEnd } = getPeriodeDateRange(currentPeriode)
+  // 3b. Periode tujuan (dari formData atau periode berjalan saat ini)
+  const periodeInput = String(formData.get("periode") ?? "").trim()
+  const targetPeriode = periodeInput || getCurrentPeriode()
+  const { start: periodStart, end: periodEnd } = getPeriodeDateRange(targetPeriode)
 
+  // Validasi pencegahan ganda di periode yang dipilih: tidak boleh ada bukti pending/verified
   const existingProofsInPeriod = await prisma.disbursementProof.findMany({
     where: {
       studentId: { in: studentIds },
@@ -141,7 +137,7 @@ export async function createPengawasBatchDisbursementAction(
         : "menunggu verifikasi"
     return {
       success: false,
-      error: `${name} sudah memiliki bukti penyaluran dana (${statusText}) pada periode ${currentPeriode}.`,
+      error: `${name} sudah memiliki bukti penyaluran dana (${statusText}) pada periode ${targetPeriode}.`,
     }
   }
 
@@ -160,40 +156,35 @@ export async function createPengawasBatchDisbursementAction(
     studentNominals[sid] = nominal
   }
 
-  // 5. Validasi berkas bukti berdasarkan mode wilayah
-  const isJepara = pengawas.wilayah.trim().toLowerCase() === "jepara"
+  // 5. Validasi berkas bukti:
+  // Jika ada berkas bukti bersama/kolektif (sharedFile atau file), 1 bukti ini mewakili semua anak yang dipilih.
+  const uploadedShared = formData.get("sharedFile") || formData.get("file")
   let sharedFile: File | null = null
   const studentFiles: Record<number, File> = {}
 
-  if (isJepara) {
-    const file = formData.get("sharedFile")
-    if (!(file instanceof File) || file.size === 0) {
+  if (uploadedShared instanceof File && uploadedShared.size > 0) {
+    if (!isValidFileType(uploadedShared)) {
       return {
         success: false,
-        error: "Silakan unggah foto/berkas bukti transfer bersama untuk wilayah Jepara.",
+        error: "File bukti harus berupa gambar (JPG/PNG/WEBP) atau PDF.",
       }
     }
-    if (!isValidFileType(file)) {
+    if (uploadedShared.size > maxFileSize) {
       return {
         success: false,
-        error: "File bukti bersama harus berupa gambar (JPG/PNG/WEBP) atau PDF.",
+        error: "Ukuran file bukti terlalu besar (maksimal 15 MB).",
       }
     }
-    if (file.size > maxFileSize) {
-      return {
-        success: false,
-        error: "Ukuran file bukti bersama terlalu besar (maksimal 15 MB).",
-      }
-    }
-    sharedFile = file
+    sharedFile = uploadedShared
   } else {
+    // Cek jika pengawas mengunggah file per anak (fallback)
     for (const sid of studentIds) {
       const file = formData.get(`file_${sid}`)
       const name = studentMap.get(sid) || `Anak ID ${sid}`
       if (!(file instanceof File) || file.size === 0) {
         return {
           success: false,
-          error: `Silakan unggah bukti transfer untuk ${name}.`,
+          error: `Silakan unggah bukti transfer/penyerahan dana.`,
         }
       }
       if (!isValidFileType(file)) {
@@ -215,6 +206,10 @@ export async function createPengawasBatchDisbursementAction(
   // 6. Upload file ke R2 & susun record
   try {
     const now = new Date()
+    // Pastikan tanggal pencatatan berada di dalam rentang periode yang dipilih
+    const disbursementDate =
+      now >= periodStart && now <= periodEnd ? now : periodStart
+
     type ProofCreateData = {
       studentId: number
       pengawasId: number
@@ -222,16 +217,17 @@ export async function createPengawasBatchDisbursementAction(
       fileUrl: string
       status: string
       tanggal: Date
-      keterangan: string
+      keterangan: string | null
       batchId: string | null
     }
 
     const recordsToCreate: ProofCreateData[] = []
 
-    if (isJepara && sharedFile) {
+    if (sharedFile) {
+      // 1 bukti bersama mewakili semua siswa yang dipilih
       const ext = sharedFile.name.split(".").pop()?.toLowerCase() || "jpg"
-      const batchId = `batch_${randomUUID()}`
-      const key = `disbursements/${pengawas.id}/jepara-${batchId}.${ext}`
+      const batchId = studentIds.length > 1 ? `batch_${randomUUID()}` : null
+      const key = `disbursements/${pengawas.id}/${batchId || randomUUID()}.${ext}`
       const contentType =
         sharedFile.type || (ext === "pdf" ? "application/pdf" : "image/jpeg")
 
@@ -257,12 +253,13 @@ export async function createPengawasBatchDisbursementAction(
           nominal: studentNominals[sid],
           fileUrl: publicUrl,
           status: "pending",
-          tanggal: now,
+          tanggal: disbursementDate,
           keterangan,
           batchId,
         })
       }
     } else {
+      // Fallback: file individu per anak
       for (const sid of studentIds) {
         const file = studentFiles[sid]
         const ext = file.name.split(".").pop()?.toLowerCase() || "jpg"
@@ -291,7 +288,7 @@ export async function createPengawasBatchDisbursementAction(
           nominal: studentNominals[sid],
           fileUrl: publicUrl,
           status: "pending",
-          tanggal: now,
+          tanggal: disbursementDate,
           keterangan,
           batchId: null,
         })

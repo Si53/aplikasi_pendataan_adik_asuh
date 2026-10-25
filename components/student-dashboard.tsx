@@ -41,8 +41,12 @@ import {
   KELAS_SD_OPTIONS,
   KELAS_SMP_SMA_OPTIONS,
   KULIAH_OPTIONS,
+  EDUCATION_LADDER,
+  findEducationLadderIndex,
+  getAllowedEducationSteps,
   type CurrentEducationPosition,
   type JenjangLevel,
+  type EducationStep,
 } from "@/lib/academic"
 
 export type StudentAcademicUpdate = {
@@ -103,7 +107,14 @@ export type StudentData = {
     medicalHistory: string
   } | null
   educationCosts: { id: number; label: string; amount: number }[]
-  documents: { id: number; type: string; fileUrl: string }[]
+  documents: {
+    id: number
+    type: string
+    fileUrl: string
+    kelas?: string | null
+    jenjang?: string | null
+    semester?: string | null
+  }[]
   academicUpdates: StudentAcademicUpdate[]
 }
 
@@ -269,34 +280,141 @@ export function StudentDashboard({ student }: { student: StudentData }) {
 
   const isPindahSekolah = isNaikJenjangStrict || isPindahSekolahManual
 
-  const availableJenjangSekolahOptions = useMemo(() => {
-    if (!currentPos?.isKnown) {
-      return [
-        { value: "SD", label: "SD" },
-        { value: "SMP", label: "SMP" },
-        { value: "SMA", label: "SMA" },
-      ]
-    }
-    if (currentPos.jenjang === "SD") {
-      return [
-        { value: "SD", label: "SD" },
-        { value: "SMP", label: "SMP (naik jenjang)" },
-      ]
-    }
-    if (currentPos.jenjang === "SMP") {
-      return [
-        { value: "SMP", label: "SMP" },
-        { value: "SMA", label: "SMA (naik jenjang)" },
-      ]
-    }
-    if (currentPos.jenjang === "SMA") {
-      return [
-        { value: "SMA", label: "SMA" },
-        { value: "Kuliah", label: "Kuliah (naik jenjang)" },
-      ]
-    }
-    return []
+  // Tangga tingkat pendidikan yang diperbolehkan (maksimal 1 ke atas dan 1 ke bawah)
+  const allowedSteps = useMemo(() => {
+    return getAllowedEducationSteps(currentPos)
   }, [currentPos])
+
+  const currentLadderIdx = useMemo(() => {
+    if (!currentPos || !currentPos.isKnown) return -1
+    return findEducationLadderIndex(currentPos.jenjang, currentPos.gradeLevel)
+  }, [currentPos])
+
+  const stepUp = useMemo(() => {
+    if (currentLadderIdx === -1 || currentLadderIdx >= EDUCATION_LADDER.length - 1) return null
+    return EDUCATION_LADDER[currentLadderIdx + 1]
+  }, [currentLadderIdx])
+
+  const stepCurrent = useMemo(() => {
+    if (currentLadderIdx === -1) return null
+    return EDUCATION_LADDER[currentLadderIdx]
+  }, [currentLadderIdx])
+
+  const availableJenjangSekolahOptions = useMemo(() => {
+    if (!currentPos?.isKnown || currentLadderIdx === -1) {
+      return [
+        { value: "SD", label: "SD" },
+        { value: "SMP", label: "SMP" },
+        { value: "SMA", label: "SMA" },
+      ]
+    }
+
+    const uniqueJenjangs = Array.from(
+      new Set(
+        allowedSteps
+          .filter((s) => s.kategori === "Sekolah")
+          .map((s) => s.jenjang)
+      )
+    )
+
+    return uniqueJenjangs.map((j) => {
+      const isNaik = isNaikJenjang(currentPos.jenjang, j)
+      const isTurun = isNaikJenjang(j, currentPos.jenjang)
+      return {
+        value: j,
+        label: isNaik
+          ? `${j === "SMA" ? "SMA/SMK" : j} (naik jenjang)`
+          : isTurun
+          ? `${j} (turun jenjang)`
+          : j === "SMA"
+          ? "SMA/SMK"
+          : j,
+      }
+    })
+  }, [currentPos, currentLadderIdx, allowedSteps])
+
+  const availableKelasOptions = useMemo(() => {
+    if (!jenjangSekolah) return []
+    if (!currentPos?.isKnown || currentLadderIdx === -1) {
+      return (jenjangSekolah === "SD" ? KELAS_SD_OPTIONS : KELAS_SMP_SMA_OPTIONS).map(
+        (opt) => ({ value: opt.value, label: opt.label })
+      )
+    }
+
+    const matchingSteps = allowedSteps.filter((s) => s.jenjang === jenjangSekolah)
+    return matchingSteps.map((s) => {
+      const stepIdx = findEducationLadderIndex(s.jenjang, s.kelas)
+      let suffix = ""
+      if (stepIdx > currentLadderIdx) suffix = " (naik kelas)"
+      else if (stepIdx < currentLadderIdx) suffix = " (turun kelas)"
+
+      const labelText = s.kelas === "1" && jenjangSekolah !== "SD" ? "Kelas 1" : `Kelas ${s.kelas}`
+      return {
+        value: s.kelas,
+        label: `${labelText}${suffix}`,
+      }
+    })
+  }, [jenjangSekolah, currentPos, currentLadderIdx, allowedSteps])
+
+  const availableSemesterKuliahOptions = useMemo(() => {
+    if (!currentPos?.isKnown || currentLadderIdx === -1) {
+      return KULIAH_OPTIONS.map((opt) => ({ value: opt, label: opt }))
+    }
+    const matchingSteps = allowedSteps.filter((s) => s.kategori === "Kuliah")
+    return matchingSteps.map((s) => {
+      const stepIdx = findEducationLadderIndex(s.jenjang, s.kelas)
+      let suffix = ""
+      if (stepIdx > currentLadderIdx) suffix = " (lanjut semester)"
+      else if (stepIdx < currentLadderIdx) suffix = " (turun semester)"
+      return {
+        value: s.kelas,
+        label: `${s.kelas}${suffix}`,
+      }
+    })
+  }, [currentPos, currentLadderIdx, allowedSteps])
+
+  // Deteksi apakah pilihan jenjang & kelas saat ini merupakan naik kelas / jenjang
+  const isSelectedNaikKelas = useMemo(() => {
+    if (currentLadderIdx === -1) return false
+    const selectedIdx =
+      educationLevelType === "Kuliah"
+        ? findEducationLadderIndex("Kuliah", semesterKuliah)
+        : findEducationLadderIndex(jenjangSekolah, kelasSekolah)
+    return selectedIdx > currentLadderIdx
+  }, [currentLadderIdx, educationLevelType, semesterKuliah, jenjangSekolah, kelasSekolah])
+
+  const handleNaikKelasCheckbox = (checked: boolean) => {
+    if (checked && stepUp) {
+      setEducationLevelType(stepUp.kategori)
+      if (stepUp.kategori === "Sekolah") {
+        setJenjangSekolah(stepUp.jenjang)
+        setKelasSekolah(stepUp.kelas)
+      } else {
+        setSemesterKuliah(stepUp.kelas)
+      }
+    } else if (!checked && stepCurrent) {
+      setEducationLevelType(stepCurrent.kategori)
+      if (stepCurrent.kategori === "Sekolah") {
+        setJenjangSekolah(stepCurrent.jenjang)
+        setKelasSekolah(stepCurrent.kelas)
+      } else {
+        setSemesterKuliah(stepCurrent.kelas)
+      }
+    }
+  }
+
+  const naikKelasTargetText = useMemo(() => {
+    if (!stepUp) return "Kamu telah mencapai tingkat tertinggi."
+    if (stepUp.kategori === "Kuliah") {
+      return `Sekarang kamu lanjut ke ${stepUp.kelas} (Kuliah)`
+    }
+    const isNaik = isNaikJenjang(currentPos?.jenjang, stepUp.jenjang)
+    const jenjangDisplay = stepUp.jenjang === "SMA" ? "SMA/SMK" : stepUp.jenjang
+    if (isNaik) {
+      return `Sekarang kamu naik jenjang ke ${jenjangDisplay} Kelas ${stepUp.kelas}`
+    }
+    return `Sekarang kamu naik ke Kelas ${stepUp.kelas} ${jenjangDisplay}`
+  }, [stepUp, currentPos])
 
   const missingFields: string[] = []
   if (educationLevelType === "Sekolah") {
@@ -401,10 +519,18 @@ export function StudentDashboard({ student }: { student: StudentData }) {
     }
 
     setJenjangSekolah(val)
-    if (currentPos?.isKnown && isNaikJenjang(currentPos.jenjang, val)) {
-      setKelasSekolah(getDefaultGradeForJenjang(val))
-    } else if (val === currentPos?.jenjang && currentPos?.kategori === "Sekolah") {
+    const matchingClasses = allowedSteps
+      .filter((s) => s.jenjang === val)
+      .map((s) => s.kelas)
+
+    if (matchingClasses.length === 1) {
+      setKelasSekolah(matchingClasses[0])
+    } else if (matchingClasses.includes(kelasSekolah)) {
+      // tetap gunakan kelas saat ini
+    } else if (currentPos?.gradeLevel && matchingClasses.includes(currentPos.gradeLevel)) {
       setKelasSekolah(currentPos.gradeLevel)
+    } else if (matchingClasses.length > 0) {
+      setKelasSekolah(matchingClasses[0])
     } else {
       setKelasSekolah("")
     }
@@ -577,29 +703,19 @@ export function StudentDashboard({ student }: { student: StudentData }) {
           {/* Kartu "Selamat Datang" dengan Gambar Ilustrasi Biksu & Anak */}
           <div className="flex flex-col md:flex-row items-center gap-6 rounded-3xl bg-white/95 p-6 shadow-xl backdrop-blur-md border border-orange-100/90">
             {/* Sisi Kiri: Gambar Ilustrasi */}
-            <div className="relative w-full max-w-[200px] h-[260px] shrink-0 overflow-hidden rounded-2xl shadow-sm border border-orange-100/80 bg-amber-50">
+            <div className="relative w-full max-w-[200px] aspect-[283/451] mx-auto md:w-[280px] md:h-[280px] md:max-w-none md:mx-0 md:aspect-auto shrink-0 overflow-hidden rounded-2xl shadow-sm border border-orange-100/80">
               <Image
                 src="/illustrasi-biksu-anak.png"
                 alt="Ilustrasi Biksu dan Anak"
                 fill
                 priority
-                sizes="(max-width: 768px) 200px, 200px"
-                className="object-contain"
+                sizes="(max-width: 768px) 200px, 280px"
+                className="object-cover"
               />
             </div>
 
             {/* Sisi Kanan: Teks Sambutan Hangat & Profil Singkat */}
             <div className="flex flex-1 flex-col gap-3 text-left">
-              <div className="flex items-center gap-2">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-orange-700">
-                  <Sparkles className="size-3.5 text-orange-600" />
-                  PORTAL ADIK ASUH
-                </span>
-                <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800">
-                  Aktif
-                </span>
-              </div>
-
               <div>
                 <h2 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight">
                   Halo, {student.fullName}!
@@ -609,18 +725,14 @@ export function StudentDashboard({ student }: { student: StudentData }) {
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-2 border-t border-orange-100/80">
+              <div className="grid grid-cols-2 gap-2.5 pt-2 border-t border-orange-100/80">
                 <div className="rounded-2xl bg-orange-50/60 p-3 border border-orange-100/80">
                   <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Jenjang & Kelas</p>
                   <p className="text-sm font-black text-foreground truncate mt-0.5">{student.gradeLevel || "-"}</p>
                 </div>
                 <div className="rounded-2xl bg-orange-50/60 p-3 border border-orange-100/80">
-                  <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Wilayah Asal</p>
-                  <p className="text-sm font-black text-foreground truncate mt-0.5">{student.wilayah || "-"}</p>
-                </div>
-                <div className="col-span-2 sm:col-span-1 rounded-2xl bg-orange-50/60 p-3 border border-orange-100/80">
-                  <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Nilai Rata-rata</p>
-                  <p className="text-sm font-black text-orange-600 truncate mt-0.5">{student.nilaiRataRata || "-"}</p>
+                  <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Cita-cita</p>
+                  <p className="text-sm font-black text-foreground truncate mt-0.5">{student.citaCita || "-"}</p>
                 </div>
               </div>
             </div>
@@ -666,22 +778,17 @@ export function StudentDashboard({ student }: { student: StudentData }) {
           </div>
 
           {/* Action Card: Update Nilai & Rapor Semester */}
-          <div className="relative overflow-hidden rounded-3xl border border-orange-200/80 bg-gradient-to-br from-orange-500 via-orange-500 to-amber-500 p-5 sm:p-6 text-white shadow-lg shadow-orange-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="relative overflow-hidden rounded-3xl border border-orange-200/80 bg-gradient-to-br from-orange-500 via-orange-500 to-amber-500 p-4 sm:p-5 text-white shadow-lg shadow-orange-500/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-start gap-4">
-              <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-md text-white shadow-inner">
-                <GraduationCap className="size-6" />
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-md text-white shadow-inner">
+                <GraduationCap className="size-5" />
               </div>
               <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="rounded-full bg-white/25 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white">
-                    Pembaruan Berkala
-                  </span>
-                </div>
-                <h3 className="text-base sm:text-lg font-black tracking-tight text-white">
+                <h3 className="text-sm sm:text-base font-black tracking-tight text-white">
                   Update Nilai & Rapor Semester
                 </h3>
                 <p className="text-xs sm:text-sm text-white/90 max-w-md">
-                  Perbarui kelas, nilai rapor semester terbaru, atau pindah sekolah agar terpantau oleh Kakak Asuh & Pengawas.
+                  Perbarui nilai, rapor semester terbaru, atau informasi pindah sekolah.
                 </p>
               </div>
             </div>
@@ -885,7 +992,7 @@ export function StudentDashboard({ student }: { student: StudentData }) {
                           required
                         >
                           <option value="">-- Pilih Kelas ({jenjangSekolah}) --</option>
-                          {(jenjangSekolah === "SD" ? KELAS_SD_OPTIONS : KELAS_SMP_SMA_OPTIONS).map((opt) => (
+                          {availableKelasOptions.map((opt) => (
                             <option key={opt.value} value={opt.value}>
                               {opt.label}
                             </option>
@@ -952,9 +1059,9 @@ export function StudentDashboard({ student }: { student: StudentData }) {
                       required
                     >
                       <option value="">-- Pilih Semester --</option>
-                      {KULIAH_OPTIONS.map((opt) => (
-                        <option key={opt} value={opt}>
-                          {opt}
+                      {availableSemesterKuliahOptions.map((opt) => (
+                        <option key={opt.value} value={opt.value}>
+                          {opt.label}
                         </option>
                       ))}
                     </select>
@@ -1167,23 +1274,65 @@ export function StudentDashboard({ student }: { student: StudentData }) {
                 </div>
               </div>
 
-              {/* Teks Keterangan Kelas / Semester Berikutnya (Muncul LIVE jika semua penentu terisi) */}
-              {(keteranganBerikutnya || isNaikJenjangStrict) && (
-                <div className="flex flex-col gap-3 animate-in fade-in slide-in-from-top-1 duration-200">
-                  {/* Kartu Info Kenaikan Kelas */}
-                  <div className="flex items-center gap-3.5 rounded-2xl border border-amber-200/90 bg-gradient-to-r from-amber-50/90 via-orange-50/70 to-amber-50/90 p-4 text-left shadow-xs">
-                    <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-orange-500/15 text-orange-600 shadow-2xs">
-                      <Sparkles className="size-4.5" />
+              {/* Section: Info Kenaikan Kelas dengan Checkbox */}
+              <div
+                className={`rounded-2xl border p-4 text-left shadow-xs transition-all space-y-3 ${
+                  isSelectedNaikKelas
+                    ? "border-emerald-300 bg-emerald-50/30"
+                    : "border-orange-200/80 bg-white"
+                }`}
+              >
+                <label className="flex items-start gap-3 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={isSelectedNaikKelas}
+                    onChange={(e) => handleNaikKelasCheckbox(e.target.checked)}
+                    className="mt-0.5 size-4.5 rounded-md border-orange-300 text-orange-600 focus:ring-orange-500/20 cursor-pointer"
+                  />
+                  <div className="space-y-0.5 min-w-0 flex-1">
+                    <span className="text-xs sm:text-sm font-bold text-orange-950 block">
+                      {educationLevelType === "Kuliah"
+                        ? "Apakah kamu lanjut ke semester berikutnya?"
+                        : "Apakah kamu naik kelas / jenjang?"}
+                    </span>
+                    <span className="text-[11px] text-muted-foreground block">
+                      {educationLevelType === "Kuliah"
+                        ? "Centang jika kamu telah menyelesaikan semester sebelumnya dan lanjut ke semester berikutnya."
+                        : "Centang jika pada pembaruan rapor ini kamu telah resmi dinyatakan naik kelas atau lulus ke jenjang berikutnya."}
+                    </span>
+                  </div>
+                </label>
+
+                {isSelectedNaikKelas ? (
+                  <div className="flex items-center gap-3 rounded-xl bg-gradient-to-r from-emerald-50 via-amber-50 to-orange-50 p-3 border border-emerald-200/80 text-emerald-950 animate-in fade-in duration-200">
+                    <div className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-600">
+                      <Sparkles className="size-4" />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-[11px] font-bold text-orange-800/80 uppercase tracking-wider">
-                        {educationLevelType === "Kuliah" ? "Info Perkembangan Kuliah" : "Info Kenaikan Kelas"}
+                      <p className="text-[11px] font-bold text-emerald-800 uppercase tracking-wider">
+                        {educationLevelType === "Kuliah" ? "Status: Lanjut Semester" : "Status: Naik Kelas"}
                       </p>
                       <p className="text-xs sm:text-sm font-extrabold text-foreground mt-0.5">
-                        {keteranganBerikutnya || (selectedJenjang === "Kuliah" ? "Sekarang kamu naik ke bangku kuliah, semester 1" : `Sekarang kamu naik ${selectedJenjang} kelas 1`)}
+                        {naikKelasTargetText}
                       </p>
                     </div>
                   </div>
+                ) : (
+                  <div className="flex items-center gap-3 rounded-xl bg-stone-50 p-3 border border-stone-200/80 text-stone-700 animate-in fade-in duration-200">
+                    <div className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-stone-200 text-stone-600">
+                      <BookOpen className="size-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-[11px] font-bold text-stone-600 uppercase tracking-wider">
+                        Status: Tetap di Tingkat Ini
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-0.5">
+                        Memperbarui nilai tanpa kenaikan kelas (tetap di {currentPos?.labelDisplay || "kelas saat ini"}).
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </div>
 
                   {/* Checklist Box: Apakah Pindah Sekolah / Kampus */}
                   <div
@@ -1259,8 +1408,6 @@ export function StudentDashboard({ student }: { student: StudentData }) {
                       </div>
                     )}
                   </div>
-                </div>
-              )}
 
               {/* Kotak Pemberitahuan Data Belum Lengkap TEPAT DI ATAS Tombol Simpan */}
               {hasSubmittedOnce && missingFields.length > 0 && (
@@ -1627,13 +1774,34 @@ export function StudentDashboard({ student }: { student: StudentData }) {
                     <div className="space-y-2.5">
                       {student.documents
                         .filter((d) => d.type === "RAPOR")
-                        .map((doc, idx, arr) => (
-                          <DocumentCardItem
-                            key={doc.id}
-                            doc={doc}
-                            title={arr.length > 1 ? `Rapor (Berkas ${idx + 1})` : "Rapor Terakhir"}
-                          />
-                        ))}
+                        .map((doc, idx, arr) => {
+                          const docKelas = doc.kelas || student.gradeLevel
+                          const docJenjang = doc.jenjang || student.jenjang
+                          const title = formatRaporTitle(docKelas, docJenjang)
+
+                          let semesterLabel = doc.semester
+                          if (!semesterLabel) {
+                            if (arr.length > 1) {
+                              semesterLabel = idx % 2 === 0 ? "Semester Ganjil" : "Semester Genap"
+                            } else {
+                              const digitMatch = (docKelas || "").match(/\d+/)
+                              const digit = digitMatch ? parseInt(digitMatch[0], 10) : 1
+                              semesterLabel = digit % 2 === 1 ? "Semester Ganjil" : "Semester Genap"
+                            }
+                          }
+                          if (!semesterLabel.toLowerCase().startsWith("semester")) {
+                            semesterLabel = `Semester ${semesterLabel}`
+                          }
+
+                          return (
+                            <DocumentCardItem
+                              key={doc.id}
+                              doc={doc}
+                              title={title}
+                              subtitle={`Tipe: ${semesterLabel}`}
+                            />
+                          )
+                        })}
                     </div>
                   ) : (
                     <div className="rounded-2xl border border-dashed border-orange-200/80 p-4 text-center text-xs text-muted-foreground bg-orange-50/20">
@@ -2021,12 +2189,46 @@ function checkNilaiRange(
   return { isValid: true, error: null, normalized }
 }
 
+function formatRaporTitle(kelas?: string | null, jenjang?: string | null): string {
+  const rawKelas = (kelas || "").trim()
+  const rawJenjang = (jenjang || "").trim()
+
+  if (!rawKelas && !rawJenjang) return "Rapor Adik Asuh"
+
+  // Kasus Kuliah
+  if (
+    rawJenjang.toUpperCase() === "KULIAH" ||
+    rawKelas.toUpperCase().includes("SEMESTER")
+  ) {
+    const digitMatch = rawKelas.match(/\d+/)
+    return digitMatch ? `Kuliah - Semester ${digitMatch[0]}` : (rawKelas || "Kuliah")
+  }
+
+  // Kasus Sekolah (SD, SMP, SMA, SMK)
+  const digitMatch = rawKelas.match(/\d+/)
+  const kelasLabel = digitMatch ? `Kelas ${digitMatch[0]}` : (rawKelas || "Kelas")
+
+  if (rawJenjang) {
+    return `${kelasLabel} - ${rawJenjang}`
+  }
+  return kelasLabel
+}
+
 function DocumentCardItem({
   doc,
   title,
+  subtitle,
 }: {
-  doc: { id: number; type: string; fileUrl: string }
+  doc: {
+    id: number
+    type: string
+    fileUrl: string
+    kelas?: string | null
+    jenjang?: string | null
+    semester?: string | null
+  }
   title: string
+  subtitle?: string
 }) {
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl bg-orange-50/60 p-4 border border-orange-200/60 transition hover:bg-orange-50/90">
@@ -2048,7 +2250,7 @@ function DocumentCardItem({
         <div className="min-w-0">
           <p className="font-extrabold text-sm text-foreground truncate">{title}</p>
           <span className="text-[11px] font-semibold text-orange-700 block">
-            Tipe: {doc.type}
+            {subtitle ?? `Tipe: ${doc.type}`}
           </span>
         </div>
       </div>

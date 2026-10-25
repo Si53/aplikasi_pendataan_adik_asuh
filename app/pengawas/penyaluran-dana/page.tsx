@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation"
 import Image from "next/image"
 import Link from "next/link"
-import { ShieldCheck, ArrowLeft } from "lucide-react"
+import { ShieldCheck } from "lucide-react"
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/auth"
 import { getPresignedR2Url } from "@/lib/r2"
@@ -54,7 +54,7 @@ export default async function PengawasPenyaluranDanaPage() {
     orderBy: { fullName: "asc" },
   })
 
-  // Hitung status tiap anak di periode berjalan
+  // Format siswa beserta riwayat pencatatannya untuk perhitungan periode dinamis
   const students: PengawasStudentRow[] = studentsRaw.map((s) => {
     const periodProofs = s.disbursements.filter((d) =>
       isDateInPeriode(d.tanggal, currentPeriode)
@@ -81,6 +81,12 @@ export default async function PengawasPenyaluranDanaPage() {
       wilayah: s.wilayah,
       statusPeriode,
       hasRejectedPrevious: statusPeriode === "Belum menerima" && hasRejected,
+      disbursements: s.disbursements.map((d) => ({
+        id: d.id,
+        tanggal: d.tanggal.toISOString(),
+        nominal: d.nominal,
+        status: d.status,
+      })),
     }
   })
 
@@ -202,13 +208,6 @@ export default async function PengawasPenyaluranDanaPage() {
           </div>
 
           <div className="flex items-center gap-2.5">
-            <Link
-              href="/pengawas"
-              className="inline-flex items-center gap-1.5 rounded-2xl bg-orange-50 px-3.5 py-2 text-sm font-bold text-orange-800 hover:bg-orange-100 border border-orange-200/80 transition shadow-2xs"
-            >
-              <ArrowLeft className="size-3.5 text-orange-600" />
-              <span className="hidden sm:inline">Kembali</span>
-            </Link>
             <LogoutButton />
           </div>
         </header>
