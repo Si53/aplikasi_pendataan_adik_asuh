@@ -103,6 +103,8 @@ export interface AdminStudentDetailData {
     fileUrl: string
     status: string
     processedAt: string | null
+    keterangan?: string | null
+    nominal?: number | null
   }>
   adminNotes: Array<{
     id: number
@@ -875,6 +877,12 @@ export function AdminStudentDetailTabs({
                           </span>
                         )}
                       </p>
+                      {proof.keterangan && (
+                        <p className="text-xs text-stone-600 bg-stone-50 border border-stone-200/80 rounded-lg px-2.5 py-1 mt-1 inline-block">
+                          <span className="font-semibold text-stone-700">Keterangan:</span>{" "}
+                          {proof.keterangan}
+                        </p>
+                      )}
                     </div>
 
                     <div className="flex items-center gap-2">

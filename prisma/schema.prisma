@@ -162,7 +162,7 @@ model AcademicUpdate {
 model DisbursementProof {
   id          Int       @id @default(autoincrement())
   studentId   Int       @map("student_id")
-  student     Student   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  student     Student   @relation(fields: [studentId], references: [id], onDelete: Restrict)
   pengawasId  Int       @map("pengawas_id")
   pengawas    Pengawas  @relation(fields: [pengawasId], references: [id])
   fileUrl     String    @map("file_url")
@@ -170,6 +170,8 @@ model DisbursementProof {
   tanggal     DateTime  @default(now())
   status      String    @default("pending") // "pending" | "verified" | "rejected"
   processedAt DateTime? @map("processed_at")
+  keterangan  String?   @map("keterangan")   // catatan pengawas: uang ini untuk kapan/keperluan apa
+  batchId     String?   @map("batch_id")     // penanda satu foto bukti yang dipakai beberapa anak (khusus wilayah Jepara)
 
   @@map("disbursement_proofs")
 }

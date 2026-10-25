@@ -126,6 +126,8 @@ export default async function AdminStudentDetailPage({
       tanggal: d.tanggal.toISOString(),
       pengawasName: d.pengawas.name,
       fileUrl: url,
+      nominal: d.nominal,
+      keterangan: d.keterangan || null,
       status: d.status,
       processedAt: d.processedAt ? d.processedAt.toISOString() : null,
     }
