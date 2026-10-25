@@ -6,9 +6,11 @@ import { prisma } from "@/lib/prisma"
 import { auth } from "@/auth"
 import { getPresignedR2Url } from "@/lib/r2"
 import { LogoutButton } from "@/components/logout-button"
+import { getCurrentPeriode, isDateInPeriode } from "@/lib/periode"
+import { formatGradeWithJenjang } from "@/lib/academic"
 import {
   PengawasPenyaluranForm,
-  type PengawasStudentOption,
+  type PengawasStudentRow,
   type PengawasProofHistoryItem,
 } from "@/components/pengawas-penyaluran-form"
 
@@ -23,26 +25,71 @@ export default async function PengawasPenyaluranDanaPage() {
   })
   if (!pengawas) redirect("/login")
 
-  // Ambil siswa binaan & wilayah tugas pengawas ini dengan status approved
+  // Periode berjalan saat ini berdasarkan tanggal hari ini
+  const currentPeriode = getCurrentPeriode()
+
+  // Ambil HANYA siswa binaan pengawas ini sendiri dengan status approved
   const studentsRaw = await prisma.student.findMany({
     where: {
+      pengawasId: pengawas.id,
       status: "approved",
-      OR: [{ pengawasId: pengawas.id }, { wilayah: pengawas.wilayah }],
     },
     select: {
       id: true,
       fullName: true,
       schoolName: true,
+      jenjang: true,
       gradeLevel: true,
       wilayah: true,
+      disbursements: {
+        select: {
+          id: true,
+          tanggal: true,
+          nominal: true,
+          status: true,
+        },
+        orderBy: { tanggal: "desc" },
+      },
     },
     orderBy: { fullName: "asc" },
   })
 
-  // Ambil riwayat bukti penyaluran yang pernah diupload oleh pengawas ini
+  // Hitung status tiap anak di periode berjalan
+  const students: PengawasStudentRow[] = studentsRaw.map((s) => {
+    const periodProofs = s.disbursements.filter((d) =>
+      isDateInPeriode(d.tanggal, currentPeriode)
+    )
+    const hasVerified = periodProofs.some((d) => d.status === "verified")
+    const hasPending = periodProofs.some((d) => d.status === "pending")
+    const hasRejected = periodProofs.some((d) => d.status === "rejected")
+
+    let statusPeriode: "Belum menerima" | "Menunggu verifikasi" | "Terverifikasi" =
+      "Belum menerima"
+    if (hasVerified) {
+      statusPeriode = "Terverifikasi"
+    } else if (hasPending) {
+      statusPeriode = "Menunggu verifikasi"
+    }
+
+    return {
+      id: s.id,
+      fullName: s.fullName,
+      schoolName: s.schoolName,
+      jenjang: s.jenjang,
+      gradeLevel: s.gradeLevel,
+      formattedGrade: formatGradeWithJenjang(s.gradeLevel, s.jenjang),
+      wilayah: s.wilayah,
+      statusPeriode,
+      hasRejectedPrevious: statusPeriode === "Belum menerima" && hasRejected,
+    }
+  })
+
+  // Ambil seluruh riwayat bukti penyaluran milik anak binaan pengawas ini
   const historyRaw = await prisma.disbursementProof.findMany({
     where: {
-      pengawasId: pengawas.id,
+      student: {
+        pengawasId: pengawas.id,
+      },
     },
     include: {
       student: {
@@ -50,6 +97,7 @@ export default async function PengawasPenyaluranDanaPage() {
           id: true,
           fullName: true,
           schoolName: true,
+          jenjang: true,
           gradeLevel: true,
           wilayah: true,
         },
@@ -60,7 +108,7 @@ export default async function PengawasPenyaluranDanaPage() {
     },
   })
 
-  // Format presigned URLs untuk berkas bukti
+  // Format presigned URLs untuk berkas bukti riwayat
   const history: PengawasProofHistoryItem[] = await Promise.all(
     historyRaw.map(async (item) => {
       const presigned = await getPresignedR2Url(item.fileUrl)
@@ -70,19 +118,19 @@ export default async function PengawasPenyaluranDanaPage() {
         fileUrl: presigned,
         nominal: item.nominal,
         status: item.status,
+        keterangan: item.keterangan || null,
+        batchId: item.batchId || null,
         processedAt: item.processedAt ? item.processedAt.toISOString() : null,
-        student: item.student,
+        student: {
+          id: item.student.id,
+          fullName: item.student.fullName,
+          schoolName: item.student.schoolName,
+          gradeLevel: formatGradeWithJenjang(item.student.gradeLevel, item.student.jenjang),
+          wilayah: item.student.wilayah,
+        },
       }
     })
   )
-
-  const students: PengawasStudentOption[] = studentsRaw.map((s) => ({
-    id: s.id,
-    fullName: s.fullName,
-    schoolName: s.schoolName,
-    gradeLevel: s.gradeLevel,
-    wilayah: s.wilayah,
-  }))
 
   return (
     <div className="relative min-h-dvh w-full">
@@ -127,7 +175,7 @@ export default async function PengawasPenyaluranDanaPage() {
         </svg>
       </div>
 
-      <main className="mx-auto flex min-h-dvh w-full max-w-4xl flex-col gap-6 px-4 py-6 sm:px-6 sm:py-8">
+      <main className="mx-auto flex min-h-dvh w-full max-w-6xl flex-col gap-6 px-4 py-6 sm:px-6 sm:py-8">
         {/* HEADER */}
         <header className="flex items-center justify-between gap-4 rounded-3xl bg-white/85 px-5 py-3.5 shadow-sm backdrop-blur-md border border-orange-100/80">
           <div className="flex items-center gap-3">
@@ -171,6 +219,7 @@ export default async function PengawasPenyaluranDanaPage() {
           history={history}
           pengawasName={pengawas.name}
           wilayah={pengawas.wilayah}
+          currentPeriode={currentPeriode}
         />
       </main>
     </div>

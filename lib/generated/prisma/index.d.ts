@@ -13015,6 +13015,8 @@ export namespace Prisma {
     tanggal: Date | null
     status: string | null
     processedAt: Date | null
+    keterangan: string | null
+    batchId: string | null
   }
 
   export type DisbursementProofMaxAggregateOutputType = {
@@ -13026,6 +13028,8 @@ export namespace Prisma {
     tanggal: Date | null
     status: string | null
     processedAt: Date | null
+    keterangan: string | null
+    batchId: string | null
   }
 
   export type DisbursementProofCountAggregateOutputType = {
@@ -13037,6 +13041,8 @@ export namespace Prisma {
     tanggal: number
     status: number
     processedAt: number
+    keterangan: number
+    batchId: number
     _all: number
   }
 
@@ -13064,6 +13070,8 @@ export namespace Prisma {
     tanggal?: true
     status?: true
     processedAt?: true
+    keterangan?: true
+    batchId?: true
   }
 
   export type DisbursementProofMaxAggregateInputType = {
@@ -13075,6 +13083,8 @@ export namespace Prisma {
     tanggal?: true
     status?: true
     processedAt?: true
+    keterangan?: true
+    batchId?: true
   }
 
   export type DisbursementProofCountAggregateInputType = {
@@ -13086,6 +13096,8 @@ export namespace Prisma {
     tanggal?: true
     status?: true
     processedAt?: true
+    keterangan?: true
+    batchId?: true
     _all?: true
   }
 
@@ -13184,6 +13196,8 @@ export namespace Prisma {
     tanggal: Date
     status: string
     processedAt: Date | null
+    keterangan: string | null
+    batchId: string | null
     _count: DisbursementProofCountAggregateOutputType | null
     _avg: DisbursementProofAvgAggregateOutputType | null
     _sum: DisbursementProofSumAggregateOutputType | null
@@ -13214,6 +13228,8 @@ export namespace Prisma {
     tanggal?: boolean
     status?: boolean
     processedAt?: boolean
+    keterangan?: boolean
+    batchId?: boolean
     student?: boolean | StudentDefaultArgs<ExtArgs>
     pengawas?: boolean | PengawasDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["disbursementProof"]>
@@ -13227,6 +13243,8 @@ export namespace Prisma {
     tanggal?: boolean
     status?: boolean
     processedAt?: boolean
+    keterangan?: boolean
+    batchId?: boolean
     student?: boolean | StudentDefaultArgs<ExtArgs>
     pengawas?: boolean | PengawasDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["disbursementProof"]>
@@ -13240,6 +13258,8 @@ export namespace Prisma {
     tanggal?: boolean
     status?: boolean
     processedAt?: boolean
+    keterangan?: boolean
+    batchId?: boolean
     student?: boolean | StudentDefaultArgs<ExtArgs>
     pengawas?: boolean | PengawasDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["disbursementProof"]>
@@ -13253,9 +13273,11 @@ export namespace Prisma {
     tanggal?: boolean
     status?: boolean
     processedAt?: boolean
+    keterangan?: boolean
+    batchId?: boolean
   }
 
-  export type DisbursementProofOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "pengawasId" | "fileUrl" | "nominal" | "tanggal" | "status" | "processedAt", ExtArgs["result"]["disbursementProof"]>
+  export type DisbursementProofOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "pengawasId" | "fileUrl" | "nominal" | "tanggal" | "status" | "processedAt" | "keterangan" | "batchId", ExtArgs["result"]["disbursementProof"]>
   export type DisbursementProofInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     student?: boolean | StudentDefaultArgs<ExtArgs>
     pengawas?: boolean | PengawasDefaultArgs<ExtArgs>
@@ -13284,6 +13306,8 @@ export namespace Prisma {
       tanggal: Date
       status: string
       processedAt: Date | null
+      keterangan: string | null
+      batchId: string | null
     }, ExtArgs["result"]["disbursementProof"]>
     composites: {}
   }
@@ -13717,6 +13741,8 @@ export namespace Prisma {
     readonly tanggal: FieldRef<"DisbursementProof", 'DateTime'>
     readonly status: FieldRef<"DisbursementProof", 'String'>
     readonly processedAt: FieldRef<"DisbursementProof", 'DateTime'>
+    readonly keterangan: FieldRef<"DisbursementProof", 'String'>
+    readonly batchId: FieldRef<"DisbursementProof", 'String'>
   }
     
 
@@ -18773,7 +18799,9 @@ export namespace Prisma {
     nominal: 'nominal',
     tanggal: 'tanggal',
     status: 'status',
-    processedAt: 'processedAt'
+    processedAt: 'processedAt',
+    keterangan: 'keterangan',
+    batchId: 'batchId'
   };
 
   export type DisbursementProofScalarFieldEnum = (typeof DisbursementProofScalarFieldEnum)[keyof typeof DisbursementProofScalarFieldEnum]
@@ -19660,6 +19688,8 @@ export namespace Prisma {
     tanggal?: DateTimeFilter<"DisbursementProof"> | Date | string
     status?: StringFilter<"DisbursementProof"> | string
     processedAt?: DateTimeNullableFilter<"DisbursementProof"> | Date | string | null
+    keterangan?: StringNullableFilter<"DisbursementProof"> | string | null
+    batchId?: StringNullableFilter<"DisbursementProof"> | string | null
     student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
     pengawas?: XOR<PengawasScalarRelationFilter, PengawasWhereInput>
   }
@@ -19673,6 +19703,8 @@ export namespace Prisma {
     tanggal?: SortOrder
     status?: SortOrder
     processedAt?: SortOrderInput | SortOrder
+    keterangan?: SortOrderInput | SortOrder
+    batchId?: SortOrderInput | SortOrder
     student?: StudentOrderByWithRelationInput
     pengawas?: PengawasOrderByWithRelationInput
   }
@@ -19689,6 +19721,8 @@ export namespace Prisma {
     tanggal?: DateTimeFilter<"DisbursementProof"> | Date | string
     status?: StringFilter<"DisbursementProof"> | string
     processedAt?: DateTimeNullableFilter<"DisbursementProof"> | Date | string | null
+    keterangan?: StringNullableFilter<"DisbursementProof"> | string | null
+    batchId?: StringNullableFilter<"DisbursementProof"> | string | null
     student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
     pengawas?: XOR<PengawasScalarRelationFilter, PengawasWhereInput>
   }, "id">
@@ -19702,6 +19736,8 @@ export namespace Prisma {
     tanggal?: SortOrder
     status?: SortOrder
     processedAt?: SortOrderInput | SortOrder
+    keterangan?: SortOrderInput | SortOrder
+    batchId?: SortOrderInput | SortOrder
     _count?: DisbursementProofCountOrderByAggregateInput
     _avg?: DisbursementProofAvgOrderByAggregateInput
     _max?: DisbursementProofMaxOrderByAggregateInput
@@ -19721,6 +19757,8 @@ export namespace Prisma {
     tanggal?: DateTimeWithAggregatesFilter<"DisbursementProof"> | Date | string
     status?: StringWithAggregatesFilter<"DisbursementProof"> | string
     processedAt?: DateTimeNullableWithAggregatesFilter<"DisbursementProof"> | Date | string | null
+    keterangan?: StringNullableWithAggregatesFilter<"DisbursementProof"> | string | null
+    batchId?: StringNullableWithAggregatesFilter<"DisbursementProof"> | string | null
   }
 
   export type AdminNoteWhereInput = {
@@ -20755,6 +20793,8 @@ export namespace Prisma {
     tanggal?: Date | string
     status?: string
     processedAt?: Date | string | null
+    keterangan?: string | null
+    batchId?: string | null
     student: StudentCreateNestedOneWithoutDisbursementsInput
     pengawas: PengawasCreateNestedOneWithoutDisbursementsInput
   }
@@ -20768,6 +20808,8 @@ export namespace Prisma {
     tanggal?: Date | string
     status?: string
     processedAt?: Date | string | null
+    keterangan?: string | null
+    batchId?: string | null
   }
 
   export type DisbursementProofUpdateInput = {
@@ -20776,6 +20818,8 @@ export namespace Prisma {
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    keterangan?: NullableStringFieldUpdateOperationsInput | string | null
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
     student?: StudentUpdateOneRequiredWithoutDisbursementsNestedInput
     pengawas?: PengawasUpdateOneRequiredWithoutDisbursementsNestedInput
   }
@@ -20789,6 +20833,8 @@ export namespace Prisma {
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    keterangan?: NullableStringFieldUpdateOperationsInput | string | null
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DisbursementProofCreateManyInput = {
@@ -20800,6 +20846,8 @@ export namespace Prisma {
     tanggal?: Date | string
     status?: string
     processedAt?: Date | string | null
+    keterangan?: string | null
+    batchId?: string | null
   }
 
   export type DisbursementProofUpdateManyMutationInput = {
@@ -20808,6 +20856,8 @@ export namespace Prisma {
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    keterangan?: NullableStringFieldUpdateOperationsInput | string | null
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DisbursementProofUncheckedUpdateManyInput = {
@@ -20819,6 +20869,8 @@ export namespace Prisma {
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    keterangan?: NullableStringFieldUpdateOperationsInput | string | null
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AdminNoteCreateInput = {
@@ -21737,6 +21789,8 @@ export namespace Prisma {
     tanggal?: SortOrder
     status?: SortOrder
     processedAt?: SortOrder
+    keterangan?: SortOrder
+    batchId?: SortOrder
   }
 
   export type DisbursementProofAvgOrderByAggregateInput = {
@@ -21755,6 +21809,8 @@ export namespace Prisma {
     tanggal?: SortOrder
     status?: SortOrder
     processedAt?: SortOrder
+    keterangan?: SortOrder
+    batchId?: SortOrder
   }
 
   export type DisbursementProofMinOrderByAggregateInput = {
@@ -21766,6 +21822,8 @@ export namespace Prisma {
     tanggal?: SortOrder
     status?: SortOrder
     processedAt?: SortOrder
+    keterangan?: SortOrder
+    batchId?: SortOrder
   }
 
   export type DisbursementProofSumOrderByAggregateInput = {
@@ -23377,6 +23435,8 @@ export namespace Prisma {
     tanggal?: Date | string
     status?: string
     processedAt?: Date | string | null
+    keterangan?: string | null
+    batchId?: string | null
     student: StudentCreateNestedOneWithoutDisbursementsInput
   }
 
@@ -23388,6 +23448,8 @@ export namespace Prisma {
     tanggal?: Date | string
     status?: string
     processedAt?: Date | string | null
+    keterangan?: string | null
+    batchId?: string | null
   }
 
   export type DisbursementProofCreateOrConnectWithoutPengawasInput = {
@@ -23522,6 +23584,8 @@ export namespace Prisma {
     tanggal?: DateTimeFilter<"DisbursementProof"> | Date | string
     status?: StringFilter<"DisbursementProof"> | string
     processedAt?: DateTimeNullableFilter<"DisbursementProof"> | Date | string | null
+    keterangan?: StringNullableFilter<"DisbursementProof"> | string | null
+    batchId?: StringNullableFilter<"DisbursementProof"> | string | null
   }
 
   export type VisitLogUpsertWithWhereUniqueWithoutPengawasInput = {
@@ -23747,6 +23811,8 @@ export namespace Prisma {
     tanggal?: Date | string
     status?: string
     processedAt?: Date | string | null
+    keterangan?: string | null
+    batchId?: string | null
     pengawas: PengawasCreateNestedOneWithoutDisbursementsInput
   }
 
@@ -23758,6 +23824,8 @@ export namespace Prisma {
     tanggal?: Date | string
     status?: string
     processedAt?: Date | string | null
+    keterangan?: string | null
+    batchId?: string | null
   }
 
   export type DisbursementProofCreateOrConnectWithoutStudentInput = {
@@ -26131,6 +26199,8 @@ export namespace Prisma {
     tanggal?: Date | string
     status?: string
     processedAt?: Date | string | null
+    keterangan?: string | null
+    batchId?: string | null
   }
 
   export type VisitLogCreateManyPengawasInput = {
@@ -26246,6 +26316,8 @@ export namespace Prisma {
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    keterangan?: NullableStringFieldUpdateOperationsInput | string | null
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
     student?: StudentUpdateOneRequiredWithoutDisbursementsNestedInput
   }
 
@@ -26257,6 +26329,8 @@ export namespace Prisma {
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    keterangan?: NullableStringFieldUpdateOperationsInput | string | null
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DisbursementProofUncheckedUpdateManyWithoutPengawasInput = {
@@ -26267,6 +26341,8 @@ export namespace Prisma {
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    keterangan?: NullableStringFieldUpdateOperationsInput | string | null
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type VisitLogUpdateWithoutPengawasInput = {
@@ -26346,6 +26422,8 @@ export namespace Prisma {
     tanggal?: Date | string
     status?: string
     processedAt?: Date | string | null
+    keterangan?: string | null
+    batchId?: string | null
   }
 
   export type AdminNoteCreateManyStudentInput = {
@@ -26445,6 +26523,8 @@ export namespace Prisma {
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    keterangan?: NullableStringFieldUpdateOperationsInput | string | null
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
     pengawas?: PengawasUpdateOneRequiredWithoutDisbursementsNestedInput
   }
 
@@ -26456,6 +26536,8 @@ export namespace Prisma {
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    keterangan?: NullableStringFieldUpdateOperationsInput | string | null
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DisbursementProofUncheckedUpdateManyWithoutStudentInput = {
@@ -26466,6 +26548,8 @@ export namespace Prisma {
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    keterangan?: NullableStringFieldUpdateOperationsInput | string | null
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AdminNoteUpdateWithoutStudentInput = {
