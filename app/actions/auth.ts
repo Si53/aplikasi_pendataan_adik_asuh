@@ -312,6 +312,18 @@ function hasFamilyData(f: FamilyInput) {
   return Boolean(f.name.trim() || f.occupation.trim() || f.medicalHistory.trim())
 }
 
+function isFamilyMemberCompleteServer(f: FamilyInput): boolean {
+  if (!f || !f.name?.trim()) return false
+  if (f.status === "Meninggal Dunia") return false
+  return Boolean(
+    f.occupation?.trim() && f.occupation.trim() !== "-" &&
+    f.incomePerMonth?.trim() && f.incomePerMonth.trim() !== "-" &&
+    f.phone?.trim() && f.phone.trim() !== "-" &&
+    f.address?.trim() && f.address.trim() !== "-" &&
+    f.medicalHistory?.trim()
+  )
+}
+
 export async function registerAction(payload: RegisterPayload): Promise<RegisterState> {
   const required = [
     payload.username,
@@ -340,6 +352,16 @@ export async function registerAction(payload: RegisterPayload): Promise<Register
   } else {
     if (parsedNilai < 0 || parsedNilai > 100) {
       return { error: "Nilai Rata-Rata Rapor harus berada di antara 0 sampai 100." }
+    }
+  }
+
+  if (
+    !isFamilyMemberCompleteServer(payload.father) &&
+    !isFamilyMemberCompleteServer(payload.mother) &&
+    !isFamilyMemberCompleteServer(payload.guardian)
+  ) {
+    return {
+      error: "Wajib mengisi lengkap data salah satu orang tua (Ayah/Ibu) atau Wali yang bertanggung jawab.",
     }
   }
 
@@ -459,6 +481,16 @@ export async function updateStudentRegistrationAction(
   } else {
     if (parsedNilai < 0 || parsedNilai > 100) {
       return { error: "Nilai Rata-Rata Rapor harus berada di antara 0 sampai 100." }
+    }
+  }
+
+  if (
+    !isFamilyMemberCompleteServer(payload.father) &&
+    !isFamilyMemberCompleteServer(payload.mother) &&
+    !isFamilyMemberCompleteServer(payload.guardian)
+  ) {
+    return {
+      error: "Wajib mengisi lengkap data salah satu orang tua (Ayah/Ibu) atau Wali yang bertanggung jawab.",
     }
   }
 

@@ -53,7 +53,6 @@ export function AdminStudentTable({
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedWilayah, setSelectedWilayah] = useState("all")
   const [onlyNoReport, setOnlyNoReport] = useState(false)
-  const [onlyAkselerasi, setOnlyAkselerasi] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState(10)
 
@@ -72,7 +71,8 @@ export function AdminStudentTable({
         const matchName = item.fullName.toLowerCase().includes(q)
         const matchNik = item.nik.toLowerCase().includes(q)
         const matchSchool = item.schoolName.toLowerCase().includes(q)
-        if (!matchName && !matchNik && !matchSchool) return false
+        const matchGrade = item.gradeLevel.toLowerCase().includes(q)
+        if (!matchName && !matchNik && !matchSchool && !matchGrade) return false
       }
 
       // Filter Wilayah
@@ -85,23 +85,13 @@ export function AdminStudentTable({
         return false
       }
 
-      // Quick filter: Program Akselerasi
-      if (onlyAkselerasi && !item.programAkselerasi) {
-        return false
-      }
-
       return true
     })
-  }, [students, searchQuery, selectedWilayah, onlyNoReport, onlyAkselerasi])
+  }, [students, searchQuery, selectedWilayah, onlyNoReport])
 
   // Count of students without report for badge on pill
   const noReportCount = useMemo(() => {
     return students.filter((s) => !s.hasAcademicUpdate).length
-  }, [students])
-
-  // Count of students with program akselerasi
-  const akselerasiCount = useMemo(() => {
-    return students.filter((s) => Boolean(s.programAkselerasi)).length
   }, [students])
 
   // Pagination Logic
@@ -118,14 +108,12 @@ export function AdminStudentTable({
   const hasActiveFilters =
     searchQuery.trim() !== "" ||
     selectedWilayah !== "all" ||
-    onlyNoReport ||
-    onlyAkselerasi
+    onlyNoReport
 
   const handleResetFilters = () => {
     setSearchQuery("")
     setSelectedWilayah("all")
     setOnlyNoReport(false)
-    setOnlyAkselerasi(false)
     setCurrentPage(1)
   }
 
@@ -312,32 +300,6 @@ export function AdminStudentTable({
                   {noReportCount}
                 </span>
               </button>
-
-              {/* Pill: Program Akselerasi */}
-              <button
-                type="button"
-                onClick={() => {
-                  setOnlyAkselerasi(!onlyAkselerasi)
-                  setCurrentPage(1)
-                }}
-                className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold transition cursor-pointer ${
-                  onlyAkselerasi
-                    ? "bg-purple-600 text-white shadow-xs shadow-purple-600/25"
-                    : "bg-purple-50 text-purple-700 hover:bg-purple-100 hover:text-purple-900 border border-purple-200/70"
-                }`}
-              >
-                <Sparkles className="size-3.5" />
-                <span>Program Akselerasi</span>
-                <span
-                  className={`rounded-full px-1.5 py-0.2 text-[10px] font-bold ${
-                    onlyAkselerasi
-                      ? "bg-purple-700 text-white"
-                      : "bg-purple-200/80 text-purple-900"
-                  }`}
-                >
-                  {akselerasiCount}
-                </span>
-              </button>
             </div>
 
             {/* Reset Filters */}
@@ -369,21 +331,20 @@ export function AdminStudentTable({
       {/* Table Card */}
       <div className="overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-xs">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+          <table className="w-full text-left border-collapse border border-stone-200">
             <thead>
-              <tr className="border-b border-stone-200/90 bg-stone-50/70 text-[11px] font-bold uppercase tracking-wider text-stone-500">
-                <th className="px-5 py-3.5">Adik Asuh</th>
-                <th className="px-5 py-3.5">Jenjang & Sekolah</th>
-                <th className="px-5 py-3.5">Wilayah</th>
-                <th className="px-5 py-3.5">Status</th>
-                <th className="px-5 py-3.5">Nilai Rata-rata</th>
-                <th className="px-5 py-3.5 text-right">Aksi</th>
+              <tr className="border-b border-stone-200 bg-stone-50/80 text-[11px] font-extrabold uppercase tracking-wider text-black">
+                <th className="px-5 py-3.5 w-[27%] border-r border-stone-200">Adik Asuh</th>
+                <th className="px-5 py-3.5 w-[26%] border-r border-stone-200">Jenjang & Sekolah</th>
+                <th className="px-5 py-3.5 w-[20%] border-r border-stone-200">Wilayah</th>
+                <th className="px-5 py-3.5 w-[13%] border-r border-stone-200">Nilai Rata-rata</th>
+                <th className="px-5 py-3.5 w-[14%] text-center">Detail</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100 text-xs">
+            <tbody className="divide-y divide-stone-200 text-xs">
               {paginatedStudents.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-5 py-12 text-center text-stone-400">
+                  <td colSpan={5} className="px-5 py-12 text-center text-stone-400">
                     <div className="flex flex-col items-center justify-center gap-2">
                       <AlertCircle className="size-8 text-stone-300" />
                       <p className="font-semibold text-stone-600">
@@ -409,8 +370,8 @@ export function AdminStudentTable({
                       key={item.id}
                       className="hover:bg-stone-50/60 transition-colors"
                     >
-                      {/* 1. Anak Asuh (Avatar inisial + nama + NIK) */}
-                      <td className="px-5 py-4">
+                      {/* 1. Adik Asuh (Avatar inisial + nama + username) */}
+                      <td className="px-5 py-4 border-r border-stone-200">
                         <div className="flex items-center gap-3">
                           <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-stone-100 font-bold text-stone-700 border border-stone-200 shadow-2xs">
                             {initial}
@@ -419,15 +380,17 @@ export function AdminStudentTable({
                             <span className="font-bold text-stone-900 text-sm truncate">
                               {item.fullName}
                             </span>
-                            <span className="text-[11px] font-mono text-stone-500">
-                              NIK: {item.nik}
-                            </span>
+                            {item.username && (
+                              <span className="text-[11px] font-medium text-stone-400 truncate">
+                                @{item.username}
+                              </span>
+                            )}
                           </div>
                         </div>
                       </td>
 
                       {/* 2. Jenjang & Sekolah */}
-                      <td className="px-5 py-4">
+                      <td className="px-5 py-4 border-r border-stone-200">
                         <div className="flex flex-col gap-0.5">
                           <span className="font-semibold text-stone-800 text-xs sm:text-sm">
                             {item.schoolName}
@@ -445,7 +408,7 @@ export function AdminStudentTable({
                       </td>
 
                       {/* 3. Wilayah / Pengawas */}
-                      <td className="px-5 py-4">
+                      <td className="px-5 py-4 border-r border-stone-200">
                         <div className="flex flex-col">
                           <span className="inline-flex items-center gap-1 font-semibold text-stone-800 text-xs">
                             <MapPin className="size-3 text-orange-500" />
@@ -457,13 +420,8 @@ export function AdminStudentTable({
                         </div>
                       </td>
 
-                      {/* 4. Status */}
-                      <td className="px-5 py-4">
-                        {renderStatusBadge(item.status)}
-                      </td>
-
-                      {/* 5. Nilai Rata-rata */}
-                      <td className="px-5 py-4">
+                      {/* 4. Nilai Rata-rata */}
+                      <td className="px-5 py-4 border-r border-stone-200">
                         <div className="flex flex-col">
                           <span className="font-bold text-stone-900 text-sm">
                             {item.latestNilai || "-"}
@@ -476,11 +434,11 @@ export function AdminStudentTable({
                         </div>
                       </td>
 
-                      {/* 6. Aksi */}
-                      <td className="px-5 py-4 text-right">
+                      {/* 5. Detail */}
+                      <td className="px-5 py-4 text-center">
                         <Link
                           href={`/admin/dashboard/data-anak-asuh/${item.id}`}
-                          className="inline-flex items-center gap-1 rounded-lg bg-stone-100 px-3 py-1.5 text-xs font-bold text-stone-700 hover:bg-orange-500 hover:text-white transition cursor-pointer border border-stone-200/80"
+                          className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-orange-50 hover:bg-orange-500 text-orange-700 hover:text-white px-3.5 py-1.5 text-xs font-bold transition-all border border-orange-200/80 shadow-2xs hover:shadow-xs w-full max-w-[110px] mx-auto cursor-pointer"
                         >
                           <Eye className="size-3.5" />
                           <span>Detail</span>

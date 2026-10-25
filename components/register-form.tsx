@@ -52,6 +52,20 @@ const emptyFamily = (): Family => ({
   medicalHistory: "",
 })
 
+export function isFamilyMemberComplete(f: Family): boolean {
+  if (!f.name.trim()) return false
+  if (f.status === "Meninggal Dunia") return false
+
+  const hasName = Boolean(f.name.trim())
+  const hasOccupation = Boolean(f.occupation.trim() && f.occupation.trim() !== "-")
+  const hasIncome = Boolean(f.incomePerMonth.trim() && f.incomePerMonth.trim() !== "-")
+  const hasPhone = Boolean(f.phone.trim() && f.phone.trim() !== "-")
+  const hasAddress = Boolean(f.address.trim() && f.address.trim() !== "-")
+  const hasMedical = Boolean(f.medicalHistory.trim())
+
+  return hasName && hasOccupation && hasIncome && hasPhone && hasAddress && hasMedical
+}
+
 const wilayahPengawasMap: Record<string, string[]> = {
   Pati: ["Pak Kusnadi", "Pak Sukijo", "Ibu Nugraheni"],
   Jepara: ["Ibu Susilo"],
@@ -193,6 +207,7 @@ type RegistrationDraft = {
   mother: Family
   guardian: Family
   costs: Cost[]
+  termsAgreed?: boolean
   consentAgreed: boolean
   savedAt: number
 }
@@ -397,6 +412,7 @@ export function RegisterForm({
     }))
 
   const [prestasiFiles, setPrestasiFiles] = useState<DocumentItem[]>(initialPrestasiItems)
+  const [termsAgreed, setTermsAgreed] = useState(isEditMode)
   const [consentAgreed, setConsentAgreed] = useState(isEditMode)
 
   const set = (key: string, value: string) => setData((d) => ({ ...d, [key]: value }))
@@ -455,6 +471,9 @@ export function RegisterForm({
     if (pendingDraft.costs && pendingDraft.costs.length > 0) {
       setCosts(pendingDraft.costs)
     }
+    if (typeof pendingDraft.termsAgreed === "boolean") {
+      setTermsAgreed(pendingDraft.termsAgreed)
+    }
     if (typeof pendingDraft.consentAgreed === "boolean") {
       setConsentAgreed(pendingDraft.consentAgreed)
     }
@@ -509,6 +528,7 @@ export function RegisterForm({
           mother,
           guardian,
           costs,
+          termsAgreed,
           consentAgreed,
           savedAt: Date.now(),
         }
@@ -531,6 +551,7 @@ export function RegisterForm({
     mother,
     guardian,
     costs,
+    termsAgreed,
     consentAgreed,
   ])
 
@@ -703,6 +724,9 @@ export function RegisterForm({
 
     // Step 1 validation
     if (step === 1) {
+      if (!termsAgreed) {
+        return setError("Harap baca dan setujui Ketentuan Adik Asuh terlebih dahulu sebelum melanjutkan.")
+      }
       if (!data.username.trim()) return setError("Username wajib diisi.")
       if (/\s/.test(data.username)) return setError("Username tidak boleh mengandung spasi.")
       const usernameDigits = (data.username.match(/\d/g) || []).length
@@ -772,10 +796,51 @@ export function RegisterForm({
       }
     }
 
-    // Step 4 validation
+    // Step 4 validation: wajib mengisi lengkap data salah satu orang tua / wali yang masih hidup
     if (step === 4) {
-      if (!father.name.trim() && !mother.name.trim() && !guardian.name.trim()) {
-        return setError("Harap isi setidaknya data salah satu orang tua atau wali.")
+      const fatherComplete = isFamilyMemberComplete(father)
+      const motherComplete = isFamilyMemberComplete(mother)
+      const guardianComplete = isFamilyMemberComplete(guardian)
+
+      if (!fatherComplete && !motherComplete && !guardianComplete) {
+        const activeMembers: { label: string; family: Family }[] = []
+        if (father.name.trim()) activeMembers.push({ label: "Ayah", family: father })
+        if (mother.name.trim()) activeMembers.push({ label: "Ibu", family: mother })
+        if (guardian.name.trim()) activeMembers.push({ label: "Wali", family: guardian })
+
+        if (activeMembers.length === 0) {
+          return setError(
+            "Wajib mengisi lengkap data salah satu orang tua (Ayah / Ibu) atau Wali sebelum melanjutkan ke langkah berikutnya."
+          )
+        }
+
+        const allDeceased = activeMembers.every((m) => m.family.status === "Meninggal Dunia")
+        if (allDeceased) {
+          return setError(
+            "Data orang tua berstatus 'Meninggal Dunia'. Sesuai ketentuan, Anda wajib melengkapi data orang tua yang masih hidup atau Wali yang bertanggung jawab."
+          )
+        }
+
+        const incompleteLiving = activeMembers.find((m) => m.family.status !== "Meninggal Dunia")
+        if (incompleteLiving) {
+          const f = incompleteLiving.family
+          const missing: string[] = []
+          if (!f.occupation.trim() || f.occupation.trim() === "-") missing.push("Pekerjaan")
+          if (!f.incomePerMonth.trim() || f.incomePerMonth.trim() === "-") missing.push("Penghasilan per Bulan")
+          if (!f.phone.trim() || f.phone.trim() === "-") missing.push("Nomor Telepon/HP")
+          if (!f.address.trim() || f.address.trim() === "-") missing.push("Alamat Domisili")
+          if (!f.medicalHistory.trim()) missing.push("Riwayat Penyakit (isi '-' bila tidak ada)")
+
+          if (missing.length > 0) {
+            return setError(
+              `Data ${incompleteLiving.label} belum lengkap. Mohon lengkapi: ${missing.join(", ")}.`
+            )
+          }
+        }
+
+        return setError(
+          "Wajib mengisi lengkap seluruh data salah satu orang tua (Ayah / Ibu) atau Wali sebelum melanjutkan."
+        )
       }
     }
 
@@ -784,6 +849,10 @@ export function RegisterForm({
 
   const submitRegistration = () => {
     setError("")
+
+    if (!termsAgreed) {
+      return setError("Harap setujui Ketentuan Adik Asuh di langkah 1 sebelum menyelesaikan pendaftaran.")
+    }
 
     const usernameDigits = (data.username.match(/\d/g) || []).length
     if (usernameDigits < 2) {
@@ -803,6 +872,11 @@ export function RegisterForm({
     }
     if (educationLevelType === "Sekolah" && (parsedNilai < 0 || parsedNilai > 100)) {
       return setError("Nilai Rata-Rata Rapor harus berada di antara 0 sampai 100.")
+    }
+
+    // Step 4 check
+    if (!isFamilyMemberComplete(father) && !isFamilyMemberComplete(mother) && !isFamilyMemberComplete(guardian)) {
+      return setError("Wajib melengkapi data salah satu orang tua atau wali yang bertanggung jawab.")
     }
 
     // Step 5 validation: seluruh dokumen wajib diupload
@@ -923,7 +997,8 @@ export function RegisterForm({
     data.username.trim() &&
     !/\s/.test(data.username) &&
     usernameDigitCount >= 2 &&
-    /^\d{16}$/.test(data.nik.trim())
+    /^\d{16}$/.test(data.nik.trim()) &&
+    termsAgreed
   )
 
   const isStep2Complete = Boolean(
@@ -954,7 +1029,9 @@ export function RegisterForm({
   )
 
   const isStep4Complete = Boolean(
-    father.name.trim() || mother.name.trim() || guardian.name.trim()
+    isFamilyMemberComplete(father) ||
+    isFamilyMemberComplete(mother) ||
+    isFamilyMemberComplete(guardian)
   )
 
   const isStep5Complete = Boolean(
@@ -1151,9 +1228,111 @@ export function RegisterForm({
       {/* LANGKAH 1: KREDENSIAL SISTEM */}
       {step === 1 && (
         <Section
-          title="1. Informasi Akun"
-          note="Data yang akan digunakan untuk masuk ke aplikasi nanti."
+          title="1. Ketentuan & Informasi Akun"
+          note="Harap baca ketentuan adik asuh dan buat data login untuk masuk ke aplikasi."
         >
+          {/* NOTICE KETENTUAN ADIK ASUH DARI PIHAK UKA */}
+          <div
+            className={`rounded-2xl border-2 p-4 sm:p-5 transition-all shadow-sm ${
+              termsAgreed
+                ? "border-emerald-500/80 bg-emerald-50/90 ring-2 ring-emerald-500/20"
+                : "border-amber-400 bg-amber-50/95 ring-2 ring-amber-400/25"
+            }`}
+          >
+            <div className="flex flex-col gap-3.5">
+              <div className="flex items-center justify-between gap-2 flex-wrap">
+                <div className="flex items-center gap-2">
+                  <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-orange-500 text-white shadow-xs">
+                    <ShieldCheck className="size-4" />
+                  </div>
+                  <div>
+                    <h3 className="font-extrabold text-foreground text-sm sm:text-base">
+                      Ketentuan Adik Asuh
+                    </h3>
+                    <p className="text-[11px] sm:text-xs text-muted-foreground font-medium">
+                      Pernyataan mengenai keinginan pihak UKA kepada adik asuh yang wajib dipatuhi
+                    </p>
+                  </div>
+                </div>
+                <span className="rounded-full bg-red-100 text-red-700 px-2.5 py-0.5 text-[11px] font-bold border border-red-200">
+                  Wajib Dipatuhi <span className="text-red-600 font-black">*</span>
+                </span>
+              </div>
+
+              {/* Daftar Ketentuan */}
+              <div className="rounded-xl border border-amber-200/90 bg-white/95 p-3.5 sm:p-4 shadow-2xs space-y-2.5 text-xs sm:text-sm text-stone-800 leading-relaxed">
+                <div className="flex items-start gap-2.5">
+                  <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-orange-100 text-[11px] font-black text-orange-800">
+                    1
+                  </span>
+                  <p>
+                    <strong>Penggunaan Dana Pendidikan:</strong> Dana pendidikan hanya boleh digunakan untuk kebutuhan pendidikan, dan tidak boleh disalahgunakan untuk hal-hal yang bertentangan dengan Pancasila, NKRI, dan Buddha Dharma.
+                  </p>
+                </div>
+                <div className="flex items-start gap-2.5">
+                  <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-orange-100 text-[11px] font-black text-orange-800">
+                    2
+                  </span>
+                  <p>
+                    <strong>Pengumpulan Laporan Studi:</strong> Adik asuh wajib mengumpulkan rapor (atau hasil studi) setiap semester sebagai bukti perkembangan belajar.
+                  </p>
+                </div>
+                <div className="flex items-start gap-2.5">
+                  <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-orange-100 text-[11px] font-black text-orange-800">
+                    3
+                  </span>
+                  <p>
+                    <strong>Ketentuan Drop Out:</strong> Jika adik asuh putus sekolah/kuliah (drop out) dengan alasan tertentu, wajib segera memberitahukan kepada pihak UKA/pengawas dan penyaluran bantuan pendidikan akan dihentikan.
+                  </p>
+                </div>
+                <div className="flex items-start gap-2.5">
+                  <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-orange-100 text-[11px] font-black text-orange-800">
+                    4
+                  </span>
+                  <p>
+                    <strong>Keaslian Dokumen & Informasi:</strong> Adik asuh dilarang memasukkan dokumen palsu maupun informasi palsu, baik saat pendaftaran maupun saat pelaporan.
+                  </p>
+                </div>
+                <div className="flex items-start gap-2.5">
+                  <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-orange-100 text-[11px] font-black text-orange-800">
+                    5
+                  </span>
+                  <p>
+                    <strong>Sanksi Pelanggaran:</strong> Pelanggaran terhadap ketentuan di atas akan mengakibatkan status adik asuh diberhentikan.
+                  </p>
+                </div>
+              </div>
+
+              {/* Kotak Centang Persetujuan */}
+              <div className="flex items-start gap-3 pt-1">
+                <input
+                  id="terms-agreement-checkbox"
+                  type="checkbox"
+                  checked={termsAgreed}
+                  onChange={(e) => setTermsAgreed(e.target.checked)}
+                  className="mt-1 size-5 shrink-0 rounded-md border-2 border-amber-500 text-orange-600 focus:ring-orange-500 cursor-pointer accent-orange-600"
+                />
+                <div className="space-y-1 min-w-0 flex-1">
+                  <label
+                    htmlFor="terms-agreement-checkbox"
+                    className="font-extrabold text-foreground text-xs sm:text-sm cursor-pointer block leading-normal"
+                  >
+                    Saya telah membaca, memahami, dan menyetujui seluruh Ketentuan Adik Asuh di atas.
+                  </label>
+                  {!termsAgreed ? (
+                    <p className="text-[11px] font-semibold text-amber-800/90">
+                      💡 Centang kotak persetujuan di atas untuk dapat melanjutkan ke langkah berikutnya.
+                    </p>
+                  ) : (
+                    <p className="text-[11px] font-bold text-emerald-700 flex items-center gap-1">
+                      <Check className="size-3.5" /> Ketentuan telah disetujui.
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
           <Field label="Username  *">
             <div className="flex flex-col gap-1.5">
               <Input
@@ -1170,7 +1349,6 @@ export function RegisterForm({
                   if (!data.username) {
                     return (
                       <span className="text-muted-foreground">
-                        Wajib sertakan minimal 2 angka (contoh: budi01)
                       </span>
                     )
                   }
@@ -1742,7 +1920,7 @@ export function RegisterForm({
       {step === 4 && (
         <Section
           title="4. Informasi Keluarga & Orang Tua"
-          note="Data orang tua atau wali calon adik asuh. Klik masing-masing bagian untuk membuka formulir."
+          note="Data orang tua atau wali calon adik asuh. Wajib mengisi lengkap seluruh data salah satu pihak penanggung jawab (Ayah, Ibu, atau Wali)."
         >
           {/* Field Jumlah Saudara di luar accordion */}
           <Field label="Berapa Bersaudara (Termasuk kamu)">
@@ -1788,7 +1966,7 @@ export function RegisterForm({
           </div>
 
           <Hint>
-            Harap isi setidaknya data salah satu orang tua (Ayah atau Ibu) atau Wali yang bertanggung jawab.
+            Wajib mengisi lengkap seluruh data salah satu orang tua (Ayah / Ibu) atau Wali yang bertanggung jawab. Jika data orang tua berstatus &ldquo;Meninggal Dunia&rdquo;, Anda wajib melengkapi data orang tua yang masih hidup atau wali.
           </Hint>
         </Section>
       )}
@@ -1887,7 +2065,7 @@ export function RegisterForm({
             <div className="flex items-center justify-between">
               <div>
                 <Label className="font-bold text-foreground text-sm">
-                  {renderLabelWithAsterisk("2. Foto Raport Terakhir (Halaman Nilai & Identitas) *")}
+                  {renderLabelWithAsterisk("2. Foto Raport Terakhir (Halaman Nilai) *")}
                 </Label>
                 <p className="text-xs text-muted-foreground mt-0.5">
                   Wajib — Unggah foto halaman rapor atau KHS semester terakhir (dapat lebih dari 1 file).
@@ -2341,7 +2519,9 @@ function FamilyAccordionSection({
 }) {
   const setVal = (p: Partial<Family>) => onChange({ ...value, ...p })
   const isDeceased = value.status === "Meninggal Dunia"
-  const isCompleted = Boolean(value.name.trim())
+  const isLivingComplete = isFamilyMemberComplete(value)
+  const isDeceasedWithData = isDeceased && Boolean(value.name.trim())
+  const hasStarted = Boolean(value.name.trim())
 
   const handleStatusChange = (newStatus: string) => {
     if (newStatus === "Meninggal Dunia") {
@@ -2379,12 +2559,24 @@ function FamilyAccordionSection({
         <div className="flex items-center gap-3 min-w-0">
           <div
             className={`flex size-9 shrink-0 items-center justify-center rounded-xl font-bold text-xs transition-colors ${
-              isCompleted
+              isLivingComplete
                 ? "bg-emerald-100 text-emerald-700"
+                : isDeceasedWithData
+                ? "bg-stone-100 text-stone-600"
+                : hasStarted
+                ? "bg-amber-100 text-amber-700"
                 : "bg-orange-100 text-orange-700"
             }`}
           >
-            {isCompleted ? <Check className="size-4 stroke-[3]" /> : <User className="size-4" />}
+            {isLivingComplete ? (
+              <Check className="size-4 stroke-[3]" />
+            ) : isDeceasedWithData ? (
+              <User className="size-4 text-stone-600" />
+            ) : hasStarted ? (
+              <AlertCircle className="size-4 text-amber-600" />
+            ) : (
+              <User className="size-4" />
+            )}
           </div>
           <div className="space-y-0.5 min-w-0">
             <div className="flex items-center gap-2">
@@ -2396,7 +2588,7 @@ function FamilyAccordionSection({
               )}
             </div>
             <p className="text-xs text-muted-foreground truncate">
-              {isCompleted ? (
+              {hasStarted ? (
                 <span className="font-medium text-foreground">
                   {value.name} ({value.status})
                 </span>
@@ -2408,14 +2600,23 @@ function FamilyAccordionSection({
         </div>
 
         <div className="flex items-center gap-2.5 shrink-0 pl-2">
-          {isCompleted ? (
+          {isLivingComplete ? (
             <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-bold text-emerald-700 border border-emerald-200">
               <CheckCircle2 className="size-3.5 text-emerald-600" />
-              <span>Terisi</span>
+              <span>Lengkap</span>
+            </span>
+          ) : isDeceasedWithData ? (
+            <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-stone-100 px-2.5 py-0.5 text-xs font-bold text-stone-600 border border-stone-200">
+              <span>Meninggal Dunia</span>
+            </span>
+          ) : hasStarted ? (
+            <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-bold text-amber-700 border border-amber-200">
+              <AlertCircle className="size-3.5 text-amber-600" />
+              <span>Belum Lengkap</span>
             </span>
           ) : (
             <span className="hidden sm:inline-block text-xs font-medium text-muted-foreground">
-              {isOptional ? "Belum diisi" : "Belum diisi"}
+              {isOptional ? "Opsional" : "Belum diisi"}
             </span>
           )}
 
@@ -2432,7 +2633,7 @@ function FamilyAccordionSection({
       {/* Collapsible Content */}
       {isOpen && (
         <div className="border-t border-border/60 p-4 space-y-4 bg-white/95 animate-in fade-in slide-in-from-top-2 duration-200">
-          <Field label="Nama Lengkap">
+          <Field label="Nama Lengkap *">
             <Input
               value={value.name}
               onChange={(e) => setVal({ name: e.target.value })}
@@ -2440,7 +2641,7 @@ function FamilyAccordionSection({
               className="h-12 rounded-xl bg-white text-sm shadow-sm"
             />
           </Field>
-          <Field label="Kondisi / Status">
+          <Field label="Kondisi / Status *">
             <select
               value={value.status}
               onChange={(e) => handleStatusChange(e.target.value)}
@@ -2450,7 +2651,7 @@ function FamilyAccordionSection({
               <option value="Meninggal Dunia">Meninggal Dunia</option>
             </select>
           </Field>
-          <Field label="Pekerjaan">
+          <Field label={isDeceased ? "Pekerjaan" : "Pekerjaan *"}>
             <Input
               disabled={isDeceased}
               value={isDeceased ? "-" : value.occupation}
@@ -2459,7 +2660,7 @@ function FamilyAccordionSection({
               className="h-12 rounded-xl bg-white text-sm shadow-sm disabled:bg-muted/60 disabled:text-muted-foreground disabled:cursor-not-allowed"
             />
           </Field>
-          <Field label="Penghasilan per Bulan">
+          <Field label={isDeceased ? "Penghasilan per Bulan" : "Penghasilan per Bulan *"}>
             <div className="relative">
               <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-muted-foreground">
                 Rp
@@ -2477,7 +2678,7 @@ function FamilyAccordionSection({
               />
             </div>
           </Field>
-          <Field label="Nomor Telepon / HP">
+          <Field label={isDeceased ? "Nomor Telepon / HP" : "Nomor Telepon / HP *"}>
             <Input
               disabled={isDeceased}
               value={isDeceased ? "-" : value.phone}
@@ -2486,7 +2687,7 @@ function FamilyAccordionSection({
               className="h-12 rounded-xl bg-white text-sm shadow-sm disabled:bg-muted/60 disabled:text-muted-foreground disabled:cursor-not-allowed"
             />
           </Field>
-          <Field label="Alamat Domisili">
+          <Field label={isDeceased ? "Alamat Domisili" : "Alamat Domisili *"}>
             <Textarea
               disabled={isDeceased}
               value={isDeceased ? "-" : value.address}
@@ -2495,12 +2696,12 @@ function FamilyAccordionSection({
               className="min-h-16 rounded-xl bg-white text-sm shadow-sm disabled:bg-muted/60 disabled:text-muted-foreground disabled:cursor-not-allowed"
             />
           </Field>
-          <Field label='Riwayat Penyakit (isi dengan " - " bila tidak ada)'>
+          <Field label={isDeceased ? "Riwayat Penyakit" : 'Riwayat Penyakit (isi dengan " - " bila tidak ada) *'}>
             <Textarea
               disabled={isDeceased}
               value={isDeceased ? "" : value.medicalHistory}
               onChange={(e) => setVal({ medicalHistory: e.target.value })}
-              placeholder={isDeceased ? "Tidak berlaku" : ''}
+              placeholder={isDeceased ? "Tidak berlaku" : "Isi dengan '-' bila tidak ada riwayat penyakit"}
               className="min-h-16 rounded-xl bg-white text-sm shadow-sm disabled:bg-muted/60 disabled:text-muted-foreground disabled:cursor-not-allowed"
             />
           </Field>

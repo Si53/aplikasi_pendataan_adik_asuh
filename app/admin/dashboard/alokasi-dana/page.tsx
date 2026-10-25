@@ -8,6 +8,7 @@ import {
   type AlokasiYearlySummary,
 } from "@/components/admin-alokasi-dana-view"
 import { calculateTotalAnggaranDiperlukan } from "@/lib/budget"
+import { formatGradeWithJenjang } from "@/lib/academic"
 
 export const dynamic = "force-dynamic"
 
@@ -148,7 +149,7 @@ export default async function AlokasiDanaDashboardPage() {
         fullName: st.fullName,
         nik: st.nik,
         schoolName: st.schoolName,
-        gradeLevel: st.gradeLevel,
+        gradeLevel: formatGradeWithJenjang(st.gradeLevel, st.jenjang),
         wilayah: st.wilayah,
         gender: st.gender,
         pengawasName: st.pengawas?.name || "Belum Ditugaskan",

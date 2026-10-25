@@ -1,7 +1,19 @@
+import { formatGradeWithJenjang } from "./academic"
+
+export interface StudentBudgetDetail {
+  id: number
+  fullName: string
+  jenjang: string
+  gradeLevel: string
+  formattedJenjangKelas: string
+  nominal: number
+}
+
 export interface WilayahBudgetItem {
   wilayah: string
   studentCount: number
   subtotal: number
+  students: StudentBudgetDetail[]
 }
 
 export interface BudgetOverviewData {
@@ -29,8 +41,11 @@ export const STANDARD_WILAYAH = [
 ]
 
 export interface StudentBudgetItem {
+  id?: number
+  fullName?: string
   status: string
   jenjang?: string | null
+  gradeLevel?: string | null
   wilayah?: string | null
 }
 
@@ -60,11 +75,14 @@ export function calculateBudgetOverview(
   students: StudentBudgetItem[]
 ): BudgetOverviewData {
   const approvedStudentsList = students.filter((s) => s.status === "approved")
-  const wilayahMap = new Map<string, { studentCount: number; subtotal: number }>()
+  const wilayahMap = new Map<
+    string,
+    { studentCount: number; subtotal: number; students: StudentBudgetDetail[] }
+  >()
 
   // Inisialisasi wilayah standar
   STANDARD_WILAYAH.forEach((w) => {
-    wilayahMap.set(w, { studentCount: 0, subtotal: 0 })
+    wilayahMap.set(w, { studentCount: 0, subtotal: 0, students: [] })
   })
 
   let unassignedJenjangCount = 0
@@ -72,18 +90,31 @@ export function calculateBudgetOverview(
 
   approvedStudentsList.forEach((s) => {
     const j = s.jenjang?.trim()
-    if (j && TARIF_JENJANG[j]) {
-      const tarif = TARIF_JENJANG[j]
-      const w = s.wilayah?.trim() || "Lainnya"
-      if (!wilayahMap.has(w)) {
-        wilayahMap.set(w, { studentCount: 0, subtotal: 0 })
-      }
-      const entry = wilayahMap.get(w)!
+    const tarif = j && TARIF_JENJANG[j] ? TARIF_JENJANG[j] : 0
+    const w = s.wilayah?.trim() || "Lainnya"
+
+    if (!wilayahMap.has(w)) {
+      wilayahMap.set(w, { studentCount: 0, subtotal: 0, students: [] })
+    }
+    const entry = wilayahMap.get(w)!
+
+    if (tarif > 0) {
       entry.studentCount += 1
       entry.subtotal += tarif
       totalAnggaranBeasiswa += tarif
     } else {
       unassignedJenjangCount++
+    }
+
+    if (s.id && s.fullName) {
+      entry.students.push({
+        id: s.id,
+        fullName: s.fullName,
+        jenjang: j || "Belum Ditentukan",
+        gradeLevel: s.gradeLevel || "-",
+        formattedJenjangKelas: formatGradeWithJenjang(s.gradeLevel, j),
+        nominal: tarif,
+      })
     }
   })
 
@@ -92,6 +123,9 @@ export function calculateBudgetOverview(
       wilayah,
       studentCount: data.studentCount,
       subtotal: data.subtotal,
+      students: data.students.sort(
+        (a, b) => b.nominal - a.nominal || a.fullName.localeCompare(b.fullName)
+      ),
     }))
     .sort(
       (a, b) =>
@@ -107,3 +141,4 @@ export function calculateBudgetOverview(
     items: budgetItems,
   }
 }
+

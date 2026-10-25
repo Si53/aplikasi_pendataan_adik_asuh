@@ -26,6 +26,7 @@ import {
   History,
 } from "lucide-react"
 import { createAdminNoteAction, verifyDisbursementAction } from "@/app/actions/admin"
+import { formatGradeWithJenjang } from "@/lib/academic"
 
 export interface AdminStudentDetailData {
   student: {
@@ -465,7 +466,9 @@ export function AdminStudentDetailTabs({
               <div className="p-3 rounded-xl bg-stone-50 border border-stone-200/60">
                 <span className="text-stone-400 text-xs block">Jenjang / Kelas</span>
                 <div className="flex items-center gap-1.5 flex-wrap mt-0.5">
-                  <strong className="text-stone-800">{data.student.gradeLevel}</strong>
+                  <strong className="text-stone-800">
+                    {formatGradeWithJenjang(data.student.gradeLevel, data.student.jenjang)}
+                  </strong>
                   {data.student.programAkselerasi && (
                     <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-purple-100 text-purple-700">
                       Akselerasi (1 Thn 3 Smt)
@@ -511,9 +514,21 @@ export function AdminStudentDetailTabs({
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
                         <span className="rounded-md bg-orange-100 px-2 py-0.5 text-xs font-bold text-orange-800">
-                          {item.semester
-                            ? `${item.kelasSaatItu} - Semester ${item.semester}`
-                            : item.kelasSaatItu}
+                          {(() => {
+                            const formatted = formatGradeWithJenjang(
+                              item.kelasSaatItu,
+                              data.student.jenjang
+                            )
+                            if (
+                              formatted.startsWith("Semester") ||
+                              data.student.jenjang === "Kuliah"
+                            ) {
+                              return formatted
+                            }
+                            return item.semester
+                              ? `${formatted} - Semester ${item.semester}`
+                              : formatted
+                          })()}
                         </span>
                         {idx === 0 && (
                           <span className="rounded-md bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">

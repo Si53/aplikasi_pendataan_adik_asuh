@@ -65,22 +65,22 @@ interface AdminKontrolStatusViewProps {
 
 type ModalTarget =
   | {
-      type: "student"
-      id: number
-      name: string
-      currentStatus: string
-      targetStatus: "approved" | "nonaktif" | "rejected" | "alumni" | "perlu_revisi"
-      actionLabel: string
-      isDeactivation?: boolean
-    }
+    type: "student"
+    id: number
+    name: string
+    currentStatus: string
+    targetStatus: "approved" | "nonaktif" | "rejected" | "alumni" | "perlu_revisi"
+    actionLabel: string
+    isDeactivation?: boolean
+  }
   | {
-      type: "pengawas"
-      id: number
-      name: string
-      currentStatus: string
-      targetStatus: "aktif" | "nonaktif"
-      actionLabel: string
-    }
+    type: "pengawas"
+    id: number
+    name: string
+    currentStatus: string
+    targetStatus: "aktif" | "nonaktif"
+    actionLabel: string
+  }
 
 export function AdminKontrolStatusView({
   students,
@@ -271,10 +271,6 @@ export function AdminKontrolStatusView({
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1 rounded-full bg-white/20 backdrop-blur-xs px-2.5 py-0.5 text-xs font-bold text-white border border-white/30">
-              <Sparkles className="size-3 text-amber-200" />
-              KONTROL & STATUS AKUN
-            </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight drop-shadow-xs">
             Kontrol Status
@@ -305,20 +301,18 @@ export function AdminKontrolStatusView({
         <button
           type="button"
           onClick={() => setActiveTab("student")}
-          className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-xs sm:text-sm font-bold transition cursor-pointer ${
-            activeTab === "student"
-              ? "bg-white text-orange-600 shadow-sm"
-              : "text-stone-600 hover:text-stone-900"
-          }`}
+          className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-xs sm:text-sm font-bold transition cursor-pointer ${activeTab === "student"
+            ? "bg-white text-orange-600 shadow-sm"
+            : "text-stone-600 hover:text-stone-900"
+            }`}
         >
           <Users className="size-4" />
           <span>Adik Asuh</span>
           <span
-            className={`rounded-full px-2 py-0.5 text-[10px] font-extrabold ${
-              activeTab === "student"
-                ? "bg-orange-100 text-orange-800"
-                : "bg-stone-300/80 text-stone-700"
-            }`}
+            className={`rounded-full px-2 py-0.5 text-[10px] font-extrabold ${activeTab === "student"
+              ? "bg-orange-100 text-orange-800"
+              : "bg-stone-300/80 text-stone-700"
+              }`}
           >
             {students.length}
           </span>
@@ -332,20 +326,18 @@ export function AdminKontrolStatusView({
         <button
           type="button"
           onClick={() => setActiveTab("pengawas")}
-          className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-xs sm:text-sm font-bold transition cursor-pointer ${
-            activeTab === "pengawas"
-              ? "bg-white text-orange-600 shadow-sm"
-              : "text-stone-600 hover:text-stone-900"
-          }`}
+          className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-xs sm:text-sm font-bold transition cursor-pointer ${activeTab === "pengawas"
+            ? "bg-white text-orange-600 shadow-sm"
+            : "text-stone-600 hover:text-stone-900"
+            }`}
         >
           <ShieldCheck className="size-4" />
           <span>Pengawas Lapangan</span>
           <span
-            className={`rounded-full px-2 py-0.5 text-[10px] font-extrabold ${
-              activeTab === "pengawas"
-                ? "bg-orange-100 text-orange-800"
-                : "bg-stone-300/80 text-stone-700"
-            }`}
+            className={`rounded-full px-2 py-0.5 text-[10px] font-extrabold ${activeTab === "pengawas"
+              ? "bg-orange-100 text-orange-800"
+              : "bg-stone-300/80 text-stone-700"
+              }`}
           >
             {pengawas.length}
           </span>
@@ -362,7 +354,7 @@ export function AdminKontrolStatusView({
             {/* Kartu 1: Total Aktif (approved) */}
             <div className="relative overflow-hidden rounded-3xl border border-emerald-100 bg-white p-6 shadow-xs">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wider text-stone-400">
+                <span className="text-xs font-bold uppercase tracking-wider text-black">
                   Total Aktif
                 </span>
                 <div className="flex size-10 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
@@ -412,7 +404,7 @@ export function AdminKontrolStatusView({
             {/* Kartu 3: Nonaktif */}
             <div className="relative overflow-hidden rounded-3xl border border-stone-200 bg-white p-6 shadow-xs">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wider text-stone-400">
+                <span className="text-xs font-bold uppercase tracking-wider text-black">
                   Akun Nonaktif
                 </span>
                 <div className="flex size-10 items-center justify-center rounded-2xl bg-stone-100 text-stone-600">
@@ -528,16 +520,16 @@ export function AdminKontrolStatusView({
 
             {/* Table Content */}
             <div className="overflow-x-auto rounded-2xl border border-stone-200">
-              <table className="w-full text-left text-xs sm:text-sm">
-                <thead className="bg-stone-50 border-b border-stone-200 text-stone-600 font-bold uppercase tracking-wider text-[11px]">
+              <table className="w-full text-left text-xs sm:text-sm border-collapse border border-stone-200">
+                <thead className="bg-stone-50/80 border-b border-stone-200 text-black font-extrabold uppercase tracking-wider text-[11px]">
                   <tr>
-                    <th className="py-3.5 px-4">Nama Adik Asuh</th>
-                    <th className="py-3.5 px-4">Tanggal Daftar</th>
-                    <th className="py-3.5 px-4 text-center">Status Saat Ini</th>
+                    <th className="py-3.5 px-4 border-r border-stone-200">Nama Adik Asuh</th>
+                    <th className="py-3.5 px-4 border-r border-stone-200">Tanggal Daftar</th>
+                    <th className="py-3.5 px-4 text-center border-r border-stone-200">Status Saat Ini</th>
                     <th className="py-3.5 px-4 text-center min-w-[340px] xl:min-w-[500px]">Kontrol Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-stone-100 bg-white">
+                <tbody className="divide-y divide-stone-200 bg-white">
                   {paginatedStudents.length === 0 ? (
                     <tr>
                       <td colSpan={4} className="py-12 text-center text-stone-400">
@@ -572,7 +564,7 @@ export function AdminKontrolStatusView({
                           className="hover:bg-orange-50/30 transition-colors"
                         >
                           {/* Nama & NIK */}
-                          <td className="py-4 px-4">
+                          <td className="py-4 px-4 border-r border-stone-200">
                             <div className="flex items-center gap-3">
                               <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-400 to-amber-500 font-bold text-xs text-white shadow-2xs">
                                 {initials}
@@ -592,7 +584,7 @@ export function AdminKontrolStatusView({
                           </td>
 
                           {/* Tanggal Daftar */}
-                          <td className="py-4 px-4">
+                          <td className="py-4 px-4 border-r border-stone-200">
                             <div className="space-y-0.5">
                               <span className="font-mono text-xs text-stone-700">
                                 {new Date(st.createdAt).toLocaleDateString("id-ID", {
@@ -608,7 +600,7 @@ export function AdminKontrolStatusView({
                           </td>
 
                           {/* Status Saat Ini */}
-                          <td className="py-4 px-4 text-center">
+                          <td className="py-4 px-4 text-center border-r border-stone-200">
                             {isApproved && (
                               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 text-xs font-bold text-emerald-700">
                                 <CheckCircle2 className="size-3.5 text-emerald-600" />
@@ -848,37 +840,34 @@ export function AdminKontrolStatusView({
                                     setReason("")
                                     setActionError(null)
                                   }}
-                                  className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-orange-500/20 ${
-                                    isApproved ? "bg-emerald-500" : "bg-stone-300"
-                                  }`}
+                                  className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-orange-500/20 ${isApproved ? "bg-emerald-500" : "bg-stone-300"
+                                    }`}
                                   role="switch"
                                   aria-checked={isApproved}
                                 >
                                   <span className="sr-only">Toggle status</span>
                                   <span
-                                    className={`pointer-events-none inline-block size-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
-                                      isApproved ? "translate-x-5" : "translate-x-0"
-                                    }`}
+                                    className={`pointer-events-none inline-block size-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${isApproved ? "translate-x-5" : "translate-x-0"
+                                      }`}
                                   />
                                 </button>
                                 <span
-                                  className={`text-xs font-bold ${
-                                    isApproved
-                                      ? "text-emerald-700"
-                                      : isAlumni
+                                  className={`text-xs font-bold ${isApproved
+                                    ? "text-emerald-700"
+                                    : isAlumni
                                       ? "text-blue-700"
                                       : isNonaktif
-                                      ? "text-stone-500"
-                                      : "text-rose-600"
-                                  }`}
+                                        ? "text-stone-500"
+                                        : "text-rose-600"
+                                    }`}
                                 >
                                   {isApproved
                                     ? "Aktif"
                                     : isAlumni
-                                    ? "Alumni"
-                                    : isNonaktif
-                                    ? "Nonaktif"
-                                    : "Ditolak"}
+                                      ? "Alumni"
+                                      : isNonaktif
+                                        ? "Nonaktif"
+                                        : "Ditolak"}
                                 </span>
                               </div>
                             )}
@@ -941,7 +930,7 @@ export function AdminKontrolStatusView({
             {/* Kartu 1: Pengawas Aktif */}
             <div className="relative overflow-hidden rounded-3xl border border-emerald-100 bg-white p-6 shadow-xs">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wider text-stone-400">
+                <span className="text-xs font-bold uppercase tracking-wider text-black">
                   Pengawas Aktif
                 </span>
                 <div className="flex size-10 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
@@ -966,7 +955,7 @@ export function AdminKontrolStatusView({
             {/* Kartu 2: Pengawas Nonaktif */}
             <div className="relative overflow-hidden rounded-3xl border border-stone-200 bg-white p-6 shadow-xs">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wider text-stone-400">
+                <span className="text-xs font-bold uppercase tracking-wider text-black">
                   Pengawas Nonaktif
                 </span>
                 <div className="flex size-10 items-center justify-center rounded-2xl bg-stone-100 text-stone-600">
@@ -991,7 +980,7 @@ export function AdminKontrolStatusView({
             {/* Kartu 3: Total Wilayah */}
             <div className="relative overflow-hidden rounded-3xl border border-orange-100 bg-white p-6 shadow-xs">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold uppercase tracking-wider text-stone-400">
+                <span className="text-xs font-bold uppercase tracking-wider text-black">
                   Total Wilayah
                 </span>
                 <div className="flex size-10 items-center justify-center rounded-2xl bg-orange-50 text-orange-600">
@@ -1078,18 +1067,18 @@ export function AdminKontrolStatusView({
 
             {/* Table Content */}
             <div className="overflow-x-auto rounded-2xl border border-stone-200">
-              <table className="w-full text-left text-xs sm:text-sm">
-                <thead className="bg-stone-50 border-b border-stone-200 text-stone-600 font-bold uppercase tracking-wider text-[11px]">
+              <table className="w-full text-left text-xs sm:text-sm border-collapse border border-stone-200">
+                <thead className="bg-stone-50/80 border-b border-stone-200 text-black font-extrabold uppercase tracking-wider text-[11px]">
                   <tr>
-                    <th className="py-3.5 px-4">Nama Pengawas</th>
-                    <th className="py-3.5 px-4">Username Login</th>
-                    <th className="py-3.5 px-4">Wilayah Tugas</th>
-                    <th className="py-3.5 px-4">Adik Asuh Binaan</th>
-                    <th className="py-3.5 px-4 text-center">Status Saat Ini</th>
+                    <th className="py-3.5 px-4 border-r border-stone-200">Nama Pengawas</th>
+                    <th className="py-3.5 px-4 border-r border-stone-200">Username Login</th>
+                    <th className="py-3.5 px-4 border-r border-stone-200">Wilayah Tugas</th>
+                    <th className="py-3.5 px-4 border-r border-stone-200">Adik Asuh Binaan</th>
+                    <th className="py-3.5 px-4 text-center border-r border-stone-200">Status Saat Ini</th>
                     <th className="py-3.5 px-4 text-center">Kontrol Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-stone-100 bg-white">
+                <tbody className="divide-y divide-stone-200 bg-white">
                   {paginatedPengawas.length === 0 ? (
                     <tr>
                       <td colSpan={6} className="py-12 text-center text-stone-400">
@@ -1115,7 +1104,7 @@ export function AdminKontrolStatusView({
                           className="hover:bg-orange-50/30 transition-colors"
                         >
                           {/* Nama & Kontak */}
-                          <td className="py-4 px-4">
+                          <td className="py-4 px-4 border-r border-stone-200">
                             <div className="flex items-center gap-3">
                               <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 font-bold text-xs text-white shadow-2xs">
                                 {initials}
@@ -1133,28 +1122,28 @@ export function AdminKontrolStatusView({
                           </td>
 
                           {/* Username */}
-                          <td className="py-4 px-4">
+                          <td className="py-4 px-4 border-r border-stone-200">
                             <span className="font-mono text-xs font-semibold text-stone-700 bg-stone-100 px-2.5 py-1 rounded-lg">
                               @{p.username}
                             </span>
                           </td>
 
                           {/* Wilayah Tugas */}
-                          <td className="py-4 px-4">
+                          <td className="py-4 px-4 border-r border-stone-200">
                             <span className="font-bold text-xs text-orange-800 bg-orange-50 px-2.5 py-1 rounded-lg border border-orange-200">
                               Wilayah {p.wilayah}
                             </span>
                           </td>
 
                           {/* Total Siswa Binaan */}
-                          <td className="py-4 px-4">
+                          <td className="py-4 px-4 border-r border-stone-200">
                             <span className="font-bold text-stone-900 text-xs">
                               {p.totalBinaanCount} Adik Asuh
                             </span>
                           </td>
 
                           {/* Status Saat Ini */}
-                          <td className="py-4 px-4 text-center">
+                          <td className="py-4 px-4 text-center border-r border-stone-200">
                             {isAktif ? (
                               <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 text-xs font-bold text-emerald-700">
                                 <CheckCircle2 className="size-3.5 text-emerald-600" />
@@ -1186,23 +1175,20 @@ export function AdminKontrolStatusView({
                                   setReason("")
                                   setActionError(null)
                                 }}
-                                className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-orange-500/20 ${
-                                  isAktif ? "bg-emerald-500" : "bg-stone-300"
-                                }`}
+                                className={`relative inline-flex h-7 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-orange-500/20 ${isAktif ? "bg-emerald-500" : "bg-stone-300"
+                                  }`}
                                 role="switch"
                                 aria-checked={isAktif}
                               >
                                 <span className="sr-only">Toggle status pengawas</span>
                                 <span
-                                  className={`pointer-events-none inline-block size-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
-                                    isAktif ? "translate-x-5" : "translate-x-0"
-                                  }`}
+                                  className={`pointer-events-none inline-block size-6 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${isAktif ? "translate-x-5" : "translate-x-0"
+                                    }`}
                                 />
                               </button>
                               <span
-                                className={`text-xs font-bold ${
-                                  isAktif ? "text-emerald-700" : "text-stone-500"
-                                }`}
+                                className={`text-xs font-bold ${isAktif ? "text-emerald-700" : "text-stone-500"
+                                  }`}
                               >
                                 {isAktif ? "Aktif" : "Nonaktif"}
                               </span>
@@ -1281,17 +1267,16 @@ export function AdminKontrolStatusView({
               {/* Header Modal */}
               <div className="p-6 border-b border-stone-100 bg-gradient-to-r from-orange-50/70 via-amber-50/40 to-white flex items-start gap-4">
                 <div
-                  className={`flex size-12 shrink-0 items-center justify-center rounded-2xl shadow-sm text-white ${
-                    resolvedTarget === "approved" || resolvedTarget === "aktif"
-                      ? "bg-emerald-600"
-                      : isRevisionModal
+                  className={`flex size-12 shrink-0 items-center justify-center rounded-2xl shadow-sm text-white ${resolvedTarget === "approved" || resolvedTarget === "aktif"
+                    ? "bg-emerald-600"
+                    : isRevisionModal
                       ? "bg-blue-600"
                       : resolvedTarget === "alumni"
-                      ? "bg-blue-600"
-                      : resolvedTarget === "rejected"
-                      ? "bg-rose-600"
-                      : "bg-stone-700"
-                  }`}
+                        ? "bg-blue-600"
+                        : resolvedTarget === "rejected"
+                          ? "bg-rose-600"
+                          : "bg-stone-700"
+                    }`}
                 >
                   {resolvedTarget === "approved" || resolvedTarget === "aktif" ? (
                     <CheckCircle2 className="size-6" />
@@ -1337,11 +1322,10 @@ export function AdminKontrolStatusView({
                     </label>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                       <label
-                        className={`flex items-center gap-2.5 p-3 rounded-2xl border cursor-pointer transition ${
-                          deactivationType === "alumni"
-                            ? "border-blue-500 bg-blue-50/60 text-blue-900 font-bold ring-2 ring-blue-500/20"
-                            : "border-stone-200 bg-white text-stone-700 hover:bg-stone-50"
-                        }`}
+                        className={`flex items-center gap-2.5 p-3 rounded-2xl border cursor-pointer transition ${deactivationType === "alumni"
+                          ? "border-blue-500 bg-blue-50/60 text-blue-900 font-bold ring-2 ring-blue-500/20"
+                          : "border-stone-200 bg-white text-stone-700 hover:bg-stone-50"
+                          }`}
                       >
                         <input
                           type="radio"
@@ -1358,11 +1342,10 @@ export function AdminKontrolStatusView({
                       </label>
 
                       <label
-                        className={`flex items-center gap-2.5 p-3 rounded-2xl border cursor-pointer transition ${
-                          deactivationType === "nonaktif"
-                            ? "border-stone-500 bg-stone-100 text-stone-900 font-bold ring-2 ring-stone-500/20"
-                            : "border-stone-200 bg-white text-stone-700 hover:bg-stone-50"
-                        }`}
+                        className={`flex items-center gap-2.5 p-3 rounded-2xl border cursor-pointer transition ${deactivationType === "nonaktif"
+                          ? "border-stone-500 bg-stone-100 text-stone-900 font-bold ring-2 ring-stone-500/20"
+                          : "border-stone-200 bg-white text-stone-700 hover:bg-stone-50"
+                          }`}
                       >
                         <input
                           type="radio"
@@ -1392,17 +1375,16 @@ export function AdminKontrolStatusView({
                   <div className="flex items-center justify-between">
                     <span className="text-stone-500 font-medium">Status Baru yang Dituju:</span>
                     <span
-                      className={`font-black uppercase font-mono ${
-                        resolvedTarget === "approved" || resolvedTarget === "aktif"
-                          ? "text-emerald-700"
-                          : isRevisionModal
+                      className={`font-black uppercase font-mono ${resolvedTarget === "approved" || resolvedTarget === "aktif"
+                        ? "text-emerald-700"
+                        : isRevisionModal
                           ? "text-blue-700"
                           : resolvedTarget === "alumni"
-                          ? "text-blue-700"
-                          : resolvedTarget === "rejected"
-                          ? "text-rose-700"
-                          : "text-stone-700"
-                      }`}
+                            ? "text-blue-700"
+                            : resolvedTarget === "rejected"
+                              ? "text-rose-700"
+                              : "text-stone-700"
+                        }`}
                     >
                       {resolvedTarget === "perlu_revisi" ? "PERLU REVISI" : resolvedTarget}
                     </span>
@@ -1430,10 +1412,10 @@ export function AdminKontrolStatusView({
                       isRevisionModal
                         ? "Contoh: Foto SKTM buram, mohon upload ulang"
                         : modalTarget.type === "student" && modalTarget.isDeactivation
-                        ? deactivationType === "alumni"
-                          ? "Contoh: Telah lulus jenjang pendidikan dan menyelesaikan program beasiswa..."
-                          : "Contoh: Pindah domisili di luar wilayah jangkauan / Mengundurkan diri..."
-                        : "Contoh: Mengaktifkan kembali setelah verifikasi dokumen lanjutan lengkap..."
+                          ? deactivationType === "alumni"
+                            ? "Contoh: Telah lulus jenjang pendidikan dan menyelesaikan program beasiswa..."
+                            : "Contoh: Pindah domisili di luar wilayah jangkauan / Mengundurkan diri..."
+                          : "Contoh: Mengaktifkan kembali setelah verifikasi dokumen lanjutan lengkap..."
                     }
                     required
                     className="w-full rounded-2xl border border-stone-300 bg-white p-3.5 text-xs sm:text-sm text-stone-800 placeholder:text-stone-400 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition resize-none"
@@ -1465,17 +1447,16 @@ export function AdminKontrolStatusView({
                   <button
                     type="submit"
                     disabled={isPending || !reason.trim()}
-                    className={`inline-flex items-center gap-2 rounded-2xl px-6 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md transition disabled:opacity-50 cursor-pointer ${
-                      resolvedTarget === "approved" || resolvedTarget === "aktif"
-                        ? "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/25"
-                        : isRevisionModal
+                    className={`inline-flex items-center gap-2 rounded-2xl px-6 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md transition disabled:opacity-50 cursor-pointer ${resolvedTarget === "approved" || resolvedTarget === "aktif"
+                      ? "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/25"
+                      : isRevisionModal
                         ? "bg-blue-600 hover:bg-blue-700 shadow-blue-600/25"
                         : resolvedTarget === "alumni"
-                        ? "bg-blue-600 hover:bg-blue-700 shadow-blue-600/25"
-                        : resolvedTarget === "rejected"
-                        ? "bg-rose-600 hover:bg-rose-700 shadow-rose-600/25"
-                        : "bg-stone-700 hover:bg-stone-800 shadow-stone-700/25"
-                    }`}
+                          ? "bg-blue-600 hover:bg-blue-700 shadow-blue-600/25"
+                          : resolvedTarget === "rejected"
+                            ? "bg-rose-600 hover:bg-rose-700 shadow-rose-600/25"
+                            : "bg-stone-700 hover:bg-stone-800 shadow-stone-700/25"
+                      }`}
                   >
                     {isPending ? (
                       <Loader2 className="size-4 animate-spin" />
@@ -1488,8 +1469,8 @@ export function AdminKontrolStatusView({
                           ? "Mengirim..."
                           : "Memproses..."
                         : isRevisionModal
-                        ? "Kirim Catatan Revisi"
-                        : "Konfirmasi & Simpan"}
+                          ? "Kirim Catatan Revisi"
+                          : "Konfirmasi & Simpan"}
                     </span>
                   </button>
                 </div>

@@ -156,7 +156,8 @@ export function AdminAlokasiDanaView({
         const matchName = s.fullName.toLowerCase().includes(q)
         const matchNik = s.nik.toLowerCase().includes(q)
         const matchSchool = s.schoolName.toLowerCase().includes(q)
-        if (!matchName && !matchNik && !matchSchool) return false
+        const matchGrade = s.gradeLevel.toLowerCase().includes(q)
+        if (!matchName && !matchNik && !matchSchool && !matchGrade) return false
       }
 
       // Wilayah
@@ -170,7 +171,7 @@ export function AdminAlokasiDanaView({
         if (selectedJenjang === "SD" && !grade.includes("sd")) return false
         if (selectedJenjang === "SMP" && !grade.includes("smp")) return false
         if (selectedJenjang === "SMA" && !grade.includes("sma") && !grade.includes("smk")) return false
-        if (selectedJenjang === "KULIAH" && !grade.includes("kuliah") && !grade.includes("univ") && !grade.includes("d3") && !grade.includes("s1")) return false
+        if (selectedJenjang === "KULIAH" && !grade.includes("kuliah") && !grade.includes("univ") && !grade.includes("d3") && !grade.includes("s1") && !grade.includes("semester")) return false
       }
 
       // Status penerimaan
@@ -267,10 +268,10 @@ export function AdminAlokasiDanaView({
       s.disbursementCount,
       s.lastVerifiedDate
         ? new Date(s.lastVerifiedDate).toLocaleDateString("id-ID", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-          })
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        })
         : "Belum pernah",
     ])
 
@@ -298,10 +299,6 @@ export function AdminAlokasiDanaView({
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1 rounded-full bg-white/20 backdrop-blur-xs px-2.5 py-0.5 text-xs font-bold text-white border border-white/30">
-              <Sparkles className="size-3 text-amber-200" />
-              AKUMULASI DANA TERVERIFIKASI
-            </span>
             <span className="rounded-full bg-white/20 backdrop-blur-xs px-2.5 py-0.5 text-[11px] font-semibold text-white border border-white/30">
               Periode {selectedPeriode}
             </span>
@@ -359,7 +356,7 @@ export function AdminAlokasiDanaView({
         <div className="relative overflow-hidden rounded-3xl border border-emerald-100 bg-white p-6 shadow-xs">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-emerald-800">
-              Debit
+              Sudah Tersalurkan
             </span>
             <div className="flex size-10 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
               <Wallet className="size-5" />
@@ -383,7 +380,7 @@ export function AdminAlokasiDanaView({
         <div className="relative overflow-hidden rounded-3xl border border-rose-100 bg-white p-6 shadow-xs">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-rose-800">
-              Kredit
+              Belum Tersalurkan
             </span>
             <div className="flex size-10 items-center justify-center rounded-2xl bg-rose-50 text-rose-600">
               <Clock className="size-5" />
@@ -497,17 +494,17 @@ export function AdminAlokasiDanaView({
 
         {/* Table Content */}
         <div className="overflow-x-auto rounded-2xl border border-stone-200">
-          <table className="w-full text-left text-xs sm:text-sm">
-            <thead className="bg-stone-50 border-b border-stone-200 text-stone-600 font-bold uppercase tracking-wider text-[11px]">
+          <table className="w-full text-left text-xs sm:text-sm border-collapse border border-stone-200">
+            <thead className="bg-stone-50/80 border-b border-stone-200 text-black font-extrabold uppercase tracking-wider text-[11px]">
               <tr>
-                <th className="py-3.5 px-4">Nama Adik Asuh</th>
-                <th className="py-3.5 px-4">Jenjang & Sekolah</th>
-                <th className="py-3.5 px-4">Total Diterima (Sepanjang Waktu)</th>
-                <th className="py-3.5 px-4">Terakhir Diverifikasi</th>
+                <th className="py-3.5 px-4 border-r border-stone-200">Nama Adik Asuh</th>
+                <th className="py-3.5 px-4 border-r border-stone-200">Jenjang & Sekolah</th>
+                <th className="py-3.5 px-4 border-r border-stone-200">Total Diterima (Sepanjang Waktu)</th>
+                <th className="py-3.5 px-4 border-r border-stone-200">Terakhir Diverifikasi</th>
                 <th className="py-3.5 px-4 text-center">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100 bg-white">
+            <tbody className="divide-y divide-stone-200 bg-white">
               {paginatedStudents.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="py-12 text-center text-stone-400">
@@ -535,7 +532,7 @@ export function AdminAlokasiDanaView({
                       className="hover:bg-orange-50/30 transition-colors group"
                     >
                       {/* 1. Nama Adik Asuh (Avatar + Nama + NIK) */}
-                      <td className="py-4 px-4">
+                      <td className="py-4 px-4 border-r border-stone-200">
                         <div className="flex items-center gap-3">
                           <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-400 to-amber-500 font-bold text-xs text-white shadow-2xs">
                             {initials}
@@ -555,7 +552,7 @@ export function AdminAlokasiDanaView({
                       </td>
 
                       {/* 2. Jenjang & Sekolah */}
-                      <td className="py-4 px-4">
+                      <td className="py-4 px-4 border-r border-stone-200">
                         <div className="space-y-0.5">
                           <div className="flex items-center gap-1.5">
                             <span className="rounded-md bg-stone-100 px-2 py-0.5 text-[10px] font-extrabold text-stone-700">
@@ -573,7 +570,7 @@ export function AdminAlokasiDanaView({
                       </td>
 
                       {/* 3. Total Diterima (Sepanjang Waktu) */}
-                      <td className="py-4 px-4">
+                      <td className="py-4 px-4 border-r border-stone-200">
                         <div className="space-y-0.5">
                           <p className="text-sm font-black text-stone-900 font-mono">
                             {formatRupiah(st.totalVerifiedNominal)}
@@ -587,7 +584,7 @@ export function AdminAlokasiDanaView({
                       </td>
 
                       {/* 4. Terakhir Diverifikasi */}
-                      <td className="py-4 px-4">
+                      <td className="py-4 px-4 border-r border-stone-200">
                         {st.lastVerifiedDate ? (
                           <div className="space-y-0.5">
                             <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-bold text-emerald-700 border border-emerald-200">

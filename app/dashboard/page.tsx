@@ -34,11 +34,14 @@ export default async function DashboardPage() {
   const presignedFotoUrl = fotoDoc?.fileUrl ? await getPresignedR2Url(fotoDoc.fileUrl) : null
 
   const presignedDocuments = await Promise.all(
-    student.documents.map(async (d) => ({
-      id: d.id,
-      type: d.type,
-      fileUrl: await getPresignedR2Url(d.fileUrl),
-    }))
+    student.documents.map(async (d) => {
+      const isRestrictedForStudent = d.type === "KK" || d.type === "SKTM"
+      return {
+        id: d.id,
+        type: d.type,
+        fileUrl: isRestrictedForStudent ? "" : await getPresignedR2Url(d.fileUrl),
+      }
+    })
   )
 
   const presignedAcademicUpdates = await Promise.all(

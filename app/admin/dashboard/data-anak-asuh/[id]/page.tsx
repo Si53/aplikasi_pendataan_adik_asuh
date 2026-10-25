@@ -10,6 +10,7 @@ import {
 } from "@/components/admin-student-detail-tabs"
 import { AdminDetailBottomBar } from "@/components/admin-detail-bottom-bar"
 import { AdminPendingApprovalActions } from "@/components/admin-pending-approval-actions"
+import { formatGradeWithJenjang } from "@/lib/academic"
 
 export const dynamic = "force-dynamic"
 
@@ -172,7 +173,7 @@ export default async function AdminStudentDetailPage({
       riwayatPenyakit: student.riwayatPenyakit,
       schoolName: student.schoolName,
       jenjang: student.jenjang,
-      gradeLevel: student.gradeLevel,
+      gradeLevel: formatGradeWithJenjang(student.gradeLevel, student.jenjang),
       programAkselerasi: student.programAkselerasi,
       nilaiRataRata: student.nilaiRataRata,
       jumlahSaudara: student.jumlahSaudara,
@@ -291,7 +292,7 @@ export default async function AdminStudentDetailPage({
               <p className="text-xs sm:text-sm text-stone-600 flex items-center gap-1.5 font-medium">
                 <School className="size-4 text-stone-400" />
                 <span>
-                  {student.schoolName} ({student.gradeLevel})
+                  {student.schoolName} ({formatGradeWithJenjang(student.gradeLevel, student.jenjang)})
                 </span>
               </p>
 

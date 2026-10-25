@@ -5,6 +5,12 @@ import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import { uploadToR2 } from "@/lib/r2"
 import { revalidatePath } from "next/cache"
+import {
+  determineCurrentEducationPosition,
+  getAllowedJenjang,
+  isNaikJenjang,
+  isValidJenjangTransition,
+} from "@/lib/academic"
 
 const allowedMimeTypes = new Set([
   "application/pdf",
@@ -52,10 +58,24 @@ export async function createStudentAcademicUpdateAction(
 
   const student = await prisma.student.findUnique({
     where: { username: session.user.username },
+    include: {
+      academicUpdates: {
+        orderBy: {
+          tanggalInput: "desc",
+        },
+        take: 1,
+      },
+    },
   })
   if (!student) {
     return { success: false, error: "Data adik asuh tidak ditemukan." }
   }
+
+  const latestUpdate =
+    student.academicUpdates && student.academicUpdates.length > 0
+      ? student.academicUpdates[0]
+      : null
+  const currentPos = determineCurrentEducationPosition(student, latestUpdate)
 
   const kategoriPendidikan = String(formData.get("kategoriPendidikan") ?? "").trim() // "Sekolah" | "Kuliah"
   const jenjangInput = String(formData.get("jenjang") ?? "").trim() // "SD" | "SMP" | "SMA" | "Kuliah"
@@ -63,8 +83,42 @@ export async function createStudentAcademicUpdateAction(
   const semesterInput = String(formData.get("semester") ?? "").trim() // "Ganjil" | "Genap"
   const kelasSaatItuInput = String(formData.get("kelasSaatItu") ?? "").trim()
   const nilaiRataRata = String(formData.get("nilaiRataRata") ?? "").trim()
+
+  const targetJenjang = kategoriPendidikan === "Kuliah" ? "Kuliah" : jenjangInput
+
+  // Validasi posisi & batasan jenjang (Requirement 3 & 5)
+  // Kecuali jika jenjang tidak dapat ditentukan sama sekali (siswa lama, Requirement 6)
+  if (currentPos && currentPos.isKnown) {
+    if (currentPos.jenjang === "Kuliah" && kategoriPendidikan === "Sekolah") {
+      return {
+        success: false,
+        error: "Adik asuh di jenjang Kuliah tidak dapat kembali memilih jenjang Sekolah.",
+      }
+    }
+    if (["SD", "SMP"].includes(currentPos.jenjang) && kategoriPendidikan === "Kuliah") {
+      return {
+        success: false,
+        error: `Adik asuh di jenjang ${currentPos.jenjang} belum dapat memilih jenjang Kuliah.`,
+      }
+    }
+
+    if (!isValidJenjangTransition(currentPos.jenjang, targetJenjang)) {
+      const allowed = getAllowedJenjang(currentPos.jenjang)
+      return {
+        success: false,
+        error: `Pilihan jenjang tidak valid. Data terakhir kamu adalah ${currentPos.labelDisplay}. Pilihan yang diperbolehkan hanya ${allowed.join(" atau ")}.`,
+      }
+    }
+  }
+
+  const movingUp = Boolean(
+    currentPos?.isKnown && isNaikJenjang(currentPos.jenjang, targetJenjang)
+  )
   const isPindahJenjang =
-    formData.get("isPindahJenjang") === "true" || formData.get("isPindahJenjang") === "on"
+    movingUp ||
+    formData.get("isPindahJenjang") === "true" ||
+    formData.get("isPindahJenjang") === "on"
+
   const namaSekolahBaru = isPindahJenjang
     ? String(formData.get("namaSekolahBaru") ?? "").trim()
     : null
@@ -127,14 +181,48 @@ export async function createStudentAcademicUpdateAction(
       error: kategoriPendidikan === "Kuliah" ? "IPK Terbaru wajib diisi." : "Nilai Rata-Rata Terbaru wajib diisi.",
     }
   }
-  if (isPindahJenjang && !namaSekolahBaru) {
+
+  // Normalisasi koma ke titik dan validasi numerik sisi server
+  const normalizedNilai = nilaiRataRata.replace(",", ".").trim()
+  const parsedNilai = parseFloat(normalizedNilai)
+
+  if (isNaN(parsedNilai) || !/^\d+(\.\d{1,2})?$/.test(normalizedNilai)) {
     return {
       success: false,
-      error: "Nama Sekolah / Kampus Baru wajib diisi jika Anda memilih pindah jenjang.",
+      error:
+        kategoriPendidikan === "Kuliah"
+          ? "IPK harus berupa angka numerik yang valid (maksimal 2 angka desimal)."
+          : "Nilai Rata-rata harus berupa angka numerik yang valid (maksimal 2 angka desimal).",
     }
   }
 
-  // Kumpulkan seluruh file yang diunggah
+  if (kategoriPendidikan === "Kuliah") {
+    if (parsedNilai < 0 || parsedNilai > 4.0) {
+      return {
+        success: false,
+        error: "IPK harus antara 0 sampai 4,00.",
+      }
+    }
+  } else {
+    if (parsedNilai < 0 || parsedNilai > 100) {
+      return {
+        success: false,
+        error: "Nilai Rata-rata harus antara 0 sampai 100.",
+      }
+    }
+  }
+
+  if (isPindahJenjang && !namaSekolahBaru) {
+    return {
+      success: false,
+      error:
+        targetJenjang === "Kuliah"
+          ? "Nama Universitas Baru wajib diisi jika Anda naik jenjang."
+          : "Nama Sekolah Baru wajib diisi jika Anda naik jenjang.",
+    }
+  }
+
+  // Kumpulkan seluruh file rapor yang diunggah
   const rawFiles = formData.getAll("files").concat(formData.getAll("file"))
   const files: File[] = rawFiles.filter(
     (f): f is File => f instanceof File && f.size > 0 && f.name !== "undefined"
@@ -148,7 +236,7 @@ export async function createStudentAcademicUpdateAction(
     }
   }
 
-  // Validasi tipe dan ukuran setiap berkas
+  // Validasi tipe dan ukuran setiap berkas rapor
   for (const file of files) {
     if (!isValidFileType(file)) {
       return {
@@ -164,7 +252,29 @@ export async function createStudentAcademicUpdateAction(
     }
   }
 
-  // Upload seluruh berkas ke R2 / Data URL
+  // Kumpulkan berkas prestasi (opsional)
+  const rawPrestasiFiles = formData.getAll("prestasiFiles").concat(formData.getAll("prestasi"))
+  const prestasiFiles: File[] = rawPrestasiFiles.filter(
+    (f): f is File => f instanceof File && f.size > 0 && f.name !== "undefined"
+  )
+
+  // Validasi tipe dan ukuran setiap berkas prestasi (jika ada)
+  for (const file of prestasiFiles) {
+    if (!isValidFileType(file)) {
+      return {
+        success: false,
+        error: `File prestasi "${file.name}" tidak valid. Berkas harus berupa gambar (JPG/PNG/WEBP) atau PDF.`,
+      }
+    }
+    if (file.size > maxFileSize) {
+      return {
+        success: false,
+        error: `Ukuran file prestasi "${file.name}" terlalu besar (maksimal 15 MB). Silakan kompres berkas terlebih dahulu.`,
+      }
+    }
+  }
+
+  // Upload seluruh berkas rapor ke R2 / Data URL
   const uploadedUrls: string[] = []
   try {
     for (const file of files) {
@@ -195,6 +305,37 @@ export async function createStudentAcademicUpdateAction(
     }
   }
 
+  // Upload berkas prestasi (jika ada) ke R2 / Data URL
+  const uploadedPrestasiUrls: string[] = []
+  try {
+    for (const file of prestasiFiles) {
+      const extension = file.name.split(".").pop()?.toLowerCase() || "jpg"
+      const key = `academic/${student.id}/prestasi-${randomUUID()}.${extension}`
+      const contentType = file.type || (extension === "pdf" ? "application/pdf" : "image/jpeg")
+
+      if (process.env.R2_ACCOUNT_ID && process.env.R2_ACCESS_KEY_ID) {
+        await uploadToR2({
+          key,
+          body: new Uint8Array(await file.arrayBuffer()),
+          contentType,
+        })
+        const publicUrl = process.env.R2_PUBLIC_URL
+          ? `${process.env.R2_PUBLIC_URL.replace(/\/$/, "")}/${key}`
+          : `/${key}`
+        uploadedPrestasiUrls.push(publicUrl)
+      } else {
+        const buffer = Buffer.from(await file.arrayBuffer())
+        uploadedPrestasiUrls.push(`data:${contentType};base64,${buffer.toString("base64")}`)
+      }
+    }
+  } catch (uploadPrestasiError) {
+    console.error("[createStudentAcademicUpdateAction upload prestasi error]", uploadPrestasiError)
+    return {
+      success: false,
+      error: "Gagal mengunggah berkas prestasi ke server. Silakan periksa koneksi internet Anda.",
+    }
+  }
+
   const docRaporPayload =
     uploadedUrls.length === 1 ? uploadedUrls[0] : JSON.stringify(uploadedUrls)
 
@@ -206,7 +347,7 @@ export async function createStudentAcademicUpdateAction(
         tanggalInput: new Date(),
         kelasSaatItu,
         semester: semesterValue,
-        nilaiRataRata,
+        nilaiRataRata: normalizedNilai,
         namaSekolahBaru: namaSekolahBaru || null,
         dokumenRapor: docRaporPayload,
       },
@@ -224,6 +365,18 @@ export async function createStudentAcademicUpdateAction(
       })
     }
 
+    // 2b. Simpan berkas prestasi ke model Document dengan tipe "PRESTASI"
+    if (uploadedPrestasiUrls.length > 0) {
+      await prisma.document.createMany({
+        data: uploadedPrestasiUrls.map((url) => ({
+          studentId: student.id,
+          type: "PRESTASI",
+          fileUrl: url,
+          uploadedAt: new Date(),
+        })),
+      })
+    }
+
     // 3. Perbarui data master Student (gradeLevel, jenjang, nilaiRataRata, programAkselerasi, schoolName)
     const updatedAkselerasi =
       kategoriPendidikan === "Kuliah" || newJenjang === "Kuliah"
@@ -235,7 +388,7 @@ export async function createStudentAcademicUpdateAction(
       data: {
         gradeLevel: newGradeLevel,
         jenjang: newJenjang,
-        nilaiRataRata: nilaiRataRata,
+        nilaiRataRata: normalizedNilai,
         programAkselerasi: updatedAkselerasi,
         ...(namaSekolahBaru ? { schoolName: namaSekolahBaru } : {}),
       },

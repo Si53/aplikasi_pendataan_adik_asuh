@@ -8,6 +8,7 @@ import {
 } from "lucide-react"
 import { AdminStudentTable, StudentTableItem } from "@/components/admin-student-table"
 import { AdminDataHeaderActions } from "@/components/admin-data-header-actions"
+import { formatGradeWithJenjang } from "@/lib/academic"
 
 export const dynamic = "force-dynamic"
 
@@ -68,9 +69,9 @@ export default async function DataAnakAsuhPage() {
 
   // 2. Extract Unique Wilayah List
   const wilayahSet = new Set<string>()
-  ;["Pati", "Jepara", "Ampel", "Wonosobo", "Sukabumi", "Bandung"].forEach((w) =>
-    wilayahSet.add(w)
-  )
+    ;["Pati", "Jepara", "Ampel", "Wonosobo", "Sukabumi", "Bandung"].forEach((w) =>
+      wilayahSet.add(w)
+    )
   studentsRaw.forEach((s) => {
     if (s.wilayah) wilayahSet.add(s.wilayah)
   })
@@ -88,7 +89,7 @@ export default async function DataAnakAsuhPage() {
       nik: s.nik,
       fullName: s.fullName,
       schoolName: s.schoolName,
-      gradeLevel: s.gradeLevel,
+      gradeLevel: formatGradeWithJenjang(s.gradeLevel, s.jenjang),
       wilayah: s.wilayah,
       status: s.status,
       initialNilai: s.nilaiRataRata,
@@ -110,8 +111,6 @@ export default async function DataAnakAsuhPage() {
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1 rounded-full bg-white/20 backdrop-blur-xs px-2.5 py-0.5 text-xs font-bold text-white border border-white/30">
-              <Sparkles className="size-3 text-amber-200" />
-              AKSES HOLISTIK
             </span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight drop-shadow-xs">
@@ -153,7 +152,7 @@ export default async function DataAnakAsuhPage() {
         {/* Card 2: Jumlah Adik Asuh (Approved) */}
         <div className="rounded-3xl border border-stone-200/90 bg-white p-6 shadow-xs transition hover:shadow-sm">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-stone-400">
+            <span className="text-xs font-bold uppercase tracking-wider text-black">
               Jumlah Adik Asuh
             </span>
             <div className="flex size-11 items-center justify-center rounded-2xl bg-orange-50 text-orange-600">
