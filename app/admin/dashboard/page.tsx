@@ -3,10 +3,9 @@ import { auth } from "@/auth"
 import { prisma } from "@/lib/prisma"
 import {
   AdminDashboardOverview,
-  type BudgetOverviewData,
-  type WilayahBudgetItem,
   type QuickAuditPendingItem,
 } from "@/components/admin-dashboard-overview"
+import { calculateBudgetOverview } from "@/lib/budget"
 
 export const dynamic = "force-dynamic"
 
@@ -144,72 +143,7 @@ export default async function AdminDashboardPage() {
   })
 
   // 4. Hitung Kebutuhan Anggaran Beasiswa Berdasarkan Wilayah
-  const TARIF_JENJANG: Record<string, number> = {
-    SD: 500000,
-    SMP: 600000,
-    SMA: 800000,
-    SMK: 800000,
-    Kuliah: 1000000,
-  }
-
-  const STANDARD_WILAYAH = [
-    "Pati",
-    "Jepara",
-    "Ampel",
-    "Wonosobo",
-    "Sukabumi",
-    "Bandung",
-  ]
-
-  const approvedStudentsList = allStudentsRaw.filter((s) => s.status === "approved")
-
-  const wilayahMap = new Map<string, { studentCount: number; subtotal: number }>()
-
-  // Inisialisasi wilayah standar
-  STANDARD_WILAYAH.forEach((w) => {
-    wilayahMap.set(w, { studentCount: 0, subtotal: 0 })
-  })
-
-  let unassignedJenjangCount = 0
-  let totalAnggaranBeasiswa = 0
-
-  approvedStudentsList.forEach((s) => {
-    const j = s.jenjang?.trim()
-    if (j && TARIF_JENJANG[j]) {
-      const tarif = TARIF_JENJANG[j]
-      const w = s.wilayah?.trim() || "Lainnya"
-      if (!wilayahMap.has(w)) {
-        wilayahMap.set(w, { studentCount: 0, subtotal: 0 })
-      }
-      const entry = wilayahMap.get(w)!
-      entry.studentCount += 1
-      entry.subtotal += tarif
-      totalAnggaranBeasiswa += tarif
-    } else {
-      unassignedJenjangCount++
-    }
-  })
-
-  // Format dan urutkan wilayah dari total anggaran terbesar ke terkecil
-  const budgetItems: WilayahBudgetItem[] = Array.from(wilayahMap.entries())
-    .map(([wilayah, data]) => ({
-      wilayah,
-      studentCount: data.studentCount,
-      subtotal: data.subtotal,
-    }))
-    .sort(
-      (a, b) =>
-        b.subtotal - a.subtotal ||
-        b.studentCount - a.studentCount ||
-        a.wilayah.localeCompare(b.wilayah)
-    )
-
-  const budgetOverview: BudgetOverviewData = {
-    totalAnggaran: totalAnggaranBeasiswa,
-    totalApprovedStudents: approvedStudentsList.length,
-    unassignedCount: unassignedJenjangCount,
-    items: budgetItems,
-  }
+  const budgetOverview = calculateBudgetOverview(allStudentsRaw)
 
   // 5. Format 3 Berkas Pending untuk Widget Audit Cepat
   const quickAuditItems: QuickAuditPendingItem[] = pendingProofsRaw.map((p) => ({

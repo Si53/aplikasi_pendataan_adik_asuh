@@ -36,6 +36,7 @@ export interface StudentTableItem {
   latestNilai: string
   hasAcademicUpdate: boolean
   latestAcademicDate: string | null
+  programAkselerasi?: boolean
   pengawasName: string
   createdAt: string
 }
@@ -70,7 +71,8 @@ export function AdminStudentTable({
         const matchName = item.fullName.toLowerCase().includes(q)
         const matchNik = item.nik.toLowerCase().includes(q)
         const matchSchool = item.schoolName.toLowerCase().includes(q)
-        if (!matchName && !matchNik && !matchSchool) return false
+        const matchGrade = item.gradeLevel.toLowerCase().includes(q)
+        if (!matchName && !matchNik && !matchSchool && !matchGrade) return false
       }
 
       // Filter Wilayah
@@ -232,7 +234,7 @@ export function AdminStudentTable({
                   setSearchQuery(e.target.value)
                   setCurrentPage(1)
                 }}
-                placeholder="Cari nama anak asuh, NIK, atau nama sekolah..."
+                placeholder="Cari nama adik asuh, NIK, atau nama sekolah..."
                 className="w-full rounded-xl border border-stone-200 bg-stone-50/50 pl-10 pr-9 py-2.5 text-sm text-stone-800 placeholder-stone-400 focus:border-orange-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition"
               />
               {searchQuery && (
@@ -329,51 +331,32 @@ export function AdminStudentTable({
       {/* Table Card */}
       <div className="overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-xs">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm text-stone-700 border-collapse">
-            <thead className="bg-stone-50/80 text-[11px] font-bold uppercase tracking-wider text-stone-500 border-b border-stone-200/80">
-              <tr>
-                <th scope="col" className="px-5 py-3.5">
-                  Anak Asuh
-                </th>
-                <th scope="col" className="px-5 py-3.5">
-                  Jenjang & Sekolah
-                </th>
-                <th scope="col" className="px-5 py-3.5">
-                  Wilayah / Pengawas
-                </th>
-                <th scope="col" className="px-5 py-3.5">
-                  Status
-                </th>
-                <th scope="col" className="px-5 py-3.5">
-                  Nilai Rata-rata
-                </th>
-                <th scope="col" className="px-5 py-3.5 text-right">
-                  Aksi
-                </th>
+          <table className="w-full text-left border-collapse border border-stone-200">
+            <thead>
+              <tr className="border-b border-stone-200 bg-stone-50/80 text-[11px] font-extrabold uppercase tracking-wider text-black">
+                <th className="px-5 py-3.5 w-[27%] border-r border-stone-200">Adik Asuh</th>
+                <th className="px-5 py-3.5 w-[26%] border-r border-stone-200">Jenjang & Sekolah</th>
+                <th className="px-5 py-3.5 w-[20%] border-r border-stone-200">Wilayah</th>
+                <th className="px-5 py-3.5 w-[13%] border-r border-stone-200">Nilai Rata-rata</th>
+                <th className="px-5 py-3.5 w-[14%] text-center">Detail</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100">
+            <tbody className="divide-y divide-stone-200 text-xs">
               {paginatedStudents.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center">
-                    <div className="flex flex-col items-center justify-center max-w-sm mx-auto text-stone-500">
-                      <div className="size-12 rounded-2xl bg-stone-100 flex items-center justify-center text-stone-400 mb-3">
-                        <Search className="size-6" />
-                      </div>
-                      <p className="font-bold text-stone-800 text-base">
-                        Tidak Ada Data Ditemukan
-                      </p>
-                      <p className="mt-1 text-xs text-stone-500">
-                        Tidak ditemukan data anak asuh yang cocok dengan filter
-                        atau pencarian Anda.
+                  <td colSpan={5} className="px-5 py-12 text-center text-stone-400">
+                    <div className="flex flex-col items-center justify-center gap-2">
+                      <AlertCircle className="size-8 text-stone-300" />
+                      <p className="font-semibold text-stone-600">
+                        Tidak ada data adik asuh yang sesuai kriteria filter.
                       </p>
                       {hasActiveFilters && (
                         <button
                           type="button"
                           onClick={handleResetFilters}
-                          className="mt-4 inline-flex items-center gap-1.5 rounded-xl bg-orange-500 px-4 py-2 text-xs font-bold text-white hover:bg-orange-600 transition"
+                          className="mt-1 text-xs font-bold text-orange-600 hover:underline cursor-pointer"
                         >
-                          Reset Filter
+                          Reset Semua Filter
                         </button>
                       )}
                     </div>
@@ -387,8 +370,8 @@ export function AdminStudentTable({
                       key={item.id}
                       className="hover:bg-stone-50/60 transition-colors"
                     >
-                      {/* 1. Anak Asuh (Avatar inisial + nama + NIK) */}
-                      <td className="px-5 py-4">
+                      {/* 1. Adik Asuh (Avatar inisial + nama + username) */}
+                      <td className="px-5 py-4 border-r border-stone-200">
                         <div className="flex items-center gap-3">
                           <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-stone-100 font-bold text-stone-700 border border-stone-200 shadow-2xs">
                             {initial}
@@ -397,27 +380,35 @@ export function AdminStudentTable({
                             <span className="font-bold text-stone-900 text-sm truncate">
                               {item.fullName}
                             </span>
-                            <span className="text-[11px] font-mono text-stone-500">
-                              NIK: {item.nik}
-                            </span>
+                            {item.username && (
+                              <span className="text-[11px] font-medium text-stone-400 truncate">
+                                @{item.username}
+                              </span>
+                            )}
                           </div>
                         </div>
                       </td>
 
                       {/* 2. Jenjang & Sekolah */}
-                      <td className="px-5 py-4">
-                        <div className="flex flex-col">
+                      <td className="px-5 py-4 border-r border-stone-200">
+                        <div className="flex flex-col gap-0.5">
                           <span className="font-semibold text-stone-800 text-xs sm:text-sm">
                             {item.schoolName}
                           </span>
                           <span className="text-xs text-stone-500">
                             {item.gradeLevel}
                           </span>
+                          {item.programAkselerasi && (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-purple-50 px-2 py-0.5 text-[10px] font-bold text-purple-700 border border-purple-200/80 w-fit mt-0.5">
+                              <Sparkles className="size-2.5 text-purple-600" />
+                              Program Akselerasi (1 Tahun 3 Semester)
+                            </span>
+                          )}
                         </div>
                       </td>
 
                       {/* 3. Wilayah / Pengawas */}
-                      <td className="px-5 py-4">
+                      <td className="px-5 py-4 border-r border-stone-200">
                         <div className="flex flex-col">
                           <span className="inline-flex items-center gap-1 font-semibold text-stone-800 text-xs">
                             <MapPin className="size-3 text-orange-500" />
@@ -429,13 +420,8 @@ export function AdminStudentTable({
                         </div>
                       </td>
 
-                      {/* 4. Status */}
-                      <td className="px-5 py-4">
-                        {renderStatusBadge(item.status)}
-                      </td>
-
-                      {/* 5. Nilai Rata-rata */}
-                      <td className="px-5 py-4">
+                      {/* 4. Nilai Rata-rata */}
+                      <td className="px-5 py-4 border-r border-stone-200">
                         <div className="flex flex-col">
                           <span className="font-bold text-stone-900 text-sm">
                             {item.latestNilai || "-"}
@@ -448,11 +434,11 @@ export function AdminStudentTable({
                         </div>
                       </td>
 
-                      {/* 6. Aksi */}
-                      <td className="px-5 py-4 text-right">
+                      {/* 5. Detail */}
+                      <td className="px-5 py-4 text-center">
                         <Link
                           href={`/admin/dashboard/data-anak-asuh/${item.id}`}
-                          className="inline-flex items-center gap-1 rounded-lg bg-stone-100 px-3 py-1.5 text-xs font-bold text-stone-700 hover:bg-orange-500 hover:text-white transition cursor-pointer border border-stone-200/80"
+                          className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-orange-50 hover:bg-orange-500 text-orange-700 hover:text-white px-3.5 py-1.5 text-xs font-bold transition-all border border-orange-200/80 shadow-2xs hover:shadow-xs w-full max-w-[110px] mx-auto cursor-pointer"
                         >
                           <Eye className="size-3.5" />
                           <span>Detail</span>
@@ -480,7 +466,7 @@ export function AdminStudentTable({
               </strong>{" "}
               dari{" "}
               <strong className="font-bold text-stone-900">{totalItems}</strong>{" "}
-              anak asuh
+              adik asuh
             </span>
 
             <div className="hidden sm:flex items-center gap-1.5">

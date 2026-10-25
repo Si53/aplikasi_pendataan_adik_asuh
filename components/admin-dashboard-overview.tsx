@@ -26,18 +26,8 @@ import {
   Coins,
 } from "lucide-react"
 
-export interface WilayahBudgetItem {
-  wilayah: string
-  studentCount: number
-  subtotal: number
-}
-
-export interface BudgetOverviewData {
-  totalAnggaran: number
-  totalApprovedStudents: number
-  unassignedCount: number
-  items: WilayahBudgetItem[]
-}
+import type { WilayahBudgetItem, BudgetOverviewData } from "@/lib/budget"
+export type { WilayahBudgetItem, BudgetOverviewData }
 
 export interface QuickAuditPendingItem {
   id: number
@@ -85,7 +75,7 @@ export function AdminDashboardOverview({
   quickAuditItems,
 }: AdminDashboardOverviewProps) {
   const [exportNotice, setExportNotice] = useState(false)
-  const [showAddModal, setShowAddModal] = useState(false)
+  const [selectedWilayahDetail, setSelectedWilayahDetail] = useState<WilayahBudgetItem | null>(null)
 
   // Quick Export Summary to CSV
   const handleExportSummary = () => {
@@ -146,16 +136,10 @@ export function AdminDashboardOverview({
       {/* 1. Header Section */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1.5">
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-bold text-orange-700">
-              <Sparkles className="size-3 text-orange-600" />
-              PORTAL ADMINISTRATOR PUSAT
-            </span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight drop-shadow-xs">
             Selamat Datang, {adminName}!
           </h1>
-          <p className="text-xs sm:text-sm text-stone-500 max-w-2xl">
+          <p className="text-xs sm:text-sm text-white/90 max-w-2xl font-medium">
             Ringkasan holistik penyaluran beasiswa, pengawasan lapangan, dan status
             perkembangan adik asuh Vihara Vimala Dharma.
           </p>
@@ -166,20 +150,21 @@ export function AdminDashboardOverview({
           <button
             type="button"
             onClick={handleExportSummary}
-            className="inline-flex items-center gap-2 rounded-xl border border-stone-200 bg-white px-3.5 py-2 text-xs sm:text-sm font-semibold text-stone-700 hover:bg-stone-50 hover:text-stone-900 shadow-2xs transition cursor-pointer"
+            className="inline-flex items-center gap-2 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 px-4 py-2 text-xs sm:text-sm font-bold text-black shadow-xs transition cursor-pointer"
           >
-            <Download className="size-4 text-stone-500" />
+            <Download className="size-4 text-black" />
             <span>Export Ringkasan</span>
           </button>
 
-          <button
-            type="button"
-            onClick={() => setShowAddModal(true)}
-            className="inline-flex items-center gap-2 rounded-xl bg-orange-500 hover:bg-orange-600 px-4 py-2 text-xs sm:text-sm font-bold text-white shadow-xs shadow-orange-500/25 transition cursor-pointer"
+          <a
+            href="https://drive.google.com/drive/folders/1Ye-JFlKU449cSGmSRfEfsnSK4Ff630_j?usp=drive_link"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 px-4 py-2 text-xs sm:text-sm font-bold text-black shadow-xs transition cursor-pointer"
           >
-            <Plus className="size-4" />
-            <span>Tambah Anak Asuh</span>
-          </button>
+            <ExternalLink className="size-4 text-black" />
+            <span>Lihat Data UKA</span>
+          </a>
         </div>
       </div>
 
@@ -265,96 +250,102 @@ export function AdminDashboardOverview({
         </Link>
       </div>
 
-      {/* 3. TWO-COLUMN LAYOUT: Left (Audit Cepat & Anggaran Wilayah) | Right (Kondisi Akademik & Shortcuts) */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        {/* ========================================================================= */}
-        {/* KOLOM KIRI (7 Kolom): AUDIT CEPAT TERLEBIH DAHULU, KEMUDIAN KEBUTUHAN ANGGARAN */}
-        {/* ========================================================================= */}
-        <div className="lg:col-span-7 space-y-6">
-          {/* 1. AUDIT CEPAT (WIDGET SHORTCUT 3 ITEM TERBARU) */}
-          <div className="rounded-3xl border border-stone-200/90 bg-white p-6 shadow-xs space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-stone-100">
-              <div className="flex items-center gap-2.5">
-                <div className="flex size-8 items-center justify-center rounded-xl bg-orange-100 text-orange-600">
-                  <ReceiptText className="size-4" />
-                </div>
-                <div>
-                  <h3 className="text-sm sm:text-base font-bold text-stone-900">
-                    Audit Cepat Bukti Transfer
-                  </h3>
-                  <p className="text-xs text-stone-500">
-                    3 berkas penyaluran dana pending terbaru
-                  </p>
-                </div>
-              </div>
-
-              <span className="rounded-full bg-orange-50 border border-orange-200 px-2.5 py-0.5 text-xs font-bold text-orange-700">
-                {stats.pendingAuditCount} Pending
-              </span>
+      {/* 3. AUDIT CEPAT BUKTI TRANSFER (FULL WIDTH LEBAR KE KANAN) */}
+      <div className="rounded-3xl border border-stone-200/90 bg-white p-6 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-stone-100">
+          <div className="flex items-center gap-2.5">
+            <div className="flex size-8 items-center justify-center rounded-xl bg-orange-100 text-orange-600">
+              <ReceiptText className="size-4" />
             </div>
-
-            {quickAuditItems.length === 0 ? (
-              <div className="py-8 text-center text-xs text-stone-400 rounded-2xl bg-stone-50 border border-dashed border-stone-200">
-                <CheckCircle2 className="size-7 text-emerald-500 mx-auto mb-1.5" />
-                <p className="font-bold text-stone-800 text-sm">
-                  Semua Bukti Telah Diaudit
-                </p>
-                <p className="text-stone-400 mt-0.5">
-                  Tidak ada antrean verifikasi bukti transfer saat ini.
-                </p>
-              </div>
-            ) : (
-              <div className="divide-y divide-stone-100">
-                {quickAuditItems.map((item) => (
-                  <div
-                    key={item.id}
-                    className="py-3.5 flex items-center justify-between gap-3 hover:bg-orange-50/30 transition rounded-xl px-2 -mx-2"
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-orange-400 to-amber-500 text-white font-bold text-xs shadow-2xs">
-                        {item.student.fullName.charAt(0).toUpperCase()}
-                      </div>
-                      <div className="space-y-0.5 min-w-0">
-                        <p className="text-xs font-bold text-stone-900 truncate">
-                          {item.student.fullName}
-                        </p>
-                        <p className="text-[11px] text-stone-500">
-                          {item.pengawas.name} • Wilayah {item.student.wilayah}
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-3 shrink-0">
-                      <span className="font-mono font-bold text-xs text-orange-600">
-                        {item.nominal ? formatRupiah(item.nominal) : "-"}
-                      </span>
-                      <Link
-                        href="/admin/dashboard/audit-finansial"
-                        className="inline-flex items-center gap-1 rounded-xl bg-orange-500 hover:bg-orange-600 px-3 py-1.5 text-xs font-bold text-white shadow-2xs transition cursor-pointer"
-                      >
-                        <span>Validasi</span>
-                        <ArrowRight className="size-3" />
-                      </Link>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Bottom Link to Full Audit */}
-            <div className="pt-2 text-center border-t border-stone-100">
-              <Link
-                href="/admin/dashboard/audit-finansial"
-                className="text-xs font-bold text-orange-600 hover:text-orange-700 inline-flex items-center gap-1.5"
-              >
-                <span>Lihat Seluruh {stats.pendingAuditCount} Berkas Pending</span>
-                <ArrowRight className="size-3" />
-              </Link>
+            <div>
+              <h3 className="text-sm sm:text-base font-bold text-stone-900">
+                Audit Cepat Bukti Transfer
+              </h3>
+              <p className="text-xs text-stone-500">
+                3 berkas penyaluran dana pending terbaru
+              </p>
             </div>
           </div>
 
-          {/* 2. KEBUTUHAN ANGGARAN BEASISWA (BREAKDOWN PER WILAYAH) */}
-          <div className="rounded-3xl border border-stone-200/90 bg-white p-6 shadow-xs space-y-5">
+          <div className="flex items-center gap-3">
+            <span className="rounded-full bg-orange-50 border border-orange-200 px-2.5 py-0.5 text-xs font-bold text-orange-700">
+              {stats.pendingAuditCount} Pending
+            </span>
+            <Link
+              href="/admin/dashboard/audit-finansial"
+              className="text-xs font-bold text-orange-600 hover:text-orange-700 hidden sm:inline-flex items-center gap-1.5"
+            >
+              <span>Lihat Seluruh Berkas</span>
+              <ArrowRight className="size-3" />
+            </Link>
+          </div>
+        </div>
+
+        {quickAuditItems.length === 0 ? (
+          <div className="py-8 text-center text-xs text-stone-400 rounded-2xl bg-stone-50 border border-dashed border-stone-200">
+            <CheckCircle2 className="size-7 text-emerald-500 mx-auto mb-1.5" />
+            <p className="font-bold text-stone-800 text-sm">
+              Semua Bukti Telah Diaudit
+            </p>
+            <p className="text-stone-400 mt-0.5">
+              Tidak ada antrean verifikasi bukti transfer saat ini.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+            {quickAuditItems.map((item) => (
+              <div
+                key={item.id}
+                className="p-4 rounded-2xl border border-stone-200/80 bg-stone-50/50 hover:bg-orange-50/40 transition flex flex-col justify-between gap-3"
+              >
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-orange-400 to-amber-500 text-white font-bold text-sm shadow-2xs">
+                    {item.student.fullName.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="space-y-0.5 min-w-0 flex-1">
+                    <p className="text-xs sm:text-sm font-bold text-stone-900 truncate">
+                      {item.student.fullName}
+                    </p>
+                    <p className="text-[11px] text-stone-500 truncate">
+                      {item.pengawas.name} • Wilayah {item.student.wilayah}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between pt-2.5 border-t border-stone-200/60">
+                  <span className="font-mono font-bold text-xs sm:text-sm text-orange-600">
+                    {item.nominal ? formatRupiah(item.nominal) : "-"}
+                  </span>
+                  <Link
+                    href="/admin/dashboard/audit-finansial"
+                    className="inline-flex items-center gap-1 rounded-xl bg-orange-500 hover:bg-orange-600 px-3 py-1.5 text-xs font-bold text-white shadow-2xs transition cursor-pointer"
+                  >
+                    <span>Validasi</span>
+                    <ArrowRight className="size-3" />
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Bottom Link to Full Audit on Mobile */}
+        <div className="pt-2 text-center border-t border-stone-100 sm:hidden">
+          <Link
+            href="/admin/dashboard/audit-finansial"
+            className="text-xs font-bold text-orange-600 hover:text-orange-700 inline-flex items-center gap-1.5"
+          >
+            <span>Lihat Seluruh {stats.pendingAuditCount} Berkas Pending</span>
+            <ArrowRight className="size-3" />
+          </Link>
+        </div>
+      </div>
+
+      {/* 4. SEJAJAR DESKTOP: Kebutuhan Anggaran Beasiswa (Kiri) & Kondisi & Status Binaan (Kanan) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        {/* KEBUTUHAN ANGGARAN BEASISWA (BREAKDOWN PER WILAYAH) */}
+        <div className="lg:col-span-7 rounded-3xl border border-stone-200/90 bg-white p-6 shadow-xs space-y-5 flex flex-col justify-between">
+          <div className="space-y-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-stone-100">
               <div>
                 <div className="flex items-center gap-2">
@@ -370,7 +361,7 @@ export function AdminDashboardOverview({
                 </p>
               </div>
 
-              <div className="text-left sm:text-right bg-orange-50/70 border border-orange-200/80 rounded-2xl px-4 py-2.5">
+              <div className="text-left sm:text-right bg-orange-50/70 border border-orange-200/80 rounded-2xl px-4 py-2.5 shrink-0">
                 <span className="text-[11px] font-bold uppercase text-stone-500 block">
                   Total Anggaran Diperlukan
                 </span>
@@ -400,10 +391,17 @@ export function AdminDashboardOverview({
                         </span>
                       </div>
 
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-2">
                         <span className="font-mono font-bold text-stone-900 text-xs sm:text-sm">
                           {formatRupiah(item.subtotal)}
                         </span>
+                        <button
+                          type="button"
+                          onClick={() => setSelectedWilayahDetail(item)}
+                          className="inline-flex items-center gap-1 rounded-lg bg-orange-50 hover:bg-orange-100 border border-orange-200/80 text-orange-700 font-bold px-2 py-1 text-[11px] transition shadow-2xs cursor-pointer hover:border-orange-300"
+                        >
+                          Lihat Detail
+                        </button>
                       </div>
                     </div>
 
@@ -420,36 +418,33 @@ export function AdminDashboardOverview({
                 )
               })}
             </div>
-
-            {/* Baris tambahan jika ada siswa approved dengan jenjang = NULL */}
-            {budgetOverview.unassignedCount > 0 && (
-              <div className="rounded-2xl border border-stone-200/90 bg-stone-50/90 p-3.5 flex items-start sm:items-center gap-3 text-xs text-stone-600 animate-in fade-in">
-                <AlertCircle className="size-4.5 text-amber-500 shrink-0 mt-0.5 sm:mt-0" />
-                <div className="flex-1">
-                  <p className="font-semibold text-stone-800">
-                    Belum Ditentukan Jenjangnya:{" "}
-                    <strong className="text-amber-800 font-bold">
-                      {budgetOverview.unassignedCount} Anak Asuh
-                    </strong>{" "}
-                    <span className="text-stone-500 font-normal">
-                      (tidak termasuk dalam total anggaran)
-                    </span>
-                  </p>
-                  <p className="text-[11px] text-stone-400 mt-0.5">
-                    Data terdaftar sebelum fitur jenjang ditambahkan. Silakan lengkapi pada modul Kontrol Status / Data Anak Asuh.
-                  </p>
-                </div>
-              </div>
-            )}
           </div>
+
+          {/* Baris tambahan jika ada siswa approved dengan jenjang = NULL */}
+          {budgetOverview.unassignedCount > 0 && (
+            <div className="rounded-2xl border border-stone-200/90 bg-stone-50/90 p-3.5 flex items-start sm:items-center gap-3 text-xs text-stone-600 animate-in fade-in mt-4">
+              <AlertCircle className="size-4.5 text-amber-500 shrink-0 mt-0.5 sm:mt-0" />
+              <div className="flex-1">
+                <p className="font-semibold text-stone-800">
+                  Belum Ditentukan Jenjangnya:{" "}
+                  <strong className="text-amber-800 font-bold">
+                    {budgetOverview.unassignedCount} Anak Asuh
+                  </strong>{" "}
+                  <span className="text-stone-500 font-normal">
+                    (tidak termasuk dalam total anggaran)
+                  </span>
+                </p>
+                <p className="text-[11px] text-stone-400 mt-0.5">
+                  Data terdaftar sebelum fitur jenjang ditambahkan. Silakan lengkapi pada modul Kontrol Status / Data Anak Asuh.
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* ========================================================================= */}
-        {/* KOLOM KANAN (5 Kolom): KONDISI & STATUS BINAAN + PANDUAN CEPAT */}
-        {/* ========================================================================= */}
-        <div className="lg:col-span-5 space-y-6">
-          {/* KONDISI & STATUS BINAAN */}
-          <div className="rounded-3xl border border-stone-200/90 bg-white p-6 shadow-xs space-y-5">
+        {/* KONDISI & STATUS BINAAN */}
+        <div className="lg:col-span-5 rounded-3xl border border-stone-200/90 bg-white p-6 shadow-xs space-y-5 flex flex-col justify-between">
+          <div className="space-y-5">
             <div>
               <h2 className="text-base sm:text-lg font-extrabold text-stone-900">
                 Kondisi & Status Binaan
@@ -496,69 +491,165 @@ export function AdminDashboardOverview({
                 </p>
               </div>
             </div>
+          </div>
 
-            <div className="pt-2">
-              <Link
-                href="/admin/dashboard/kontrol-status"
-                className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-stone-900 hover:bg-stone-800 py-3 text-xs sm:text-sm font-bold text-white shadow-sm transition"
-              >
-                <span>Buka Kontrol Status</span>
-                <ArrowRight className="size-4" />
-              </Link>
-            </div>
+          <div className="pt-2">
+            <Link
+              href="/admin/dashboard/kontrol-status"
+              className="w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-stone-900 hover:bg-stone-800 py-3 text-xs sm:text-sm font-bold text-white shadow-sm transition"
+            >
+              <span>Buka Kontrol Status</span>
+              <ArrowRight className="size-4" />
+            </Link>
           </div>
         </div>
       </div>
 
-      {/* MODAL PLACEHOLDER "+ Tambah Anak Asuh" */}
-      {showAddModal && (
+      {/* MODAL DETAIL ANGGARAN WILAYAH */}
+      {selectedWilayahDetail && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/60 p-4 backdrop-blur-xs animate-in fade-in"
-          onClick={() => setShowAddModal(false)}
+          onClick={() => setSelectedWilayahDetail(null)}
         >
           <div
-            className="relative w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl space-y-4 border border-stone-200"
+            className="relative w-full max-w-2xl max-h-[85vh] flex flex-col rounded-3xl bg-white shadow-2xl overflow-hidden border border-stone-200 animate-in zoom-in-95"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between pb-2 border-b border-stone-100">
-              <div className="flex items-center gap-2">
-                <div className="flex size-9 items-center justify-center rounded-xl bg-orange-100 text-orange-600">
-                  <Plus className="size-5" />
+            {/* Modal Header */}
+            <div className="flex items-start justify-between p-5 sm:p-6 border-b border-stone-100 bg-gradient-to-r from-orange-50/70 via-amber-50/40 to-white">
+              <div className="flex items-center gap-3.5">
+                <div className="flex size-11 sm:size-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 font-black text-white shadow-md shadow-orange-500/20">
+                  <Coins className="size-5 sm:size-6" />
                 </div>
-                <h3 className="text-base font-bold text-stone-900">
-                  Tambah Pendaftaran Anak Asuh
-                </h3>
+                <div>
+                  <h2 className="text-base sm:text-lg font-black text-stone-900">
+                    Detail Anggaran Wilayah {selectedWilayahDetail.wilayah}
+                  </h2>
+                  <p className="text-xs text-stone-500 mt-0.5">
+                    {selectedWilayahDetail.studentCount} Anak Asuh Aktif • Total Anggaran:{" "}
+                    <strong className="text-orange-600 font-mono font-bold">
+                      {formatRupiah(selectedWilayahDetail.subtotal)}
+                    </strong>
+                  </p>
+                </div>
               </div>
+
               <button
                 type="button"
-                onClick={() => setShowAddModal(false)}
-                className="text-stone-400 hover:text-stone-600"
+                onClick={() => setSelectedWilayahDetail(null)}
+                className="rounded-full p-2 text-stone-400 hover:bg-stone-100 hover:text-stone-700 transition cursor-pointer"
+                aria-label="Tutup modal"
               >
                 <X className="size-5" />
               </button>
             </div>
 
-            <p className="text-xs text-stone-600 leading-relaxed">
-              Pendaftaran calon adik asuh baru dapat dilakukan secara langsung melalui
-              formulir pendaftaran online terpadu atau melalui bimbingan Pengawas Lapangan.
-            </p>
+            {/* Modal Body (Scrollable List) */}
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+              {selectedWilayahDetail.students.length === 0 ? (
+                <div className="py-12 text-center text-stone-400 space-y-2">
+                  <Coins className="size-10 text-stone-300 mx-auto" />
+                  <p className="text-sm font-bold text-stone-700">
+                    Belum Ada Adik Asuh Aktif
+                  </p>
+                  <p className="text-xs text-stone-500 max-w-sm mx-auto">
+                    Belum ada adik asuh dengan status disetujui (approved) yang tercatat di wilayah {selectedWilayahDetail.wilayah}.
+                  </p>
+                </div>
+              ) : (
+                <div className="rounded-2xl border border-stone-200/90 overflow-hidden shadow-2xs">
+                  <table className="w-full text-left border-collapse border border-stone-200 text-xs">
+                    <thead>
+                      <tr className="bg-stone-50/90 text-black font-extrabold uppercase border-b border-stone-200">
+                        <th className="py-3 px-3.5 text-center w-12 border-r border-stone-200">No</th>
+                        <th className="py-3 px-3.5 border-r border-stone-200">Nama Lengkap</th>
+                        <th className="py-3 px-3.5 border-r border-stone-200">Jenjang</th>
+                        <th className="py-3 px-3.5 text-right">Kebutuhan Anggaran</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-stone-200 bg-white">
+                      {selectedWilayahDetail.students.map((student, idx) => (
+                        <tr
+                          key={student.id}
+                          className="hover:bg-orange-50/30 transition"
+                        >
+                          <td className="py-3 px-3.5 text-center text-stone-400 font-mono font-medium border-r border-stone-200">
+                            {idx + 1}
+                          </td>
+                          <td className="py-3 px-3.5 font-bold text-stone-900 border-r border-stone-200">
+                            <Link
+                              href={`/admin/dashboard/data-anak-asuh/${student.id}`}
+                              className="hover:text-orange-600 hover:underline transition"
+                              title="Lihat profil anak asuh"
+                            >
+                              {student.fullName}
+                            </Link>
+                          </td>
+                          <td className="py-3 px-3.5 border-r border-stone-200">
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <span
+                                className={`inline-flex items-center px-2 py-0.5 rounded-md font-bold text-[10px] ${
+                                  student.jenjang === "Kuliah"
+                                    ? "bg-purple-100 text-purple-800"
+                                    : student.jenjang === "SMA" || student.jenjang === "SMK"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : student.jenjang === "SMP"
+                                    ? "bg-amber-100 text-amber-800"
+                                    : student.jenjang === "SD"
+                                    ? "bg-emerald-100 text-emerald-800"
+                                    : "bg-stone-100 text-stone-600"
+                                }`}
+                              >
+                                {student.jenjang}
+                              </span>
+                              {student.formattedJenjangKelas && student.formattedJenjangKelas !== "-" && (
+                                <span className="text-[10px] text-stone-400 font-medium">
+                                  ({student.formattedJenjangKelas})
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                          <td className="py-3 px-3.5 text-right font-mono font-bold text-stone-900">
+                            {student.nominal > 0 ? (
+                              <span className="text-orange-600">
+                                {formatRupiah(student.nominal)}
+                              </span>
+                            ) : (
+                              <span className="text-stone-400 font-normal italic">
+                                Belum Ditentukan
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                    <tfoot className="bg-stone-50 border-t border-stone-200 font-bold text-stone-800">
+                      <tr>
+                        <td colSpan={3} className="py-3 px-3.5 text-right border-r border-stone-200">
+                          Total Anggaran Wilayah:
+                        </td>
+                        <td className="py-3 px-3.5 text-right font-mono text-sm text-orange-600 font-black">
+                          {formatRupiah(selectedWilayahDetail.subtotal)}
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                </div>
+              )}
+            </div>
 
-            <div className="flex items-center justify-end gap-2.5 pt-2">
+            {/* Modal Footer */}
+            <div className="flex items-center justify-between p-4 sm:px-6 border-t border-stone-100 bg-stone-50/50">
+              <span className="text-[11px] text-stone-500">
+                Tarif bulanan disesuaikan dengan ketentuan beasiswa per jenjang
+              </span>
               <button
                 type="button"
-                onClick={() => setShowAddModal(false)}
-                className="rounded-xl border border-stone-200 bg-white px-4 py-2 text-xs font-semibold text-stone-700 hover:bg-stone-50 transition"
+                onClick={() => setSelectedWilayahDetail(null)}
+                className="px-4 py-2 rounded-xl bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs transition cursor-pointer"
               >
                 Tutup
               </button>
-              <Link
-                href="/register"
-                target="_blank"
-                className="inline-flex items-center gap-1.5 rounded-xl bg-orange-500 hover:bg-orange-600 px-4 py-2 text-xs font-bold text-white shadow-xs transition"
-              >
-                <span>Buka Form Pendaftaran</span>
-                <ExternalLink className="size-3.5" />
-              </Link>
             </div>
           </div>
         </div>

@@ -186,8 +186,8 @@ export function AdminAuditFinansialView({
       p.status === "verified"
         ? "Terverifikasi"
         : p.status === "rejected"
-        ? "Ditolak"
-        : "Menunggu Verifikasi",
+          ? "Ditolak"
+          : "Menunggu Verifikasi",
     ])
 
     const csvContent =
@@ -214,15 +214,13 @@ export function AdminAuditFinansialView({
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-bold text-orange-700">
-              <Sparkles className="size-3 text-orange-600" />
-              PENGAWASAN KEUANGAN & BUKTI BAYAR
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/20 backdrop-blur-xs px-2.5 py-0.5 text-xs font-bold text-white border border-white/30">
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-stone-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight drop-shadow-xs">
             Audit Finansial
           </h1>
-          <p className="text-xs sm:text-sm text-stone-500 max-w-2xl">
+          <p className="text-xs sm:text-sm text-white/90 max-w-2xl font-medium">
             Verifikasi dan audit bukti transfer penyaluran dana beasiswa dari
             pengawas wilayah ke masing-masing adik asuh.
           </p>
@@ -305,19 +303,17 @@ export function AdminAuditFinansialView({
                       key={item.id}
                       type="button"
                       onClick={() => setSelectedProofId(item.id)}
-                      className={`w-full text-left p-4 rounded-2xl border transition-all duration-150 flex items-start justify-between gap-3 cursor-pointer ${
-                        isSelected
+                      className={`w-full text-left p-4 rounded-2xl border transition-all duration-150 flex items-start justify-between gap-3 cursor-pointer ${isSelected
                           ? "bg-orange-50/60 border-orange-500 ring-2 ring-orange-500/20 shadow-xs"
                           : "bg-stone-50/70 border-stone-200/80 hover:bg-white hover:border-stone-300"
-                      }`}
+                        }`}
                     >
                       <div className="flex items-start gap-3 min-w-0">
                         <div
-                          className={`flex size-10 shrink-0 items-center justify-center rounded-xl font-bold text-sm shadow-2xs ${
-                            isSelected
+                          className={`flex size-10 shrink-0 items-center justify-center rounded-xl font-bold text-sm shadow-2xs ${isSelected
                               ? "bg-orange-500 text-white"
                               : "bg-white text-stone-700 border border-stone-200"
-                          }`}
+                            }`}
                         >
                           {initial}
                         </div>
@@ -494,7 +490,7 @@ export function AdminAuditFinansialView({
                   <div className="text-right">
                     <span className="text-lg sm:text-xl font-black text-orange-600">
                       {selectedProof.nominal !== null &&
-                      selectedProof.nominal !== undefined
+                        selectedProof.nominal !== undefined
                         ? `Rp ${selectedProof.nominal.toLocaleString("id-ID")}`
                         : "Rp - (Belum tercatat)"}
                     </span>
@@ -648,23 +644,23 @@ export function AdminAuditFinansialView({
         </div>
 
         {/* Tabel Riwayat */}
-        <div className="overflow-x-auto border border-stone-200/80 rounded-2xl overflow-hidden">
-          <table className="w-full text-left text-sm text-stone-700 border-collapse">
-            <thead className="bg-stone-50 text-[11px] font-bold uppercase tracking-wider text-stone-500 border-b border-stone-200/80">
+        <div className="overflow-x-auto border border-stone-200 rounded-2xl overflow-hidden">
+          <table className="w-full text-left text-sm text-stone-700 border-collapse border border-stone-200">
+            <thead className="bg-stone-50/80 text-[11px] font-extrabold uppercase tracking-wider text-black border-b border-stone-200">
               <tr>
-                <th scope="col" className="px-5 py-3.5">
+                <th scope="col" className="px-5 py-3.5 border-r border-stone-200">
                   Tanggal Diproses
                 </th>
-                <th scope="col" className="px-5 py-3.5">
+                <th scope="col" className="px-5 py-3.5 border-r border-stone-200">
                   Nama Siswa
                 </th>
-                <th scope="col" className="px-5 py-3.5">
+                <th scope="col" className="px-5 py-3.5 border-r border-stone-200">
                   Pengawas & Wilayah
                 </th>
-                <th scope="col" className="px-5 py-3.5">
+                <th scope="col" className="px-5 py-3.5 border-r border-stone-200">
                   Nominal
                 </th>
-                <th scope="col" className="px-5 py-3.5">
+                <th scope="col" className="px-5 py-3.5 border-r border-stone-200">
                   Bukti
                 </th>
                 <th scope="col" className="px-5 py-3.5 text-right">
@@ -672,7 +668,7 @@ export function AdminAuditFinansialView({
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100 text-xs">
+            <tbody className="divide-y divide-stone-200 text-xs bg-white">
               {paginatedHistory.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-6 py-10 text-center text-stone-400">
@@ -686,27 +682,27 @@ export function AdminAuditFinansialView({
                     className="hover:bg-stone-50/60 transition-colors"
                   >
                     {/* Tanggal */}
-                    <td className="px-5 py-3.5 font-mono text-stone-600">
+                    <td className="px-5 py-3.5 font-mono text-stone-600 border-r border-stone-200">
                       {item.processedAt
                         ? new Date(item.processedAt).toLocaleDateString(
-                            "id-ID",
-                            {
-                              day: "numeric",
-                              month: "short",
-                              year: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            }
-                          )
-                        : new Date(item.tanggal).toLocaleDateString("id-ID", {
+                          "id-ID",
+                          {
                             day: "numeric",
                             month: "short",
                             year: "numeric",
-                          })}
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          }
+                        )
+                        : new Date(item.tanggal).toLocaleDateString("id-ID", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                        })}
                     </td>
 
                     {/* Nama Siswa */}
-                    <td className="px-5 py-3.5">
+                    <td className="px-5 py-3.5 border-r border-stone-200">
                       <Link
                         href={`/admin/dashboard/data-anak-asuh/${item.student.id}`}
                         className="font-bold text-stone-900 hover:text-orange-600 transition"
@@ -719,7 +715,7 @@ export function AdminAuditFinansialView({
                     </td>
 
                     {/* Pengawas & Wilayah */}
-                    <td className="px-5 py-3.5">
+                    <td className="px-5 py-3.5 border-r border-stone-200">
                       <span className="font-semibold text-stone-800 block">
                         {item.pengawas.name}
                       </span>
@@ -730,14 +726,14 @@ export function AdminAuditFinansialView({
                     </td>
 
                     {/* Nominal */}
-                    <td className="px-5 py-3.5 font-bold text-stone-800">
+                    <td className="px-5 py-3.5 font-bold text-stone-800 border-r border-stone-200">
                       {item.nominal !== null && item.nominal !== undefined
                         ? `Rp ${item.nominal.toLocaleString("id-ID")}`
                         : "-"}
                     </td>
 
                     {/* Bukti */}
-                    <td className="px-5 py-3.5">
+                    <td className="px-5 py-3.5 border-r border-stone-200">
                       {item.fileUrl ? (
                         <a
                           href={item.fileUrl}

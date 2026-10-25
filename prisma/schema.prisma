@@ -56,6 +56,7 @@ model Student {
   schoolName          String              @map("school_name")
   jenjang             String?             // "SD" | "SMP" | "SMA" | "SMK" | "Kuliah" | null (belum ditentukan)
   gradeLevel          String              @map("grade_level")
+  programAkselerasi   Boolean             @default(false) @map("program_akselerasi")
   nilaiRataRata       String              @map("nilai_rata_rata")
   jumlahSaudara       Int                 @map("jumlah_saudara")
   status              String              @default("pending") // "pending" | "approved" | "rejected" | "nonaktif" | "alumni"
@@ -150,6 +151,7 @@ model AcademicUpdate {
   student         Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
   tanggalInput    DateTime @default(now()) @map("tanggal_input")
   kelasSaatItu    String   @map("kelas_saat_itu")
+  semester        String?  @map("semester") // "Ganjil" | "Genap" | null (khusus untuk jenjang Sekolah, null untuk Kuliah karena sudah punya sistem semester sendiri di gradeLevel)
   nilaiRataRata   String   @map("nilai_rata_rata")
   namaSekolahBaru String?  @map("nama_sekolah_baru")
   dokumenRapor    String?  @map("dokumen_rapor")

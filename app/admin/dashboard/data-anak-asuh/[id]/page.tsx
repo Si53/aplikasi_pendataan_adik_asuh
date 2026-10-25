@@ -10,6 +10,7 @@ import {
 } from "@/components/admin-student-detail-tabs"
 import { AdminDetailBottomBar } from "@/components/admin-detail-bottom-bar"
 import { AdminPendingApprovalActions } from "@/components/admin-pending-approval-actions"
+import { formatGradeWithJenjang } from "@/lib/academic"
 
 export const dynamic = "force-dynamic"
 
@@ -90,16 +91,31 @@ export default async function AdminStudentDetailPage({
     : Promise.resolve(null)
 
   const academicPromises = student.academicUpdates.map(async (item) => {
-    const url = item.dokumenRapor
-      ? await getPresignedR2Url(item.dokumenRapor)
-      : null
+    let rawUrls: string[] = []
+    if (item.dokumenRapor) {
+      try {
+        const parsed = JSON.parse(item.dokumenRapor)
+        if (Array.isArray(parsed)) {
+          rawUrls = parsed
+        } else if (typeof parsed === "string") {
+          rawUrls = [parsed]
+        }
+      } catch {
+        rawUrls = [item.dokumenRapor]
+      }
+    }
+    const presignedUrls = await Promise.all(
+      rawUrls.map((url) => getPresignedR2Url(url))
+    )
     return {
       id: item.id,
       tanggalInput: item.tanggalInput.toISOString(),
       kelasSaatItu: item.kelasSaatItu,
+      semester: item.semester,
       nilaiRataRata: item.nilaiRataRata,
       namaSekolahBaru: item.namaSekolahBaru,
-      dokumenRaporUrl: url,
+      dokumenRaporUrl: presignedUrls[0] || null,
+      dokumenRaporUrls: presignedUrls,
     }
   })
 
@@ -156,7 +172,9 @@ export default async function AdminStudentDetailPage({
       noHp: student.noHp,
       riwayatPenyakit: student.riwayatPenyakit,
       schoolName: student.schoolName,
-      gradeLevel: student.gradeLevel,
+      jenjang: student.jenjang,
+      gradeLevel: formatGradeWithJenjang(student.gradeLevel, student.jenjang),
+      programAkselerasi: student.programAkselerasi,
       nilaiRataRata: student.nilaiRataRata,
       jumlahSaudara: student.jumlahSaudara,
       status: student.status,
@@ -233,7 +251,6 @@ export default async function AdminStudentDetailPage({
   }
 
   const initial = student.fullName.charAt(0).toUpperCase() || "A"
-  const studentCode = `AKA-2024-${student.id.toString().padStart(4, "0")}`
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl mx-auto">
@@ -246,10 +263,6 @@ export default async function AdminStudentDetailPage({
           <ArrowLeft className="size-4 text-stone-400" />
           <span>Kembali ke Data Anak Asuh</span>
         </Link>
-
-        <span className="text-xs font-mono font-bold text-stone-500 bg-stone-100 px-3 py-1 rounded-lg border border-stone-200/80">
-          {studentCode}
-        </span>
       </div>
 
       {/* 2. Main Header Profile Card */}
@@ -274,15 +287,12 @@ export default async function AdminStudentDetailPage({
                 <h1 className="text-xl sm:text-2xl font-black text-stone-900 tracking-tight">
                   {student.fullName}
                 </h1>
-                <span className="rounded-md bg-stone-100 px-2 py-0.5 text-xs font-mono font-bold text-stone-600">
-                  {studentCode}
-                </span>
               </div>
 
               <p className="text-xs sm:text-sm text-stone-600 flex items-center gap-1.5 font-medium">
                 <School className="size-4 text-stone-400" />
                 <span>
-                  {student.schoolName} ({student.gradeLevel})
+                  {student.schoolName} ({formatGradeWithJenjang(student.gradeLevel, student.jenjang)})
                 </span>
               </p>
 
@@ -316,6 +326,13 @@ export default async function AdminStudentDetailPage({
                   <span className="inline-flex items-center gap-1 rounded-full bg-rose-50 px-2.5 py-0.5 text-xs font-semibold text-rose-700 border border-rose-200">
                     <span className="size-1.5 rounded-full bg-rose-500" />
                     Ditolak
+                  </span>
+                )}
+
+                {student.programAkselerasi && (
+                  <span className="inline-flex items-center gap-1 rounded-full bg-purple-50 px-2.5 py-0.5 text-xs font-semibold text-purple-700 border border-purple-200">
+                    <Sparkles className="size-3 text-purple-600" />
+                    Program Akselerasi (1 Tahun 3 Semester)
                   </span>
                 )}
 

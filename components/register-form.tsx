@@ -20,6 +20,7 @@ import {
   Info,
   Loader2,
   LogIn,
+  MessageCircle,
   PartyPopper,
   Plus,
   RotateCcw,
@@ -50,6 +51,20 @@ const emptyFamily = (): Family => ({
   phone: "",
   medicalHistory: "",
 })
+
+export function isFamilyMemberComplete(f: Family): boolean {
+  if (!f.name.trim()) return false
+  if (f.status === "Meninggal Dunia") return false
+
+  const hasName = Boolean(f.name.trim())
+  const hasOccupation = Boolean(f.occupation.trim() && f.occupation.trim() !== "-")
+  const hasIncome = Boolean(f.incomePerMonth.trim() && f.incomePerMonth.trim() !== "-")
+  const hasPhone = Boolean(f.phone.trim() && f.phone.trim() !== "-")
+  const hasAddress = Boolean(f.address.trim() && f.address.trim() !== "-")
+  const hasMedical = Boolean(f.medicalHistory.trim())
+
+  return hasName && hasOccupation && hasIncome && hasPhone && hasAddress && hasMedical
+}
 
 const wilayahPengawasMap: Record<string, string[]> = {
   Pati: ["Pak Kusnadi", "Pak Sukijo", "Ibu Nugraheni"],
@@ -187,10 +202,12 @@ type RegistrationDraft = {
     jumlahSaudara: string
   }
   educationLevelType: "Sekolah" | "Kuliah"
+  programAkselerasi?: boolean
   father: Family
   mother: Family
   guardian: Family
   costs: Cost[]
+  termsAgreed?: boolean
   consentAgreed: boolean
   savedAt: number
 }
@@ -216,6 +233,7 @@ export type RegisterFormProps = {
     schoolName: string
     jenjang?: string | null
     gradeLevel: string
+    programAkselerasi?: boolean
     nilaiRataRata: string
     jumlahSaudara?: number | null
     father?: Family | null
@@ -242,6 +260,10 @@ export function RegisterForm({
 
   const [educationLevelType, setEducationLevelType] = useState<"Sekolah" | "Kuliah">(
     initialStudentData?.jenjang === "Kuliah" ? "Kuliah" : "Sekolah"
+  )
+
+  const [programAkselerasi, setProgramAkselerasi] = useState<boolean>(
+    Boolean(initialStudentData?.programAkselerasi)
   )
 
   // Draft storage states
@@ -343,7 +365,7 @@ export function RegisterForm({
         ]
   )
 
-  type PrestasiItem = {
+  type DocumentItem = {
     id: string
     name: string
     url: string
@@ -351,11 +373,11 @@ export function RegisterForm({
   }
 
   const initialDocsMap: {
-    [key in "KK" | "RAPOR" | "FOTO_ANAK" | "SKTM"]?: { name: string; url: string; uploading: boolean }
+    [key in "KK" | "FOTO_ANAK" | "SKTM"]?: { name: string; url: string; uploading: boolean }
   } = {}
   if (initialStudentData?.documents) {
     for (const doc of initialStudentData.documents) {
-      if (doc.type === "KK" || doc.type === "RAPOR" || doc.type === "FOTO_ANAK" || doc.type === "SKTM") {
+      if (doc.type === "KK" || doc.type === "FOTO_ANAK" || doc.type === "SKTM") {
         initialDocsMap[doc.type] = {
           name: `${doc.type}_terlampir.file`,
           url: doc.fileUrl,
@@ -366,10 +388,21 @@ export function RegisterForm({
   }
 
   const [uploadedFiles, setUploadedFiles] = useState<{
-    [key in "KK" | "RAPOR" | "FOTO_ANAK" | "SKTM"]?: { name: string; url: string; uploading: boolean }
+    [key in "KK" | "FOTO_ANAK" | "SKTM"]?: { name: string; url: string; uploading: boolean }
   }>(initialDocsMap)
 
-  const initialPrestasiItems: PrestasiItem[] = (initialStudentData?.documents || [])
+  const initialRaporItems: DocumentItem[] = (initialStudentData?.documents || [])
+    .filter((d) => d.type === "RAPOR")
+    .map((d, index) => ({
+      id: `existing-rapor-${index}-${d.fileUrl.slice(-6)}`,
+      name: `Rapor Terlampir ${index + 1}`,
+      url: d.fileUrl,
+      uploading: false,
+    }))
+
+  const [raporFiles, setRaporFiles] = useState<DocumentItem[]>(initialRaporItems)
+
+  const initialPrestasiItems: DocumentItem[] = (initialStudentData?.documents || [])
     .filter((d) => d.type === "PRESTASI")
     .map((d, index) => ({
       id: `existing-prestasi-${index}-${d.fileUrl.slice(-6)}`,
@@ -378,7 +411,8 @@ export function RegisterForm({
       uploading: false,
     }))
 
-  const [prestasiFiles, setPrestasiFiles] = useState<PrestasiItem[]>(initialPrestasiItems)
+  const [prestasiFiles, setPrestasiFiles] = useState<DocumentItem[]>(initialPrestasiItems)
+  const [termsAgreed, setTermsAgreed] = useState(isEditMode)
   const [consentAgreed, setConsentAgreed] = useState(isEditMode)
 
   const set = (key: string, value: string) => setData((d) => ({ ...d, [key]: value }))
@@ -422,6 +456,9 @@ export function RegisterForm({
     if (pendingDraft.educationLevelType) {
       setEducationLevelType(pendingDraft.educationLevelType)
     }
+    if (typeof pendingDraft.programAkselerasi === "boolean") {
+      setProgramAkselerasi(pendingDraft.programAkselerasi)
+    }
     if (pendingDraft.father) {
       setFather(pendingDraft.father)
     }
@@ -433,6 +470,9 @@ export function RegisterForm({
     }
     if (pendingDraft.costs && pendingDraft.costs.length > 0) {
       setCosts(pendingDraft.costs)
+    }
+    if (typeof pendingDraft.termsAgreed === "boolean") {
+      setTermsAgreed(pendingDraft.termsAgreed)
     }
     if (typeof pendingDraft.consentAgreed === "boolean") {
       setConsentAgreed(pendingDraft.consentAgreed)
@@ -483,10 +523,12 @@ export function RegisterForm({
           step,
           data,
           educationLevelType,
+          programAkselerasi,
           father,
           mother,
           guardian,
           costs,
+          termsAgreed,
           consentAgreed,
           savedAt: Date.now(),
         }
@@ -504,15 +546,20 @@ export function RegisterForm({
     step,
     data,
     educationLevelType,
+    programAkselerasi,
     father,
     mother,
     guardian,
     costs,
+    termsAgreed,
     consentAgreed,
   ])
 
   const handleEducationLevelChange = (lvl: "Sekolah" | "Kuliah") => {
     setEducationLevelType(lvl)
+    if (lvl === "Sekolah") {
+      setProgramAkselerasi(false)
+    }
     setData((prev) => ({
       ...prev,
       jenjang: lvl === "Kuliah" ? "Kuliah" : "",
@@ -539,7 +586,7 @@ export function RegisterForm({
     })
   }
 
-  const handleFileUpload = async (type: "KK" | "RAPOR" | "FOTO_ANAK" | "SKTM", file: File) => {
+  const handleFileUpload = async (type: "KK" | "FOTO_ANAK" | "SKTM", file: File) => {
     setError("")
 
     if (file.size > 15 * 1024 * 1024) {
@@ -584,6 +631,49 @@ export function RegisterForm({
         return copy
       })
     }
+  }
+
+  const handleRaporUpload = async (file: File) => {
+    setError("")
+
+    if (file.size > 15 * 1024 * 1024) {
+      setError(`Ukuran file "${file.name}" terlalu besar (maksimal 15 MB). Silakan pilih file yang lebih kecil atau kompres terlebih dahulu.`)
+      return
+    }
+
+    const tempId = `rapor-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`
+    setRaporFiles((prev) => [
+      ...prev,
+      { id: tempId, name: file.name, url: "", uploading: true },
+    ])
+
+    try {
+      const processedFile = await compressImageClientSide(file)
+      const formData = new FormData()
+      formData.append("type", "RAPOR")
+      formData.append("username", data.username.trim() || "temp")
+      formData.append("file", processedFile)
+
+      const res = await uploadRegistrationDocumentAction(formData)
+      if (res.success) {
+        setRaporFiles((prev) =>
+          prev.map((item) =>
+            item.id === tempId ? { ...item, url: res.fileUrl, uploading: false } : item
+          )
+        )
+      } else {
+        setError(res.error || "Gagal mengunggah berkas rapor. Silakan coba lagi.")
+        setRaporFiles((prev) => prev.filter((item) => item.id !== tempId))
+      }
+    } catch (err) {
+      console.error("Upload rapor failed", err)
+      setError("Gagal mengunggah berkas rapor. Periksa koneksi internet Anda.")
+      setRaporFiles((prev) => prev.filter((item) => item.id !== tempId))
+    }
+  }
+
+  const handleRemoveRapor = (id: string) => {
+    setRaporFiles((prev) => prev.filter((item) => item.id !== id))
   }
 
   const handlePrestasiUpload = async (file: File) => {
@@ -634,8 +724,18 @@ export function RegisterForm({
 
     // Step 1 validation
     if (step === 1) {
+      if (!termsAgreed) {
+        return setError("Harap baca dan setujui Ketentuan Adik Asuh terlebih dahulu sebelum melanjutkan.")
+      }
       if (!data.username.trim()) return setError("Username wajib diisi.")
       if (/\s/.test(data.username)) return setError("Username tidak boleh mengandung spasi.")
+      const usernameDigits = (data.username.match(/\d/g) || []).length
+      if (usernameDigits === 0) {
+        return setError(`Username wajib menyertakan minimal 2 angka (contoh: ${data.username || "budi"}01).`)
+      }
+      if (usernameDigits < 2) {
+        return setError(`Username wajib menyertakan minimal 2 angka (saat ini baru ${usernameDigits} angka).`)
+      }
       if (!/^\d{16}$/.test(data.nik.trim())) {
         return setError(`NIK harus terdiri dari 16 angka (saat ini ${data.nik.length} angka).`)
       }
@@ -680,12 +780,67 @@ export function RegisterForm({
             : "Nilai Rata-Rata Rapor wajib diisi."
         )
       }
+      const parsedNilai = Number(data.nilaiRataRata.trim().replace(",", "."))
+      if (isNaN(parsedNilai)) {
+        return setError(
+          educationLevelType === "Kuliah"
+            ? "IPK harus berupa angka yang valid (contoh: 3.80)."
+            : "Nilai Rata-Rata Rapor harus berupa angka yang valid (contoh: 88.5)."
+        )
+      }
+      if (educationLevelType === "Kuliah" && (parsedNilai < 0 || parsedNilai > 4)) {
+        return setError(`IPK harus berada di antara 0 sampai 4.00 (saat ini ${data.nilaiRataRata}).`)
+      }
+      if (educationLevelType === "Sekolah" && (parsedNilai < 0 || parsedNilai > 100)) {
+        return setError(`Nilai Rata-Rata Rapor harus berada di antara 0 sampai 100 (saat ini ${data.nilaiRataRata}).`)
+      }
     }
 
-    // Step 4 validation
+    // Step 4 validation: wajib mengisi lengkap data salah satu orang tua / wali yang masih hidup
     if (step === 4) {
-      if (!father.name.trim() && !mother.name.trim() && !guardian.name.trim()) {
-        return setError("Harap isi setidaknya data salah satu orang tua atau wali.")
+      const fatherComplete = isFamilyMemberComplete(father)
+      const motherComplete = isFamilyMemberComplete(mother)
+      const guardianComplete = isFamilyMemberComplete(guardian)
+
+      if (!fatherComplete && !motherComplete && !guardianComplete) {
+        const activeMembers: { label: string; family: Family }[] = []
+        if (father.name.trim()) activeMembers.push({ label: "Ayah", family: father })
+        if (mother.name.trim()) activeMembers.push({ label: "Ibu", family: mother })
+        if (guardian.name.trim()) activeMembers.push({ label: "Wali", family: guardian })
+
+        if (activeMembers.length === 0) {
+          return setError(
+            "Wajib mengisi lengkap data salah satu orang tua (Ayah / Ibu) atau Wali sebelum melanjutkan ke langkah berikutnya."
+          )
+        }
+
+        const allDeceased = activeMembers.every((m) => m.family.status === "Meninggal Dunia")
+        if (allDeceased) {
+          return setError(
+            "Data orang tua berstatus 'Meninggal Dunia'. Sesuai ketentuan, Anda wajib melengkapi data orang tua yang masih hidup atau Wali yang bertanggung jawab."
+          )
+        }
+
+        const incompleteLiving = activeMembers.find((m) => m.family.status !== "Meninggal Dunia")
+        if (incompleteLiving) {
+          const f = incompleteLiving.family
+          const missing: string[] = []
+          if (!f.occupation.trim() || f.occupation.trim() === "-") missing.push("Pekerjaan")
+          if (!f.incomePerMonth.trim() || f.incomePerMonth.trim() === "-") missing.push("Penghasilan per Bulan")
+          if (!f.phone.trim() || f.phone.trim() === "-") missing.push("Nomor Telepon/HP")
+          if (!f.address.trim() || f.address.trim() === "-") missing.push("Alamat Domisili")
+          if (!f.medicalHistory.trim()) missing.push("Riwayat Penyakit (isi '-' bila tidak ada)")
+
+          if (missing.length > 0) {
+            return setError(
+              `Data ${incompleteLiving.label} belum lengkap. Mohon lengkapi: ${missing.join(", ")}.`
+            )
+          }
+        }
+
+        return setError(
+          "Wajib mengisi lengkap seluruh data salah satu orang tua (Ayah / Ibu) atau Wali sebelum melanjutkan."
+        )
       }
     }
 
@@ -695,9 +850,39 @@ export function RegisterForm({
   const submitRegistration = () => {
     setError("")
 
+    if (!termsAgreed) {
+      return setError("Harap setujui Ketentuan Adik Asuh di langkah 1 sebelum menyelesaikan pendaftaran.")
+    }
+
+    const usernameDigits = (data.username.match(/\d/g) || []).length
+    if (usernameDigits < 2) {
+      return setError("Username wajib menyertakan minimal 2 angka (contoh: budi01).")
+    }
+
+    const parsedNilai = Number(data.nilaiRataRata.trim().replace(",", "."))
+    if (isNaN(parsedNilai)) {
+      return setError(
+        educationLevelType === "Kuliah"
+          ? "IPK harus berupa angka yang valid (contoh: 3.80)."
+          : "Nilai Rata-Rata Rapor harus berupa angka yang valid (contoh: 88.5)."
+      )
+    }
+    if (educationLevelType === "Kuliah" && (parsedNilai < 0 || parsedNilai > 4)) {
+      return setError("IPK harus berada di antara 0 sampai 4.00.")
+    }
+    if (educationLevelType === "Sekolah" && (parsedNilai < 0 || parsedNilai > 100)) {
+      return setError("Nilai Rata-Rata Rapor harus berada di antara 0 sampai 100.")
+    }
+
+    // Step 4 check
+    if (!isFamilyMemberComplete(father) && !isFamilyMemberComplete(mother) && !isFamilyMemberComplete(guardian)) {
+      return setError("Wajib melengkapi data salah satu orang tua atau wali yang bertanggung jawab.")
+    }
+
     // Step 5 validation: seluruh dokumen wajib diupload
-    if (!uploadedFiles.KK?.url || !uploadedFiles.RAPOR?.url || !uploadedFiles.FOTO_ANAK?.url || !uploadedFiles.SKTM?.url) {
-      return setError("Seluruh berkas wajib (Kartu Keluarga, Raport Terakhir, Foto Anak, dan SKTM) wajib diunggah.")
+    const validRaporFiles = raporFiles.filter((item) => item.url)
+    if (!uploadedFiles.KK?.url || validRaporFiles.length === 0 || !uploadedFiles.FOTO_ANAK?.url || !uploadedFiles.SKTM?.url) {
+      return setError("Seluruh berkas wajib (Kartu Keluarga, Rapor Terakhir, Foto Anak, dan SKTM) wajib diunggah.")
     }
 
     if (!consentAgreed) {
@@ -720,6 +905,11 @@ export function RegisterForm({
         fileUrl: item!.url,
       }))
 
+    const raporPayload = validRaporFiles.map((item) => ({
+      type: "RAPOR",
+      fileUrl: item.url,
+    }))
+
     const prestasiPayload = prestasiFiles
       .filter((item) => item.url)
       .map((item) => ({
@@ -727,7 +917,7 @@ export function RegisterForm({
         fileUrl: item.url,
       }))
 
-    const documentsPayload = [...singleDocsPayload, ...prestasiPayload]
+    const documentsPayload = [...singleDocsPayload, ...raporPayload, ...prestasiPayload]
 
     const finalJenjang = educationLevelType === "Kuliah" ? "Kuliah" : (data.jenjang.trim() || null)
 
@@ -746,6 +936,7 @@ export function RegisterForm({
       schoolName: data.schoolName.trim(),
       jenjang: finalJenjang,
       gradeLevel: data.gradeLevel.trim(),
+      programAkselerasi: educationLevelType === "Kuliah" ? programAkselerasi : false,
       nilaiRataRata: data.nilaiRataRata.trim(),
       jumlahSaudara: Number(data.jumlahSaudara) || 0,
       educationCosts: costs
@@ -800,10 +991,14 @@ export function RegisterForm({
     "Unggah Dokumen",
   ]
 
+  const usernameDigitCount = (data.username.match(/\d/g) || []).length
+
   const isStep1Complete = Boolean(
     data.username.trim() &&
     !/\s/.test(data.username) &&
-    /^\d{16}$/.test(data.nik.trim())
+    usernameDigitCount >= 2 &&
+    /^\d{16}$/.test(data.nik.trim()) &&
+    termsAgreed
   )
 
   const isStep2Complete = Boolean(
@@ -818,20 +1013,30 @@ export function RegisterForm({
     data.noHp.trim()
   )
 
+  const parsedNilai = Number(data.nilaiRataRata.trim().replace(",", "."))
+  const isNilaiValid =
+    Boolean(data.nilaiRataRata.trim()) &&
+    !isNaN(parsedNilai) &&
+    (educationLevelType === "Kuliah"
+      ? parsedNilai >= 0 && parsedNilai <= 4
+      : parsedNilai >= 0 && parsedNilai <= 100)
+
   const isStep3Complete = Boolean(
     data.schoolName.trim() &&
     (educationLevelType === "Kuliah" || data.jenjang.trim()) &&
     data.gradeLevel.trim() &&
-    data.nilaiRataRata.trim()
+    isNilaiValid
   )
 
   const isStep4Complete = Boolean(
-    father.name.trim() || mother.name.trim() || guardian.name.trim()
+    isFamilyMemberComplete(father) ||
+    isFamilyMemberComplete(mother) ||
+    isFamilyMemberComplete(guardian)
   )
 
   const isStep5Complete = Boolean(
     uploadedFiles.KK?.url &&
-    uploadedFiles.RAPOR?.url &&
+    raporFiles.some((f) => f.url && !f.uploading) &&
     uploadedFiles.FOTO_ANAK?.url &&
     uploadedFiles.SKTM?.url &&
     consentAgreed
@@ -1023,17 +1228,153 @@ export function RegisterForm({
       {/* LANGKAH 1: KREDENSIAL SISTEM */}
       {step === 1 && (
         <Section
-          title="1. Informasi Akun"
-          note="Data yang akan digunakan untuk masuk ke aplikasi nanti."
+          title="1. Ketentuan & Informasi Akun"
+          note="Harap baca ketentuan adik asuh dan buat data login untuk masuk ke aplikasi."
         >
-          <Field label="Username *">
-            <Input
-              value={data.username}
-              onChange={(e) => set("username", e.target.value.replace(/\s+/g, "").toLowerCase())}
-              placeholder="Contoh: yuhen01"
-              className="h-14 rounded-2xl bg-white text-base shadow-sm"
-              required
-            />
+          {/* NOTICE KETENTUAN ADIK ASUH DARI PIHAK UKA */}
+          <div
+            className={`rounded-2xl border-2 p-4 sm:p-5 transition-all shadow-sm ${
+              termsAgreed
+                ? "border-emerald-500/80 bg-emerald-50/90 ring-2 ring-emerald-500/20"
+                : "border-amber-400 bg-amber-50/95 ring-2 ring-amber-400/25"
+            }`}
+          >
+            <div className="flex flex-col gap-3.5">
+              <div className="flex items-center justify-between gap-2 flex-wrap">
+                <div className="flex items-center gap-2">
+                  <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-orange-500 text-white shadow-xs">
+                    <ShieldCheck className="size-4" />
+                  </div>
+                  <div>
+                    <h3 className="font-extrabold text-foreground text-sm sm:text-base">
+                      Ketentuan Adik Asuh
+                    </h3>
+                    <p className="text-[11px] sm:text-xs text-muted-foreground font-medium">
+                      Pernyataan mengenai keinginan pihak UKA kepada adik asuh yang wajib dipatuhi
+                    </p>
+                  </div>
+                </div>
+                <span className="rounded-full bg-red-100 text-red-700 px-2.5 py-0.5 text-[11px] font-bold border border-red-200">
+                  Wajib Dipatuhi <span className="text-red-600 font-black">*</span>
+                </span>
+              </div>
+
+              {/* Daftar Ketentuan */}
+              <div className="rounded-xl border border-amber-200/90 bg-white/95 p-3.5 sm:p-4 shadow-2xs space-y-2.5 text-xs sm:text-sm text-stone-800 leading-relaxed">
+                <div className="flex items-start gap-2.5">
+                  <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-orange-100 text-[11px] font-black text-orange-800">
+                    1
+                  </span>
+                  <p>
+                    <strong>Penggunaan Dana Pendidikan:</strong> Dana pendidikan hanya boleh digunakan untuk kebutuhan pendidikan, dan tidak boleh disalahgunakan untuk hal-hal yang bertentangan dengan Pancasila, NKRI, dan Buddha Dharma.
+                  </p>
+                </div>
+                <div className="flex items-start gap-2.5">
+                  <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-orange-100 text-[11px] font-black text-orange-800">
+                    2
+                  </span>
+                  <p>
+                    <strong>Pengumpulan Laporan Studi:</strong> Adik asuh wajib mengumpulkan rapor (atau hasil studi) setiap semester sebagai bukti perkembangan belajar.
+                  </p>
+                </div>
+                <div className="flex items-start gap-2.5">
+                  <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-orange-100 text-[11px] font-black text-orange-800">
+                    3
+                  </span>
+                  <p>
+                    <strong>Ketentuan Drop Out:</strong> Jika adik asuh putus sekolah/kuliah (drop out) dengan alasan tertentu, wajib segera memberitahukan kepada pihak UKA/pengawas dan penyaluran bantuan pendidikan akan dihentikan.
+                  </p>
+                </div>
+                <div className="flex items-start gap-2.5">
+                  <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-orange-100 text-[11px] font-black text-orange-800">
+                    4
+                  </span>
+                  <p>
+                    <strong>Keaslian Dokumen & Informasi:</strong> Adik asuh dilarang memasukkan dokumen palsu maupun informasi palsu, baik saat pendaftaran maupun saat pelaporan.
+                  </p>
+                </div>
+                <div className="flex items-start gap-2.5">
+                  <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-orange-100 text-[11px] font-black text-orange-800">
+                    5
+                  </span>
+                  <p>
+                    <strong>Sanksi Pelanggaran:</strong> Pelanggaran terhadap ketentuan di atas akan mengakibatkan status adik asuh diberhentikan.
+                  </p>
+                </div>
+              </div>
+
+              {/* Kotak Centang Persetujuan */}
+              <div className="flex items-start gap-3 pt-1">
+                <input
+                  id="terms-agreement-checkbox"
+                  type="checkbox"
+                  checked={termsAgreed}
+                  onChange={(e) => setTermsAgreed(e.target.checked)}
+                  className="mt-1 size-5 shrink-0 rounded-md border-2 border-amber-500 text-orange-600 focus:ring-orange-500 cursor-pointer accent-orange-600"
+                />
+                <div className="space-y-1 min-w-0 flex-1">
+                  <label
+                    htmlFor="terms-agreement-checkbox"
+                    className="font-extrabold text-foreground text-xs sm:text-sm cursor-pointer block leading-normal"
+                  >
+                    Saya telah membaca, memahami, dan menyetujui seluruh Ketentuan Adik Asuh di atas.
+                  </label>
+                  {!termsAgreed ? (
+                    <p className="text-[11px] font-semibold text-amber-800/90">
+                      💡 Centang kotak persetujuan di atas untuk dapat melanjutkan ke langkah berikutnya.
+                    </p>
+                  ) : (
+                    <p className="text-[11px] font-bold text-emerald-700 flex items-center gap-1">
+                      <Check className="size-3.5" /> Ketentuan telah disetujui.
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <Field label="Username  *">
+            <div className="flex flex-col gap-1.5">
+              <Input
+                value={data.username}
+                onChange={(e) => set("username", e.target.value.replace(/\s+/g, "").toLowerCase())}
+                placeholder="Contoh: yuhen01"
+                className="h-14 rounded-2xl bg-white text-base shadow-sm"
+                required
+              />
+              {/* Indikator / Pemberitahuan jumlah angka di username */}
+              <div className="flex items-center justify-between text-xs font-semibold">
+                {(() => {
+                  const numDigits = (data.username.match(/\d/g) || []).length
+                  if (!data.username) {
+                    return (
+                      <span className="text-muted-foreground">
+                      </span>
+                    )
+                  }
+                  if (numDigits === 0) {
+                    return (
+                      <span className="flex items-center gap-1 text-red-600 font-bold">
+                        <AlertCircle className="size-3.5" /> Belum ada angka (wajib sertakan minimal 2 angka)
+                      </span>
+                    )
+                  }
+                  if (numDigits < 2) {
+                    return (
+                      <span className="flex items-center gap-1 text-amber-600 font-bold">
+                        <AlertCircle className="size-3.5" /> Baru {numDigits} angka (tambahkan 1 angka lagi, misal: {data.username}1)
+                      </span>
+                    )
+                  }
+                  return (
+                    <span className="flex items-center gap-1 text-emerald-600 font-bold">
+                      <Check className="size-3.5" /> Sudah menyertakan {numDigits} angka
+                    </span>
+                  )
+                })()}
+                <span className="text-muted-foreground">Min. 2 angka</span>
+              </div>
+            </div>
           </Field>
 
           <Field label="Nomor Induk Kependudukan (NIK) *">
@@ -1370,31 +1711,110 @@ export function RegisterForm({
               </select>
             </Field>
           ) : (
-            <Field label="Semester *">
-              <select
-                value={data.gradeLevel}
-                onChange={(e) => set("gradeLevel", e.target.value)}
-                className="h-14 w-full rounded-2xl border border-border bg-white px-4 text-base font-semibold text-foreground shadow-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 cursor-pointer"
-              >
-                <option value="">-- Pilih Semester Kuliah --</option>
-                {Array.from({ length: 10 }, (_, i) => i + 1).map((s) => (
-                  <option key={s} value={String(s)}>
-                    Semester {s}
-                  </option>
-                ))}
-              </select>
-            </Field>
+            <>
+              <Field label="Semester *">
+                <select
+                  value={data.gradeLevel}
+                  onChange={(e) => set("gradeLevel", e.target.value)}
+                  className="h-14 w-full rounded-2xl border border-border bg-white px-4 text-base font-semibold text-foreground shadow-sm focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 cursor-pointer"
+                >
+                  <option value="">-- Pilih Semester Kuliah --</option>
+                  {Array.from({ length: 10 }, (_, i) => i + 1).map((s) => (
+                    <option key={s} value={String(s)}>
+                      Semester {s}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+
+              {/* Checkbox Program Akselerasi (Khusus Kuliah) */}
+              <div className="rounded-2xl border border-purple-200 bg-purple-50/60 p-4 transition animate-in fade-in slide-in-from-top-2 duration-200 shadow-xs">
+                <label className="flex items-start gap-3 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={programAkselerasi}
+                    onChange={(e) => setProgramAkselerasi(e.target.checked)}
+                    className="mt-0.5 size-4 rounded-md border-purple-300 text-purple-600 focus:ring-purple-500/20 cursor-pointer"
+                  />
+                  <div className="space-y-0.5">
+                    <span className="text-xs sm:text-sm font-bold text-purple-950 block">
+                      Saya mengikuti program percepatan 1 Tahun 3 Semester
+                    </span>
+                    <span className="text-[11px] text-purple-700 block">
+                      Centang opsi ini jika kampus kamu menerapkan kurikulum akselerasi/trimester (3 semester per tahun akademik).
+                    </span>
+                  </div>
+                </label>
+              </div>
+            </>
           )}
 
           {/* 5. Input Nilai Rata-Rata / IPK */}
-          <Field label={educationLevelType === "Kuliah" ? "IPK *" : "Nilai Rata-Rata Rapor *"}>
-            <Input
-              value={data.nilaiRataRata}
-              onChange={(e) => set("nilaiRataRata", e.target.value)}
-              placeholder={educationLevelType === "Kuliah" ? "Contoh: 3.80" : "Contoh: 88.5"}
-              className="h-14 rounded-2xl bg-white text-base shadow-sm"
-              required
-            />
+          <Field label={educationLevelType === "Kuliah" ? "IPK (Rentang 0 - 4.00) *" : "Nilai Rata-Rata Rapor (Rentang 0 - 100) *"}>
+            <div className="flex flex-col gap-1.5">
+              <Input
+                type="text"
+                inputMode="decimal"
+                value={data.nilaiRataRata}
+                onChange={(e) => set("nilaiRataRata", e.target.value.replace(/\s+/g, ""))}
+                placeholder={educationLevelType === "Kuliah" ? "Contoh: 3.80" : "Contoh: 88.5"}
+                className="h-14 rounded-2xl bg-white text-base shadow-sm"
+                required
+              />
+              {/* Indikator / Pemberitahuan nilai */}
+              <div className="flex items-center justify-between text-xs font-semibold">
+                {(() => {
+                  const raw = data.nilaiRataRata.trim()
+                  if (!raw) {
+                    return (
+                      <span className="text-muted-foreground">
+                        {educationLevelType === "Kuliah"
+                          ? "Masukkan IPK antara 0.00 sampai 4.00"
+                          : "Masukkan nilai antara 0 sampai 100"}
+                      </span>
+                    )
+                  }
+                  const num = Number(raw.replace(",", "."))
+                  if (isNaN(num)) {
+                    return (
+                      <span className="flex items-center gap-1 text-red-600 font-bold">
+                        <AlertCircle className="size-3.5" /> Format angka tidak valid (contoh: {educationLevelType === "Kuliah" ? "3.80" : "88.5"})
+                      </span>
+                    )
+                  }
+                  if (educationLevelType === "Kuliah") {
+                    if (num < 0 || num > 4) {
+                      return (
+                        <span className="flex items-center gap-1 text-red-600 font-bold">
+                          <AlertCircle className="size-3.5" /> IPK harus antara 0 sampai 4.00 (saat ini {raw})
+                        </span>
+                      )
+                    }
+                    return (
+                      <span className="flex items-center gap-1 text-emerald-600 font-bold">
+                        <Check className="size-3.5" /> IPK valid ({num.toFixed(2)})
+                      </span>
+                    )
+                  } else {
+                    if (num < 0 || num > 100) {
+                      return (
+                        <span className="flex items-center gap-1 text-red-600 font-bold">
+                          <AlertCircle className="size-3.5" /> Nilai rapor harus antara 0 sampai 100 (saat ini {raw})
+                        </span>
+                      )
+                    }
+                    return (
+                      <span className="flex items-center gap-1 text-emerald-600 font-bold">
+                        <Check className="size-3.5" /> Nilai rapor valid ({num})
+                      </span>
+                    )
+                  }
+                })()}
+                <span className="text-muted-foreground">
+                  {educationLevelType === "Kuliah" ? "Maks. 4.00" : "Maks. 100"}
+                </span>
+              </div>
+            </div>
           </Field>
 
           {/* Rincian Biaya Pendidikan dengan Format Nominal Titik */}
@@ -1500,7 +1920,7 @@ export function RegisterForm({
       {step === 4 && (
         <Section
           title="4. Informasi Keluarga & Orang Tua"
-          note="Data orang tua atau wali calon adik asuh. Klik masing-masing bagian untuk membuka formulir."
+          note="Data orang tua atau wali calon adik asuh. Wajib mengisi lengkap seluruh data salah satu pihak penanggung jawab (Ayah, Ibu, atau Wali)."
         >
           {/* Field Jumlah Saudara di luar accordion */}
           <Field label="Berapa Bersaudara (Termasuk kamu)">
@@ -1546,7 +1966,7 @@ export function RegisterForm({
           </div>
 
           <Hint>
-            Harap isi setidaknya data salah satu orang tua (Ayah atau Ibu) atau Wali yang bertanggung jawab.
+            Wajib mengisi lengkap seluruh data salah satu orang tua (Ayah / Ibu) atau Wali yang bertanggung jawab. Jika data orang tua berstatus &ldquo;Meninggal Dunia&rdquo;, Anda wajib melengkapi data orang tua yang masih hidup atau wali.
           </Hint>
         </Section>
       )}
@@ -1562,10 +1982,173 @@ export function RegisterForm({
             </span>
           }
         >
+          {/* 1. KARTU KELUARGA (KK) */}
+          {(() => {
+            const item = uploadedFiles.KK
+            const inputId = "file-upload-KK"
+            return (
+              <div
+                className={`flex flex-col gap-3 rounded-2xl border p-4 transition shadow-sm ${
+                  item?.url
+                    ? "border-emerald-500/50 bg-emerald-50/70"
+                    : "border-border/80 bg-white/80"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <Label htmlFor={inputId} className="font-bold text-foreground text-sm cursor-pointer">
+                    {renderLabelWithAsterisk("1. Kartu Keluarga (KK) *")}
+                  </Label>
+                  {item?.url ? (
+                    <span className="flex items-center gap-1 text-xs font-bold text-emerald-600">
+                      <CheckCircle2 className="size-4" /> Terunggah
+                    </span>
+                  ) : (
+                    <span className="text-[11px] font-semibold text-destructive">Wajib diunggah</span>
+                  )}
+                </div>
+
+                {/* Hidden file input */}
+                <input
+                  id={inputId}
+                  type="file"
+                  accept="image/*,.pdf"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0]
+                    if (file) handleFileUpload("KK", file)
+                  }}
+                />
+
+                {/* Custom upload button (+) */}
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center justify-between">
+                  <label
+                    htmlFor={inputId}
+                    className={`flex items-center justify-center gap-2 rounded-xl border px-4 py-3 text-xs sm:text-sm font-bold cursor-pointer transition shadow-sm ${
+                      item?.url
+                        ? "border-emerald-500 bg-emerald-100/80 text-emerald-800 hover:bg-emerald-100"
+                        : "border-primary bg-primary/10 text-primary hover:bg-primary/20"
+                    }`}
+                  >
+                    {item?.uploading ? (
+                      <span className="flex items-center gap-2">
+                        <Loader2 className="size-4 animate-spin" /> Sedang Mengunggah...
+                      </span>
+                    ) : item?.url ? (
+                      <span className="flex items-center gap-2">
+                        <FileCheck className="size-4" /> Ganti Berkas ({item.name})
+                      </span>
+                    ) : (
+                      <span className="flex items-center gap-2">
+                        <Plus className="size-4" /> Pilih & Unggah Berkas
+                      </span>
+                    )}
+                  </label>
+
+                  {item?.name && !item.uploading && (
+                    <p className="truncate text-xs text-muted-foreground font-medium max-w-xs">
+                      {item.name}
+                    </p>
+                  )}
+                </div>
+              </div>
+            )
+          })()}
+
+          {/* 2. DOKUMEN RAPOR (WAJIB - MULTI-UPLOAD) */}
+          <div
+            className={`flex flex-col gap-3 rounded-2xl border p-4 shadow-sm transition ${
+              raporFiles.some((f) => f.url && !f.uploading)
+                ? "border-emerald-500/50 bg-emerald-50/70"
+                : "border-border/80 bg-white/80"
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <Label className="font-bold text-foreground text-sm">
+                  {renderLabelWithAsterisk("2. Foto Raport Terakhir (Halaman Nilai) *")}
+                </Label>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Wajib — Unggah foto halaman rapor atau KHS semester terakhir (dapat lebih dari 1 file).
+                </p>
+              </div>
+              {raporFiles.some((f) => f.url && !f.uploading) ? (
+                <span className="flex items-center gap-1 text-xs font-bold text-emerald-600">
+                  <CheckCircle2 className="size-4" /> Terunggah ({raporFiles.filter((f) => f.url).length})
+                </span>
+              ) : (
+                <span className="text-[11px] font-semibold text-destructive">Wajib diunggah</span>
+              )}
+            </div>
+
+            {/* Daftar Berkas Rapor Terunggah */}
+            {raporFiles.length > 0 && (
+              <div className="space-y-2 pt-1">
+                {raporFiles.map((item, idx) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between gap-2 rounded-xl border border-border/70 bg-white p-3 shadow-xs"
+                  >
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-700">
+                        {item.uploading ? (
+                          <Loader2 className="size-4 animate-spin" />
+                        ) : (
+                          <FileCheck className="size-4 text-emerald-600" />
+                        )}
+                      </div>
+                      <div className="min-w-0 space-y-0.5">
+                        <p className="text-xs font-semibold text-foreground truncate max-w-xs sm:max-w-md">
+                          {idx + 1}. {item.name}
+                        </p>
+                        <p className="text-[11px] text-muted-foreground">
+                          {item.uploading ? "Sedang mengunggah..." : "Siap dikirim"}
+                        </p>
+                      </div>
+                    </div>
+
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => handleRemoveRapor(item.id)}
+                      disabled={item.uploading}
+                      className="size-8 p-0 text-muted-foreground hover:text-destructive hover:bg-red-50 rounded-lg shrink-0 cursor-pointer"
+                      title="Hapus file ini"
+                    >
+                      <Trash2 className="size-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Tombol Tambah File Rapor */}
+            <div>
+              <input
+                id="file-upload-rapor"
+                type="file"
+                accept="image/*,.pdf"
+                className="hidden"
+                onChange={(e) => {
+                  const file = e.target.files?.[0]
+                  if (file) {
+                    handleRaporUpload(file)
+                    e.target.value = ""
+                  }
+                }}
+              />
+              <label
+                htmlFor="file-upload-rapor"
+                className="inline-flex items-center justify-center gap-2 rounded-xl border border-primary bg-primary/10 px-4 py-2.5 text-xs sm:text-sm font-bold text-primary hover:bg-primary/20 cursor-pointer transition shadow-sm"
+              >
+                <Plus className="size-4" /> Tambah File Rapor
+              </label>
+            </div>
+          </div>
+
+          {/* 3. FOTO ANAK & 4. SKTM */}
           {(
             [
-              ["KK", "1. Kartu Keluarga (KK) *"],
-              ["RAPOR", "2. Foto Raport Terakhir (Halaman Nilai & Identitas) *"],
               ["FOTO_ANAK", "3. Foto Anak (Formal / Bebas) *"],
               ["SKTM", "4. Surat Keterangan Tidak Mampu (SKTM) *"],
             ] as const
@@ -1841,7 +2424,18 @@ export function RegisterForm({
               className="h-12 rounded-2xl text-sm font-semibold text-muted-foreground hover:text-foreground"
             />
           )}
-        </div>
+      </div>
+
+      {/* Tombol Hubungi Kami (WhatsApp) - Dipisah dari section navigasi utama */}
+      <a
+        href="https://wa.me/6282129741793?text=Halo%2C%20saya%20ingin%20bertanya%20mengenai%20pendaftaran%20Adik%20Asuh"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-1 flex h-13 sm:h-14 w-full items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-[#00A859] to-[#10D361] hover:brightness-105 text-white text-sm sm:text-base font-bold shadow-md shadow-emerald-600/20 transition active:scale-[0.98] cursor-pointer"
+      >
+        <MessageCircle className="size-5 text-white" />
+        <span>Hubungi Kami</span>
+      </a>
     </div>
   )
 }
@@ -1925,7 +2519,9 @@ function FamilyAccordionSection({
 }) {
   const setVal = (p: Partial<Family>) => onChange({ ...value, ...p })
   const isDeceased = value.status === "Meninggal Dunia"
-  const isCompleted = Boolean(value.name.trim())
+  const isLivingComplete = isFamilyMemberComplete(value)
+  const isDeceasedWithData = isDeceased && Boolean(value.name.trim())
+  const hasStarted = Boolean(value.name.trim())
 
   const handleStatusChange = (newStatus: string) => {
     if (newStatus === "Meninggal Dunia") {
@@ -1963,12 +2559,24 @@ function FamilyAccordionSection({
         <div className="flex items-center gap-3 min-w-0">
           <div
             className={`flex size-9 shrink-0 items-center justify-center rounded-xl font-bold text-xs transition-colors ${
-              isCompleted
+              isLivingComplete
                 ? "bg-emerald-100 text-emerald-700"
+                : isDeceasedWithData
+                ? "bg-stone-100 text-stone-600"
+                : hasStarted
+                ? "bg-amber-100 text-amber-700"
                 : "bg-orange-100 text-orange-700"
             }`}
           >
-            {isCompleted ? <Check className="size-4 stroke-[3]" /> : <User className="size-4" />}
+            {isLivingComplete ? (
+              <Check className="size-4 stroke-[3]" />
+            ) : isDeceasedWithData ? (
+              <User className="size-4 text-stone-600" />
+            ) : hasStarted ? (
+              <AlertCircle className="size-4 text-amber-600" />
+            ) : (
+              <User className="size-4" />
+            )}
           </div>
           <div className="space-y-0.5 min-w-0">
             <div className="flex items-center gap-2">
@@ -1980,7 +2588,7 @@ function FamilyAccordionSection({
               )}
             </div>
             <p className="text-xs text-muted-foreground truncate">
-              {isCompleted ? (
+              {hasStarted ? (
                 <span className="font-medium text-foreground">
                   {value.name} ({value.status})
                 </span>
@@ -1992,14 +2600,23 @@ function FamilyAccordionSection({
         </div>
 
         <div className="flex items-center gap-2.5 shrink-0 pl-2">
-          {isCompleted ? (
+          {isLivingComplete ? (
             <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-bold text-emerald-700 border border-emerald-200">
               <CheckCircle2 className="size-3.5 text-emerald-600" />
-              <span>Terisi</span>
+              <span>Lengkap</span>
+            </span>
+          ) : isDeceasedWithData ? (
+            <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-stone-100 px-2.5 py-0.5 text-xs font-bold text-stone-600 border border-stone-200">
+              <span>Meninggal Dunia</span>
+            </span>
+          ) : hasStarted ? (
+            <span className="hidden sm:inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-bold text-amber-700 border border-amber-200">
+              <AlertCircle className="size-3.5 text-amber-600" />
+              <span>Belum Lengkap</span>
             </span>
           ) : (
             <span className="hidden sm:inline-block text-xs font-medium text-muted-foreground">
-              {isOptional ? "Belum diisi" : "Belum diisi"}
+              {isOptional ? "Opsional" : "Belum diisi"}
             </span>
           )}
 
@@ -2016,7 +2633,7 @@ function FamilyAccordionSection({
       {/* Collapsible Content */}
       {isOpen && (
         <div className="border-t border-border/60 p-4 space-y-4 bg-white/95 animate-in fade-in slide-in-from-top-2 duration-200">
-          <Field label="Nama Lengkap">
+          <Field label="Nama Lengkap *">
             <Input
               value={value.name}
               onChange={(e) => setVal({ name: e.target.value })}
@@ -2024,7 +2641,7 @@ function FamilyAccordionSection({
               className="h-12 rounded-xl bg-white text-sm shadow-sm"
             />
           </Field>
-          <Field label="Kondisi / Status">
+          <Field label="Kondisi / Status *">
             <select
               value={value.status}
               onChange={(e) => handleStatusChange(e.target.value)}
@@ -2034,7 +2651,7 @@ function FamilyAccordionSection({
               <option value="Meninggal Dunia">Meninggal Dunia</option>
             </select>
           </Field>
-          <Field label="Pekerjaan">
+          <Field label={isDeceased ? "Pekerjaan" : "Pekerjaan *"}>
             <Input
               disabled={isDeceased}
               value={isDeceased ? "-" : value.occupation}
@@ -2043,7 +2660,7 @@ function FamilyAccordionSection({
               className="h-12 rounded-xl bg-white text-sm shadow-sm disabled:bg-muted/60 disabled:text-muted-foreground disabled:cursor-not-allowed"
             />
           </Field>
-          <Field label="Penghasilan per Bulan">
+          <Field label={isDeceased ? "Penghasilan per Bulan" : "Penghasilan per Bulan *"}>
             <div className="relative">
               <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-muted-foreground">
                 Rp
@@ -2061,7 +2678,7 @@ function FamilyAccordionSection({
               />
             </div>
           </Field>
-          <Field label="Nomor Telepon / HP">
+          <Field label={isDeceased ? "Nomor Telepon / HP" : "Nomor Telepon / HP *"}>
             <Input
               disabled={isDeceased}
               value={isDeceased ? "-" : value.phone}
@@ -2070,7 +2687,7 @@ function FamilyAccordionSection({
               className="h-12 rounded-xl bg-white text-sm shadow-sm disabled:bg-muted/60 disabled:text-muted-foreground disabled:cursor-not-allowed"
             />
           </Field>
-          <Field label="Alamat Domisili">
+          <Field label={isDeceased ? "Alamat Domisili" : "Alamat Domisili *"}>
             <Textarea
               disabled={isDeceased}
               value={isDeceased ? "-" : value.address}
@@ -2079,12 +2696,12 @@ function FamilyAccordionSection({
               className="min-h-16 rounded-xl bg-white text-sm shadow-sm disabled:bg-muted/60 disabled:text-muted-foreground disabled:cursor-not-allowed"
             />
           </Field>
-          <Field label='Riwayat Penyakit (isi dengan " - " bila tidak ada)'>
+          <Field label={isDeceased ? "Riwayat Penyakit" : 'Riwayat Penyakit (isi dengan " - " bila tidak ada) *'}>
             <Textarea
               disabled={isDeceased}
-              value={isDeceased ? "-" : value.medicalHistory}
+              value={isDeceased ? "" : value.medicalHistory}
               onChange={(e) => setVal({ medicalHistory: e.target.value })}
-              placeholder={isDeceased ? "Tidak berlaku" : 'Isi " - " jika tidak ada riwayat penyakit berat'}
+              placeholder={isDeceased ? "Tidak berlaku" : "Isi dengan '-' bila tidak ada riwayat penyakit"}
               className="min-h-16 rounded-xl bg-white text-sm shadow-sm disabled:bg-muted/60 disabled:text-muted-foreground disabled:cursor-not-allowed"
             />
           </Field>

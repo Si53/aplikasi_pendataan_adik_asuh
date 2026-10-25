@@ -6,6 +6,7 @@ import {
   type StudentStatusItem,
   type PengawasStatusItem,
 } from "@/components/admin-kontrol-status-view"
+import { formatGradeWithJenjang } from "@/lib/academic"
 
 export const dynamic = "force-dynamic"
 
@@ -52,7 +53,7 @@ export default async function KontrolStatusDashboardPage() {
     nik: st.nik,
     fullName: st.fullName,
     schoolName: st.schoolName,
-    gradeLevel: st.gradeLevel,
+    gradeLevel: formatGradeWithJenjang(st.gradeLevel, st.jenjang),
     wilayah: st.wilayah,
     createdAt: st.createdAt.toISOString(),
     status: st.status,

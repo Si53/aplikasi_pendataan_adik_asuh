@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation"
 import Image from "next/image"
-import { Bell, MapPin, ShieldCheck } from "lucide-react"
+import { MapPin, ShieldCheck } from "lucide-react"
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/auth"
 import { getPresignedR2Url } from "@/lib/r2"
@@ -187,7 +187,7 @@ export default async function PengawasPage() {
       </div>
 
       <main className="mx-auto flex min-h-dvh w-full max-w-5xl flex-col gap-6 px-4 py-6 sm:px-6 sm:py-8">
-        {/* 1. HEADER (Logo Kecil di Kiri, Judul Oranye Bold, Ikon Bell Notifikasi + Logout) */}
+        {/* 1. HEADER (Logo Kecil di Kiri, Judul Oranye Bold, Logout) */}
         <header className="flex items-center justify-between gap-4 rounded-3xl bg-white/85 px-5 py-3.5 shadow-sm backdrop-blur-md border border-orange-100/80">
           <div className="flex items-center gap-3">
             <div className="relative size-10 overflow-hidden rounded-full border border-orange-200 shadow-sm">
@@ -200,29 +200,16 @@ export default async function PengawasPage() {
               />
             </div>
             <div>
-              <h1 className="text-lg sm:text-xl font-extrabold text-orange-600 tracking-tight">
+              <h1 className="text-xl sm:text-2xl font-extrabold text-orange-600 tracking-tight">
                 Dashboard Pengawas
               </h1>
-              <p className="text-[11px] font-semibold text-muted-foreground flex items-center gap-1">
-                <ShieldCheck className="size-3 text-orange-500" /> Vihara Vimala Dharma
+              <p className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
+                <ShieldCheck className="size-3.5 text-orange-500" /> Vihara Vimala Dharma
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2.5">
-            {/* Bell Notifikasi dengan Badge Kecil */}
-            <div className="relative">
-              <button
-                type="button"
-                className="flex size-10 items-center justify-center rounded-2xl bg-orange-50 text-orange-700 transition hover:bg-orange-100/80 border border-orange-200/60"
-                aria-label="Notifikasi"
-              >
-                <Bell className="size-5" />
-              </button>
-              {/* Badge dot kecil */}
-              <span className="absolute top-1.5 right-1.5 size-2.5 rounded-full bg-orange-500 ring-2 ring-white" />
-            </div>
-
             <LogoutButton />
           </div>
         </header>
@@ -230,17 +217,17 @@ export default async function PengawasPage() {
         {/* 2. KARTU PROFIL PENGAWAS */}
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 rounded-3xl bg-white/90 p-5 sm:p-6 shadow-md backdrop-blur-md border border-orange-100/80">
           {/* Avatar Inisial */}
-          <div className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 font-extrabold text-xl text-white shadow-md shadow-orange-500/20">
+          <div className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 font-extrabold text-2xl text-white shadow-md shadow-orange-500/20">
             {pengawasInitials}
           </div>
 
           {/* Info Pengawas */}
           <div className="flex flex-1 flex-col items-center sm:items-start text-center sm:text-left gap-1">
-            <h2 className="text-xl sm:text-2xl font-black text-foreground">
+            <h2 className="text-2xl sm:text-3xl font-black text-foreground">
               Halo, {pengawas.name}
             </h2>
-            <div className="mt-1 flex items-center gap-1.5 rounded-full bg-orange-50 px-3.5 py-1 text-xs font-bold text-orange-800 border border-orange-200">
-              <MapPin className="size-3.5 text-orange-600" />
+            <div className="mt-1 flex items-center gap-1.5 rounded-full bg-orange-50 px-3.5 py-1 text-sm font-bold text-orange-800 border border-orange-200">
+              <MapPin className="size-4 text-orange-600" />
               <span>Wilayah Tugas: <strong>{pengawas.wilayah}</strong></span>
             </div>
           </div>

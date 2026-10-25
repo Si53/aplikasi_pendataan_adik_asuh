@@ -115,14 +115,14 @@ export function PengawasDashboard({
           </div>
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="rounded-full bg-white/25 px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-white">
+              <span className="rounded-full bg-white/25 px-2.5 py-0.5 text-xs font-extrabold uppercase tracking-wider text-white">
                 Audit
               </span>
-              <h3 className="text-base sm:text-lg font-black tracking-tight text-white">
+              <h3 className="text-lg sm:text-xl font-black tracking-tight text-white">
                 Input Penyaluran Dana
               </h3>
             </div>
-            <p className="text-xs sm:text-sm text-white/90 max-w-xl">
+            <p className="text-sm sm:text-base text-white/90 max-w-xl">
               Unggah bukti struk/nota dan nominal bantuan yang telah diserahkan ke adik asuh.
             </p>
           </div>
@@ -130,7 +130,7 @@ export function PengawasDashboard({
 
         <Link
           href="/pengawas/penyaluran-dana"
-          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-2.5 text-xs sm:text-sm font-black text-orange-600 hover:bg-orange-50 transition shadow-sm shrink-0 group self-start sm:self-auto w-full sm:w-auto"
+          className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-2.5 text-sm sm:text-base font-black text-orange-600 hover:bg-orange-50 transition shadow-sm shrink-0 group self-start sm:self-auto w-full sm:w-auto"
         >
           <span>Unggah Bukti</span>
           <ArrowRight className="size-4 group-hover:translate-x-0.5 transition-transform" />
@@ -145,7 +145,7 @@ export function PengawasDashboard({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Cari adik asuh berdasarkan nama, sekolah, atau cita-cita..."
-          className="h-14 w-full rounded-2xl border border-orange-200/80 bg-white/95 pl-12 pr-10 text-sm sm:text-base font-medium text-foreground shadow-sm backdrop-blur-md placeholder:text-muted-foreground focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+          className="h-14 w-full rounded-2xl border border-orange-200/80 bg-white/95 pl-12 pr-10 text-base sm:text-lg font-medium text-foreground shadow-sm backdrop-blur-md placeholder:text-muted-foreground focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
         />
         {query && (
           <button
@@ -173,17 +173,17 @@ export function PengawasDashboard({
               <Users className="size-5 sm:size-6" />
             </div>
             <div className="space-y-0.5 min-w-0">
-              <h2 className="text-base sm:text-xl font-extrabold text-foreground truncate">
+              <h2 className="text-lg sm:text-2xl font-extrabold text-foreground truncate">
                 Adik Asuh Binaan Saya ({filteredBinaan.length})
               </h2>
-              <p className="text-xs text-muted-foreground truncate">
+              <p className="text-sm text-muted-foreground truncate">
                 Adik asuh yang memilih bimbingan langsung Anda
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2.5 shrink-0 pl-2">
-            <span className="hidden sm:inline-flex items-center rounded-full bg-orange-50 px-3 py-1 text-xs font-bold text-orange-800 border border-orange-200">
+            <span className="hidden sm:inline-flex items-center rounded-full bg-orange-50 px-3 py-1 text-sm font-bold text-orange-800 border border-orange-200">
               {filteredBinaan.length} Siswa
             </span>
 
@@ -201,7 +201,7 @@ export function PengawasDashboard({
         {openSections.binaan && (
           <div className="border-t border-orange-100/80 p-5 sm:p-6 bg-orange-50/20 animate-in fade-in slide-in-from-top-2 duration-200">
             {filteredBinaan.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-orange-200 bg-white/60 p-8 text-center text-sm text-muted-foreground backdrop-blur-sm">
+              <div className="rounded-2xl border border-dashed border-orange-200 bg-white/60 p-8 text-center text-base text-muted-foreground backdrop-blur-sm">
                 {query
                   ? "Tidak ada adik asuh binaan yang cocok dengan pencarian."
                   : "Belum ada adik asuh yang memilih Anda sebagai pengawas langsung."}
@@ -231,17 +231,17 @@ export function PengawasDashboard({
               <MapPin className="size-5 sm:size-6" />
             </div>
             <div className="space-y-0.5 min-w-0">
-              <h2 className="text-base sm:text-xl font-extrabold text-foreground truncate">
+              <h2 className="text-lg sm:text-2xl font-extrabold text-foreground truncate">
                 Adik Asuh di Wilayah {wilayah} ({filteredAllWilayah.length})
               </h2>
-              <p className="text-xs text-muted-foreground truncate">
+              <p className="text-sm text-muted-foreground truncate">
                 Semua adik asuh terdaftar di wilayah {wilayah}
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-2.5 shrink-0 pl-2">
-            <span className="hidden sm:inline-flex items-center rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-800 border border-amber-200">
+            <span className="hidden sm:inline-flex items-center rounded-full bg-amber-50 px-3 py-1 text-sm font-bold text-amber-800 border border-amber-200">
               {filteredAllWilayah.length} Siswa
             </span>
 
@@ -259,7 +259,7 @@ export function PengawasDashboard({
         {openSections.wilayah && (
           <div className="border-t border-orange-100/80 p-5 sm:p-6 bg-orange-50/20 animate-in fade-in slide-in-from-top-2 duration-200">
             {filteredAllWilayah.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-orange-200 bg-white/60 p-8 text-center text-sm text-muted-foreground backdrop-blur-sm">
+              <div className="rounded-2xl border border-dashed border-orange-200 bg-white/60 p-8 text-center text-base text-muted-foreground backdrop-blur-sm">
                 {query
                   ? "Tidak ada adik asuh di wilayah ini yang cocok dengan pencarian."
                   : `Belum ada adik asuh terdaftar di wilayah ${wilayah}.`}
@@ -313,7 +313,7 @@ function StudentCard({
               className="size-full object-cover"
             />
           ) : (
-            <div className="flex size-full items-center justify-center font-extrabold text-lg text-orange-600">
+            <div className="flex size-full items-center justify-center font-extrabold text-xl text-orange-600">
               {initials}
             </div>
           )}
@@ -322,23 +322,23 @@ function StudentCard({
         {/* Nama & Status */}
         <div className="flex flex-1 flex-col gap-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
-            <h3 className="font-extrabold text-base sm:text-lg text-foreground truncate">
+            <h3 className="font-extrabold text-lg sm:text-xl text-foreground truncate">
               {student.fullName}
             </h3>
           </div>
 
           <div className="flex flex-wrap items-center gap-1.5">
             {badgeLabel ? (
-              <span className="rounded-full bg-amber-50 px-2.5 py-0.5 text-[11px] font-bold text-amber-900 border border-amber-200 truncate max-w-[200px]">
+              <span className="rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-bold text-amber-900 border border-amber-200 truncate max-w-[200px]">
                 {badgeLabel}
               </span>
             ) : isBinaan ? (
-              <span className="rounded-full bg-orange-50 px-2.5 py-0.5 text-[11px] font-bold text-orange-700 border border-orange-200">
+              <span className="rounded-full bg-orange-50 px-2.5 py-0.5 text-xs font-bold text-orange-700 border border-orange-200">
                 Binaan Saya
               </span>
             ) : null}
             {student.citaCita && (
-              <span className="text-[11px] font-medium text-muted-foreground truncate">
+              <span className="text-xs font-medium text-muted-foreground truncate">
                 • {student.citaCita}
               </span>
             )}
@@ -347,19 +347,19 @@ function StudentCard({
       </div>
 
       {/* Bagian Tengah: Detail Sekolah, Kelas, Nilai */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 rounded-2xl bg-orange-50/50 p-3 text-xs border border-orange-100/60">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 rounded-2xl bg-orange-50/50 p-3 text-sm border border-orange-100/60">
         <div>
-          <span className="text-muted-foreground block text-[11px]">Sekolah</span>
+          <span className="text-muted-foreground block text-xs">Sekolah</span>
           <p className="font-bold text-foreground truncate" title={student.schoolName}>
             {student.schoolName || "-"}
           </p>
         </div>
         <div>
-          <span className="text-muted-foreground block text-[11px]">Kelas</span>
+          <span className="text-muted-foreground block text-xs">Kelas</span>
           <p className="font-bold text-foreground truncate">{student.gradeLevel || "-"}</p>
         </div>
         <div>
-          <span className="text-muted-foreground block text-[11px]">Nilai Rapor / IPK</span>
+          <span className="text-muted-foreground block text-xs">Nilai Rapor / IPK</span>
           <p className="font-extrabold text-orange-600 truncate">{student.nilaiRataRata || "-"}</p>
         </div>
       </div>
@@ -367,10 +367,10 @@ function StudentCard({
       {/* Bagian Bawah: Tombol "Lihat Detail" (Oranye Pill-Shape) */}
       <Link
         href={`/pengawas/students/${student.id}`}
-        className="flex h-11 w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-orange-500 via-orange-500 to-amber-500 px-6 text-sm font-bold text-white shadow-md shadow-orange-500/20 transition-all duration-200 hover:from-orange-600 hover:to-amber-600 hover:shadow-lg hover:shadow-orange-500/30 active:scale-[0.98]"
+        className="flex h-11 w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-orange-500 via-orange-500 to-amber-500 px-6 text-base font-bold text-white shadow-md shadow-orange-500/20 transition-all duration-200 hover:from-orange-600 hover:to-amber-600 hover:shadow-lg hover:shadow-orange-500/30 active:scale-[0.98]"
       >
         <span>Lihat Detail</span>
-        <ArrowRight className="size-4 transition-transform group-hover:translate-x-0.5" />
+        <ArrowRight className="size-4.5 transition-transform group-hover:translate-x-0.5" />
       </Link>
     </div>
   )

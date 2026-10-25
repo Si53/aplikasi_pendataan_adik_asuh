@@ -34,26 +34,49 @@ export default async function DashboardPage() {
   const presignedFotoUrl = fotoDoc?.fileUrl ? await getPresignedR2Url(fotoDoc.fileUrl) : null
 
   const presignedDocuments = await Promise.all(
-    student.documents.map(async (d) => ({
-      id: d.id,
-      type: d.type,
-      fileUrl: await getPresignedR2Url(d.fileUrl),
-    }))
+    student.documents.map(async (d) => {
+      const isRestrictedForStudent = d.type === "KK" || d.type === "SKTM"
+      return {
+        id: d.id,
+        type: d.type,
+        fileUrl: isRestrictedForStudent ? "" : await getPresignedR2Url(d.fileUrl),
+      }
+    })
   )
 
   const presignedAcademicUpdates = await Promise.all(
-    student.academicUpdates.map(async (u) => ({
-      id: u.id,
-      tanggalInput: u.tanggalInput.toLocaleDateString("id-ID", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      }),
-      kelasSaatItu: u.kelasSaatItu,
-      nilaiRataRata: u.nilaiRataRata,
-      namaSekolahBaru: u.namaSekolahBaru,
-      dokumenRaporUrl: u.dokumenRapor ? await getPresignedR2Url(u.dokumenRapor) : null,
-    }))
+    student.academicUpdates.map(async (u) => {
+      let rawUrls: string[] = []
+      if (u.dokumenRapor) {
+        try {
+          const parsed = JSON.parse(u.dokumenRapor)
+          if (Array.isArray(parsed)) {
+            rawUrls = parsed
+          } else if (typeof parsed === "string") {
+            rawUrls = [parsed]
+          }
+        } catch {
+          rawUrls = [u.dokumenRapor]
+        }
+      }
+      const presignedUrls = await Promise.all(
+        rawUrls.map((url) => getPresignedR2Url(url))
+      )
+      return {
+        id: u.id,
+        tanggalInput: u.tanggalInput.toLocaleDateString("id-ID", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        }),
+        kelasSaatItu: u.kelasSaatItu,
+        semester: u.semester,
+        nilaiRataRata: u.nilaiRataRata,
+        namaSekolahBaru: u.namaSekolahBaru,
+        dokumenRaporUrl: presignedUrls[0] || null,
+        dokumenRaporUrls: presignedUrls,
+      }
+    })
   )
 
   // Inisial avatar fallback
@@ -77,7 +100,9 @@ export default async function DashboardPage() {
     alamatLengkap: student.alamatLengkap,
     noHp: student.noHp,
     schoolName: student.schoolName,
+    jenjang: student.jenjang,
     gradeLevel: student.gradeLevel,
+    programAkselerasi: student.programAkselerasi,
     nilaiRataRata: student.nilaiRataRata,
     citaCita: student.citaCita,
     wilayah: student.wilayah,

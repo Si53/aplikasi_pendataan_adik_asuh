@@ -7,6 +7,7 @@ import {
   AuditProofItem,
   StudentWithoutProofItem,
 } from "@/components/admin-audit-finansial-view"
+import { formatGradeWithJenjang } from "@/lib/academic"
 
 export const dynamic = "force-dynamic"
 
@@ -26,6 +27,7 @@ export default async function AuditFinansialDashboardPage() {
             id: true,
             fullName: true,
             schoolName: true,
+            jenjang: true,
             gradeLevel: true,
             wilayah: true,
           },
@@ -74,6 +76,7 @@ export default async function AuditFinansialDashboardPage() {
             id: true,
             fullName: true,
             schoolName: true,
+            jenjang: true,
             gradeLevel: true,
             wilayah: true,
           },
@@ -108,7 +111,7 @@ export default async function AuditFinansialDashboardPage() {
         id: p.student.id,
         fullName: p.student.fullName,
         schoolName: p.student.schoolName,
-        gradeLevel: p.student.gradeLevel,
+        gradeLevel: formatGradeWithJenjang(p.student.gradeLevel, p.student.jenjang),
         wilayah: p.student.wilayah,
       },
       pengawas: {
@@ -134,7 +137,7 @@ export default async function AuditFinansialDashboardPage() {
           id: p.student.id,
           fullName: p.student.fullName,
           schoolName: p.student.schoolName,
-          gradeLevel: p.student.gradeLevel,
+          gradeLevel: formatGradeWithJenjang(p.student.gradeLevel, p.student.jenjang),
           wilayah: p.student.wilayah,
         },
         pengawas: {
@@ -157,7 +160,7 @@ export default async function AuditFinansialDashboardPage() {
       id: st.id,
       fullName: st.fullName,
       schoolName: st.schoolName,
-      gradeLevel: st.gradeLevel,
+      gradeLevel: formatGradeWithJenjang(st.gradeLevel, st.jenjang),
       wilayah: st.wilayah,
       pengawas: st.pengawas
         ? {

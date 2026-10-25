@@ -46,7 +46,7 @@ export function AdminModulePlaceholder({
             href="/admin/dashboard/data-anak-asuh"
             className="inline-flex items-center gap-2 rounded-xl bg-orange-500 hover:bg-orange-600 px-5 py-2.5 text-xs font-bold text-white transition shadow-xs shadow-orange-500/25"
           >
-            <span>Buka Data Anak Asuh</span>
+            <span>Buka Data Adik Asuh</span>
             <ArrowRight className="size-3.5" />
           </Link>
         </div>

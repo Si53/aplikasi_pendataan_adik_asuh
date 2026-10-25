@@ -52,7 +52,7 @@ export function AdminSidebar({
       exact: true,
     },
     {
-      label: "Data Anak Asuh",
+      label: "Data Adik Asuh",
       href: "/admin/dashboard/data-anak-asuh",
       icon: Users,
       badge: totalStudentsCount,

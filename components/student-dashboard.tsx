@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useState, useTransition, useRef, useMemo, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import {
@@ -23,16 +23,37 @@ import {
   ArrowRight,
   X,
   Clock,
+  Plus,
+  Trash2,
+  FileCheck,
+  Check,
+  ChevronDown,
+  Eye,
+  ShieldCheck,
 } from "lucide-react"
 import { createStudentAcademicUpdateAction } from "@/app/actions/academic"
+import { HiddenBirthDate } from "@/components/hidden-birth-date"
+import {
+  determineCurrentEducationPosition,
+  getAllowedJenjang,
+  isNaikJenjang,
+  getDefaultGradeForJenjang,
+  KELAS_SD_OPTIONS,
+  KELAS_SMP_SMA_OPTIONS,
+  KULIAH_OPTIONS,
+  type CurrentEducationPosition,
+  type JenjangLevel,
+} from "@/lib/academic"
 
 export type StudentAcademicUpdate = {
   id: number
   tanggalInput: string
   kelasSaatItu: string
+  semester?: string | null
   nilaiRataRata: string
   namaSekolahBaru: string | null
   dokumenRaporUrl: string | null
+  dokumenRaporUrls?: string[]
 }
 
 export type StudentData = {
@@ -44,7 +65,9 @@ export type StudentData = {
   alamatLengkap: string
   noHp: string
   schoolName: string
+  jenjang?: string | null
   gradeLevel: string
+  programAkselerasi?: boolean
   nilaiRataRata: string
   citaCita: string
   wilayah: string
@@ -89,47 +112,390 @@ export function StudentDashboard({ student }: { student: StudentData }) {
   const [activeTab, setActiveTab] = useState<"beranda" | "akademik" | "profil" | "dokumen">("beranda")
   const [isPending, startTransition] = useTransition()
 
-  // Form State untuk Update Nilai & Rapor
-  const defaultKelas =
-    student.academicUpdates && student.academicUpdates.length > 0
-      ? student.academicUpdates[0].kelasSaatItu
-      : student.gradeLevel || ""
+  // Accordion state untuk Tab Dokumen Saya
+  const [openViewableDocs, setOpenViewableDocs] = useState(true)
+  const [openVerifiedDocs, setOpenVerifiedDocs] = useState(false)
 
-  const [kelasSaatItu, setKelasSaatItu] = useState(defaultKelas)
-  const [isPindahJenjang, setIsPindahJenjang] = useState(false)
+  // Tentukan posisi pendidikan saat ini dari data terbaru atau pendaftaran
+  const currentPos = useMemo<CurrentEducationPosition | null>(() => {
+    const latest =
+      student.academicUpdates && student.academicUpdates.length > 0
+        ? student.academicUpdates[0]
+        : null
+    return determineCurrentEducationPosition(student, latest)
+  }, [student])
+
+  // 1. Kategori Pendidikan (Sekolah vs Kuliah)
+  const [educationLevelType, setEducationLevelType] = useState<"Sekolah" | "Kuliah">(() => {
+    return currentPos?.kategori || "Sekolah"
+  })
+
+  // 2. Dropdown Bertingkat & Semester untuk Sekolah
+  const [jenjangSekolah, setJenjangSekolah] = useState<string>(() => {
+    return currentPos?.kategori === "Sekolah" ? currentPos.jenjang : ""
+  })
+  const [kelasSekolah, setKelasSekolah] = useState<string>(() => {
+    return currentPos?.kategori === "Sekolah" ? currentPos.gradeLevel : ""
+  })
+  const [semesterSekolah, setSemesterSekolah] = useState<"Ganjil" | "Genap" | "">("")
+
+  // 3. Dropdown untuk Kuliah
+  const [semesterKuliah, setSemesterKuliah] = useState<string>(() => {
+    return currentPos?.kategori === "Kuliah" ? currentPos.gradeLevel : ""
+  })
+
+  // 4. Program Akselerasi (Khusus Kuliah)
+  const [programAkselerasi, setProgramAkselerasi] = useState<boolean>(
+    Boolean(student.programAkselerasi)
+  )
+
+  const [isPindahSekolahManual, setIsPindahSekolahManual] = useState(false)
   const [namaSekolahBaru, setNamaSekolahBaru] = useState("")
   const [nilaiRataRata, setNilaiRataRata] = useState("")
-  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+
+  // Sinkronisasi form saat currentPos berubah (misal setelah simpan update / router.refresh)
+  useEffect(() => {
+    if (currentPos) {
+      setEducationLevelType(currentPos.kategori)
+      if (currentPos.kategori === "Sekolah") {
+        setJenjangSekolah(currentPos.jenjang)
+        setKelasSekolah(currentPos.gradeLevel)
+      } else {
+        setSemesterKuliah(currentPos.gradeLevel)
+      }
+    }
+  }, [currentPos])
+
+  // 5. Multi-upload Dokumen Rapor
+  const [raporFiles, setRaporFiles] = useState<
+    Array<{ id: string; file: File; name: string; size: number }>
+  >([])
+
+  // 5b. Multi-upload Dokumen Prestasi (Opsional)
+  const [prestasiFiles, setPrestasiFiles] = useState<
+    Array<{ id: string; file: File; name: string; size: number }>
+  >([])
   const [fileError, setFileError] = useState("")
+  const [hasSubmittedOnce, setHasSubmittedOnce] = useState(false)
+  const validationAlertRef = useRef<HTMLDivElement>(null)
   const [formFeedback, setFormFeedback] = useState<{
     type: "success" | "error"
     text: string
   } | null>(null)
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFileError("")
-    const file = e.target.files?.[0]
-    if (!file) {
-      setSelectedFile(null)
+  const nilaiCheck = checkNilaiRange(nilaiRataRata, educationLevelType)
+
+  const handleNilaiChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawVal = e.target.value
+    let cleaned = ""
+    let hasSeparator = false
+    let decimalDigits = 0
+
+    for (let i = 0; i < rawVal.length; i++) {
+      const ch = rawVal[i]
+      if (ch >= "0" && ch <= "9") {
+        if (hasSeparator) {
+          if (decimalDigits < 2) {
+            cleaned += ch
+            decimalDigits++
+          }
+        } else {
+          cleaned += ch
+        }
+      } else if ((ch === "," || ch === ".") && !hasSeparator) {
+        hasSeparator = true
+        cleaned += ch
+      }
+    }
+
+    setNilaiRataRata(cleaned)
+  }
+
+  const handleNilaiKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (
+      e.key === "Backspace" ||
+      e.key === "Delete" ||
+      e.key === "Tab" ||
+      e.key === "Escape" ||
+      e.key === "Enter" ||
+      e.key === "ArrowLeft" ||
+      e.key === "ArrowRight" ||
+      e.key === "ArrowUp" ||
+      e.key === "ArrowDown" ||
+      e.key === "Home" ||
+      e.key === "End" ||
+      e.ctrlKey ||
+      e.metaKey
+    ) {
       return
     }
 
+    if (e.key >= "0" && e.key <= "9") {
+      const target = e.currentTarget
+      const val = target.value
+      const hasSep = val.includes(",") || val.includes(".")
+      if (hasSep) {
+        const sepIndex = val.indexOf(",") !== -1 ? val.indexOf(",") : val.indexOf(".")
+        const selectionStart = target.selectionStart ?? val.length
+        const selectionEnd = target.selectionEnd ?? val.length
+        if (selectionStart > sepIndex && selectionStart === selectionEnd) {
+          const decimals = val.slice(sepIndex + 1)
+          if (decimals.length >= 2) {
+            e.preventDefault()
+          }
+        }
+      }
+      return
+    }
+
+    if (e.key === "," || e.key === ".") {
+      if (e.currentTarget.value.includes(",") || e.currentTarget.value.includes(".")) {
+        e.preventDefault()
+      }
+      return
+    }
+
+    e.preventDefault()
+  }
+
+  const selectedJenjang: string =
+    educationLevelType === "Kuliah" ? "Kuliah" : jenjangSekolah
+
+  const isNaikJenjangStrict = Boolean(
+    currentPos?.isKnown &&
+      selectedJenjang &&
+      isNaikJenjang(currentPos.jenjang, selectedJenjang)
+  )
+
+  const isPindahSekolah = isNaikJenjangStrict || isPindahSekolahManual
+
+  const availableJenjangSekolahOptions = useMemo(() => {
+    if (!currentPos?.isKnown) {
+      return [
+        { value: "SD", label: "SD" },
+        { value: "SMP", label: "SMP" },
+        { value: "SMA", label: "SMA" },
+      ]
+    }
+    if (currentPos.jenjang === "SD") {
+      return [
+        { value: "SD", label: "SD" },
+        { value: "SMP", label: "SMP (naik jenjang)" },
+      ]
+    }
+    if (currentPos.jenjang === "SMP") {
+      return [
+        { value: "SMP", label: "SMP" },
+        { value: "SMA", label: "SMA (naik jenjang)" },
+      ]
+    }
+    if (currentPos.jenjang === "SMA") {
+      return [
+        { value: "SMA", label: "SMA" },
+        { value: "Kuliah", label: "Kuliah (naik jenjang)" },
+      ]
+    }
+    return []
+  }, [currentPos])
+
+  const missingFields: string[] = []
+  if (educationLevelType === "Sekolah") {
+    if (!jenjangSekolah) missingFields.push("Jenjang Sekolah")
+    if (!kelasSekolah) missingFields.push("Kelas")
+    if (!semesterSekolah) missingFields.push("Semester")
+    if (!nilaiRataRata.trim()) {
+      missingFields.push("Nilai Rapor")
+    } else if (!nilaiCheck.isValid && nilaiCheck.error) {
+      missingFields.push(
+        nilaiCheck.error.includes("antara")
+          ? `Nilai Rapor (${nilaiCheck.error.replace("Nilai Rapor ", "")})`
+          : "Nilai Rapor"
+      )
+    }
+  } else {
+    if (!semesterKuliah) missingFields.push("Semester")
+    if (!nilaiRataRata.trim()) {
+      missingFields.push("IPK")
+    } else if (!nilaiCheck.isValid && nilaiCheck.error) {
+      missingFields.push(
+        nilaiCheck.error.includes("antara")
+          ? `IPK (${nilaiCheck.error.replace("IPK ", "")})`
+          : "IPK"
+      )
+    }
+  }
+
+  if (isPindahSekolah && !namaSekolahBaru.trim()) {
+    missingFields.push(
+      educationLevelType === "Kuliah" || selectedJenjang === "Kuliah"
+        ? "Nama Universitas Baru"
+        : "Nama Sekolah Baru"
+    )
+  }
+
+  if (raporFiles.length === 0) {
+    missingFields.push("Foto Rapor")
+  }
+
+  const isFieldInvalid = (
+    fieldName: "jenjang" | "kelas" | "semester" | "nilai" | "rapor" | "namaSekolahBaru"
+  ) => {
+    if (!hasSubmittedOnce) return false
+    if (fieldName === "jenjang") return educationLevelType === "Sekolah" && !jenjangSekolah
+    if (fieldName === "kelas") return educationLevelType === "Sekolah" && !kelasSekolah
+    if (fieldName === "semester") {
+      return educationLevelType === "Sekolah" ? !semesterSekolah : !semesterKuliah
+    }
+    if (fieldName === "nilai") {
+      return !nilaiRataRata.trim() || !nilaiCheck.isValid
+    }
+    if (fieldName === "rapor") {
+      return raporFiles.length === 0
+    }
+    if (fieldName === "namaSekolahBaru") {
+      return isPindahSekolah && !namaSekolahBaru.trim()
+    }
+    return false
+  }
+
+  const keteranganBerikutnya = getKeteranganBerikutnya({
+    educationLevelType,
+    jenjangSekolah,
+    kelasSekolah,
+    semesterSekolah,
+    semesterKuliah,
+  })
+
+  const handleLevelTypeChange = (type: "Sekolah" | "Kuliah") => {
+    setEducationLevelType(type)
+    setFileError("")
+    setFormFeedback(null)
+    if (type === "Kuliah") {
+      setSemesterSekolah("")
+      if (currentPos?.jenjang === "SMA") {
+        setSemesterKuliah("Semester 1")
+      } else if (currentPos?.jenjang === "Kuliah") {
+        setSemesterKuliah(currentPos.gradeLevel)
+      } else {
+        setSemesterKuliah("Semester 1")
+      }
+    } else {
+      if (currentPos?.kategori === "Sekolah") {
+        setJenjangSekolah(currentPos.jenjang)
+        setKelasSekolah(currentPos.gradeLevel)
+      } else {
+        setJenjangSekolah("")
+        setKelasSekolah("")
+      }
+    }
+  }
+
+  const handleJenjangSekolahChange = (val: string) => {
+    if (val === "Kuliah") {
+      setEducationLevelType("Kuliah")
+      setSemesterKuliah("Semester 1")
+      setJenjangSekolah("")
+      setKelasSekolah("")
+      setSemesterSekolah("")
+      return
+    }
+
+    setJenjangSekolah(val)
+    if (currentPos?.isKnown && isNaikJenjang(currentPos.jenjang, val)) {
+      setKelasSekolah(getDefaultGradeForJenjang(val))
+    } else if (val === currentPos?.jenjang && currentPos?.kategori === "Sekolah") {
+      setKelasSekolah(currentPos.gradeLevel)
+    } else {
+      setKelasSekolah("")
+    }
+  }
+
+  const handleAddRaporFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFileError("")
+    const file = e.target.files?.[0]
+    if (!file) return
+
     if (file.size > 15 * 1024 * 1024) {
       setFileError(`Ukuran file "${file.name}" terlalu besar (maksimal 15 MB). Silakan pilih file yang lebih kecil.`)
-      setSelectedFile(null)
+      e.target.value = ""
       return
     }
 
     try {
-      if (file.type.startsWith("image/") && !file.type.includes("pdf") && file.size > 500 * 1024) {
-        const compressed = await compressImageClientSide(file)
-        setSelectedFile(compressed)
-      } else {
-        setSelectedFile(file)
-      }
+      const processedFile =
+        file.type.startsWith("image/") && !file.type.includes("pdf") && file.size > 500 * 1024
+          ? await compressImageClientSide(file)
+          : file
+
+      setRaporFiles((prev) => [
+        ...prev,
+        {
+          id: `rapor-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+          file: processedFile,
+          name: file.name,
+          size: processedFile.size,
+        },
+      ])
     } catch {
-      setSelectedFile(file)
+      setRaporFiles((prev) => [
+        ...prev,
+        {
+          id: `rapor-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+          file,
+          name: file.name,
+          size: file.size,
+        },
+      ])
     }
+    e.target.value = ""
+  }
+
+  const handleRemoveRaporFile = (id: string) => {
+    setRaporFiles((prev) => prev.filter((item) => item.id !== id))
+  }
+
+  const handleAddPrestasiFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFileError("")
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (file.size > 15 * 1024 * 1024) {
+      setFileError(`Ukuran file "${file.name}" terlalu besar (maksimal 15 MB). Silakan pilih file yang lebih kecil.`)
+      e.target.value = ""
+      return
+    }
+
+    try {
+      const processedFile =
+        file.type.startsWith("image/") && !file.type.includes("pdf") && file.size > 500 * 1024
+          ? await compressImageClientSide(file)
+          : file
+
+      setPrestasiFiles((prev) => [
+        ...prev,
+        {
+          id: `prestasi-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+          file: processedFile,
+          name: file.name,
+          size: processedFile.size,
+        },
+      ])
+    } catch {
+      setPrestasiFiles((prev) => [
+        ...prev,
+        {
+          id: `prestasi-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+          file,
+          name: file.name,
+          size: file.size,
+        },
+      ])
+    }
+    e.target.value = ""
+  }
+
+  const handleRemovePrestasiFile = (id: string) => {
+    setPrestasiFiles((prev) => prev.filter((item) => item.id !== id))
   }
 
   const handleAcademicSubmit = (e: React.FormEvent) => {
@@ -137,44 +503,61 @@ export function StudentDashboard({ student }: { student: StudentData }) {
     setFormFeedback(null)
     setFileError("")
 
-    // Validasi input
-    if (!kelasSaatItu.trim()) {
-      setFormFeedback({ type: "error", text: "Kelas / Tingkat Saat Ini wajib diisi." })
+    // Jika ada field wajib yang belum diisi atau nilai di luar rentang
+    if (missingFields.length > 0) {
+      setHasSubmittedOnce(true)
+      setTimeout(() => {
+        validationAlertRef.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        })
+      }, 50)
       return
     }
 
-    if (!nilaiRataRata.trim()) {
-      setFormFeedback({ type: "error", text: "Nilai Rata-Rata / IPK Terbaru wajib diisi." })
-      return
-    }
-
-    if (isPindahJenjang && !namaSekolahBaru.trim()) {
-      setFormFeedback({
-        type: "error",
-        text: "Nama Sekolah / Kampus Baru wajib diisi karena Anda mencentang opsi pindah jenjang.",
-      })
-      return
-    }
+    const normalizedNilai = nilaiRataRata.trim().replace(",", ".")
 
     const formData = new FormData()
-    formData.append("kelasSaatItu", kelasSaatItu.trim())
-    formData.append("nilaiRataRata", nilaiRataRata.trim())
-    formData.append("isPindahJenjang", isPindahJenjang ? "true" : "false")
-    if (isPindahJenjang && namaSekolahBaru.trim()) {
+    formData.append("kategoriPendidikan", educationLevelType)
+    if (educationLevelType === "Sekolah") {
+      formData.append("jenjang", jenjangSekolah)
+      formData.append("gradeLevel", kelasSekolah)
+      formData.append("semester", semesterSekolah)
+      formData.append("kelasSaatItu", `Kelas ${kelasSekolah} ${jenjangSekolah}`)
+    } else {
+      formData.append("jenjang", "Kuliah")
+      formData.append("gradeLevel", semesterKuliah)
+      formData.append("kelasSaatItu", semesterKuliah)
+      formData.append("programAkselerasi", programAkselerasi ? "true" : "false")
+    }
+    formData.append("nilaiRataRata", normalizedNilai)
+    formData.append("isPindahJenjang", isPindahSekolah ? "true" : "false")
+    if (isPindahSekolah && namaSekolahBaru.trim()) {
       formData.append("namaSekolahBaru", namaSekolahBaru.trim())
     }
-    if (selectedFile) {
-      formData.append("file", selectedFile)
-    }
+    raporFiles.forEach((item) => {
+      formData.append("files", item.file)
+    })
+    prestasiFiles.forEach((item) => {
+      formData.append("prestasiFiles", item.file)
+    })
 
     startTransition(async () => {
       const res = await createStudentAcademicUpdateAction(formData)
       if (res.success) {
         setFormFeedback({ type: "success", text: res.message })
+        setHasSubmittedOnce(false)
+        if (educationLevelType === "Sekolah") {
+          setKelasSekolah("")
+          setSemesterSekolah("")
+        } else {
+          setSemesterKuliah("")
+        }
         setNilaiRataRata("")
-        setIsPindahJenjang(false)
+        setIsPindahSekolahManual(false)
         setNamaSekolahBaru("")
-        setSelectedFile(null)
+        setRaporFiles([])
+        setPrestasiFiles([])
         router.refresh()
       } else {
         setFormFeedback({ type: "error", text: res.error })
@@ -200,35 +583,84 @@ export function StudentDashboard({ student }: { student: StudentData }) {
                 alt="Ilustrasi Biksu dan Anak"
                 fill
                 priority
-                sizes="(max-width: 768px) 200px, 220px"
-                className="object-cover"
+                sizes="(max-width: 768px) 200px, 200px"
+                className="object-contain"
               />
             </div>
 
-            {/* Sisi Kanan: Teks Sambutan & Info Pengawas */}
-            <div className="flex flex-1 flex-col justify-center text-center md:text-left gap-3 w-full">
-              <div className="space-y-1">
-                <span className="inline-flex items-center gap-1 rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-orange-800">
-                  <Sparkles className="size-3" /> Program Bantuan Dana Pendidikan
+            {/* Sisi Kanan: Teks Sambutan Hangat & Profil Singkat */}
+            <div className="flex flex-1 flex-col gap-3 text-left">
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-100 px-3 py-1 text-xs font-bold text-orange-700">
+                  <Sparkles className="size-3.5 text-orange-600" />
+                  PORTAL ADIK ASUH
                 </span>
-                <h2 className="text-xl sm:text-2xl font-black text-foreground tracking-tight">
-                  Selamat datang di Program Adik Asuh!
+                <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800">
+                  Aktif
+                </span>
+              </div>
+
+              <div>
+                <h2 className="text-2xl sm:text-3xl font-black text-foreground tracking-tight">
+                  Halo, {student.fullName}!
                 </h2>
-                <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground font-medium">
-                  Bersama Vihara Vimala Dharma, raih cita-cita setinggi mungkin melalui
-                  pendidikan yang berkelanjutan.
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1 leading-relaxed">
+                  Selamat datang di portal informasi beasiswa adik asuh Vihara Vimala Dharma. Tetap semangat dalam menuntut ilmu dan meraih cita-citamu!
                 </p>
               </div>
 
-              {/* Info Pengawas Pendamping Asli dari Relasi Database */}
-              <div className="rounded-2xl bg-orange-50/80 p-4 border border-orange-200/80 text-left">
-                <span className="text-xs font-bold text-orange-900 block">
-                  Pengawas Pendamping Wilayah {student.wilayah}:
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-2 border-t border-orange-100/80">
+                <div className="rounded-2xl bg-orange-50/60 p-3 border border-orange-100/80">
+                  <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Jenjang & Kelas</p>
+                  <p className="text-sm font-black text-foreground truncate mt-0.5">{student.gradeLevel || "-"}</p>
+                </div>
+                <div className="rounded-2xl bg-orange-50/60 p-3 border border-orange-100/80">
+                  <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Wilayah Asal</p>
+                  <p className="text-sm font-black text-foreground truncate mt-0.5">{student.wilayah || "-"}</p>
+                </div>
+                <div className="col-span-2 sm:col-span-1 rounded-2xl bg-orange-50/60 p-3 border border-orange-100/80">
+                  <p className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider">Nilai Rata-rata</p>
+                  <p className="text-sm font-black text-orange-600 truncate mt-0.5">{student.nilaiRataRata || "-"}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Kartu Profil Singkat & Pengawas Pendamping */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {/* Sekolah / Institusi */}
+            <div className="rounded-3xl bg-white/95 p-5 shadow-md backdrop-blur-md border border-orange-100/90 flex flex-col justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex size-11 items-center justify-center rounded-2xl bg-orange-100 text-orange-600 shadow-2xs">
+                  <Building2 className="size-5.5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Institusi Pendidikan</h3>
+                  <p className="text-base sm:text-lg font-black text-foreground mt-0.5">{student.schoolName || "-"}</p>
+                </div>
+              </div>
+              <div className="mt-4 pt-3 border-t border-orange-100/80 flex items-center justify-between text-xs text-muted-foreground">
+                <span>Tingkat: <strong className="text-foreground">{student.gradeLevel}</strong></span>
+                <span>Cita-cita: <strong className="text-orange-600">{student.citaCita || "-"}</strong></span>
+              </div>
+            </div>
+
+            {/* Pengawas Pendamping */}
+            <div className="rounded-3xl bg-white/95 p-5 shadow-md backdrop-blur-md border border-orange-100/90 flex flex-col justify-between">
+              <div className="flex items-center gap-3">
+                <div className="flex size-11 items-center justify-center rounded-2xl bg-amber-100 text-amber-700 shadow-2xs">
+                  <UserRound className="size-5.5" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-muted-foreground uppercase tracking-wider">Kakak Pengawas</h3>
+                  <p className="text-base sm:text-lg font-black text-foreground mt-0.5">{student.pengawasName}</p>
+                </div>
+              </div>
+              <div className="mt-4 pt-3 border-t border-orange-100/80 flex items-center justify-between text-xs text-muted-foreground">
+                <span className="flex items-center gap-1">
+                  <MapPin className="size-3 text-orange-500" /> Wilayah {student.wilayah}
                 </span>
-                <p className="mt-1 text-base sm:text-lg font-extrabold text-orange-600 flex items-center gap-1.5">
-                  <MapPin className="size-4 shrink-0 text-orange-500" />
-                  <span>{student.pengawasName}</span>
-                </p>
+                <span className="text-emerald-600 font-bold">Siap Mendampingi</span>
               </div>
             </div>
           </div>
@@ -299,7 +731,7 @@ export function StudentDashboard({ student }: { student: StudentData }) {
               </div>
               <div>
                 <h3 className="text-base sm:text-lg font-extrabold text-foreground">
-                  Formulir Pembaruan Semester
+                  Upload Nilai
                 </h3>
                 <p className="text-xs text-muted-foreground">
                   Kamu bisa mengisi formulir ini setiap kali menerima hasil nilai/rapor baru
@@ -307,7 +739,7 @@ export function StudentDashboard({ student }: { student: StudentData }) {
               </div>
             </div>
 
-            <form onSubmit={handleAcademicSubmit} className="flex flex-col gap-4">
+            <form onSubmit={handleAcademicSubmit} className="flex flex-col gap-4.5">
               {/* Feedback Alert */}
               {formFeedback && (
                 <div
@@ -327,124 +759,539 @@ export function StudentDashboard({ student }: { student: StudentData }) {
                 </div>
               )}
 
-              {/* Field 1: Kelas / Tingkat Saat Ini */}
+              {/* 0. Info Posisi Terakhir Siswa */}
+              {currentPos?.isKnown && currentPos.labelDisplay && (
+                <div className="flex items-center gap-2.5 rounded-2xl bg-gradient-to-r from-orange-50 via-amber-50/80 to-orange-50 p-3.5 border border-orange-200/80 text-left shadow-2xs">
+                  <div className="flex size-7 shrink-0 items-center justify-center rounded-xl bg-orange-500/15 text-orange-600">
+                    <Sparkles className="size-4" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs text-orange-950 font-medium">
+                      Data terakhir kamu: <strong className="font-extrabold text-orange-600">{currentPos.labelDisplay}</strong>
+                      {currentPos.schoolName ? ` (${currentPos.schoolName})` : ""}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* 1. Radio Button: Sekolah vs Kuliah */}
               <div className="flex flex-col gap-1.5 text-left">
-                <label htmlFor="kelasSaatItu" className="text-xs font-bold text-orange-950/80">
-                  Kelas / Tingkat Saat Ini <span className="text-red-500 font-extrabold">*</span>
+                <label className="text-xs font-bold text-orange-950/80">
+                  Kategori Pendidikan <span className="text-red-500 font-extrabold">*</span>
                 </label>
-                <input
-                  id="kelasSaatItu"
-                  type="text"
-                  value={kelasSaatItu}
-                  onChange={(e) => setKelasSaatItu(e.target.value)}
-                  placeholder="Contoh: Kelas 8 SMP atau Semester 3"
-                  className="h-12 w-full rounded-2xl border border-orange-200/80 bg-orange-50/30 px-4 text-sm font-semibold text-foreground placeholder:text-muted-foreground focus:border-orange-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20"
-                  required
-                />
+                <div className="grid grid-cols-2 gap-3" role="radiogroup" aria-label="Pilih Kategori Pendidikan">
+                  {(["Sekolah", "Kuliah"] as const).map((lvl) => {
+                    const isSelected = educationLevelType === lvl
+                    let isDisabled = false
+                    if (currentPos?.isKnown) {
+                      if (currentPos.jenjang === "Kuliah" && lvl === "Sekolah") isDisabled = true
+                      if (["SD", "SMP"].includes(currentPos.jenjang) && lvl === "Kuliah") isDisabled = true
+                    }
+                    const isNaikKuliah = lvl === "Kuliah" && currentPos?.jenjang === "SMA"
+
+                    return (
+                      <label
+                        key={lvl}
+                        className={`flex items-center gap-3 rounded-2xl border p-3.5 transition select-none shadow-xs ${
+                          isDisabled
+                            ? "border-stone-200 bg-stone-100/60 text-stone-400 opacity-50 cursor-not-allowed"
+                            : isSelected
+                            ? "border-orange-500 bg-orange-50/80 text-orange-950 font-bold ring-2 ring-orange-500/20 cursor-pointer"
+                            : "border-orange-200/60 bg-white/90 text-foreground hover:bg-orange-50/30 cursor-pointer"
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="educationLevelType"
+                          value={lvl}
+                          checked={isSelected}
+                          disabled={isDisabled}
+                          onChange={() => !isDisabled && handleLevelTypeChange(lvl)}
+                          className="sr-only"
+                        />
+                        <div
+                          className={`flex size-5 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
+                            isDisabled
+                              ? "border-stone-300 bg-stone-200"
+                              : isSelected
+                              ? "border-orange-500 bg-orange-500"
+                              : "border-stone-300 bg-white"
+                          }`}
+                        >
+                          {isSelected && <span className="size-2 rounded-full bg-white shadow-xs" />}
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-xs sm:text-sm font-bold">
+                            {lvl} {isNaikKuliah ? "(naik jenjang)" : ""}
+                          </span>
+                          <span className="text-[10px] text-muted-foreground font-normal">
+                            {lvl === "Sekolah"
+                              ? "SD, SMP, atau SMA"
+                              : isNaikKuliah
+                              ? "Masuk Perguruan Tinggi / Universitas"
+                              : "Perguruan Tinggi / Universitas"}
+                          </span>
+                        </div>
+                      </label>
+                    )
+                  })}
+                </div>
               </div>
 
-              {/* Field 2: Checkbox Pindah Jenjang Sekolah */}
-              <div className="rounded-2xl border border-orange-200/70 bg-orange-50/40 p-4 transition">
-                <label className="flex items-start gap-3 cursor-pointer select-none">
-                  <input
-                    type="checkbox"
-                    checked={isPindahJenjang}
-                    onChange={(e) => setIsPindahJenjang(e.target.checked)}
-                    className="mt-0.5 size-4 rounded-md border-orange-300 text-orange-600 focus:ring-orange-500/20"
-                  />
-                  <div className="space-y-0.5">
-                    <span className="text-xs sm:text-sm font-bold text-foreground block">
-                      Saya pindah jenjang sekolah baru (misal dari SD ke SMP, SMP ke SMA, dll)
-                    </span>
-                    <span className="text-[11px] text-muted-foreground block">
-                      Centang opsi ini jika kamu melanjutkan ke sekolah/universitas yang baru.
-                    </span>
-                  </div>
-                </label>
+              {/* 2. DROPDOWN PILIHAN TINGKAT & SEMESTER */}
+              {educationLevelType === "Sekolah" ? (
+                <div className="flex flex-col gap-3.5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    {/* Dropdown 1 - Jenjang */}
+                    <div className="flex flex-col gap-1.5 text-left">
+                      <label htmlFor="jenjangSekolah" className="text-xs font-bold text-orange-950/80">
+                        Jenjang Sekolah <span className="text-red-500 font-extrabold">*</span>
+                      </label>
+                      <select
+                        id="jenjangSekolah"
+                        value={jenjangSekolah}
+                        onChange={(e) => handleJenjangSekolahChange(e.target.value)}
+                        className={`h-12 w-full rounded-2xl border bg-white px-4 text-sm font-semibold text-foreground focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 cursor-pointer shadow-xs transition-all ${
+                          isFieldInvalid("jenjang")
+                            ? "border-amber-400 ring-2 ring-amber-400/25 bg-amber-50/20"
+                            : "border-orange-200/80"
+                        }`}
+                        required
+                      >
+                        <option value="">-- Pilih Jenjang --</option>
+                        {availableJenjangSekolahOptions.map((opt) => (
+                          <option key={opt.value} value={opt.value}>
+                            {opt.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
 
-                {/* Field 2b: Nama Sekolah Baru (Muncul jika checkbox dicentang) */}
-                {isPindahJenjang && (
-                  <div className="mt-3 pt-3 border-t border-orange-200/60 flex flex-col gap-1.5 animate-in fade-in slide-in-from-top-2 duration-200">
-                    <label htmlFor="namaSekolahBaru" className="text-xs font-bold text-orange-950/80 flex items-center gap-1.5">
-                      <Building2 className="size-3.5 text-orange-600" />
-                      <span>Nama Sekolah / Kampus Baru</span>
-                      <span className="text-red-500 font-extrabold">*</span>
+                    {/* Dropdown 2 - Kelas (Muncul SETELAH Dropdown 1 dipilih) */}
+                    {jenjangSekolah ? (
+                      <div className="flex flex-col gap-1.5 text-left animate-in fade-in slide-in-from-top-1 duration-200">
+                        <label htmlFor="kelasSekolah" className="text-xs font-bold text-orange-950/80">
+                          Kelas ({jenjangSekolah}) <span className="text-red-500 font-extrabold">*</span>
+                        </label>
+                        <select
+                          id="kelasSekolah"
+                          value={kelasSekolah}
+                          onChange={(e) => setKelasSekolah(e.target.value)}
+                          className={`h-12 w-full rounded-2xl border bg-white px-4 text-sm font-semibold text-foreground focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 cursor-pointer shadow-xs transition-all ${
+                            isFieldInvalid("kelas")
+                              ? "border-amber-400 ring-2 ring-amber-400/25 bg-amber-50/20"
+                              : "border-orange-200/80"
+                          }`}
+                          required
+                        >
+                          <option value="">-- Pilih Kelas ({jenjangSekolah}) --</option>
+                          {(jenjangSekolah === "SD" ? KELAS_SD_OPTIONS : KELAS_SMP_SMA_OPTIONS).map((opt) => (
+                            <option key={opt.value} value={opt.value}>
+                              {opt.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    ) : (
+                      <div className="hidden sm:flex flex-col justify-end pb-3 text-xs text-muted-foreground italic">
+                        Pilih jenjang sekolah terlebih dahulu untuk memilih kelas.
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Tombol Pilihan Semester (Khusus Sekolah - Button Group Pill-Shape) */}
+                  <div className="flex flex-col gap-1.5 text-left">
+                    <label className="text-xs font-bold text-orange-950/80">
+                      Semester <span className="text-red-500 font-extrabold">*</span>
                     </label>
-                    <input
-                      id="namaSekolahBaru"
-                      type="text"
-                      value={namaSekolahBaru}
-                      onChange={(e) => setNamaSekolahBaru(e.target.value)}
-                      placeholder="Contoh: SMP Negeri 1 Pati atau Universitas Diponegoro"
-                      className="h-12 w-full rounded-2xl border border-orange-200/80 bg-white px-4 text-sm font-semibold text-foreground placeholder:text-muted-foreground focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
-                      required={isPindahJenjang}
-                    />
+                    <div
+                      className={`grid grid-cols-2 gap-3 p-1 rounded-full transition-all ${
+                        isFieldInvalid("semester")
+                          ? "ring-2 ring-amber-400/40 border border-amber-400/60 bg-amber-50/30"
+                          : ""
+                      }`}
+                      role="radiogroup"
+                      aria-label="Pilih Semester"
+                    >
+                      {(["Ganjil", "Genap"] as const).map((sem) => {
+                        const isSelected = semesterSekolah === sem
+                        return (
+                          <button
+                            key={sem}
+                            type="button"
+                            onClick={() => setSemesterSekolah(sem)}
+                            className={`h-11 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer border shadow-xs ${
+                              isSelected
+                                ? "border-orange-500 bg-orange-500 text-white shadow-orange-500/20"
+                                : "border-orange-200/80 bg-white text-foreground hover:bg-orange-50/50"
+                            }`}
+                          >
+                            Semester {sem}
+                          </button>
+                        )
+                      })}
+                    </div>
                   </div>
-                )}
-              </div>
+                </div>
+              ) : (
+                /* Dropdown Semester untuk Kuliah */
+                <div className="flex flex-col gap-3.5">
+                  <div className="flex flex-col gap-1.5 text-left">
+                    <label htmlFor="semesterKuliah" className="text-xs font-bold text-orange-950/80">
+                      Semester Saat Ini <span className="text-red-500 font-extrabold">*</span>
+                    </label>
+                    <select
+                      id="semesterKuliah"
+                      value={semesterKuliah}
+                      onChange={(e) => setSemesterKuliah(e.target.value)}
+                      className={`h-12 w-full rounded-2xl border bg-white px-4 text-sm font-semibold text-foreground focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20 cursor-pointer shadow-xs transition-all ${
+                        isFieldInvalid("semester")
+                          ? "border-amber-400 ring-2 ring-amber-400/25 bg-amber-50/20"
+                          : "border-orange-200/80"
+                      }`}
+                      required
+                    >
+                      <option value="">-- Pilih Semester --</option>
+                      {KULIAH_OPTIONS.map((opt) => (
+                        <option key={opt} value={opt}>
+                          {opt}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              )}
 
-              {/* Field 3: Nilai Rata-Rata Terbaru */}
+              {/* 2b. Checkbox Program Akselerasi (Khusus Kuliah) */}
+              {educationLevelType === "Kuliah" && (
+                <div className="rounded-2xl border border-purple-200 bg-purple-50/60 p-4 transition animate-in fade-in slide-in-from-top-2 duration-200 shadow-xs">
+                  <label className="flex items-start gap-3 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={programAkselerasi}
+                      onChange={(e) => setProgramAkselerasi(e.target.checked)}
+                      className="mt-0.5 size-4 rounded-md border-purple-300 text-purple-600 focus:ring-purple-500/20 cursor-pointer"
+                    />
+                    <div className="space-y-0.5">
+                      <span className="text-xs sm:text-sm font-bold text-purple-950 block">
+                        Saya mengikuti program percepatan 1 Tahun 3 Semester
+                      </span>
+                      <span className="text-[11px] text-purple-700 block">
+                        Centang opsi ini jika kampus kamu menerapkan kurikulum akselerasi/trimester (3 semester per tahun akademik).
+                      </span>
+                    </div>
+                  </label>
+                </div>
+              )}
+
+              {/* 5 (Sekolah) / 4 (Kuliah). Nilai Rata-Rata / IPK Terbaru */}
               <div className="flex flex-col gap-1.5 text-left">
                 <label htmlFor="nilaiRataRata" className="text-xs font-bold text-orange-950/80">
-                  Nilai Rata-Rata / IPK Terbaru <span className="text-red-500 font-extrabold">*</span>
+                  {educationLevelType === "Kuliah" ? "IPK Terbaru" : "Nilai Rata-Rata Terbaru"}{" "}
+                  <span className="text-red-500 font-extrabold">*</span>
                 </label>
                 <input
                   id="nilaiRataRata"
                   type="text"
+                  inputMode="decimal"
                   value={nilaiRataRata}
-                  onChange={(e) => setNilaiRataRata(e.target.value)}
-                  placeholder="Contoh: 88.5 atau 3.75"
-                  className="h-12 w-full rounded-2xl border border-orange-200/80 bg-orange-50/30 px-4 text-sm font-semibold text-foreground placeholder:text-muted-foreground focus:border-orange-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+                  onChange={handleNilaiChange}
+                  onKeyDown={handleNilaiKeyDown}
+                  placeholder={
+                    educationLevelType === "Kuliah"
+                      ? "Contoh: 3.75 (Skala IPK 0.00 - 4.00)"
+                      : "Contoh: 85.5 (Skala Rapor 0 - 100)"
+                  }
+                  className={`h-12 w-full rounded-2xl border px-4 text-sm font-semibold text-foreground placeholder:text-muted-foreground focus:border-orange-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 shadow-xs transition-all ${
+                    isFieldInvalid("nilai")
+                      ? "border-amber-400 ring-2 ring-amber-400/25 bg-amber-50/20"
+                      : "border-orange-200/80 bg-orange-50/30"
+                  }`}
                   required
                 />
+                {nilaiCheck.error && (
+                  <p className="mt-0.5 text-xs font-bold text-amber-700 animate-in fade-in duration-150 flex items-center gap-1.5">
+                    <AlertCircle className="size-3.5 shrink-0 text-amber-600" />
+                    <span>{nilaiCheck.error}</span>
+                  </p>
+                )}
               </div>
 
-              {/* Field 4: Upload Dokumen Rapor (Opsional) */}
-              <div className="flex flex-col gap-1.5 text-left">
-                <label className="text-xs font-bold text-orange-950/80 flex items-center justify-between">
-                  <span>Upload Dokumen Rapor (Opsional)</span>
-                  <span className="text-[11px] font-normal text-muted-foreground">Format JPG/PNG/PDF (Maks 15 MB)</span>
-                </label>
+              {/* 5. Upload Dokumen Rapor (WAJIB - MULTI-UPLOAD) */}
+              <div
+                className={`flex flex-col gap-3 rounded-2xl p-4 shadow-xs transition-all ${
+                  isFieldInvalid("rapor")
+                    ? "border-2 border-amber-400 ring-2 ring-amber-400/20 bg-amber-50/30"
+                    : "border border-orange-200/80 bg-orange-50/30"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <label className="text-xs font-bold text-orange-950/80 block">
+                      Dokumen Rapor / KHS / Transkrip <span className="text-red-500 font-extrabold">*</span>
+                    </label>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                      Wajib — Unggah foto halaman rapor atau KHS semester terbaru (dapat lebih dari 1 file).
+                    </p>
+                  </div>
+                  <span className="rounded-full bg-orange-100 px-2.5 py-0.5 text-[10px] font-bold text-orange-800 border border-orange-200 shrink-0">
+                    Wajib
+                  </span>
+                </div>
 
-                <div className="relative">
+                {/* Daftar File Rapor Terpilih */}
+                {raporFiles.length > 0 && (
+                  <div className="space-y-2 pt-1">
+                    {raporFiles.map((item, idx) => (
+                      <div
+                        key={item.id}
+                        className="flex items-center justify-between gap-2 rounded-xl border border-orange-200/80 bg-white p-3 shadow-xs"
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-700">
+                            <FileCheck className="size-4 text-emerald-600" />
+                          </div>
+                          <div className="min-w-0 space-y-0.5">
+                            <p className="text-xs font-semibold text-foreground truncate max-w-xs sm:max-w-md">
+                              {idx + 1}. {item.name}
+                            </p>
+                            <p className="text-[11px] text-muted-foreground">
+                              Ukuran: {(item.size / 1024).toFixed(0)} KB • Siap diunggah
+                            </p>
+                          </div>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveRaporFile(item.id)}
+                          className="size-8 p-0 text-muted-foreground hover:text-destructive hover:bg-red-50 rounded-lg shrink-0 flex items-center justify-center cursor-pointer transition"
+                          title="Hapus file ini"
+                        >
+                          <Trash2 className="size-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Tombol Tambah File Rapor */}
+                <div>
                   <input
                     id="dokumenRaporInput"
                     type="file"
-                    accept="image/*,application/pdf"
-                    onChange={handleFileChange}
-                    className="sr-only"
+                    accept="image/*,.pdf"
+                    className="hidden"
+                    onChange={handleAddRaporFile}
                   />
                   <label
                     htmlFor="dokumenRaporInput"
-                    className="flex flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-orange-200/90 bg-orange-50/30 p-4 text-center cursor-pointer hover:bg-orange-50/60 hover:border-orange-300 transition"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-orange-500 bg-orange-500/10 px-4 py-2.5 text-xs sm:text-sm font-bold text-orange-700 hover:bg-orange-500/20 cursor-pointer transition shadow-xs"
                   >
-                    <UploadCloud className="size-6 text-orange-500" />
-                    <span className="text-xs font-bold text-orange-800">
-                      {selectedFile ? selectedFile.name : "Klik untuk pilih foto rapor atau dokumen PDF"}
-                    </span>
-                    <span className="text-[10px] text-muted-foreground">
-                      {selectedFile
-                        ? `Ukuran: ${(selectedFile.size / 1024).toFixed(0)} KB • Klik untuk ganti file`
-                        : "Bisa foto langsung dari HP atau upload scan PDF"}
-                    </span>
+                    <Plus className="size-4 text-orange-600" />
+                    <span>Tambah File Rapor</span>
                   </label>
-
-                  {selectedFile && (
-                    <button
-                      type="button"
-                      onClick={() => setSelectedFile(null)}
-                      className="absolute right-3 top-3 rounded-full bg-stone-100 p-1 text-stone-500 hover:bg-stone-200 hover:text-stone-800"
-                      aria-label="Hapus file terpilih"
-                    >
-                      <X className="size-3.5" />
-                    </button>
-                  )}
                 </div>
 
                 {fileError && (
                   <p className="text-xs text-destructive font-medium">{fileError}</p>
                 )}
               </div>
+
+              {/* 6. Upload Dokumen Prestasi (OPSIONAL - MULTI-UPLOAD) */}
+              <div className="flex flex-col gap-3 rounded-2xl border border-orange-200/80 bg-orange-50/30 p-4 shadow-xs">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <label className="text-xs font-bold text-orange-950/80 block">
+                      Dokumen Prestasi (Sertifikat / Piagam)
+                    </label>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">
+                      Opsional — Unggah sertifikat, piala, atau piagam penghargaan jika ada (dapat lebih dari 1 file).
+                    </p>
+                  </div>
+                  <span className="rounded-full bg-stone-100 px-2.5 py-0.5 text-[10px] font-bold text-stone-600 border border-stone-200 shrink-0">
+                    Opsional
+                  </span>
+                </div>
+
+                {/* Daftar File Prestasi Terpilih */}
+                {prestasiFiles.length > 0 && (
+                  <div className="space-y-2 pt-1">
+                    {prestasiFiles.map((item, idx) => (
+                      <div
+                        key={item.id}
+                        className="flex items-center justify-between gap-2 rounded-xl border border-orange-200/80 bg-white p-3 shadow-xs"
+                      >
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-orange-100 text-orange-700">
+                            <FileCheck className="size-4 text-emerald-600" />
+                          </div>
+                          <div className="min-w-0 space-y-0.5">
+                            <p className="text-xs font-semibold text-foreground truncate max-w-xs sm:max-w-md">
+                              {idx + 1}. {item.name}
+                            </p>
+                            <p className="text-[11px] text-muted-foreground">
+                              Ukuran: {(item.size / 1024).toFixed(0)} KB • Siap diunggah
+                            </p>
+                          </div>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => handleRemovePrestasiFile(item.id)}
+                          className="size-8 p-0 text-muted-foreground hover:text-destructive hover:bg-red-50 rounded-lg shrink-0 flex items-center justify-center cursor-pointer transition"
+                          title="Hapus file ini"
+                        >
+                          <Trash2 className="size-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Tombol Tambah File Prestasi */}
+                <div>
+                  <input
+                    id="dokumenPrestasiInput"
+                    type="file"
+                    accept="image/*,.pdf"
+                    className="hidden"
+                    onChange={handleAddPrestasiFile}
+                  />
+                  <label
+                    htmlFor="dokumenPrestasiInput"
+                    className="inline-flex items-center justify-center gap-2 rounded-xl border border-orange-300 bg-white px-4 py-2.5 text-xs sm:text-sm font-bold text-orange-700 hover:bg-orange-50 cursor-pointer transition shadow-xs"
+                  >
+                    <Plus className="size-4 text-orange-600" />
+                    <span>Tambah File Prestasi</span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Teks Keterangan Kelas / Semester Berikutnya (Muncul LIVE jika semua penentu terisi) */}
+              {(keteranganBerikutnya || isNaikJenjangStrict) && (
+                <div className="flex flex-col gap-3 animate-in fade-in slide-in-from-top-1 duration-200">
+                  {/* Kartu Info Kenaikan Kelas */}
+                  <div className="flex items-center gap-3.5 rounded-2xl border border-amber-200/90 bg-gradient-to-r from-amber-50/90 via-orange-50/70 to-amber-50/90 p-4 text-left shadow-xs">
+                    <div className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-orange-500/15 text-orange-600 shadow-2xs">
+                      <Sparkles className="size-4.5" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-[11px] font-bold text-orange-800/80 uppercase tracking-wider">
+                        {educationLevelType === "Kuliah" ? "Info Perkembangan Kuliah" : "Info Kenaikan Kelas"}
+                      </p>
+                      <p className="text-xs sm:text-sm font-extrabold text-foreground mt-0.5">
+                        {keteranganBerikutnya || (selectedJenjang === "Kuliah" ? "Sekarang kamu naik ke bangku kuliah, semester 1" : `Sekarang kamu naik ${selectedJenjang} kelas 1`)}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Checklist Box: Apakah Pindah Sekolah / Kampus */}
+                  <div
+                    className={`rounded-2xl border p-4 text-left shadow-xs transition-all space-y-3 ${
+                      isFieldInvalid("namaSekolahBaru")
+                        ? "border-amber-400 ring-2 ring-amber-400/25 bg-amber-50/20"
+                        : "border-orange-200/80 bg-white"
+                    }`}
+                  >
+                    <label className="flex items-start gap-3 cursor-pointer select-none">
+                      <input
+                        type="checkbox"
+                        checked={isPindahSekolah}
+                        onChange={(e) => {
+                          if (!isNaikJenjangStrict) {
+                            setIsPindahSekolahManual(e.target.checked)
+                          }
+                        }}
+                        disabled={isNaikJenjangStrict}
+                        className="mt-0.5 size-4.5 rounded-md border-orange-300 text-orange-600 focus:ring-orange-500/20 cursor-pointer"
+                      />
+                      <div className="space-y-0.5 min-w-0 flex-1">
+                        <span className="text-xs sm:text-sm font-bold text-orange-950 block">
+                          {educationLevelType === "Kuliah" || selectedJenjang === "Kuliah"
+                            ? "Apakah kamu pindah kampus / universitas?"
+                            : "Apakah kamu pindah sekolah?"}
+                        </span>
+                        <span className="text-[11px] text-muted-foreground block">
+                          {isNaikJenjangStrict
+                            ? "Wajib — Otomatis tercentang karena kamu naik jenjang pendidikan."
+                            : educationLevelType === "Kuliah" || selectedJenjang === "Kuliah"
+                            ? "Centang jika kamu berpindah ke perguruan tinggi / universitas baru."
+                            : "Centang jika kamu berpindah ke sekolah baru."}
+                        </span>
+                      </div>
+                    </label>
+
+                    {/* Jika iya, masukkan nama sekolah baru */}
+                    {isPindahSekolah && (
+                      <div className="pt-2 border-t border-orange-100 flex flex-col gap-1.5 animate-in fade-in slide-in-from-top-1 duration-200">
+                        <label htmlFor="inputNamaSekolahBaru" className="text-xs font-bold text-orange-950/80">
+                          {educationLevelType === "Kuliah" || selectedJenjang === "Kuliah"
+                            ? "Nama Universitas Baru"
+                            : "Nama Sekolah Baru"}{" "}
+                          <span className="text-red-500 font-extrabold">*</span>
+                        </label>
+                        <input
+                          id="inputNamaSekolahBaru"
+                          type="text"
+                          value={namaSekolahBaru}
+                          onChange={(e) => setNamaSekolahBaru(e.target.value)}
+                          placeholder={
+                            educationLevelType === "Kuliah" || selectedJenjang === "Kuliah"
+                              ? "Contoh: Universitas Diponegoro"
+                              : jenjangSekolah === "SMP"
+                              ? "Contoh: SMP Negeri 1 Pati"
+                              : jenjangSekolah === "SMA"
+                              ? "Contoh: SMA Negeri 1 Pati"
+                              : "Contoh: SD Negeri 1 Pati"
+                          }
+                          className={`h-12 w-full rounded-2xl border px-4 text-sm font-semibold text-foreground placeholder:text-muted-foreground focus:border-orange-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 shadow-xs transition-all ${
+                            isFieldInvalid("namaSekolahBaru")
+                              ? "border-amber-400 ring-2 ring-amber-400/25 bg-amber-50/20"
+                              : "border-orange-200/80 bg-orange-50/30"
+                          }`}
+                          required
+                        />
+                        <p className="text-[11px] text-muted-foreground">
+                          {educationLevelType === "Kuliah" || selectedJenjang === "Kuliah"
+                            ? "Tuliskan nama lengkap universitas / perguruan tinggi baru kamu."
+                            : "Tuliskan nama lengkap sekolah baru kamu."}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Kotak Pemberitahuan Data Belum Lengkap TEPAT DI ATAS Tombol Simpan */}
+              {hasSubmittedOnce && missingFields.length > 0 && (
+                <div
+                  ref={validationAlertRef}
+                  role="alert"
+                  className="rounded-2xl border border-amber-300 bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 p-4 text-left shadow-xs animate-in fade-in slide-in-from-top-1 duration-200"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-amber-500/15 text-amber-700 shadow-2xs mt-0.5">
+                      <AlertCircle className="size-4.5" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs sm:text-sm font-bold text-amber-950">
+                        Yuk lengkapi dulu data berikut:
+                      </p>
+                      <div className="mt-2.5 flex flex-wrap gap-1.5">
+                        {missingFields.map((field) => (
+                          <span
+                            key={field}
+                            className="inline-flex items-center gap-1.5 rounded-xl bg-white/95 px-3 py-1 text-xs font-bold text-amber-900 border border-amber-200 shadow-2xs"
+                          >
+                            <span className="size-1.5 rounded-full bg-amber-500" />
+                            {field}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Tombol Simpan Update */}
               <button
@@ -512,7 +1359,9 @@ export function StudentDashboard({ student }: { student: StudentData }) {
                     <div className="space-y-1.5 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <span className="rounded-lg bg-orange-500 px-2.5 py-0.5 text-xs font-bold text-white shadow-2xs">
-                          {update.kelasSaatItu}
+                          {update.semester
+                            ? `${update.kelasSaatItu} - Semester ${update.semester}`
+                            : update.kelasSaatItu}
                         </span>
                         <span className="flex items-center gap-1 text-xs text-muted-foreground font-medium">
                           <Calendar className="size-3 text-orange-500" />
@@ -540,14 +1389,32 @@ export function StudentDashboard({ student }: { student: StudentData }) {
                       )}
                     </div>
 
-                    {/* Tombol Lihat Rapor Presigned URL */}
-                    <div className="self-end sm:self-center shrink-0">
-                      {update.dokumenRaporUrl ? (
+                    {/* Tombol Lihat Rapor Presigned URL(s) */}
+                    <div className="self-end sm:self-center shrink-0 flex flex-wrap items-center gap-2">
+                      {update.dokumenRaporUrls && update.dokumenRaporUrls.length > 0 ? (
+                        update.dokumenRaporUrls.map((url, urlIdx) => (
+                          <a
+                            key={urlIdx}
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 rounded-xl bg-white px-3.5 py-1.5 text-xs font-bold text-orange-700 hover:bg-orange-100 hover:text-orange-900 border border-orange-300 shadow-2xs transition"
+                          >
+                            <FileText className="size-3.5" />
+                            <span>
+                              {update.dokumenRaporUrls && update.dokumenRaporUrls.length > 1
+                                ? `Rapor ${urlIdx + 1}`
+                                : "Lihat Rapor"}
+                            </span>
+                            <ExternalLink className="size-3 opacity-70" />
+                          </a>
+                        ))
+                      ) : update.dokumenRaporUrl ? (
                         <a
                           href={update.dokumenRaporUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 rounded-xl bg-white px-4 py-2 text-xs font-bold text-orange-700 hover:bg-orange-100 hover:text-orange-900 border border-orange-300 shadow-2xs transition"
+                          className="inline-flex items-center gap-1.5 rounded-xl bg-white px-3.5 py-1.5 text-xs font-bold text-orange-700 hover:bg-orange-100 hover:text-orange-900 border border-orange-300 shadow-2xs transition"
                         >
                           <FileText className="size-3.5" />
                           <span>Lihat Rapor</span>
@@ -608,8 +1475,21 @@ export function StudentDashboard({ student }: { student: StudentData }) {
           {/* Data Pribadi & Kontak */}
           <div className="rounded-3xl bg-white/90 p-5 sm:p-6 shadow-md backdrop-blur-md border border-orange-100/80">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-              <Info label="Nomor Induk Kependudukan (NIK)" value={student.nik} />
-              <Info label="Tanggal Lahir" value={student.dateOfBirth} />
+              <Info
+                label="Nomor Induk Kependudukan (NIK)"
+                value={
+                  student.nik
+                    ? student.nik.trim().length <= 4
+                      ? student.nik
+                      : "*".repeat(Math.max(12, student.nik.trim().length - 4)) +
+                        student.nik.trim().slice(-4)
+                    : "-"
+                }
+              />
+              <Info
+                label="Tanggal Lahir"
+                value={<HiddenBirthDate value={student.dateOfBirth} />}
+              />
               <Info label="Jenis Kelamin" value={student.gender} />
               <Info label="Cita-cita" value={student.citaCita} />
               <Info label="Sekolah / Universitas" value={student.schoolName} />
@@ -624,6 +1504,20 @@ export function StudentDashboard({ student }: { student: StudentData }) {
               <div className="sm:col-span-2">
                 <Info label="Riwayat Penyakit" value={student.riwayatPenyakit} />
               </div>
+            </div>
+          </div>
+
+          {/* Data Orang Tua & Wali (Hanya Menampilkan Nama) */}
+          <div className="rounded-3xl bg-white/90 p-5 sm:p-6 shadow-md backdrop-blur-md border border-orange-100/80 flex flex-col gap-3">
+            <h3 className="text-base font-bold text-foreground">Data Orang Tua & Wali</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+              <Info label="Nama Ayah" value={student.father?.name || "-"} />
+              <Info label="Nama Ibu" value={student.mother?.name || "-"} />
+              {student.guardian?.name && student.guardian.name.trim() !== "" && student.guardian.name.trim() !== "-" && (
+                <div className="sm:col-span-2">
+                  <Info label="Nama Wali" value={student.guardian.name} />
+                </div>
+              )}
             </div>
           </div>
 
@@ -662,76 +1556,202 @@ export function StudentDashboard({ student }: { student: StudentData }) {
             </div>
           </div>
 
-          <div className="rounded-3xl bg-white/90 p-5 sm:p-6 shadow-md backdrop-blur-md border border-orange-100/80">
-            <div className="flex flex-col gap-3">
-              {student.documents.length ? (
-                student.documents.map((doc) => (
-                  <div
-                    key={doc.id}
-                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl bg-orange-50/60 p-4 border border-orange-200/60 transition hover:bg-orange-50/90"
-                  >
-                    <div className="flex items-center gap-3 min-w-0">
-                      {doc.type === "FOTO_ANAK" && doc.fileUrl ? (
-                        <div className="relative size-12 shrink-0 overflow-hidden rounded-xl border-2 border-orange-300 bg-amber-100 shadow-sm">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={doc.fileUrl}
-                            alt="Foto Anak"
-                            className="size-full object-cover"
-                          />
-                        </div>
-                      ) : (
-                        <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-orange-500/15 text-orange-600 shadow-sm border border-orange-200/60">
-                          <FileText className="size-6" />
-                        </div>
-                      )}
-                      <div className="min-w-0">
-                        <p className="font-extrabold text-sm text-foreground truncate">
-                          {doc.type === "FOTO_ANAK"
-                            ? "Foto Anak"
-                            : doc.type === "RAPOR"
-                            ? "Rapor Terakhir"
-                            : doc.type === "SKTM"
-                            ? "Surat Keterangan Tidak Mampu (SKTM)"
-                            : doc.type === "PRESTASI"
-                            ? "Sertifikat / Piagam Prestasi"
-                            : "Kartu Keluarga (KK)"}
-                        </p>
-                        <span className="text-[11px] font-semibold text-orange-700 block">
-                          Tipe: {doc.type}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-2 shrink-0">
-                      <a
-                        href={doc.fileUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="flex flex-1 sm:flex-none items-center justify-center gap-1.5 rounded-xl bg-white px-4 py-2 text-xs font-bold text-orange-950 shadow-sm border border-orange-200 hover:bg-orange-100/60 hover:text-orange-900 transition"
-                      >
-                        <ExternalLink className="size-3.5" />
-                        <span>Buka / Lihat</span>
-                      </a>
-                      <a
-                        href={doc.fileUrl}
-                        download
-                        target="_blank"
-                        rel="noreferrer"
-                        className="flex flex-1 sm:flex-none items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-4 py-2 text-xs font-bold text-white shadow-sm hover:from-orange-600 hover:to-amber-600 transition"
-                      >
-                        <Download className="size-3.5" />
-                        <span>Unduh</span>
-                      </a>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="rounded-2xl border border-dashed border-orange-200 p-6 text-center text-sm text-muted-foreground">
-                  Belum ada dokumen yang diunggah.
+          {/* 1. DROPDOWN: Dokumen yang Bisa Dilihat (Default TERBUKA) */}
+          <div className="overflow-hidden rounded-3xl border border-orange-200/80 bg-white/95 shadow-md backdrop-blur-md transition-all">
+            <button
+              type="button"
+              onClick={() => setOpenViewableDocs((prev) => !prev)}
+              aria-expanded={openViewableDocs}
+              className="flex w-full items-center justify-between p-4 sm:p-5 text-left hover:bg-orange-50/40 transition-colors cursor-pointer select-none"
+            >
+              <div className="flex items-center gap-3.5 min-w-0">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-orange-100 text-orange-600 shadow-2xs">
+                  <Eye className="size-5" />
                 </div>
-              )}
-            </div>
+                <div className="space-y-0.5 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="font-extrabold text-foreground text-sm sm:text-base">
+                      Dokumen yang Bisa Dilihat
+                    </h3>
+                    <span className="rounded-full bg-orange-500/15 px-2.5 py-0.5 text-xs font-black text-orange-700">
+                      {
+                        student.documents.filter(
+                          (d) => d.type === "RAPOR" || d.type === "FOTO_ANAK" || d.type === "PRESTASI"
+                        ).length
+                      }
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground truncate">
+                    Rapor, Foto Anak, dan Sertifikat Prestasi
+                  </p>
+                </div>
+              </div>
+
+              <div
+                className={`flex size-8 shrink-0 items-center justify-center rounded-xl bg-stone-100 text-stone-600 transition-transform duration-200 ${
+                  openViewableDocs ? "rotate-180 bg-orange-100 text-orange-700" : ""
+                }`}
+              >
+                <ChevronDown className="size-4" />
+              </div>
+            </button>
+
+            {openViewableDocs && (
+              <div className="border-t border-orange-100 p-4 sm:p-5 space-y-5 animate-in fade-in slide-in-from-top-1 duration-200">
+                {/* Grup 1: Foto Anak */}
+                <div>
+                  <h4 className="text-xs font-bold text-orange-950/80 uppercase tracking-wider mb-2.5">
+                    Foto Anak
+                  </h4>
+                  {student.documents.filter((d) => d.type === "FOTO_ANAK").length > 0 ? (
+                    <div className="space-y-2.5">
+                      {student.documents
+                        .filter((d) => d.type === "FOTO_ANAK")
+                        .map((doc) => (
+                          <DocumentCardItem key={doc.id} doc={doc} title="Foto Anak" />
+                        ))}
+                    </div>
+                  ) : (
+                    <div className="rounded-2xl border border-dashed border-orange-200/80 p-4 text-center text-xs text-muted-foreground bg-orange-50/20">
+                      Belum ada foto anak
+                    </div>
+                  )}
+                </div>
+
+                {/* Grup 2: Rapor */}
+                <div>
+                  <h4 className="text-xs font-bold text-orange-950/80 uppercase tracking-wider mb-2.5">
+                    Dokumen Rapor
+                  </h4>
+                  {student.documents.filter((d) => d.type === "RAPOR").length > 0 ? (
+                    <div className="space-y-2.5">
+                      {student.documents
+                        .filter((d) => d.type === "RAPOR")
+                        .map((doc, idx, arr) => (
+                          <DocumentCardItem
+                            key={doc.id}
+                            doc={doc}
+                            title={arr.length > 1 ? `Rapor (Berkas ${idx + 1})` : "Rapor Terakhir"}
+                          />
+                        ))}
+                    </div>
+                  ) : (
+                    <div className="rounded-2xl border border-dashed border-orange-200/80 p-4 text-center text-xs text-muted-foreground bg-orange-50/20">
+                      Belum ada dokumen rapor
+                    </div>
+                  )}
+                </div>
+
+                {/* Grup 3: Prestasi */}
+                <div>
+                  <h4 className="text-xs font-bold text-orange-950/80 uppercase tracking-wider mb-2.5">
+                    Prestasi
+                  </h4>
+                  {student.documents.filter((d) => d.type === "PRESTASI").length > 0 ? (
+                    <div className="space-y-2.5">
+                      {student.documents
+                        .filter((d) => d.type === "PRESTASI")
+                        .map((doc, idx, arr) => (
+                          <DocumentCardItem
+                            key={doc.id}
+                            doc={doc}
+                            title={
+                              arr.length > 1
+                                ? `Sertifikat / Piagam Prestasi (${idx + 1})`
+                                : "Sertifikat / Piagam Prestasi"
+                            }
+                          />
+                        ))}
+                    </div>
+                  ) : (
+                    <div className="rounded-2xl border border-dashed border-orange-200/80 p-4 text-center text-xs text-muted-foreground bg-orange-50/20">
+                      Belum ada prestasi
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* 2. DROPDOWN: Dokumen Terverifikasi (Default TERTUTUP) */}
+          <div className="overflow-hidden rounded-3xl border border-orange-200/80 bg-white/95 shadow-md backdrop-blur-md transition-all">
+            <button
+              type="button"
+              onClick={() => setOpenVerifiedDocs((prev) => !prev)}
+              aria-expanded={openVerifiedDocs}
+              className="flex w-full items-center justify-between p-4 sm:p-5 text-left hover:bg-orange-50/40 transition-colors cursor-pointer select-none"
+            >
+              <div className="flex items-center gap-3.5 min-w-0">
+                <div className="flex size-10 shrink-0 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700 shadow-2xs">
+                  <ShieldCheck className="size-5" />
+                </div>
+                <div className="space-y-0.5 min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="font-extrabold text-foreground text-sm sm:text-base">
+                      Dokumen Terverifikasi
+                    </h3>
+                    <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-black text-emerald-800 border border-emerald-200">
+                      {
+                        student.documents.filter(
+                          (d) => d.type === "KK" || d.type === "SKTM"
+                        ).length
+                      }
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground truncate">
+                    Kartu Keluarga dan Surat Keterangan Tidak Mampu
+                  </p>
+                </div>
+              </div>
+
+              <div
+                className={`flex size-8 shrink-0 items-center justify-center rounded-xl bg-stone-100 text-stone-600 transition-transform duration-200 ${
+                  openVerifiedDocs ? "rotate-180 bg-emerald-100 text-emerald-700" : ""
+                }`}
+              >
+                <ChevronDown className="size-4" />
+              </div>
+            </button>
+
+            {openVerifiedDocs && (
+              <div className="border-t border-orange-100 p-4 sm:p-5 space-y-2.5 animate-in fade-in slide-in-from-top-1 duration-200">
+                {student.documents.filter((d) => d.type === "KK" || d.type === "SKTM").length > 0 ? (
+                  student.documents
+                    .filter((d) => d.type === "KK" || d.type === "SKTM")
+                    .map((doc) => (
+                      <div
+                        key={doc.id}
+                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl bg-orange-50/60 p-4 border border-orange-200/60 transition hover:bg-orange-50/90"
+                      >
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-orange-500/15 text-orange-600 shadow-sm border border-orange-200/60">
+                            <FileText className="size-6" />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="font-extrabold text-sm text-foreground truncate">
+                              {doc.type === "SKTM"
+                                ? "Surat Keterangan Tidak Mampu (SKTM)"
+                                : "Kartu Keluarga (KK)"}
+                            </p>
+                            <span className="text-[11px] font-semibold text-orange-700 block">
+                              Tipe: {doc.type}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-1.5 rounded-xl bg-emerald-50 px-3.5 py-2 border border-emerald-200/80 text-emerald-800 text-xs font-bold shadow-2xs">
+                          <CheckCircle2 className="size-4 text-emerald-600 shrink-0" />
+                          <span>Dokumen telah terverifikasi</span>
+                        </div>
+                      </div>
+                    ))
+                ) : (
+                  <div className="rounded-2xl border border-dashed border-orange-200/80 p-4 text-center text-xs text-muted-foreground bg-orange-50/20">
+                    Belum ada dokumen terverifikasi
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </section>
       )}
@@ -875,11 +1895,194 @@ async function compressImageClientSide(file: File): Promise<File> {
   }
 }
 
-function Info({ label, value }: { label: string; value: string }) {
+/**
+ * Menghitung teks keterangan kelas / semester berikutnya secara live.
+ * HANYA tampil jika semua pilihan penentu sudah terisi:
+ * - Sekolah: jenjang + kelas + semester
+ * - Kuliah: semester
+ */
+function getKeteranganBerikutnya({
+  educationLevelType,
+  jenjangSekolah,
+  kelasSekolah,
+  semesterSekolah,
+  semesterKuliah,
+}: {
+  educationLevelType: "Sekolah" | "Kuliah"
+  jenjangSekolah: string
+  kelasSekolah: string
+  semesterSekolah: "Ganjil" | "Genap" | ""
+  semesterKuliah: string
+}): string | null {
+  if (educationLevelType === "Sekolah") {
+    if (!jenjangSekolah || !kelasSekolah || !semesterSekolah) {
+      return null
+    }
+
+    const n = parseInt(kelasSekolah, 10)
+    if (isNaN(n)) return null
+
+    if (semesterSekolah === "Ganjil") {
+      return `Kamu masih di ${jenjangSekolah} kelas ${n}. Kamu akan naik kelas setelah semester genap.`
+    }
+
+    // Semester Genap
+    if (jenjangSekolah === "SD") {
+      if (n >= 1 && n <= 5) {
+        return `Sekarang kamu naik SD kelas ${n + 1}`
+      }
+      if (n === 6) {
+        return "Sekarang kamu naik SMP kelas 1"
+      }
+    } else if (jenjangSekolah === "SMP") {
+      if (n >= 1 && n <= 2) {
+        return `Sekarang kamu naik SMP kelas ${n + 1}`
+      }
+      if (n === 3) {
+        return "Sekarang kamu naik SMA/SMK kelas 1"
+      }
+    } else if (jenjangSekolah === "SMA") {
+      if (n >= 1 && n <= 2) {
+        return `Sekarang kamu naik SMA/SMK kelas ${n + 1}`
+      }
+      if (n === 3) {
+        return "Sekarang kamu naik ke bangku kuliah, semester 1"
+      }
+    }
+
+    return null
+  }
+
+  if (educationLevelType === "Kuliah") {
+    if (!semesterKuliah || !semesterKuliah.trim()) {
+      return null
+    }
+
+    const match = semesterKuliah.match(/\d+/)
+    if (!match) return null
+    const semNum = parseInt(match[0], 10)
+    if (isNaN(semNum)) return null
+
+    if (semNum >= 1 && semNum <= 9) {
+      return `Sekarang kamu naik ke semester ${semNum + 1}`
+    }
+    if (semNum >= 10) {
+      return "Kamu sudah di semester 10. Jika sudah lulus, hubungi Kakak Asuh."
+    }
+  }
+
+  return null
+}
+
+/**
+ * Validasi rentang nilai secara dinamis sesuai jenjang.
+ */
+function checkNilaiRange(
+  val: string,
+  levelType: "Sekolah" | "Kuliah"
+): { isValid: boolean; error: string | null; normalized: string | null } {
+  const trimmed = val.trim()
+  if (!trimmed) {
+    return { isValid: false, error: null, normalized: null }
+  }
+
+  const normalized = trimmed.replace(",", ".")
+  const num = parseFloat(normalized)
+
+  if (isNaN(num)) {
+    return {
+      isValid: false,
+      error:
+        levelType === "Kuliah"
+          ? "IPK harus berupa angka yang valid"
+          : "Nilai Rapor harus berupa angka yang valid",
+      normalized: null,
+    }
+  }
+
+  if (levelType === "Kuliah") {
+    if (num < 0 || num > 4.0) {
+      return {
+        isValid: false,
+        error: "IPK harus antara 0 sampai 4,00",
+        normalized,
+      }
+    }
+  } else {
+    if (num < 0 || num > 100) {
+      return {
+        isValid: false,
+        error: "Nilai Rapor harus antara 0 sampai 100",
+        normalized,
+      }
+    }
+  }
+
+  return { isValid: true, error: null, normalized }
+}
+
+function DocumentCardItem({
+  doc,
+  title,
+}: {
+  doc: { id: number; type: string; fileUrl: string }
+  title: string
+}) {
+  return (
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-2xl bg-orange-50/60 p-4 border border-orange-200/60 transition hover:bg-orange-50/90">
+      <div className="flex items-center gap-3 min-w-0">
+        {doc.type === "FOTO_ANAK" && doc.fileUrl ? (
+          <div className="relative size-12 shrink-0 overflow-hidden rounded-xl border-2 border-orange-300 bg-amber-100 shadow-sm">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={doc.fileUrl}
+              alt="Foto Anak"
+              className="size-full object-cover"
+            />
+          </div>
+        ) : (
+          <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-orange-500/15 text-orange-600 shadow-sm border border-orange-200/60">
+            <FileText className="size-6" />
+          </div>
+        )}
+        <div className="min-w-0">
+          <p className="font-extrabold text-sm text-foreground truncate">{title}</p>
+          <span className="text-[11px] font-semibold text-orange-700 block">
+            Tipe: {doc.type}
+          </span>
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2 shrink-0">
+        <a
+          href={doc.fileUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="flex flex-1 sm:flex-none items-center justify-center gap-1.5 rounded-xl bg-white px-4 py-2 text-xs font-bold text-orange-950 shadow-sm border border-orange-200 hover:bg-orange-100/60 hover:text-orange-900 transition"
+        >
+          <ExternalLink className="size-3.5" />
+          <span>Buka / Lihat</span>
+        </a>
+        <a
+          href={doc.fileUrl}
+          download
+          target="_blank"
+          rel="noreferrer"
+          className="flex flex-1 sm:flex-none items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-4 py-2 text-xs font-bold text-white shadow-sm hover:from-orange-600 hover:to-amber-600 transition"
+        >
+          <Download className="size-3.5" />
+          <span>Unduh</span>
+        </a>
+      </div>
+    </div>
+  )
+}
+
+function Info({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div className="rounded-2xl bg-orange-50/50 p-3.5 border border-orange-100/60">
       <p className="text-xs font-semibold text-muted-foreground">{label}</p>
-      <p className="mt-0.5 font-bold text-foreground">{value || "-"}</p>
+      <div className="mt-0.5 font-bold text-foreground">{value || "-"}</div>
     </div>
   )
 }
