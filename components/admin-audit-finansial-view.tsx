@@ -35,6 +35,8 @@ export interface AuditProofItem {
   nominal: number | null
   status: "pending" | "verified" | "rejected" | string
   processedAt: string | null
+  keterangan?: string | null
+  batchId?: string | null
   student: {
     id: number
     fullName: string
@@ -523,6 +525,12 @@ export function AdminAuditFinansialView({
                     <strong className="text-stone-900 text-right">
                       {selectedProof.pengawas.name}
                     </strong>
+                  </div>
+                  <div className="flex justify-between items-start">
+                    <span className="text-stone-500">Keterangan:</span>
+                    <span className="text-stone-800 text-right font-medium max-w-[210px] break-words">
+                      {selectedProof.keterangan || "-"}
+                    </span>
                   </div>
                   <div className="flex justify-between items-start">
                     <span className="text-stone-500">Waktu Pengajuan:</span>

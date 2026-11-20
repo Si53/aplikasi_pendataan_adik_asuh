@@ -28,7 +28,10 @@ import {
   Loader2,
   Info,
 } from "lucide-react"
-import { createBantuanAdjustmentAction } from "@/app/actions/admin"
+import {
+  createBantuanAdjustmentAction,
+  updateScholarshipRatesAction,
+} from "@/app/actions/admin"
 import {
   getAvailablePeriodeList,
   getCurrentPeriode,
@@ -87,6 +90,7 @@ interface AdminAlokasiDanaViewProps {
   verifiedDisbursements: VerifiedDisbursementSummary[]
   students: AlokasiStudentItem[]
   wilayahList: string[]
+  scholarshipRates?: Record<string, number>
 }
 
 function formatRupiah(amount: number): string {
@@ -105,7 +109,27 @@ export function AdminAlokasiDanaView({
   verifiedDisbursements,
   students,
   wilayahList,
+  scholarshipRates,
 }: AdminAlokasiDanaViewProps) {
+  // Modal Atur Tarif Beasiswa State
+  const [showRatesModal, setShowRatesModal] = useState(false)
+  const [activeRates, setActiveRates] = useState<Record<string, number>>(() => ({
+    SD: scholarshipRates?.SD ?? 250000,
+    SMP: scholarshipRates?.SMP ?? 300000,
+    SMA: scholarshipRates?.SMA ?? 400000,
+    SMK: scholarshipRates?.SMK ?? 400000,
+    Kuliah: scholarshipRates?.Kuliah ?? 500000,
+  }))
+  const [ratesFormRaw, setRatesFormRaw] = useState<Record<string, string>>(() => ({
+    SD: (scholarshipRates?.SD ?? 250000).toLocaleString("id-ID"),
+    SMP: (scholarshipRates?.SMP ?? 300000).toLocaleString("id-ID"),
+    SMA: (scholarshipRates?.SMA ?? 400000).toLocaleString("id-ID"),
+    SMK: (scholarshipRates?.SMK ?? 400000).toLocaleString("id-ID"),
+    Kuliah: (scholarshipRates?.Kuliah ?? 500000).toLocaleString("id-ID"),
+  }))
+  const [ratesPending, startRatesTransition] = useTransition()
+  const [ratesError, setRatesError] = useState<string | null>(null)
+  const [ratesSuccess, setRatesSuccess] = useState<string | null>(null)
   // Periode state (dropdown dari 2026 Ganjil s.d. periode saat ini)
   const availablePeriodeList = useMemo(() => getAvailablePeriodeList(), [])
   const [selectedPeriode, setSelectedPeriode] = useState<string>(
@@ -293,6 +317,41 @@ export function AdminAlokasiDanaView({
     setTimeout(() => setExportNotice(false), 4000)
   }
 
+  // Submit Atur Tarif Beasiswa
+  const handleSaveRates = (e: React.FormEvent) => {
+    e.preventDefault()
+    setRatesError(null)
+    setRatesSuccess(null)
+
+    const parsed: { jenjang: string; nominal: number }[] = []
+    for (const [jenjang, strVal] of Object.entries(ratesFormRaw)) {
+      const num = parseInt(strVal.replace(/\D/g, ""), 10)
+      if (isNaN(num) || num < 0) {
+        setRatesError(`Nominal untuk jenjang ${jenjang} tidak valid.`)
+        return
+      }
+      parsed.push({ jenjang, nominal: num })
+    }
+
+    startRatesTransition(async () => {
+      const res = await updateScholarshipRatesAction(parsed)
+      if (res.success) {
+        const newMap: Record<string, number> = {}
+        parsed.forEach((p) => {
+          newMap[p.jenjang] = p.nominal
+        })
+        setActiveRates(newMap)
+        setRatesSuccess("Tarif standar beasiswa berhasil diperbarui!")
+        setTimeout(() => {
+          setRatesSuccess(null)
+          setShowRatesModal(false)
+        }, 1500)
+      } else {
+        setRatesError(res.error || "Gagal memperbarui tarif beasiswa.")
+      }
+    })
+  }
+
   return (
     <div className="space-y-8">
       {/* 1. Header Section */}
@@ -310,9 +369,30 @@ export function AdminAlokasiDanaView({
             Laporan akumulasi dana beasiswa yang telah diverifikasi disalurkan kepada
             masing-masing adik asuh per periode semester dan sepanjang waktu.
           </p>
+          <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px] font-semibold text-white/95">
+            <span className="text-white/80 font-medium">Standar beasiswa per jenjang:</span>
+            <span className="rounded-md bg-white/20 px-2 py-0.5">SD: Rp {activeRates.SD.toLocaleString("id-ID")}</span>
+            <span className="rounded-md bg-white/20 px-2 py-0.5">SMP: Rp {activeRates.SMP.toLocaleString("id-ID")}</span>
+            <span className="rounded-md bg-white/20 px-2 py-0.5">SMA/SMK: Rp {activeRates.SMA.toLocaleString("id-ID")}</span>
+            <span className="rounded-md bg-white/20 px-2 py-0.5">Kuliah: Rp {activeRates.Kuliah.toLocaleString("id-ID")}</span>
+          </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
+          {/* Tombol Atur Tarif Jenjang */}
+          <button
+            type="button"
+            onClick={() => {
+              setRatesError(null)
+              setRatesSuccess(null)
+              setShowRatesModal(true)
+            }}
+            className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 px-4 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md shadow-orange-500/20 active:scale-[0.98] transition cursor-pointer"
+          >
+            <Coins className="size-4" />
+            <span>Atur Tarif Jenjang</span>
+          </button>
+
           {/* Dropdown Periode */}
           <div className="flex items-center gap-2">
             <label htmlFor="periode-select" className="text-xs font-bold text-white shrink-0">
@@ -1029,6 +1109,131 @@ export function AdminAlokasiDanaView({
                 Tutup
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 5. MODAL ATUR TARIF STANDAR JENJANG ===================================== */}
+      {/* ========================================================================= */}
+      {showRatesModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in">
+          <div
+            className="w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl border border-stone-200 animate-in zoom-in-95"
+            role="dialog"
+            aria-modal="true"
+          >
+            {/* Header Modal */}
+            <div className="flex items-center justify-between border-b border-stone-100 bg-gradient-to-r from-orange-500 to-amber-500 p-5 text-white">
+              <div className="flex items-center gap-3">
+                <div className="flex size-10 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-xs text-white">
+                  <Coins className="size-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-extrabold tracking-tight text-white">
+                    Atur Standar Tarif Beasiswa
+                  </h3>
+                  <p className="text-xs text-white/90">
+                    Konfigurasi nominal beasiswa bulanan per jenjang pendidikan
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowRatesModal(false)}
+                className="rounded-full p-1.5 text-white/80 hover:bg-white/20 hover:text-white transition cursor-pointer"
+              >
+                <X className="size-5" />
+              </button>
+            </div>
+
+            {/* Form Body */}
+            <form onSubmit={handleSaveRates} className="p-6 space-y-4">
+              <div className="rounded-2xl bg-orange-50/70 border border-orange-200/80 p-3.5 text-xs text-orange-950 flex items-start gap-2.5">
+                <Info className="size-4 text-orange-600 shrink-0 mt-0.5" />
+                <p className="leading-relaxed">
+                  Perubahan tarif di sini akan otomatis memperbarui perhitungan kebutuhan anggaran di seluruh dashboard dan menjadi nilai default auto-fill saat pengawas menyalurkan beasiswa.
+                </p>
+              </div>
+
+              {ratesSuccess && (
+                <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-3 text-xs text-emerald-800 flex items-center gap-2">
+                  <CheckCircle2 className="size-4 text-emerald-600 shrink-0" />
+                  <span>{ratesSuccess}</span>
+                </div>
+              )}
+
+              {ratesError && (
+                <div className="rounded-xl bg-rose-50 border border-rose-200 p-3 text-xs text-rose-800 flex items-center gap-2">
+                  <AlertCircle className="size-4 text-rose-600 shrink-0" />
+                  <span>{ratesError}</span>
+                </div>
+              )}
+
+              <div className="space-y-3 pt-1">
+                {[
+                  { key: "SD", label: "Sekolah Dasar (SD)", desc: "Kelas 1 - 6" },
+                  { key: "SMP", label: "Sekolah Menengah Pertama (SMP)", desc: "Kelas 7 - 9" },
+                  { key: "SMA", label: "Sekolah Menengah Atas (SMA)", desc: "Kelas 10 - 12" },
+                  { key: "SMK", label: "Sekolah Menengah Kejuruan (SMK)", desc: "Kelas 10 - 12/13" },
+                  { key: "Kuliah", label: "Perguruan Tinggi / Kuliah", desc: "Diploma & Strata 1" },
+                ].map((item) => (
+                  <div
+                    key={item.key}
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 rounded-2xl border border-stone-200 p-3.5 bg-stone-50/50 hover:bg-white transition"
+                  >
+                    <div>
+                      <p className="text-xs sm:text-sm font-bold text-stone-900">{item.label}</p>
+                      <p className="text-[11px] text-stone-500">{item.desc}</p>
+                    </div>
+                    <div className="relative w-full sm:w-44 shrink-0">
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-stone-400">
+                        Rp
+                      </span>
+                      <input
+                        type="text"
+                        value={ratesFormRaw[item.key] || ""}
+                        onChange={(e) => {
+                          const formatted = formatNominalInput(e.target.value)
+                          setRatesFormRaw((prev) => ({
+                            ...prev,
+                            [item.key]: formatted,
+                          }))
+                        }}
+                        placeholder="Contoh: 300.000"
+                        className="h-9.5 w-full rounded-xl border border-stone-200 bg-white pl-9 pr-3 text-xs sm:text-sm font-mono font-bold text-stone-800 text-right focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="pt-3 border-t border-stone-100 flex items-center justify-end gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => setShowRatesModal(false)}
+                  disabled={ratesPending}
+                  className="rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-xs font-bold text-stone-700 hover:bg-stone-50 transition cursor-pointer disabled:opacity-50"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  disabled={ratesPending}
+                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-orange-500/20 active:scale-[0.98] transition cursor-pointer disabled:opacity-50"
+                >
+                  {ratesPending ? (
+                    <>
+                      <Loader2 className="size-4 animate-spin" />
+                      <span>Menyimpan...</span>
+                    </>
+                  ) : (
+                    <span>Simpan Perubahan Tarif</span>
+                  )}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

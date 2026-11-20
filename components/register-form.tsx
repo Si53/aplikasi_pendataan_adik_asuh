@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useTransition } from "react"
+import { useState, useEffect, useTransition, useMemo } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { registerAction, updateStudentRegistrationAction, type RegisterPayload } from "@/app/actions/auth"
@@ -242,6 +242,8 @@ export type RegisterFormProps = {
     educationCosts?: { label: string; amount: number }[]
     documents?: { type: string; fileUrl: string }[]
   }
+  availableRegions?: string[]
+  availablePengawas?: { id: number; name: string; wilayah: string }[]
 }
 
 export function RegisterForm({
@@ -249,11 +251,35 @@ export function RegisterForm({
   originalIdentifier,
   revisionNote,
   initialStudentData,
+  availableRegions,
+  availablePengawas,
 }: RegisterFormProps = {}) {
   const router = useRouter()
   const [pending, startTransition] = useTransition()
   const [step, setStep] = useState(1)
   const [error, setError] = useState("")
+
+  const activeRegions = useMemo(() => {
+    if (availableRegions && availableRegions.length > 0) return availableRegions
+    return regions
+  }, [availableRegions])
+
+  const activePengawasMap = useMemo(() => {
+    if (availablePengawas && availablePengawas.length > 0) {
+      const map: Record<string, string[]> = {}
+      activeRegions.forEach((r: string) => {
+        map[r] = []
+      })
+      availablePengawas.forEach((p) => {
+        if (!map[p.wilayah]) map[p.wilayah] = []
+        if (!map[p.wilayah].includes(p.name)) {
+          map[p.wilayah].push(p.name)
+        }
+      })
+      return map
+    }
+    return wilayahPengawasMap
+  }, [availablePengawas, activeRegions])
 
   const initDate = initialStudentData?.dateOfBirth ? new Date(initialStudentData.dateOfBirth) : null
   const isValidDate = Boolean(initDate && !isNaN(initDate.getTime()))
@@ -361,7 +387,6 @@ export function RegisterForm({
         }))
       : [
           { label: "Biaya SPP Bulanan", amount: "" },
-          { label: "Uang Buku & Seragam", amount: "" },
         ]
   )
 
@@ -1513,7 +1538,7 @@ export function RegisterForm({
 
           <Field label="Wilayah Penempatan (Pilih Kota) *">
             <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-              {regions.map((reg) => (
+              {activeRegions.map((reg: string) => (
                 <Button
                   key={reg}
                   type="button"
@@ -1541,11 +1566,17 @@ export function RegisterForm({
                 aria-label={`Pilih Pengawas Wilayah ${data.wilayah}`}
               >
                 <option value="">-- Pilih Pengawas --</option>
-                {wilayahPengawasMap[data.wilayah]?.map((pName) => (
-                  <option key={pName} value={pName}>
-                    {pName}
+                {activePengawasMap[data.wilayah] && activePengawasMap[data.wilayah].length > 0 ? (
+                  activePengawasMap[data.wilayah].map((pName: string) => (
+                    <option key={pName} value={pName}>
+                      {pName}
+                    </option>
+                  ))
+                ) : (
+                  <option value="Pengawas Wilayah">
+                    Belum ada pengawas khusus (Akan ditugaskan Admin)
                   </option>
-                ))}
+                )}
               </select>
             </Field>
           )}

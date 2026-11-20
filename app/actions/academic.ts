@@ -10,6 +10,7 @@ import {
   getAllowedJenjang,
   isNaikJenjang,
   isValidJenjangTransition,
+  isValidEducationStepTransition,
 } from "@/lib/academic"
 
 const allowedMimeTypes = new Set([
@@ -83,6 +84,15 @@ export async function createStudentAcademicUpdateAction(
   const semesterInput = String(formData.get("semester") ?? "").trim() // "Ganjil" | "Genap"
   const kelasSaatItuInput = String(formData.get("kelasSaatItu") ?? "").trim()
   const nilaiRataRata = String(formData.get("nilaiRataRata") ?? "").trim()
+  const statusKelanjutan = String(formData.get("statusKelanjutan") ?? "lanjut").trim() // "lanjut" | "tidak_lanjut"
+  const alasanTidakLanjut = String(formData.get("alasanTidakLanjut") ?? "").trim()
+
+  if (statusKelanjutan === "tidak_lanjut" && !alasanTidakLanjut) {
+    return {
+      success: false,
+      error: "Alasan tidak melanjutkan sekolah wajib diisi.",
+    }
+  }
 
   const targetJenjang = kategoriPendidikan === "Kuliah" ? "Kuliah" : jenjangInput
 
@@ -102,11 +112,10 @@ export async function createStudentAcademicUpdateAction(
       }
     }
 
-    if (!isValidJenjangTransition(currentPos.jenjang, targetJenjang)) {
-      const allowed = getAllowedJenjang(currentPos.jenjang)
+    if (!isValidEducationStepTransition(currentPos, targetJenjang, gradeLevelInput)) {
       return {
         success: false,
-        error: `Pilihan jenjang tidak valid. Data terakhir kamu adalah ${currentPos.labelDisplay}. Pilihan yang diperbolehkan hanya ${allowed.join(" atau ")}.`,
+        error: `Pilihan jenjang atau kelas tidak valid. Data terakhir kamu adalah ${currentPos.labelDisplay}. Kamu hanya dapat memperbarui data maksimal 1 tingkat ke atas atau 1 tingkat ke bawah.`,
       }
     }
   }
@@ -341,6 +350,11 @@ export async function createStudentAcademicUpdateAction(
 
   try {
     // 1. Buat record AcademicUpdate baru
+    const finalNamaSekolahBaru =
+      statusKelanjutan === "tidak_lanjut"
+        ? `[Tidak Melanjutkan Sekolah] ${alasanTidakLanjut}`
+        : namaSekolahBaru || null
+
     await prisma.academicUpdate.create({
       data: {
         studentId: student.id,
@@ -348,7 +362,7 @@ export async function createStudentAcademicUpdateAction(
         kelasSaatItu,
         semester: semesterValue,
         nilaiRataRata: normalizedNilai,
-        namaSekolahBaru: namaSekolahBaru || null,
+        namaSekolahBaru: finalNamaSekolahBaru,
         dokumenRapor: docRaporPayload,
       },
     })
@@ -377,11 +391,13 @@ export async function createStudentAcademicUpdateAction(
       })
     }
 
-    // 3. Perbarui data master Student (gradeLevel, jenjang, nilaiRataRata, programAkselerasi, schoolName)
+    // 3. Perbarui data master Student (gradeLevel, jenjang, nilaiRataRata, programAkselerasi, schoolName, status)
     const updatedAkselerasi =
       kategoriPendidikan === "Kuliah" || newJenjang === "Kuliah"
         ? programAkselerasiInput
         : student.programAkselerasi
+
+    const newStudentStatus = statusKelanjutan === "tidak_lanjut" ? "nonaktif" : student.status
 
     await prisma.student.update({
       where: { id: student.id },
@@ -390,21 +406,40 @@ export async function createStudentAcademicUpdateAction(
         jenjang: newJenjang,
         nilaiRataRata: normalizedNilai,
         programAkselerasi: updatedAkselerasi,
-        ...(namaSekolahBaru ? { schoolName: namaSekolahBaru } : {}),
+        status: newStudentStatus,
+        ...(namaSekolahBaru && statusKelanjutan === "lanjut" ? { schoolName: namaSekolahBaru } : {}),
       },
     })
+
+    // Jika adik asuh tidak melanjutkan sekolah, buat catatan admin otomatis
+    if (statusKelanjutan === "tidak_lanjut") {
+      const firstAdmin = await prisma.admin.findFirst()
+      if (firstAdmin) {
+        await prisma.adminNote.create({
+          data: {
+            studentId: student.id,
+            adminId: firstAdmin.id,
+            note: `Adik Asuh ${student.fullName} melaporkan tidak melanjutkan sekolah. Alasan: ${alasanTidakLanjut}`,
+          },
+        })
+      }
+    }
 
     revalidatePath("/dashboard")
     revalidatePath("/pengawas")
     revalidatePath(`/pengawas/students/${student.id}`)
     revalidatePath("/admin/dashboard")
+    revalidatePath("/admin/dashboard/kontrol-status")
     revalidatePath("/admin/dashboard/data-anak-asuh")
     revalidatePath(`/admin/dashboard/data-anak-asuh/${student.id}`)
     revalidatePath("/admin/dashboard/alokasi-dana")
 
     return {
       success: true,
-      message: "Pembaruan nilai dan dokumen rapor berhasil disimpan!",
+      message:
+        statusKelanjutan === "tidak_lanjut"
+          ? "Laporan akademik berhasil disimpan. Status akun kamu telah dinonaktifkan sesuai pilihan tidak melanjutkan sekolah."
+          : "Pembaruan nilai dan dokumen rapor berhasil disimpan!",
     }
   } catch (dbError) {
     console.error("[createStudentAcademicUpdateAction database error]", dbError)

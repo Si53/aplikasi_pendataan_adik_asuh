@@ -11,6 +11,7 @@ import {
 import { AdminDetailBottomBar } from "@/components/admin-detail-bottom-bar"
 import { AdminPendingApprovalActions } from "@/components/admin-pending-approval-actions"
 import { formatGradeWithJenjang } from "@/lib/academic"
+import { getScholarshipRatesMap } from "@/lib/budget"
 
 export const dynamic = "force-dynamic"
 
@@ -126,17 +127,65 @@ export default async function AdminStudentDetailPage({
       tanggal: d.tanggal.toISOString(),
       pengawasName: d.pengawas.name,
       fileUrl: url,
+      nominal: d.nominal,
+      keterangan: d.keterangan || null,
       status: d.status,
       processedAt: d.processedAt ? d.processedAt.toISOString() : null,
     }
   })
 
-  const [presignedFotoUrl, resolvedAcademics, resolvedDisbursements] =
-    await Promise.all([
-      presignedFotoPromise,
-      Promise.all(academicPromises),
-      Promise.all(disbursementPromises),
-    ])
+  const documentPromises = student.documents.map(async (d) => {
+    let docKelas: string | null = null
+    let docJenjang: string | null = null
+    let docSemester: string | null = null
+
+    if (d.type === "RAPOR") {
+      const matchingUpdate = student.academicUpdates.find((u) => {
+        if (!u.dokumenRapor) return false
+        try {
+          const parsed = JSON.parse(u.dokumenRapor)
+          if (Array.isArray(parsed)) return parsed.includes(d.fileUrl)
+          if (typeof parsed === "string") return parsed === d.fileUrl
+        } catch {
+          return u.dokumenRapor === d.fileUrl || u.dokumenRapor.includes(d.fileUrl)
+        }
+        return false
+      })
+
+      if (matchingUpdate) {
+        docKelas = matchingUpdate.kelasSaatItu
+        docJenjang = student.jenjang
+        docSemester = matchingUpdate.semester
+          ? `Semester ${matchingUpdate.semester}`
+          : null
+      } else {
+        docKelas = student.gradeLevel
+        docJenjang = student.jenjang
+      }
+    }
+
+    return {
+      id: d.id,
+      type: d.type,
+      fileUrl: d.fileUrl ? await getPresignedR2Url(d.fileUrl) : "",
+      uploadedAt: d.uploadedAt.toISOString(),
+      kelas: docKelas,
+      jenjang: docJenjang,
+      semester: docSemester,
+    }
+  })
+
+  const [
+    presignedFotoUrl,
+    resolvedAcademics,
+    resolvedDisbursements,
+    resolvedDocuments,
+  ] = await Promise.all([
+    presignedFotoPromise,
+    Promise.all(academicPromises),
+    Promise.all(disbursementPromises),
+    Promise.all(documentPromises),
+  ])
 
   // Latest visit record
   const latestVisitRecord = student.visitLogs[0]
@@ -248,6 +297,7 @@ export default async function AdminStudentDetailPage({
       label: e.label,
       amount: e.amount,
     })),
+    documents: resolvedDocuments,
   }
 
   const initial = student.fullName.charAt(0).toUpperCase() || "A"
@@ -354,7 +404,10 @@ export default async function AdminStudentDetailPage({
       </div>
 
       {/* 3. 4 Interactive Tabs */}
-      <AdminStudentDetailTabs data={formattedData} />
+      <AdminStudentDetailTabs
+        data={formattedData}
+        scholarshipRates={await getScholarshipRatesMap()}
+      />
 
       {/* 4. Bottom Persistent Action Bar */}
       <AdminDetailBottomBar

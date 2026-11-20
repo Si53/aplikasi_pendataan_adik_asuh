@@ -106,6 +106,8 @@ export default async function AuditFinansialDashboardPage() {
       fileUrl: url,
       nominal: p.nominal,
       status: p.status,
+      keterangan: p.keterangan || null,
+      batchId: p.batchId || null,
       processedAt: p.processedAt ? p.processedAt.toISOString() : null,
       student: {
         id: p.student.id,
@@ -132,6 +134,8 @@ export default async function AuditFinansialDashboardPage() {
         fileUrl: url,
         nominal: p.nominal,
         status: p.status,
+        keterangan: p.keterangan || null,
+        batchId: p.batchId || null,
         processedAt: p.processedAt ? p.processedAt.toISOString() : null,
         student: {
           id: p.student.id,

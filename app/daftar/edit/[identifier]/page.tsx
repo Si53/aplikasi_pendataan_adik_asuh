@@ -2,6 +2,7 @@ import { redirect } from "next/navigation"
 import { prisma } from "@/lib/prisma"
 import { PageHeader } from "@/components/page-header"
 import { RegisterForm } from "@/components/register-form"
+import { getRegionsList } from "@/lib/budget"
 
 type PageProps = {
   params: Promise<{ identifier: string }>
@@ -49,6 +50,15 @@ export default async function EditDaftarPage({ params }: PageProps) {
 
   const latestRevisionNote = student.adminNotes?.[0]?.note || ""
 
+  const [availableRegions, availablePengawas] = await Promise.all([
+    getRegionsList(),
+    prisma.pengawas.findMany({
+      where: { status: "aktif" },
+      select: { id: true, name: true, wilayah: true },
+      orderBy: { name: "asc" },
+    }),
+  ])
+
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-md sm:max-w-xl md:max-w-2xl flex-col bg-transparent pb-8">
       <PageHeader
@@ -61,6 +71,8 @@ export default async function EditDaftarPage({ params }: PageProps) {
         originalIdentifier={identifier}
         revisionNote={latestRevisionNote}
         initialStudentData={student}
+        availableRegions={availableRegions}
+        availablePengawas={availablePengawas}
       />
     </main>
   )

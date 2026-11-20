@@ -309,4 +309,281 @@ export async function updatePengawasStatusAction(
   }
 }
 
+/**
+ * Memperbarui tarif standar beasiswa per jenjang (SD, SMP, SMA, SMK, Kuliah)
+ */
+export async function updateScholarshipRatesAction(
+  rates: { jenjang: string; nominal: number }[]
+): Promise<{ success: boolean; error?: string }> {
+  const session = await auth()
+  if (!session?.user || session.user.role !== "ADMIN") {
+    return { success: false, error: "Akses ditolak. Anda bukan Administrator." }
+  }
+
+  if (!rates || rates.length === 0) {
+    return { success: false, error: "Data tarif tidak boleh kosong." }
+  }
+
+  try {
+    for (const item of rates) {
+      if (!item.jenjang || typeof item.nominal !== "number" || item.nominal < 0) {
+        continue
+      }
+      await prisma.scholarshipRate.upsert({
+        where: { jenjang: item.jenjang },
+        update: { nominal: item.nominal },
+        create: { jenjang: item.jenjang, nominal: item.nominal },
+      })
+    }
+
+    revalidatePath("/admin/dashboard/alokasi-dana")
+    revalidatePath("/admin/dashboard")
+    revalidatePath("/admin/dashboard/kontrol-status")
+    revalidatePath("/pengawas/penyaluran-dana")
+    revalidatePath("/dashboard")
+
+    return { success: true }
+  } catch (error) {
+    console.error("[updateScholarshipRatesAction Error]", error)
+    return { success: false, error: "Gagal memperbarui tarif beasiswa." }
+  }
+}
+
+/**
+ * Membuat akun pengawas baru dari dashboard admin
+ */
+export async function createPengawasAction(data: {
+  name: string
+  username: string
+  password?: string
+  wilayah: string
+  noHp?: string
+}): Promise<{ success: boolean; error?: string }> {
+  const session = await auth()
+  if (!session?.user || session.user.role !== "ADMIN") {
+    return { success: false, error: "Akses ditolak. Anda bukan Administrator." }
+  }
+
+  const cleanName = (data.name || "").trim()
+  const cleanUsername = (data.username || "").toLowerCase().trim()
+  const cleanWilayah = (data.wilayah || "").trim()
+  const cleanNoHp = (data.noHp || "").trim()
+  const rawPassword = (data.password || "").trim() || "hidupadikasuh"
+
+  if (!cleanName) {
+    return { success: false, error: "Nama pengawas wajib diisi." }
+  }
+  if (!cleanUsername) {
+    return { success: false, error: "Username wajib diisi." }
+  }
+  if (!cleanWilayah) {
+    return { success: false, error: "Wilayah penugasan wajib dipilih." }
+  }
+
+  // Cek keunikan username
+  const existingPengawas = await prisma.pengawas.findUnique({
+    where: { username: cleanUsername },
+  })
+  if (existingPengawas) {
+    return { success: false, error: "Username sudah digunakan oleh pengawas lain." }
+  }
+
+  const existingStudent = await prisma.student.findUnique({
+    where: { username: cleanUsername },
+  })
+  if (existingStudent) {
+    return { success: false, error: "Username sudah terdaftar sebagai adik asuh." }
+  }
+
+  try {
+    const bcrypt = await import("bcryptjs")
+    const hashedPassword = await bcrypt.hash(rawPassword, 12)
+
+    await prisma.pengawas.create({
+      data: {
+        name: cleanName,
+        username: cleanUsername,
+        password: hashedPassword,
+        wilayah: cleanWilayah,
+        noHp: cleanNoHp || null,
+        status: "aktif",
+      },
+    })
+
+    revalidatePath("/admin/dashboard/kontrol-status")
+    revalidatePath("/admin/dashboard/alokasi-dana")
+    revalidatePath("/admin/dashboard/data-anak-asuh")
+    revalidatePath("/daftar")
+
+    return { success: true }
+  } catch (error) {
+    console.error("[createPengawasAction Error]", error)
+    return { success: false, error: "Gagal membuat akun pengawas baru." }
+  }
+}
+
+/**
+ * Menambahkan wilayah operasional baru
+ */
+export async function createRegionAction(
+  name: string
+): Promise<{ success: boolean; error?: string }> {
+  const session = await auth()
+  if (!session?.user || session.user.role !== "ADMIN") {
+    return { success: false, error: "Akses ditolak. Anda bukan Administrator." }
+  }
+
+  const cleanName = (name || "").trim()
+  if (!cleanName) {
+    return { success: false, error: "Nama wilayah wajib diisi." }
+  }
+
+  try {
+    const existing = await prisma.region.findFirst({
+      where: {
+        name: { equals: cleanName, mode: "insensitive" },
+      },
+    })
+    if (existing) {
+      return { success: false, error: `Wilayah "${cleanName}" sudah terdaftar.` }
+    }
+
+    await prisma.region.create({
+      data: { name: cleanName },
+    })
+
+    revalidatePath("/admin/dashboard/kontrol-status")
+    revalidatePath("/admin/dashboard/alokasi-dana")
+    revalidatePath("/admin/dashboard/data-anak-asuh")
+    revalidatePath("/daftar")
+
+    return { success: true }
+  } catch (error) {
+    console.error("[createRegionAction Error]", error)
+    return { success: false, error: "Gagal menambahkan wilayah baru." }
+  }
+}
+
+/**
+ * Menghapus akun pengawas yang berstatus nonaktif
+ */
+export async function deletePengawasAction(
+  id: number
+): Promise<{ success: boolean; error?: string }> {
+  const session = await auth()
+  if (!session?.user || session.user.role !== "ADMIN") {
+    return { success: false, error: "Akses ditolak. Anda bukan Administrator." }
+  }
+
+  try {
+    const pengawas = await prisma.pengawas.findUnique({
+      where: { id },
+      include: {
+        _count: {
+          select: {
+            students: true,
+            disbursements: true,
+          },
+        },
+      },
+    })
+
+    if (!pengawas) {
+      return { success: false, error: "Pengawas tidak ditemukan." }
+    }
+
+    if (pengawas.status !== "nonaktif") {
+      return {
+        success: false,
+        error: "Hanya akun pengawas yang berstatus nonaktif yang dapat dihapus. Silakan nonaktifkan akun terlebih dahulu.",
+      }
+    }
+
+    if (pengawas._count.students > 0) {
+      return {
+        success: false,
+        error: `Pengawas "${pengawas.name}" masih memiliki ${pengawas._count.students} adik asuh binaan. Silakan pindahkan adik asuh binaan ke pengawas lain sebelum menghapus akun ini.`,
+      }
+    }
+
+    if (pengawas._count.disbursements > 0) {
+      return {
+        success: false,
+        error: `Pengawas "${pengawas.name}" memiliki ${pengawas._count.disbursements} riwayat bukti penyaluran dana. Akun tidak dapat dihapus demi integritas data audit keuangan.`,
+      }
+    }
+
+    // Bersihkan relasi opsional jika ada
+    await prisma.adminNote.updateMany({
+      where: { pengawasId: id },
+      data: { pengawasId: null },
+    })
+    await prisma.visitLog.updateMany({
+      where: { pengawasId: id },
+      data: { pengawasId: null },
+    })
+
+    await prisma.pengawas.delete({
+      where: { id },
+    })
+
+    revalidatePath("/admin/dashboard/kontrol-status")
+    revalidatePath("/admin/dashboard/alokasi-dana")
+    revalidatePath("/admin/dashboard/data-anak-asuh")
+    revalidatePath("/daftar")
+
+    return { success: true }
+  } catch (error) {
+    console.error("[deletePengawasAction Error]", error)
+    return { success: false, error: "Gagal menghapus akun pengawas." }
+  }
+}
+
+/**
+ * Menghapus wilayah (jika daerah/wilayah tidak memiliki pengawas)
+ */
+export async function deleteRegionAction(
+  id: number
+): Promise<{ success: boolean; error?: string }> {
+  const session = await auth()
+  if (!session?.user || session.user.role !== "ADMIN") {
+    return { success: false, error: "Akses ditolak. Anda bukan Administrator." }
+  }
+
+  try {
+    const region = await prisma.region.findUnique({
+      where: { id },
+    })
+    if (!region) {
+      return { success: false, error: "Wilayah tidak ditemukan." }
+    }
+
+    // Cek apakah masih ada pengawas di wilayah ini
+    const pengawasCount = await prisma.pengawas.count({
+      where: { wilayah: region.name },
+    })
+
+    if (pengawasCount > 0) {
+      return {
+        success: false,
+        error: `Wilayah "${region.name}" tidak dapat dihapus karena masih memiliki ${pengawasCount} pengawas yang bertugas. Pindahkan atau hapus pengawas di wilayah ini terlebih dahulu.`,
+      }
+    }
+
+    await prisma.region.delete({
+      where: { id },
+    })
+
+    revalidatePath("/admin/dashboard/kontrol-status")
+    revalidatePath("/admin/dashboard/alokasi-dana")
+    revalidatePath("/admin/dashboard/data-anak-asuh")
+    revalidatePath("/daftar")
+
+    return { success: true }
+  } catch (error) {
+    console.error("[deleteRegionAction Error]", error)
+    return { success: false, error: "Gagal menghapus wilayah." }
+  }
+}
+
 

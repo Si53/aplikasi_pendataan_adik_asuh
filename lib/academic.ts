@@ -230,8 +230,105 @@ export function determineCurrentEducationPosition(
   return null
 }
 
+export interface EducationStep {
+  kategori: "Sekolah" | "Kuliah"
+  jenjang: JenjangLevel
+  kelas: string
+  label: string
+}
+
+export const EDUCATION_LADDER: EducationStep[] = [
+  // SD (Kelas 1 - 6)
+  { kategori: "Sekolah", jenjang: "SD", kelas: "1", label: "Kelas 1 SD" },
+  { kategori: "Sekolah", jenjang: "SD", kelas: "2", label: "Kelas 2 SD" },
+  { kategori: "Sekolah", jenjang: "SD", kelas: "3", label: "Kelas 3 SD" },
+  { kategori: "Sekolah", jenjang: "SD", kelas: "4", label: "Kelas 4 SD" },
+  { kategori: "Sekolah", jenjang: "SD", kelas: "5", label: "Kelas 5 SD" },
+  { kategori: "Sekolah", jenjang: "SD", kelas: "6", label: "Kelas 6 SD" },
+  // SMP (Kelas 1 - 3)
+  { kategori: "Sekolah", jenjang: "SMP", kelas: "1", label: "Kelas 1 SMP" },
+  { kategori: "Sekolah", jenjang: "SMP", kelas: "2", label: "Kelas 2 SMP" },
+  { kategori: "Sekolah", jenjang: "SMP", kelas: "3", label: "Kelas 3 SMP" },
+  // SMA / SMK (Kelas 1 - 3)
+  { kategori: "Sekolah", jenjang: "SMA", kelas: "1", label: "Kelas 1 SMA/SMK" },
+  { kategori: "Sekolah", jenjang: "SMA", kelas: "2", label: "Kelas 2 SMA/SMK" },
+  { kategori: "Sekolah", jenjang: "SMA", kelas: "3", label: "Kelas 3 SMA/SMK" },
+  // Kuliah (Semester 1 - 10)
+  { kategori: "Kuliah", jenjang: "Kuliah", kelas: "Semester 1", label: "Semester 1" },
+  { kategori: "Kuliah", jenjang: "Kuliah", kelas: "Semester 2", label: "Semester 2" },
+  { kategori: "Kuliah", jenjang: "Kuliah", kelas: "Semester 3", label: "Semester 3" },
+  { kategori: "Kuliah", jenjang: "Kuliah", kelas: "Semester 4", label: "Semester 4" },
+  { kategori: "Kuliah", jenjang: "Kuliah", kelas: "Semester 5", label: "Semester 5" },
+  { kategori: "Kuliah", jenjang: "Kuliah", kelas: "Semester 6", label: "Semester 6" },
+  { kategori: "Kuliah", jenjang: "Kuliah", kelas: "Semester 7", label: "Semester 7" },
+  { kategori: "Kuliah", jenjang: "Kuliah", kelas: "Semester 8", label: "Semester 8" },
+  { kategori: "Kuliah", jenjang: "Kuliah", kelas: "Semester 9", label: "Semester 9" },
+  { kategori: "Kuliah", jenjang: "Kuliah", kelas: "Semester 10", label: "Semester 10" },
+]
+
+export function findEducationLadderIndex(
+  jenjang?: string | null,
+  gradeLevel?: string | null
+): number {
+  if (!jenjang && !gradeLevel) return -1
+
+  const normJenjang = (jenjang || "").trim()
+  const rawGrade = (gradeLevel || "").trim()
+  const digitMatch = rawGrade.match(/\d+/)
+  const digit = digitMatch ? digitMatch[0] : null
+
+  if (normJenjang === "Kuliah" || /semester/i.test(rawGrade) || /kuliah/i.test(rawGrade)) {
+    const sem = digit ? `Semester ${digit}` : "Semester 1"
+    return EDUCATION_LADDER.findIndex(
+      (s) => s.jenjang === "Kuliah" && s.kelas === sem
+    )
+  }
+
+  if (normJenjang === "SD" || /\bSD\b/i.test(rawGrade)) {
+    const k = digit || "1"
+    return EDUCATION_LADDER.findIndex((s) => s.jenjang === "SD" && s.kelas === k)
+  }
+
+  if (normJenjang === "SMP" || /\bSMP\b/i.test(rawGrade)) {
+    const k = digit || "1"
+    return EDUCATION_LADDER.findIndex((s) => s.jenjang === "SMP" && s.kelas === k)
+  }
+
+  if (normJenjang === "SMA" || normJenjang === "SMK" || /\b(SMA|SMK)\b/i.test(rawGrade)) {
+    const k = digit || "1"
+    return EDUCATION_LADDER.findIndex((s) => s.jenjang === "SMA" && s.kelas === k)
+  }
+
+  if (digit) {
+    const n = parseInt(digit, 10)
+    if (n >= 1 && n <= 6) {
+      return EDUCATION_LADDER.findIndex((s) => s.jenjang === "SD" && s.kelas === digit)
+    }
+  }
+
+  return -1
+}
+
+export function getAllowedEducationSteps(
+  currentPos: CurrentEducationPosition | null | undefined
+): EducationStep[] {
+  if (!currentPos || !currentPos.isKnown) {
+    return EDUCATION_LADDER
+  }
+
+  const idx = findEducationLadderIndex(currentPos.jenjang, currentPos.gradeLevel)
+  if (idx === -1) {
+    return EDUCATION_LADDER
+  }
+
+  const minIdx = Math.max(0, idx - 1)
+  const maxIdx = Math.min(EDUCATION_LADDER.length - 1, idx + 1)
+
+  return EDUCATION_LADDER.slice(minIdx, maxIdx + 1)
+}
+
 /**
- * Mendapatkan jenjang yang diperbolehkan untuk dipilih (saat ini + 1 tingkat di atasnya).
+ * Mendapatkan jenjang yang diperbolehkan untuk dipilih (1 tingkat ke bawah, saat ini, dan 1 tingkat ke atas).
  */
 export function getAllowedJenjang(
   currentJenjang: JenjangLevel | null | undefined
@@ -245,13 +342,9 @@ export function getAllowedJenjang(
     return [...JENJANG_ORDER]
   }
 
-  // Hanya jenjang saat ini dan tepat satu tingkat di atasnya jika ada
-  if (idx === JENJANG_ORDER.length - 1) {
-    // Kuliah
-    return [currentJenjang]
-  }
-
-  return [currentJenjang, JENJANG_ORDER[idx + 1]]
+  const minIdx = Math.max(0, idx - 1)
+  const maxIdx = Math.min(JENJANG_ORDER.length - 1, idx + 1)
+  return JENJANG_ORDER.slice(minIdx, maxIdx + 1)
 }
 
 /**
@@ -278,6 +371,26 @@ export function isValidJenjangTransition(
   if (!currentJenjang) return true // Siswa lama tidak dibatasi
   const allowed = getAllowedJenjang(currentJenjang)
   return allowed.includes(targetJenjang as JenjangLevel)
+}
+
+/**
+ * Validasi apakah perpindahan tingkat (jenjang & kelas) diperbolehkan (maksimal 1 ke atas dan 1 ke bawah).
+ */
+export function isValidEducationStepTransition(
+  currentPos: CurrentEducationPosition | null | undefined,
+  targetJenjang: string,
+  targetGradeLevel: string
+): boolean {
+  if (!currentPos || !currentPos.isKnown) return true
+  const allowedSteps = getAllowedEducationSteps(currentPos)
+  const targetDigit = extractDigit(targetGradeLevel)
+  const normTargetJenjang = targetJenjang === "SMK" ? "SMA" : targetJenjang
+
+  return allowedSteps.some((step) => {
+    if (step.jenjang !== normTargetJenjang) return false
+    const stepDigit = extractDigit(step.kelas)
+    return stepDigit === targetDigit || step.kelas === targetGradeLevel
+  })
 }
 
 /**

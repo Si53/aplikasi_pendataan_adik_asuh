@@ -83,6 +83,16 @@ export type VisitLog = $Result.DefaultSelection<Prisma.$VisitLogPayload>
  * 
  */
 export type LoginAttempt = $Result.DefaultSelection<Prisma.$LoginAttemptPayload>
+/**
+ * Model ScholarshipRate
+ * 
+ */
+export type ScholarshipRate = $Result.DefaultSelection<Prisma.$ScholarshipRatePayload>
+/**
+ * Model Region
+ * 
+ */
+export type Region = $Result.DefaultSelection<Prisma.$RegionPayload>
 
 /**
  * ##  Prisma Client ʲˢ
@@ -341,6 +351,26 @@ export class PrismaClient<
     * ```
     */
   get loginAttempt(): Prisma.LoginAttemptDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.scholarshipRate`: Exposes CRUD operations for the **ScholarshipRate** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ScholarshipRates
+    * const scholarshipRates = await prisma.scholarshipRate.findMany()
+    * ```
+    */
+  get scholarshipRate(): Prisma.ScholarshipRateDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.region`: Exposes CRUD operations for the **Region** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Regions
+    * const regions = await prisma.region.findMany()
+    * ```
+    */
+  get region(): Prisma.RegionDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -795,7 +825,9 @@ export namespace Prisma {
     AdminNote: 'AdminNote',
     BantuanAdjustment: 'BantuanAdjustment',
     VisitLog: 'VisitLog',
-    LoginAttempt: 'LoginAttempt'
+    LoginAttempt: 'LoginAttempt',
+    ScholarshipRate: 'ScholarshipRate',
+    Region: 'Region'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -814,7 +846,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "admin" | "pengawas" | "student" | "educationCost" | "father" | "mother" | "guardian" | "document" | "academicUpdate" | "disbursementProof" | "adminNote" | "bantuanAdjustment" | "visitLog" | "loginAttempt"
+      modelProps: "admin" | "pengawas" | "student" | "educationCost" | "father" | "mother" | "guardian" | "document" | "academicUpdate" | "disbursementProof" | "adminNote" | "bantuanAdjustment" | "visitLog" | "loginAttempt" | "scholarshipRate" | "region"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1854,6 +1886,154 @@ export namespace Prisma {
           }
         }
       }
+      ScholarshipRate: {
+        payload: Prisma.$ScholarshipRatePayload<ExtArgs>
+        fields: Prisma.ScholarshipRateFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ScholarshipRateFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScholarshipRatePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ScholarshipRateFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScholarshipRatePayload>
+          }
+          findFirst: {
+            args: Prisma.ScholarshipRateFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScholarshipRatePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ScholarshipRateFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScholarshipRatePayload>
+          }
+          findMany: {
+            args: Prisma.ScholarshipRateFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScholarshipRatePayload>[]
+          }
+          create: {
+            args: Prisma.ScholarshipRateCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScholarshipRatePayload>
+          }
+          createMany: {
+            args: Prisma.ScholarshipRateCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ScholarshipRateCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScholarshipRatePayload>[]
+          }
+          delete: {
+            args: Prisma.ScholarshipRateDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScholarshipRatePayload>
+          }
+          update: {
+            args: Prisma.ScholarshipRateUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScholarshipRatePayload>
+          }
+          deleteMany: {
+            args: Prisma.ScholarshipRateDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ScholarshipRateUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ScholarshipRateUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScholarshipRatePayload>[]
+          }
+          upsert: {
+            args: Prisma.ScholarshipRateUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ScholarshipRatePayload>
+          }
+          aggregate: {
+            args: Prisma.ScholarshipRateAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateScholarshipRate>
+          }
+          groupBy: {
+            args: Prisma.ScholarshipRateGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ScholarshipRateGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ScholarshipRateCountArgs<ExtArgs>
+            result: $Utils.Optional<ScholarshipRateCountAggregateOutputType> | number
+          }
+        }
+      }
+      Region: {
+        payload: Prisma.$RegionPayload<ExtArgs>
+        fields: Prisma.RegionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RegionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RegionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RegionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RegionPayload>
+          }
+          findFirst: {
+            args: Prisma.RegionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RegionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RegionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RegionPayload>
+          }
+          findMany: {
+            args: Prisma.RegionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RegionPayload>[]
+          }
+          create: {
+            args: Prisma.RegionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RegionPayload>
+          }
+          createMany: {
+            args: Prisma.RegionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.RegionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RegionPayload>[]
+          }
+          delete: {
+            args: Prisma.RegionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RegionPayload>
+          }
+          update: {
+            args: Prisma.RegionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RegionPayload>
+          }
+          deleteMany: {
+            args: Prisma.RegionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RegionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.RegionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RegionPayload>[]
+          }
+          upsert: {
+            args: Prisma.RegionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RegionPayload>
+          }
+          aggregate: {
+            args: Prisma.RegionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRegion>
+          }
+          groupBy: {
+            args: Prisma.RegionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RegionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RegionCountArgs<ExtArgs>
+            result: $Utils.Optional<RegionCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1964,6 +2144,8 @@ export namespace Prisma {
     bantuanAdjustment?: BantuanAdjustmentOmit
     visitLog?: VisitLogOmit
     loginAttempt?: LoginAttemptOmit
+    scholarshipRate?: ScholarshipRateOmit
+    region?: RegionOmit
   }
 
   /* Types for Logging */
@@ -13015,6 +13197,8 @@ export namespace Prisma {
     tanggal: Date | null
     status: string | null
     processedAt: Date | null
+    keterangan: string | null
+    batchId: string | null
   }
 
   export type DisbursementProofMaxAggregateOutputType = {
@@ -13026,6 +13210,8 @@ export namespace Prisma {
     tanggal: Date | null
     status: string | null
     processedAt: Date | null
+    keterangan: string | null
+    batchId: string | null
   }
 
   export type DisbursementProofCountAggregateOutputType = {
@@ -13037,6 +13223,8 @@ export namespace Prisma {
     tanggal: number
     status: number
     processedAt: number
+    keterangan: number
+    batchId: number
     _all: number
   }
 
@@ -13064,6 +13252,8 @@ export namespace Prisma {
     tanggal?: true
     status?: true
     processedAt?: true
+    keterangan?: true
+    batchId?: true
   }
 
   export type DisbursementProofMaxAggregateInputType = {
@@ -13075,6 +13265,8 @@ export namespace Prisma {
     tanggal?: true
     status?: true
     processedAt?: true
+    keterangan?: true
+    batchId?: true
   }
 
   export type DisbursementProofCountAggregateInputType = {
@@ -13086,6 +13278,8 @@ export namespace Prisma {
     tanggal?: true
     status?: true
     processedAt?: true
+    keterangan?: true
+    batchId?: true
     _all?: true
   }
 
@@ -13184,6 +13378,8 @@ export namespace Prisma {
     tanggal: Date
     status: string
     processedAt: Date | null
+    keterangan: string | null
+    batchId: string | null
     _count: DisbursementProofCountAggregateOutputType | null
     _avg: DisbursementProofAvgAggregateOutputType | null
     _sum: DisbursementProofSumAggregateOutputType | null
@@ -13214,6 +13410,8 @@ export namespace Prisma {
     tanggal?: boolean
     status?: boolean
     processedAt?: boolean
+    keterangan?: boolean
+    batchId?: boolean
     student?: boolean | StudentDefaultArgs<ExtArgs>
     pengawas?: boolean | PengawasDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["disbursementProof"]>
@@ -13227,6 +13425,8 @@ export namespace Prisma {
     tanggal?: boolean
     status?: boolean
     processedAt?: boolean
+    keterangan?: boolean
+    batchId?: boolean
     student?: boolean | StudentDefaultArgs<ExtArgs>
     pengawas?: boolean | PengawasDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["disbursementProof"]>
@@ -13240,6 +13440,8 @@ export namespace Prisma {
     tanggal?: boolean
     status?: boolean
     processedAt?: boolean
+    keterangan?: boolean
+    batchId?: boolean
     student?: boolean | StudentDefaultArgs<ExtArgs>
     pengawas?: boolean | PengawasDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["disbursementProof"]>
@@ -13253,9 +13455,11 @@ export namespace Prisma {
     tanggal?: boolean
     status?: boolean
     processedAt?: boolean
+    keterangan?: boolean
+    batchId?: boolean
   }
 
-  export type DisbursementProofOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "pengawasId" | "fileUrl" | "nominal" | "tanggal" | "status" | "processedAt", ExtArgs["result"]["disbursementProof"]>
+  export type DisbursementProofOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "studentId" | "pengawasId" | "fileUrl" | "nominal" | "tanggal" | "status" | "processedAt" | "keterangan" | "batchId", ExtArgs["result"]["disbursementProof"]>
   export type DisbursementProofInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     student?: boolean | StudentDefaultArgs<ExtArgs>
     pengawas?: boolean | PengawasDefaultArgs<ExtArgs>
@@ -13284,6 +13488,8 @@ export namespace Prisma {
       tanggal: Date
       status: string
       processedAt: Date | null
+      keterangan: string | null
+      batchId: string | null
     }, ExtArgs["result"]["disbursementProof"]>
     composites: {}
   }
@@ -13717,6 +13923,8 @@ export namespace Prisma {
     readonly tanggal: FieldRef<"DisbursementProof", 'DateTime'>
     readonly status: FieldRef<"DisbursementProof", 'String'>
     readonly processedAt: FieldRef<"DisbursementProof", 'DateTime'>
+    readonly keterangan: FieldRef<"DisbursementProof", 'String'>
+    readonly batchId: FieldRef<"DisbursementProof", 'String'>
   }
     
 
@@ -18619,6 +18827,2029 @@ export namespace Prisma {
 
 
   /**
+   * Model ScholarshipRate
+   */
+
+  export type AggregateScholarshipRate = {
+    _count: ScholarshipRateCountAggregateOutputType | null
+    _avg: ScholarshipRateAvgAggregateOutputType | null
+    _sum: ScholarshipRateSumAggregateOutputType | null
+    _min: ScholarshipRateMinAggregateOutputType | null
+    _max: ScholarshipRateMaxAggregateOutputType | null
+  }
+
+  export type ScholarshipRateAvgAggregateOutputType = {
+    id: number | null
+    nominal: number | null
+  }
+
+  export type ScholarshipRateSumAggregateOutputType = {
+    id: number | null
+    nominal: number | null
+  }
+
+  export type ScholarshipRateMinAggregateOutputType = {
+    id: number | null
+    jenjang: string | null
+    nominal: number | null
+    updatedAt: Date | null
+  }
+
+  export type ScholarshipRateMaxAggregateOutputType = {
+    id: number | null
+    jenjang: string | null
+    nominal: number | null
+    updatedAt: Date | null
+  }
+
+  export type ScholarshipRateCountAggregateOutputType = {
+    id: number
+    jenjang: number
+    nominal: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ScholarshipRateAvgAggregateInputType = {
+    id?: true
+    nominal?: true
+  }
+
+  export type ScholarshipRateSumAggregateInputType = {
+    id?: true
+    nominal?: true
+  }
+
+  export type ScholarshipRateMinAggregateInputType = {
+    id?: true
+    jenjang?: true
+    nominal?: true
+    updatedAt?: true
+  }
+
+  export type ScholarshipRateMaxAggregateInputType = {
+    id?: true
+    jenjang?: true
+    nominal?: true
+    updatedAt?: true
+  }
+
+  export type ScholarshipRateCountAggregateInputType = {
+    id?: true
+    jenjang?: true
+    nominal?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ScholarshipRateAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ScholarshipRate to aggregate.
+     */
+    where?: ScholarshipRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScholarshipRates to fetch.
+     */
+    orderBy?: ScholarshipRateOrderByWithRelationInput | ScholarshipRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ScholarshipRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScholarshipRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScholarshipRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ScholarshipRates
+    **/
+    _count?: true | ScholarshipRateCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ScholarshipRateAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ScholarshipRateSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ScholarshipRateMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ScholarshipRateMaxAggregateInputType
+  }
+
+  export type GetScholarshipRateAggregateType<T extends ScholarshipRateAggregateArgs> = {
+        [P in keyof T & keyof AggregateScholarshipRate]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateScholarshipRate[P]>
+      : GetScalarType<T[P], AggregateScholarshipRate[P]>
+  }
+
+
+
+
+  export type ScholarshipRateGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ScholarshipRateWhereInput
+    orderBy?: ScholarshipRateOrderByWithAggregationInput | ScholarshipRateOrderByWithAggregationInput[]
+    by: ScholarshipRateScalarFieldEnum[] | ScholarshipRateScalarFieldEnum
+    having?: ScholarshipRateScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ScholarshipRateCountAggregateInputType | true
+    _avg?: ScholarshipRateAvgAggregateInputType
+    _sum?: ScholarshipRateSumAggregateInputType
+    _min?: ScholarshipRateMinAggregateInputType
+    _max?: ScholarshipRateMaxAggregateInputType
+  }
+
+  export type ScholarshipRateGroupByOutputType = {
+    id: number
+    jenjang: string
+    nominal: number
+    updatedAt: Date
+    _count: ScholarshipRateCountAggregateOutputType | null
+    _avg: ScholarshipRateAvgAggregateOutputType | null
+    _sum: ScholarshipRateSumAggregateOutputType | null
+    _min: ScholarshipRateMinAggregateOutputType | null
+    _max: ScholarshipRateMaxAggregateOutputType | null
+  }
+
+  type GetScholarshipRateGroupByPayload<T extends ScholarshipRateGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ScholarshipRateGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ScholarshipRateGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ScholarshipRateGroupByOutputType[P]>
+            : GetScalarType<T[P], ScholarshipRateGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ScholarshipRateSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    jenjang?: boolean
+    nominal?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["scholarshipRate"]>
+
+  export type ScholarshipRateSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    jenjang?: boolean
+    nominal?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["scholarshipRate"]>
+
+  export type ScholarshipRateSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    jenjang?: boolean
+    nominal?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["scholarshipRate"]>
+
+  export type ScholarshipRateSelectScalar = {
+    id?: boolean
+    jenjang?: boolean
+    nominal?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ScholarshipRateOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "jenjang" | "nominal" | "updatedAt", ExtArgs["result"]["scholarshipRate"]>
+
+  export type $ScholarshipRatePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ScholarshipRate"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      jenjang: string
+      nominal: number
+      updatedAt: Date
+    }, ExtArgs["result"]["scholarshipRate"]>
+    composites: {}
+  }
+
+  type ScholarshipRateGetPayload<S extends boolean | null | undefined | ScholarshipRateDefaultArgs> = $Result.GetResult<Prisma.$ScholarshipRatePayload, S>
+
+  type ScholarshipRateCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ScholarshipRateFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ScholarshipRateCountAggregateInputType | true
+    }
+
+  export interface ScholarshipRateDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ScholarshipRate'], meta: { name: 'ScholarshipRate' } }
+    /**
+     * Find zero or one ScholarshipRate that matches the filter.
+     * @param {ScholarshipRateFindUniqueArgs} args - Arguments to find a ScholarshipRate
+     * @example
+     * // Get one ScholarshipRate
+     * const scholarshipRate = await prisma.scholarshipRate.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ScholarshipRateFindUniqueArgs>(args: SelectSubset<T, ScholarshipRateFindUniqueArgs<ExtArgs>>): Prisma__ScholarshipRateClient<$Result.GetResult<Prisma.$ScholarshipRatePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ScholarshipRate that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ScholarshipRateFindUniqueOrThrowArgs} args - Arguments to find a ScholarshipRate
+     * @example
+     * // Get one ScholarshipRate
+     * const scholarshipRate = await prisma.scholarshipRate.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ScholarshipRateFindUniqueOrThrowArgs>(args: SelectSubset<T, ScholarshipRateFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ScholarshipRateClient<$Result.GetResult<Prisma.$ScholarshipRatePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ScholarshipRate that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScholarshipRateFindFirstArgs} args - Arguments to find a ScholarshipRate
+     * @example
+     * // Get one ScholarshipRate
+     * const scholarshipRate = await prisma.scholarshipRate.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ScholarshipRateFindFirstArgs>(args?: SelectSubset<T, ScholarshipRateFindFirstArgs<ExtArgs>>): Prisma__ScholarshipRateClient<$Result.GetResult<Prisma.$ScholarshipRatePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ScholarshipRate that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScholarshipRateFindFirstOrThrowArgs} args - Arguments to find a ScholarshipRate
+     * @example
+     * // Get one ScholarshipRate
+     * const scholarshipRate = await prisma.scholarshipRate.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ScholarshipRateFindFirstOrThrowArgs>(args?: SelectSubset<T, ScholarshipRateFindFirstOrThrowArgs<ExtArgs>>): Prisma__ScholarshipRateClient<$Result.GetResult<Prisma.$ScholarshipRatePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ScholarshipRates that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScholarshipRateFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ScholarshipRates
+     * const scholarshipRates = await prisma.scholarshipRate.findMany()
+     * 
+     * // Get first 10 ScholarshipRates
+     * const scholarshipRates = await prisma.scholarshipRate.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const scholarshipRateWithIdOnly = await prisma.scholarshipRate.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ScholarshipRateFindManyArgs>(args?: SelectSubset<T, ScholarshipRateFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScholarshipRatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ScholarshipRate.
+     * @param {ScholarshipRateCreateArgs} args - Arguments to create a ScholarshipRate.
+     * @example
+     * // Create one ScholarshipRate
+     * const ScholarshipRate = await prisma.scholarshipRate.create({
+     *   data: {
+     *     // ... data to create a ScholarshipRate
+     *   }
+     * })
+     * 
+     */
+    create<T extends ScholarshipRateCreateArgs>(args: SelectSubset<T, ScholarshipRateCreateArgs<ExtArgs>>): Prisma__ScholarshipRateClient<$Result.GetResult<Prisma.$ScholarshipRatePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ScholarshipRates.
+     * @param {ScholarshipRateCreateManyArgs} args - Arguments to create many ScholarshipRates.
+     * @example
+     * // Create many ScholarshipRates
+     * const scholarshipRate = await prisma.scholarshipRate.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ScholarshipRateCreateManyArgs>(args?: SelectSubset<T, ScholarshipRateCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ScholarshipRates and returns the data saved in the database.
+     * @param {ScholarshipRateCreateManyAndReturnArgs} args - Arguments to create many ScholarshipRates.
+     * @example
+     * // Create many ScholarshipRates
+     * const scholarshipRate = await prisma.scholarshipRate.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ScholarshipRates and only return the `id`
+     * const scholarshipRateWithIdOnly = await prisma.scholarshipRate.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ScholarshipRateCreateManyAndReturnArgs>(args?: SelectSubset<T, ScholarshipRateCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScholarshipRatePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ScholarshipRate.
+     * @param {ScholarshipRateDeleteArgs} args - Arguments to delete one ScholarshipRate.
+     * @example
+     * // Delete one ScholarshipRate
+     * const ScholarshipRate = await prisma.scholarshipRate.delete({
+     *   where: {
+     *     // ... filter to delete one ScholarshipRate
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ScholarshipRateDeleteArgs>(args: SelectSubset<T, ScholarshipRateDeleteArgs<ExtArgs>>): Prisma__ScholarshipRateClient<$Result.GetResult<Prisma.$ScholarshipRatePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ScholarshipRate.
+     * @param {ScholarshipRateUpdateArgs} args - Arguments to update one ScholarshipRate.
+     * @example
+     * // Update one ScholarshipRate
+     * const scholarshipRate = await prisma.scholarshipRate.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ScholarshipRateUpdateArgs>(args: SelectSubset<T, ScholarshipRateUpdateArgs<ExtArgs>>): Prisma__ScholarshipRateClient<$Result.GetResult<Prisma.$ScholarshipRatePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ScholarshipRates.
+     * @param {ScholarshipRateDeleteManyArgs} args - Arguments to filter ScholarshipRates to delete.
+     * @example
+     * // Delete a few ScholarshipRates
+     * const { count } = await prisma.scholarshipRate.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ScholarshipRateDeleteManyArgs>(args?: SelectSubset<T, ScholarshipRateDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ScholarshipRates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScholarshipRateUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ScholarshipRates
+     * const scholarshipRate = await prisma.scholarshipRate.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ScholarshipRateUpdateManyArgs>(args: SelectSubset<T, ScholarshipRateUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ScholarshipRates and returns the data updated in the database.
+     * @param {ScholarshipRateUpdateManyAndReturnArgs} args - Arguments to update many ScholarshipRates.
+     * @example
+     * // Update many ScholarshipRates
+     * const scholarshipRate = await prisma.scholarshipRate.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ScholarshipRates and only return the `id`
+     * const scholarshipRateWithIdOnly = await prisma.scholarshipRate.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ScholarshipRateUpdateManyAndReturnArgs>(args: SelectSubset<T, ScholarshipRateUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ScholarshipRatePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ScholarshipRate.
+     * @param {ScholarshipRateUpsertArgs} args - Arguments to update or create a ScholarshipRate.
+     * @example
+     * // Update or create a ScholarshipRate
+     * const scholarshipRate = await prisma.scholarshipRate.upsert({
+     *   create: {
+     *     // ... data to create a ScholarshipRate
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ScholarshipRate we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ScholarshipRateUpsertArgs>(args: SelectSubset<T, ScholarshipRateUpsertArgs<ExtArgs>>): Prisma__ScholarshipRateClient<$Result.GetResult<Prisma.$ScholarshipRatePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ScholarshipRates.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScholarshipRateCountArgs} args - Arguments to filter ScholarshipRates to count.
+     * @example
+     * // Count the number of ScholarshipRates
+     * const count = await prisma.scholarshipRate.count({
+     *   where: {
+     *     // ... the filter for the ScholarshipRates we want to count
+     *   }
+     * })
+    **/
+    count<T extends ScholarshipRateCountArgs>(
+      args?: Subset<T, ScholarshipRateCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ScholarshipRateCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ScholarshipRate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScholarshipRateAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ScholarshipRateAggregateArgs>(args: Subset<T, ScholarshipRateAggregateArgs>): Prisma.PrismaPromise<GetScholarshipRateAggregateType<T>>
+
+    /**
+     * Group by ScholarshipRate.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ScholarshipRateGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ScholarshipRateGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ScholarshipRateGroupByArgs['orderBy'] }
+        : { orderBy?: ScholarshipRateGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ScholarshipRateGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetScholarshipRateGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ScholarshipRate model
+   */
+  readonly fields: ScholarshipRateFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ScholarshipRate.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ScholarshipRateClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ScholarshipRate model
+   */
+  interface ScholarshipRateFieldRefs {
+    readonly id: FieldRef<"ScholarshipRate", 'Int'>
+    readonly jenjang: FieldRef<"ScholarshipRate", 'String'>
+    readonly nominal: FieldRef<"ScholarshipRate", 'Int'>
+    readonly updatedAt: FieldRef<"ScholarshipRate", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ScholarshipRate findUnique
+   */
+  export type ScholarshipRateFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScholarshipRate
+     */
+    select?: ScholarshipRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScholarshipRate
+     */
+    omit?: ScholarshipRateOmit<ExtArgs> | null
+    /**
+     * Filter, which ScholarshipRate to fetch.
+     */
+    where: ScholarshipRateWhereUniqueInput
+  }
+
+  /**
+   * ScholarshipRate findUniqueOrThrow
+   */
+  export type ScholarshipRateFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScholarshipRate
+     */
+    select?: ScholarshipRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScholarshipRate
+     */
+    omit?: ScholarshipRateOmit<ExtArgs> | null
+    /**
+     * Filter, which ScholarshipRate to fetch.
+     */
+    where: ScholarshipRateWhereUniqueInput
+  }
+
+  /**
+   * ScholarshipRate findFirst
+   */
+  export type ScholarshipRateFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScholarshipRate
+     */
+    select?: ScholarshipRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScholarshipRate
+     */
+    omit?: ScholarshipRateOmit<ExtArgs> | null
+    /**
+     * Filter, which ScholarshipRate to fetch.
+     */
+    where?: ScholarshipRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScholarshipRates to fetch.
+     */
+    orderBy?: ScholarshipRateOrderByWithRelationInput | ScholarshipRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ScholarshipRates.
+     */
+    cursor?: ScholarshipRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScholarshipRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScholarshipRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ScholarshipRates.
+     */
+    distinct?: ScholarshipRateScalarFieldEnum | ScholarshipRateScalarFieldEnum[]
+  }
+
+  /**
+   * ScholarshipRate findFirstOrThrow
+   */
+  export type ScholarshipRateFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScholarshipRate
+     */
+    select?: ScholarshipRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScholarshipRate
+     */
+    omit?: ScholarshipRateOmit<ExtArgs> | null
+    /**
+     * Filter, which ScholarshipRate to fetch.
+     */
+    where?: ScholarshipRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScholarshipRates to fetch.
+     */
+    orderBy?: ScholarshipRateOrderByWithRelationInput | ScholarshipRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ScholarshipRates.
+     */
+    cursor?: ScholarshipRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScholarshipRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScholarshipRates.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ScholarshipRates.
+     */
+    distinct?: ScholarshipRateScalarFieldEnum | ScholarshipRateScalarFieldEnum[]
+  }
+
+  /**
+   * ScholarshipRate findMany
+   */
+  export type ScholarshipRateFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScholarshipRate
+     */
+    select?: ScholarshipRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScholarshipRate
+     */
+    omit?: ScholarshipRateOmit<ExtArgs> | null
+    /**
+     * Filter, which ScholarshipRates to fetch.
+     */
+    where?: ScholarshipRateWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ScholarshipRates to fetch.
+     */
+    orderBy?: ScholarshipRateOrderByWithRelationInput | ScholarshipRateOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ScholarshipRates.
+     */
+    cursor?: ScholarshipRateWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ScholarshipRates from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ScholarshipRates.
+     */
+    skip?: number
+    distinct?: ScholarshipRateScalarFieldEnum | ScholarshipRateScalarFieldEnum[]
+  }
+
+  /**
+   * ScholarshipRate create
+   */
+  export type ScholarshipRateCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScholarshipRate
+     */
+    select?: ScholarshipRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScholarshipRate
+     */
+    omit?: ScholarshipRateOmit<ExtArgs> | null
+    /**
+     * The data needed to create a ScholarshipRate.
+     */
+    data: XOR<ScholarshipRateCreateInput, ScholarshipRateUncheckedCreateInput>
+  }
+
+  /**
+   * ScholarshipRate createMany
+   */
+  export type ScholarshipRateCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ScholarshipRates.
+     */
+    data: ScholarshipRateCreateManyInput | ScholarshipRateCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ScholarshipRate createManyAndReturn
+   */
+  export type ScholarshipRateCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScholarshipRate
+     */
+    select?: ScholarshipRateSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScholarshipRate
+     */
+    omit?: ScholarshipRateOmit<ExtArgs> | null
+    /**
+     * The data used to create many ScholarshipRates.
+     */
+    data: ScholarshipRateCreateManyInput | ScholarshipRateCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ScholarshipRate update
+   */
+  export type ScholarshipRateUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScholarshipRate
+     */
+    select?: ScholarshipRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScholarshipRate
+     */
+    omit?: ScholarshipRateOmit<ExtArgs> | null
+    /**
+     * The data needed to update a ScholarshipRate.
+     */
+    data: XOR<ScholarshipRateUpdateInput, ScholarshipRateUncheckedUpdateInput>
+    /**
+     * Choose, which ScholarshipRate to update.
+     */
+    where: ScholarshipRateWhereUniqueInput
+  }
+
+  /**
+   * ScholarshipRate updateMany
+   */
+  export type ScholarshipRateUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ScholarshipRates.
+     */
+    data: XOR<ScholarshipRateUpdateManyMutationInput, ScholarshipRateUncheckedUpdateManyInput>
+    /**
+     * Filter which ScholarshipRates to update
+     */
+    where?: ScholarshipRateWhereInput
+    /**
+     * Limit how many ScholarshipRates to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ScholarshipRate updateManyAndReturn
+   */
+  export type ScholarshipRateUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScholarshipRate
+     */
+    select?: ScholarshipRateSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScholarshipRate
+     */
+    omit?: ScholarshipRateOmit<ExtArgs> | null
+    /**
+     * The data used to update ScholarshipRates.
+     */
+    data: XOR<ScholarshipRateUpdateManyMutationInput, ScholarshipRateUncheckedUpdateManyInput>
+    /**
+     * Filter which ScholarshipRates to update
+     */
+    where?: ScholarshipRateWhereInput
+    /**
+     * Limit how many ScholarshipRates to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ScholarshipRate upsert
+   */
+  export type ScholarshipRateUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScholarshipRate
+     */
+    select?: ScholarshipRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScholarshipRate
+     */
+    omit?: ScholarshipRateOmit<ExtArgs> | null
+    /**
+     * The filter to search for the ScholarshipRate to update in case it exists.
+     */
+    where: ScholarshipRateWhereUniqueInput
+    /**
+     * In case the ScholarshipRate found by the `where` argument doesn't exist, create a new ScholarshipRate with this data.
+     */
+    create: XOR<ScholarshipRateCreateInput, ScholarshipRateUncheckedCreateInput>
+    /**
+     * In case the ScholarshipRate was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ScholarshipRateUpdateInput, ScholarshipRateUncheckedUpdateInput>
+  }
+
+  /**
+   * ScholarshipRate delete
+   */
+  export type ScholarshipRateDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScholarshipRate
+     */
+    select?: ScholarshipRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScholarshipRate
+     */
+    omit?: ScholarshipRateOmit<ExtArgs> | null
+    /**
+     * Filter which ScholarshipRate to delete.
+     */
+    where: ScholarshipRateWhereUniqueInput
+  }
+
+  /**
+   * ScholarshipRate deleteMany
+   */
+  export type ScholarshipRateDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ScholarshipRates to delete
+     */
+    where?: ScholarshipRateWhereInput
+    /**
+     * Limit how many ScholarshipRates to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ScholarshipRate without action
+   */
+  export type ScholarshipRateDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ScholarshipRate
+     */
+    select?: ScholarshipRateSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ScholarshipRate
+     */
+    omit?: ScholarshipRateOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Region
+   */
+
+  export type AggregateRegion = {
+    _count: RegionCountAggregateOutputType | null
+    _avg: RegionAvgAggregateOutputType | null
+    _sum: RegionSumAggregateOutputType | null
+    _min: RegionMinAggregateOutputType | null
+    _max: RegionMaxAggregateOutputType | null
+  }
+
+  export type RegionAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type RegionSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type RegionMinAggregateOutputType = {
+    id: number | null
+    name: string | null
+    createdAt: Date | null
+  }
+
+  export type RegionMaxAggregateOutputType = {
+    id: number | null
+    name: string | null
+    createdAt: Date | null
+  }
+
+  export type RegionCountAggregateOutputType = {
+    id: number
+    name: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type RegionAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type RegionSumAggregateInputType = {
+    id?: true
+  }
+
+  export type RegionMinAggregateInputType = {
+    id?: true
+    name?: true
+    createdAt?: true
+  }
+
+  export type RegionMaxAggregateInputType = {
+    id?: true
+    name?: true
+    createdAt?: true
+  }
+
+  export type RegionCountAggregateInputType = {
+    id?: true
+    name?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type RegionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Region to aggregate.
+     */
+    where?: RegionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Regions to fetch.
+     */
+    orderBy?: RegionOrderByWithRelationInput | RegionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RegionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Regions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Regions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Regions
+    **/
+    _count?: true | RegionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: RegionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: RegionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RegionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RegionMaxAggregateInputType
+  }
+
+  export type GetRegionAggregateType<T extends RegionAggregateArgs> = {
+        [P in keyof T & keyof AggregateRegion]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRegion[P]>
+      : GetScalarType<T[P], AggregateRegion[P]>
+  }
+
+
+
+
+  export type RegionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RegionWhereInput
+    orderBy?: RegionOrderByWithAggregationInput | RegionOrderByWithAggregationInput[]
+    by: RegionScalarFieldEnum[] | RegionScalarFieldEnum
+    having?: RegionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RegionCountAggregateInputType | true
+    _avg?: RegionAvgAggregateInputType
+    _sum?: RegionSumAggregateInputType
+    _min?: RegionMinAggregateInputType
+    _max?: RegionMaxAggregateInputType
+  }
+
+  export type RegionGroupByOutputType = {
+    id: number
+    name: string
+    createdAt: Date
+    _count: RegionCountAggregateOutputType | null
+    _avg: RegionAvgAggregateOutputType | null
+    _sum: RegionSumAggregateOutputType | null
+    _min: RegionMinAggregateOutputType | null
+    _max: RegionMaxAggregateOutputType | null
+  }
+
+  type GetRegionGroupByPayload<T extends RegionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RegionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RegionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RegionGroupByOutputType[P]>
+            : GetScalarType<T[P], RegionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RegionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["region"]>
+
+  export type RegionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["region"]>
+
+  export type RegionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    createdAt?: boolean
+  }, ExtArgs["result"]["region"]>
+
+  export type RegionSelectScalar = {
+    id?: boolean
+    name?: boolean
+    createdAt?: boolean
+  }
+
+  export type RegionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "createdAt", ExtArgs["result"]["region"]>
+
+  export type $RegionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Region"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      name: string
+      createdAt: Date
+    }, ExtArgs["result"]["region"]>
+    composites: {}
+  }
+
+  type RegionGetPayload<S extends boolean | null | undefined | RegionDefaultArgs> = $Result.GetResult<Prisma.$RegionPayload, S>
+
+  type RegionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RegionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RegionCountAggregateInputType | true
+    }
+
+  export interface RegionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Region'], meta: { name: 'Region' } }
+    /**
+     * Find zero or one Region that matches the filter.
+     * @param {RegionFindUniqueArgs} args - Arguments to find a Region
+     * @example
+     * // Get one Region
+     * const region = await prisma.region.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RegionFindUniqueArgs>(args: SelectSubset<T, RegionFindUniqueArgs<ExtArgs>>): Prisma__RegionClient<$Result.GetResult<Prisma.$RegionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Region that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RegionFindUniqueOrThrowArgs} args - Arguments to find a Region
+     * @example
+     * // Get one Region
+     * const region = await prisma.region.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RegionFindUniqueOrThrowArgs>(args: SelectSubset<T, RegionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RegionClient<$Result.GetResult<Prisma.$RegionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Region that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RegionFindFirstArgs} args - Arguments to find a Region
+     * @example
+     * // Get one Region
+     * const region = await prisma.region.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RegionFindFirstArgs>(args?: SelectSubset<T, RegionFindFirstArgs<ExtArgs>>): Prisma__RegionClient<$Result.GetResult<Prisma.$RegionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Region that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RegionFindFirstOrThrowArgs} args - Arguments to find a Region
+     * @example
+     * // Get one Region
+     * const region = await prisma.region.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RegionFindFirstOrThrowArgs>(args?: SelectSubset<T, RegionFindFirstOrThrowArgs<ExtArgs>>): Prisma__RegionClient<$Result.GetResult<Prisma.$RegionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Regions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RegionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Regions
+     * const regions = await prisma.region.findMany()
+     * 
+     * // Get first 10 Regions
+     * const regions = await prisma.region.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const regionWithIdOnly = await prisma.region.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends RegionFindManyArgs>(args?: SelectSubset<T, RegionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RegionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Region.
+     * @param {RegionCreateArgs} args - Arguments to create a Region.
+     * @example
+     * // Create one Region
+     * const Region = await prisma.region.create({
+     *   data: {
+     *     // ... data to create a Region
+     *   }
+     * })
+     * 
+     */
+    create<T extends RegionCreateArgs>(args: SelectSubset<T, RegionCreateArgs<ExtArgs>>): Prisma__RegionClient<$Result.GetResult<Prisma.$RegionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Regions.
+     * @param {RegionCreateManyArgs} args - Arguments to create many Regions.
+     * @example
+     * // Create many Regions
+     * const region = await prisma.region.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RegionCreateManyArgs>(args?: SelectSubset<T, RegionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Regions and returns the data saved in the database.
+     * @param {RegionCreateManyAndReturnArgs} args - Arguments to create many Regions.
+     * @example
+     * // Create many Regions
+     * const region = await prisma.region.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Regions and only return the `id`
+     * const regionWithIdOnly = await prisma.region.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends RegionCreateManyAndReturnArgs>(args?: SelectSubset<T, RegionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RegionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Region.
+     * @param {RegionDeleteArgs} args - Arguments to delete one Region.
+     * @example
+     * // Delete one Region
+     * const Region = await prisma.region.delete({
+     *   where: {
+     *     // ... filter to delete one Region
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RegionDeleteArgs>(args: SelectSubset<T, RegionDeleteArgs<ExtArgs>>): Prisma__RegionClient<$Result.GetResult<Prisma.$RegionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Region.
+     * @param {RegionUpdateArgs} args - Arguments to update one Region.
+     * @example
+     * // Update one Region
+     * const region = await prisma.region.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RegionUpdateArgs>(args: SelectSubset<T, RegionUpdateArgs<ExtArgs>>): Prisma__RegionClient<$Result.GetResult<Prisma.$RegionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Regions.
+     * @param {RegionDeleteManyArgs} args - Arguments to filter Regions to delete.
+     * @example
+     * // Delete a few Regions
+     * const { count } = await prisma.region.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RegionDeleteManyArgs>(args?: SelectSubset<T, RegionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Regions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RegionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Regions
+     * const region = await prisma.region.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RegionUpdateManyArgs>(args: SelectSubset<T, RegionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Regions and returns the data updated in the database.
+     * @param {RegionUpdateManyAndReturnArgs} args - Arguments to update many Regions.
+     * @example
+     * // Update many Regions
+     * const region = await prisma.region.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Regions and only return the `id`
+     * const regionWithIdOnly = await prisma.region.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends RegionUpdateManyAndReturnArgs>(args: SelectSubset<T, RegionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RegionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Region.
+     * @param {RegionUpsertArgs} args - Arguments to update or create a Region.
+     * @example
+     * // Update or create a Region
+     * const region = await prisma.region.upsert({
+     *   create: {
+     *     // ... data to create a Region
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Region we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RegionUpsertArgs>(args: SelectSubset<T, RegionUpsertArgs<ExtArgs>>): Prisma__RegionClient<$Result.GetResult<Prisma.$RegionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Regions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RegionCountArgs} args - Arguments to filter Regions to count.
+     * @example
+     * // Count the number of Regions
+     * const count = await prisma.region.count({
+     *   where: {
+     *     // ... the filter for the Regions we want to count
+     *   }
+     * })
+    **/
+    count<T extends RegionCountArgs>(
+      args?: Subset<T, RegionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RegionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Region.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RegionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RegionAggregateArgs>(args: Subset<T, RegionAggregateArgs>): Prisma.PrismaPromise<GetRegionAggregateType<T>>
+
+    /**
+     * Group by Region.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RegionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RegionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RegionGroupByArgs['orderBy'] }
+        : { orderBy?: RegionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RegionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRegionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Region model
+   */
+  readonly fields: RegionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Region.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RegionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Region model
+   */
+  interface RegionFieldRefs {
+    readonly id: FieldRef<"Region", 'Int'>
+    readonly name: FieldRef<"Region", 'String'>
+    readonly createdAt: FieldRef<"Region", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Region findUnique
+   */
+  export type RegionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Region
+     */
+    select?: RegionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Region
+     */
+    omit?: RegionOmit<ExtArgs> | null
+    /**
+     * Filter, which Region to fetch.
+     */
+    where: RegionWhereUniqueInput
+  }
+
+  /**
+   * Region findUniqueOrThrow
+   */
+  export type RegionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Region
+     */
+    select?: RegionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Region
+     */
+    omit?: RegionOmit<ExtArgs> | null
+    /**
+     * Filter, which Region to fetch.
+     */
+    where: RegionWhereUniqueInput
+  }
+
+  /**
+   * Region findFirst
+   */
+  export type RegionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Region
+     */
+    select?: RegionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Region
+     */
+    omit?: RegionOmit<ExtArgs> | null
+    /**
+     * Filter, which Region to fetch.
+     */
+    where?: RegionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Regions to fetch.
+     */
+    orderBy?: RegionOrderByWithRelationInput | RegionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Regions.
+     */
+    cursor?: RegionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Regions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Regions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Regions.
+     */
+    distinct?: RegionScalarFieldEnum | RegionScalarFieldEnum[]
+  }
+
+  /**
+   * Region findFirstOrThrow
+   */
+  export type RegionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Region
+     */
+    select?: RegionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Region
+     */
+    omit?: RegionOmit<ExtArgs> | null
+    /**
+     * Filter, which Region to fetch.
+     */
+    where?: RegionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Regions to fetch.
+     */
+    orderBy?: RegionOrderByWithRelationInput | RegionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Regions.
+     */
+    cursor?: RegionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Regions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Regions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Regions.
+     */
+    distinct?: RegionScalarFieldEnum | RegionScalarFieldEnum[]
+  }
+
+  /**
+   * Region findMany
+   */
+  export type RegionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Region
+     */
+    select?: RegionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Region
+     */
+    omit?: RegionOmit<ExtArgs> | null
+    /**
+     * Filter, which Regions to fetch.
+     */
+    where?: RegionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Regions to fetch.
+     */
+    orderBy?: RegionOrderByWithRelationInput | RegionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Regions.
+     */
+    cursor?: RegionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Regions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Regions.
+     */
+    skip?: number
+    distinct?: RegionScalarFieldEnum | RegionScalarFieldEnum[]
+  }
+
+  /**
+   * Region create
+   */
+  export type RegionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Region
+     */
+    select?: RegionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Region
+     */
+    omit?: RegionOmit<ExtArgs> | null
+    /**
+     * The data needed to create a Region.
+     */
+    data: XOR<RegionCreateInput, RegionUncheckedCreateInput>
+  }
+
+  /**
+   * Region createMany
+   */
+  export type RegionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Regions.
+     */
+    data: RegionCreateManyInput | RegionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Region createManyAndReturn
+   */
+  export type RegionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Region
+     */
+    select?: RegionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Region
+     */
+    omit?: RegionOmit<ExtArgs> | null
+    /**
+     * The data used to create many Regions.
+     */
+    data: RegionCreateManyInput | RegionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Region update
+   */
+  export type RegionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Region
+     */
+    select?: RegionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Region
+     */
+    omit?: RegionOmit<ExtArgs> | null
+    /**
+     * The data needed to update a Region.
+     */
+    data: XOR<RegionUpdateInput, RegionUncheckedUpdateInput>
+    /**
+     * Choose, which Region to update.
+     */
+    where: RegionWhereUniqueInput
+  }
+
+  /**
+   * Region updateMany
+   */
+  export type RegionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Regions.
+     */
+    data: XOR<RegionUpdateManyMutationInput, RegionUncheckedUpdateManyInput>
+    /**
+     * Filter which Regions to update
+     */
+    where?: RegionWhereInput
+    /**
+     * Limit how many Regions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Region updateManyAndReturn
+   */
+  export type RegionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Region
+     */
+    select?: RegionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Region
+     */
+    omit?: RegionOmit<ExtArgs> | null
+    /**
+     * The data used to update Regions.
+     */
+    data: XOR<RegionUpdateManyMutationInput, RegionUncheckedUpdateManyInput>
+    /**
+     * Filter which Regions to update
+     */
+    where?: RegionWhereInput
+    /**
+     * Limit how many Regions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Region upsert
+   */
+  export type RegionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Region
+     */
+    select?: RegionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Region
+     */
+    omit?: RegionOmit<ExtArgs> | null
+    /**
+     * The filter to search for the Region to update in case it exists.
+     */
+    where: RegionWhereUniqueInput
+    /**
+     * In case the Region found by the `where` argument doesn't exist, create a new Region with this data.
+     */
+    create: XOR<RegionCreateInput, RegionUncheckedCreateInput>
+    /**
+     * In case the Region was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RegionUpdateInput, RegionUncheckedUpdateInput>
+  }
+
+  /**
+   * Region delete
+   */
+  export type RegionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Region
+     */
+    select?: RegionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Region
+     */
+    omit?: RegionOmit<ExtArgs> | null
+    /**
+     * Filter which Region to delete.
+     */
+    where: RegionWhereUniqueInput
+  }
+
+  /**
+   * Region deleteMany
+   */
+  export type RegionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Regions to delete
+     */
+    where?: RegionWhereInput
+    /**
+     * Limit how many Regions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Region without action
+   */
+  export type RegionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Region
+     */
+    select?: RegionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Region
+     */
+    omit?: RegionOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -18773,7 +21004,9 @@ export namespace Prisma {
     nominal: 'nominal',
     tanggal: 'tanggal',
     status: 'status',
-    processedAt: 'processedAt'
+    processedAt: 'processedAt',
+    keterangan: 'keterangan',
+    batchId: 'batchId'
   };
 
   export type DisbursementProofScalarFieldEnum = (typeof DisbursementProofScalarFieldEnum)[keyof typeof DisbursementProofScalarFieldEnum]
@@ -18823,6 +21056,25 @@ export namespace Prisma {
   };
 
   export type LoginAttemptScalarFieldEnum = (typeof LoginAttemptScalarFieldEnum)[keyof typeof LoginAttemptScalarFieldEnum]
+
+
+  export const ScholarshipRateScalarFieldEnum: {
+    id: 'id',
+    jenjang: 'jenjang',
+    nominal: 'nominal',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ScholarshipRateScalarFieldEnum = (typeof ScholarshipRateScalarFieldEnum)[keyof typeof ScholarshipRateScalarFieldEnum]
+
+
+  export const RegionScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    createdAt: 'createdAt'
+  };
+
+  export type RegionScalarFieldEnum = (typeof RegionScalarFieldEnum)[keyof typeof RegionScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -19660,6 +21912,8 @@ export namespace Prisma {
     tanggal?: DateTimeFilter<"DisbursementProof"> | Date | string
     status?: StringFilter<"DisbursementProof"> | string
     processedAt?: DateTimeNullableFilter<"DisbursementProof"> | Date | string | null
+    keterangan?: StringNullableFilter<"DisbursementProof"> | string | null
+    batchId?: StringNullableFilter<"DisbursementProof"> | string | null
     student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
     pengawas?: XOR<PengawasScalarRelationFilter, PengawasWhereInput>
   }
@@ -19673,6 +21927,8 @@ export namespace Prisma {
     tanggal?: SortOrder
     status?: SortOrder
     processedAt?: SortOrderInput | SortOrder
+    keterangan?: SortOrderInput | SortOrder
+    batchId?: SortOrderInput | SortOrder
     student?: StudentOrderByWithRelationInput
     pengawas?: PengawasOrderByWithRelationInput
   }
@@ -19689,6 +21945,8 @@ export namespace Prisma {
     tanggal?: DateTimeFilter<"DisbursementProof"> | Date | string
     status?: StringFilter<"DisbursementProof"> | string
     processedAt?: DateTimeNullableFilter<"DisbursementProof"> | Date | string | null
+    keterangan?: StringNullableFilter<"DisbursementProof"> | string | null
+    batchId?: StringNullableFilter<"DisbursementProof"> | string | null
     student?: XOR<StudentScalarRelationFilter, StudentWhereInput>
     pengawas?: XOR<PengawasScalarRelationFilter, PengawasWhereInput>
   }, "id">
@@ -19702,6 +21960,8 @@ export namespace Prisma {
     tanggal?: SortOrder
     status?: SortOrder
     processedAt?: SortOrderInput | SortOrder
+    keterangan?: SortOrderInput | SortOrder
+    batchId?: SortOrderInput | SortOrder
     _count?: DisbursementProofCountOrderByAggregateInput
     _avg?: DisbursementProofAvgOrderByAggregateInput
     _max?: DisbursementProofMaxOrderByAggregateInput
@@ -19721,6 +21981,8 @@ export namespace Prisma {
     tanggal?: DateTimeWithAggregatesFilter<"DisbursementProof"> | Date | string
     status?: StringWithAggregatesFilter<"DisbursementProof"> | string
     processedAt?: DateTimeNullableWithAggregatesFilter<"DisbursementProof"> | Date | string | null
+    keterangan?: StringNullableWithAggregatesFilter<"DisbursementProof"> | string | null
+    batchId?: StringNullableWithAggregatesFilter<"DisbursementProof"> | string | null
   }
 
   export type AdminNoteWhereInput = {
@@ -19971,6 +22233,99 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter<"LoginAttempt"> | number
     ipAddress?: StringWithAggregatesFilter<"LoginAttempt"> | string
     createdAt?: DateTimeWithAggregatesFilter<"LoginAttempt"> | Date | string
+  }
+
+  export type ScholarshipRateWhereInput = {
+    AND?: ScholarshipRateWhereInput | ScholarshipRateWhereInput[]
+    OR?: ScholarshipRateWhereInput[]
+    NOT?: ScholarshipRateWhereInput | ScholarshipRateWhereInput[]
+    id?: IntFilter<"ScholarshipRate"> | number
+    jenjang?: StringFilter<"ScholarshipRate"> | string
+    nominal?: IntFilter<"ScholarshipRate"> | number
+    updatedAt?: DateTimeFilter<"ScholarshipRate"> | Date | string
+  }
+
+  export type ScholarshipRateOrderByWithRelationInput = {
+    id?: SortOrder
+    jenjang?: SortOrder
+    nominal?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ScholarshipRateWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    jenjang?: string
+    AND?: ScholarshipRateWhereInput | ScholarshipRateWhereInput[]
+    OR?: ScholarshipRateWhereInput[]
+    NOT?: ScholarshipRateWhereInput | ScholarshipRateWhereInput[]
+    nominal?: IntFilter<"ScholarshipRate"> | number
+    updatedAt?: DateTimeFilter<"ScholarshipRate"> | Date | string
+  }, "id" | "jenjang">
+
+  export type ScholarshipRateOrderByWithAggregationInput = {
+    id?: SortOrder
+    jenjang?: SortOrder
+    nominal?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ScholarshipRateCountOrderByAggregateInput
+    _avg?: ScholarshipRateAvgOrderByAggregateInput
+    _max?: ScholarshipRateMaxOrderByAggregateInput
+    _min?: ScholarshipRateMinOrderByAggregateInput
+    _sum?: ScholarshipRateSumOrderByAggregateInput
+  }
+
+  export type ScholarshipRateScalarWhereWithAggregatesInput = {
+    AND?: ScholarshipRateScalarWhereWithAggregatesInput | ScholarshipRateScalarWhereWithAggregatesInput[]
+    OR?: ScholarshipRateScalarWhereWithAggregatesInput[]
+    NOT?: ScholarshipRateScalarWhereWithAggregatesInput | ScholarshipRateScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"ScholarshipRate"> | number
+    jenjang?: StringWithAggregatesFilter<"ScholarshipRate"> | string
+    nominal?: IntWithAggregatesFilter<"ScholarshipRate"> | number
+    updatedAt?: DateTimeWithAggregatesFilter<"ScholarshipRate"> | Date | string
+  }
+
+  export type RegionWhereInput = {
+    AND?: RegionWhereInput | RegionWhereInput[]
+    OR?: RegionWhereInput[]
+    NOT?: RegionWhereInput | RegionWhereInput[]
+    id?: IntFilter<"Region"> | number
+    name?: StringFilter<"Region"> | string
+    createdAt?: DateTimeFilter<"Region"> | Date | string
+  }
+
+  export type RegionOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type RegionWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    name?: string
+    AND?: RegionWhereInput | RegionWhereInput[]
+    OR?: RegionWhereInput[]
+    NOT?: RegionWhereInput | RegionWhereInput[]
+    createdAt?: DateTimeFilter<"Region"> | Date | string
+  }, "id" | "name">
+
+  export type RegionOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+    _count?: RegionCountOrderByAggregateInput
+    _avg?: RegionAvgOrderByAggregateInput
+    _max?: RegionMaxOrderByAggregateInput
+    _min?: RegionMinOrderByAggregateInput
+    _sum?: RegionSumOrderByAggregateInput
+  }
+
+  export type RegionScalarWhereWithAggregatesInput = {
+    AND?: RegionScalarWhereWithAggregatesInput | RegionScalarWhereWithAggregatesInput[]
+    OR?: RegionScalarWhereWithAggregatesInput[]
+    NOT?: RegionScalarWhereWithAggregatesInput | RegionScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"Region"> | number
+    name?: StringWithAggregatesFilter<"Region"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"Region"> | Date | string
   }
 
   export type AdminCreateInput = {
@@ -20755,6 +23110,8 @@ export namespace Prisma {
     tanggal?: Date | string
     status?: string
     processedAt?: Date | string | null
+    keterangan?: string | null
+    batchId?: string | null
     student: StudentCreateNestedOneWithoutDisbursementsInput
     pengawas: PengawasCreateNestedOneWithoutDisbursementsInput
   }
@@ -20768,6 +23125,8 @@ export namespace Prisma {
     tanggal?: Date | string
     status?: string
     processedAt?: Date | string | null
+    keterangan?: string | null
+    batchId?: string | null
   }
 
   export type DisbursementProofUpdateInput = {
@@ -20776,6 +23135,8 @@ export namespace Prisma {
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    keterangan?: NullableStringFieldUpdateOperationsInput | string | null
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
     student?: StudentUpdateOneRequiredWithoutDisbursementsNestedInput
     pengawas?: PengawasUpdateOneRequiredWithoutDisbursementsNestedInput
   }
@@ -20789,6 +23150,8 @@ export namespace Prisma {
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    keterangan?: NullableStringFieldUpdateOperationsInput | string | null
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DisbursementProofCreateManyInput = {
@@ -20800,6 +23163,8 @@ export namespace Prisma {
     tanggal?: Date | string
     status?: string
     processedAt?: Date | string | null
+    keterangan?: string | null
+    batchId?: string | null
   }
 
   export type DisbursementProofUpdateManyMutationInput = {
@@ -20808,6 +23173,8 @@ export namespace Prisma {
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    keterangan?: NullableStringFieldUpdateOperationsInput | string | null
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DisbursementProofUncheckedUpdateManyInput = {
@@ -20819,6 +23186,8 @@ export namespace Prisma {
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    keterangan?: NullableStringFieldUpdateOperationsInput | string | null
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AdminNoteCreateInput = {
@@ -21036,6 +23405,91 @@ export namespace Prisma {
   export type LoginAttemptUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     ipAddress?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ScholarshipRateCreateInput = {
+    jenjang: string
+    nominal: number
+    updatedAt?: Date | string
+  }
+
+  export type ScholarshipRateUncheckedCreateInput = {
+    id?: number
+    jenjang: string
+    nominal: number
+    updatedAt?: Date | string
+  }
+
+  export type ScholarshipRateUpdateInput = {
+    jenjang?: StringFieldUpdateOperationsInput | string
+    nominal?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ScholarshipRateUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    jenjang?: StringFieldUpdateOperationsInput | string
+    nominal?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ScholarshipRateCreateManyInput = {
+    id?: number
+    jenjang: string
+    nominal: number
+    updatedAt?: Date | string
+  }
+
+  export type ScholarshipRateUpdateManyMutationInput = {
+    jenjang?: StringFieldUpdateOperationsInput | string
+    nominal?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ScholarshipRateUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    jenjang?: StringFieldUpdateOperationsInput | string
+    nominal?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RegionCreateInput = {
+    name: string
+    createdAt?: Date | string
+  }
+
+  export type RegionUncheckedCreateInput = {
+    id?: number
+    name: string
+    createdAt?: Date | string
+  }
+
+  export type RegionUpdateInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RegionUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RegionCreateManyInput = {
+    id?: number
+    name: string
+    createdAt?: Date | string
+  }
+
+  export type RegionUpdateManyMutationInput = {
+    name?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RegionUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    name?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -21737,6 +24191,8 @@ export namespace Prisma {
     tanggal?: SortOrder
     status?: SortOrder
     processedAt?: SortOrder
+    keterangan?: SortOrder
+    batchId?: SortOrder
   }
 
   export type DisbursementProofAvgOrderByAggregateInput = {
@@ -21755,6 +24211,8 @@ export namespace Prisma {
     tanggal?: SortOrder
     status?: SortOrder
     processedAt?: SortOrder
+    keterangan?: SortOrder
+    batchId?: SortOrder
   }
 
   export type DisbursementProofMinOrderByAggregateInput = {
@@ -21766,6 +24224,8 @@ export namespace Prisma {
     tanggal?: SortOrder
     status?: SortOrder
     processedAt?: SortOrder
+    keterangan?: SortOrder
+    batchId?: SortOrder
   }
 
   export type DisbursementProofSumOrderByAggregateInput = {
@@ -21962,6 +24422,63 @@ export namespace Prisma {
   }
 
   export type LoginAttemptSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type ScholarshipRateCountOrderByAggregateInput = {
+    id?: SortOrder
+    jenjang?: SortOrder
+    nominal?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ScholarshipRateAvgOrderByAggregateInput = {
+    id?: SortOrder
+    nominal?: SortOrder
+  }
+
+  export type ScholarshipRateMaxOrderByAggregateInput = {
+    id?: SortOrder
+    jenjang?: SortOrder
+    nominal?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ScholarshipRateMinOrderByAggregateInput = {
+    id?: SortOrder
+    jenjang?: SortOrder
+    nominal?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ScholarshipRateSumOrderByAggregateInput = {
+    id?: SortOrder
+    nominal?: SortOrder
+  }
+
+  export type RegionCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type RegionAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type RegionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type RegionMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type RegionSumOrderByAggregateInput = {
     id?: SortOrder
   }
 
@@ -23377,6 +25894,8 @@ export namespace Prisma {
     tanggal?: Date | string
     status?: string
     processedAt?: Date | string | null
+    keterangan?: string | null
+    batchId?: string | null
     student: StudentCreateNestedOneWithoutDisbursementsInput
   }
 
@@ -23388,6 +25907,8 @@ export namespace Prisma {
     tanggal?: Date | string
     status?: string
     processedAt?: Date | string | null
+    keterangan?: string | null
+    batchId?: string | null
   }
 
   export type DisbursementProofCreateOrConnectWithoutPengawasInput = {
@@ -23522,6 +26043,8 @@ export namespace Prisma {
     tanggal?: DateTimeFilter<"DisbursementProof"> | Date | string
     status?: StringFilter<"DisbursementProof"> | string
     processedAt?: DateTimeNullableFilter<"DisbursementProof"> | Date | string | null
+    keterangan?: StringNullableFilter<"DisbursementProof"> | string | null
+    batchId?: StringNullableFilter<"DisbursementProof"> | string | null
   }
 
   export type VisitLogUpsertWithWhereUniqueWithoutPengawasInput = {
@@ -23747,6 +26270,8 @@ export namespace Prisma {
     tanggal?: Date | string
     status?: string
     processedAt?: Date | string | null
+    keterangan?: string | null
+    batchId?: string | null
     pengawas: PengawasCreateNestedOneWithoutDisbursementsInput
   }
 
@@ -23758,6 +26283,8 @@ export namespace Prisma {
     tanggal?: Date | string
     status?: string
     processedAt?: Date | string | null
+    keterangan?: string | null
+    batchId?: string | null
   }
 
   export type DisbursementProofCreateOrConnectWithoutStudentInput = {
@@ -26131,6 +28658,8 @@ export namespace Prisma {
     tanggal?: Date | string
     status?: string
     processedAt?: Date | string | null
+    keterangan?: string | null
+    batchId?: string | null
   }
 
   export type VisitLogCreateManyPengawasInput = {
@@ -26246,6 +28775,8 @@ export namespace Prisma {
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    keterangan?: NullableStringFieldUpdateOperationsInput | string | null
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
     student?: StudentUpdateOneRequiredWithoutDisbursementsNestedInput
   }
 
@@ -26257,6 +28788,8 @@ export namespace Prisma {
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    keterangan?: NullableStringFieldUpdateOperationsInput | string | null
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DisbursementProofUncheckedUpdateManyWithoutPengawasInput = {
@@ -26267,6 +28800,8 @@ export namespace Prisma {
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    keterangan?: NullableStringFieldUpdateOperationsInput | string | null
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type VisitLogUpdateWithoutPengawasInput = {
@@ -26346,6 +28881,8 @@ export namespace Prisma {
     tanggal?: Date | string
     status?: string
     processedAt?: Date | string | null
+    keterangan?: string | null
+    batchId?: string | null
   }
 
   export type AdminNoteCreateManyStudentInput = {
@@ -26445,6 +28982,8 @@ export namespace Prisma {
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    keterangan?: NullableStringFieldUpdateOperationsInput | string | null
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
     pengawas?: PengawasUpdateOneRequiredWithoutDisbursementsNestedInput
   }
 
@@ -26456,6 +28995,8 @@ export namespace Prisma {
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    keterangan?: NullableStringFieldUpdateOperationsInput | string | null
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type DisbursementProofUncheckedUpdateManyWithoutStudentInput = {
@@ -26466,6 +29007,8 @@ export namespace Prisma {
     tanggal?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
     processedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    keterangan?: NullableStringFieldUpdateOperationsInput | string | null
+    batchId?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type AdminNoteUpdateWithoutStudentInput = {
