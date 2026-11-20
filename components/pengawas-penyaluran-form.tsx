@@ -28,6 +28,7 @@ import {
   getPeriodeFromDate,
   getCurrentPeriode,
 } from "@/lib/periode"
+import { getTarifForJenjang, TARIF_JENJANG } from "@/lib/budget"
 
 export interface PengawasStudentRow {
   id: number
@@ -71,6 +72,7 @@ interface PengawasPenyaluranFormProps {
   pengawasName: string
   wilayah: string
   currentPeriode: string
+  scholarshipRates?: Record<string, number>
 }
 
 function formatNominal(val: string | number | undefined): string {
@@ -86,7 +88,9 @@ export function PengawasPenyaluranForm({
   pengawasName: _pengawasName,
   wilayah,
   currentPeriode,
+  scholarshipRates,
 }: PengawasPenyaluranFormProps) {
+  const rates = scholarshipRates || TARIF_JENJANG
   const router = useRouter()
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -179,6 +183,16 @@ export function PengawasPenyaluranForm({
       if (prev.includes(id)) {
         return prev.filter((item) => item !== id)
       } else {
+        const student = students.find((s) => s.id === id)
+        if (student) {
+          const tarif = getTarifForJenjang(student.jenjang, student.gradeLevel, rates)
+          if (tarif > 0) {
+            setNominals((prevNom) => ({
+              ...prevNom,
+              [id]: prevNom[id] || String(tarif),
+            }))
+          }
+        }
         return [...prev, id]
       }
     })
@@ -190,6 +204,18 @@ export function PengawasPenyaluranForm({
       setSelectedIds([])
     } else {
       setSelectedIds(eligibleStudents.map((s) => s.id))
+      setNominals((prevNom) => {
+        const updated = { ...prevNom }
+        eligibleStudents.forEach((st) => {
+          if (!updated[st.id]) {
+            const tarif = getTarifForJenjang(st.jenjang, st.gradeLevel, rates)
+            if (tarif > 0) {
+              updated[st.id] = String(tarif)
+            }
+          }
+        })
+        return updated
+      })
     }
   }
 
@@ -368,6 +394,21 @@ export function PengawasPenyaluranForm({
               <p className="text-xs text-muted-foreground mt-0.5">
                 Centang adik asuh yang akan disalurkan dan isi nominal bantuannya.
               </p>
+              <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px] font-semibold text-orange-950/80">
+                <span className="text-muted-foreground font-medium">Standar beasiswa per jenjang:</span>
+                <span className="rounded-md bg-orange-100/80 px-2 py-0.5 text-orange-800">
+                  SD: Rp {(rates.SD ?? 250000).toLocaleString("id-ID")}
+                </span>
+                <span className="rounded-md bg-orange-100/80 px-2 py-0.5 text-orange-800">
+                  SMP: Rp {(rates.SMP ?? 300000).toLocaleString("id-ID")}
+                </span>
+                <span className="rounded-md bg-orange-100/80 px-2 py-0.5 text-orange-800">
+                  SMA/SMK: Rp {(rates.SMA ?? 400000).toLocaleString("id-ID")}
+                </span>
+                <span className="rounded-md bg-orange-100/80 px-2 py-0.5 text-orange-800">
+                  Kuliah: Rp {(rates.Kuliah ?? 500000).toLocaleString("id-ID")}
+                </span>
+              </div>
             </div>
 
             {/* Dropdown Periode Tabel */}
@@ -524,7 +565,11 @@ export function PengawasPenyaluranForm({
                             disabled={!isChecked || isLocked}
                             value={formatNominal(nominals[st.id])}
                             onChange={(e) => handleNominalChange(st.id, e.target.value)}
-                            placeholder={isChecked ? "Contoh: 500.000" : "-"}
+                            placeholder={
+                              isChecked
+                                ? `Contoh: ${formatNominal(getTarifForJenjang(st.jenjang, st.gradeLevel, rates) || 250000)}`
+                                : "-"
+                            }
                             className={`w-full h-9 rounded-xl border pl-9 pr-2.5 text-xs font-bold transition focus:outline-none ${
                               isChecked
                                 ? "border-orange-300 bg-white text-foreground focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
@@ -618,7 +663,7 @@ export function PengawasPenyaluranForm({
                             inputMode="numeric"
                             value={formatNominal(nominals[st.id])}
                             onChange={(e) => handleNominalChange(st.id, e.target.value)}
-                            placeholder="Contoh: 500.000"
+                            placeholder={`Contoh: ${formatNominal(getTarifForJenjang(st.jenjang, st.gradeLevel, rates) || 250000)}`}
                             className="w-full h-10 rounded-xl border border-orange-300 bg-white pl-9 pr-3 text-sm font-bold text-foreground focus:border-orange-500 focus:outline-none"
                           />
                         </div>

@@ -7,7 +7,11 @@ import {
   type AlokasiStudentItem,
   type AlokasiYearlySummary,
 } from "@/components/admin-alokasi-dana-view"
-import { calculateTotalAnggaranDiperlukan } from "@/lib/budget"
+import {
+  calculateTotalAnggaranDiperlukan,
+  getScholarshipRatesMap,
+  getRegionsList,
+} from "@/lib/budget"
 import { formatGradeWithJenjang } from "@/lib/academic"
 
 export const dynamic = "force-dynamic"
@@ -19,7 +23,12 @@ export default async function AlokasiDanaDashboardPage() {
   }
 
   // 1. Fetch data dari database secara paralel
-  const [allVerifiedDisbursementsRaw, studentsRaw] = await Promise.all([
+  const [
+    allVerifiedDisbursementsRaw,
+    studentsRaw,
+    scholarshipRates,
+    regionsList,
+  ] = await Promise.all([
     // Ambil seluruh bukti penyaluran berstatus terverifikasi
     prisma.disbursementProof.findMany({
       where: {
@@ -76,10 +85,17 @@ export default async function AlokasiDanaDashboardPage() {
         fullName: "asc",
       },
     }),
+
+    // Ambil konfigurasi tarif beasiswa dan wilayah aktif
+    getScholarshipRatesMap(),
+    getRegionsList(),
   ])
 
   // 2. Hitung Total Anggaran Diperlukan (Menggunakan shared helper dari lib/budget)
-  const totalAnggaranDiperlukan = calculateTotalAnggaranDiperlukan(studentsRaw)
+  const totalAnggaranDiperlukan = calculateTotalAnggaranDiperlukan(
+    studentsRaw,
+    scholarshipRates
+  )
 
   // 3. Format seluruh bukti terverifikasi untuk perhitungan Debit dinamis per periode
   const verifiedDisbursements = allVerifiedDisbursementsRaw.map((d) => ({
@@ -165,9 +181,7 @@ export default async function AlokasiDanaDashboardPage() {
 
   // 5. Ekstrak daftar wilayah unik
   const wilayahSet = new Set<string>()
-  ;["Pati", "Jepara", "Ampel", "Wonosobo", "Sukabumi", "Bandung"].forEach((w) =>
-    wilayahSet.add(w)
-  )
+  regionsList.forEach((w) => wilayahSet.add(w))
   studentsRaw.forEach((s) => {
     if (s.wilayah) wilayahSet.add(s.wilayah)
   })
@@ -180,6 +194,7 @@ export default async function AlokasiDanaDashboardPage() {
         verifiedDisbursements={verifiedDisbursements}
         students={students}
         wilayahList={wilayahList}
+        scholarshipRates={scholarshipRates}
       />
     </div>
   )

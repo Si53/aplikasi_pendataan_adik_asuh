@@ -8,6 +8,7 @@ import {
   PengawasStudentDetailTabs,
   type StudentDetailFull,
 } from "@/components/pengawas-student-detail-tabs"
+import { getTarifForJenjang, getScholarshipRatesMap } from "@/lib/budget"
 
 export default async function StudentDetailPage({
   params,
@@ -29,6 +30,8 @@ export default async function StudentDetailPage({
     where: { username: session.user.username },
   })
   if (!pengawas) redirect("/login")
+
+  const ratesMap = await getScholarshipRatesMap()
 
   const student = await prisma.student.findFirst({
     where: {
@@ -139,6 +142,7 @@ export default async function StudentDetailPage({
     alamatLengkap: student.alamatLengkap,
     noHp: student.noHp,
     schoolName: student.schoolName,
+    jenjang: student.jenjang,
     gradeLevel: student.gradeLevel,
     programAkselerasi: student.programAkselerasi,
     nilaiAwal: student.nilaiRataRata,
@@ -292,6 +296,9 @@ export default async function StudentDetailPage({
               <span className="rounded-full bg-stone-100 px-3 py-1 text-sm font-bold text-stone-700">
                 {student.schoolName} ({student.gradeLevel})
               </span>
+              <span className="rounded-full bg-emerald-50 px-3 py-1 text-sm font-extrabold text-emerald-800 border border-emerald-200 shadow-2xs">
+                Beasiswa: Rp {getTarifForJenjang(student.jenjang, student.gradeLevel, ratesMap).toLocaleString("id-ID")} / bulan
+              </span>
             </div>
           </div>
         </div>
@@ -301,6 +308,7 @@ export default async function StudentDetailPage({
           student={studentData}
           pengawasName={pengawas.name}
           wilayah={pengawas.wilayah}
+          scholarshipRates={ratesMap}
         />
       </main>
     </div>

@@ -8,6 +8,7 @@ import { getPresignedR2Url } from "@/lib/r2"
 import { LogoutButton } from "@/components/logout-button"
 import { getCurrentPeriode, isDateInPeriode } from "@/lib/periode"
 import { formatGradeWithJenjang } from "@/lib/academic"
+import { getScholarshipRatesMap } from "@/lib/budget"
 import {
   PengawasPenyaluranForm,
   type PengawasStudentRow,
@@ -219,6 +220,7 @@ export default async function PengawasPenyaluranDanaPage() {
           pengawasName={pengawas.name}
           wilayah={pengawas.wilayah}
           currentPeriode={currentPeriode}
+          scholarshipRates={await getScholarshipRatesMap()}
         />
       </main>
     </div>

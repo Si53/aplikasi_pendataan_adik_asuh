@@ -3,7 +3,8 @@ import { auth } from "@/auth"
 import { LogoutButton } from "@/components/logout-button"
 import { prisma } from "@/lib/prisma"
 import { getPresignedR2Url } from "@/lib/r2"
-import { Heart, MapPin } from "lucide-react"
+import { Heart, MapPin, Sparkles } from "lucide-react"
+import { getTarifForJenjang, getScholarshipRatesMap } from "@/lib/budget"
 import { StudentDashboard, type StudentData } from "@/components/student-dashboard"
 
 export default async function DashboardPage() {
@@ -119,6 +120,8 @@ export default async function DashboardPage() {
     .map((w) => w[0])
     .join("")
     .toUpperCase()
+
+  const ratesMap = await getScholarshipRatesMap()
 
   const mappedStudent: StudentData = {
     id: student.id,
@@ -265,9 +268,14 @@ export default async function DashboardPage() {
               <h2 className="text-base sm:text-lg font-black text-foreground truncate">
                 Halo, {student.fullName}
               </h2>
-              <span className="text-[11px] font-bold text-orange-700 flex items-center gap-1">
-                <MapPin className="size-3" /> Wilayah {student.wilayah}
-              </span>
+              <div className="flex flex-wrap items-center gap-1.5 mt-0.5">
+                <span className="text-[11px] font-bold text-orange-700 flex items-center gap-1">
+                  <MapPin className="size-3" /> Wilayah {student.wilayah}
+                </span>
+                <span className="rounded-full bg-orange-100/90 px-2 py-0.5 text-[10px] font-extrabold text-orange-700">
+                  Rp {getTarifForJenjang(student.jenjang, student.gradeLevel, ratesMap).toLocaleString("id-ID")}/bln
+                </span>
+              </div>
             </div>
           </div>
 
@@ -276,7 +284,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* Konten Dashboard Interaktif (Beranda / Profil / Dokumen) dengan Bottom Nav Berwarna */}
-        <StudentDashboard student={mappedStudent} />
+        <StudentDashboard student={mappedStudent} scholarshipRates={ratesMap} />
       </main>
     </div>
   )

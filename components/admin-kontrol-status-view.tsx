@@ -28,11 +28,26 @@ import {
   Phone,
   Eye,
   GraduationCap,
+  MapPin,
+  Plus,
+  Trash2,
 } from "lucide-react"
 import {
   updateStudentStatusAction,
   updatePengawasStatusAction,
+  createPengawasAction,
+  deletePengawasAction,
+  createRegionAction,
+  deleteRegionAction,
 } from "@/app/actions/admin"
+
+export interface RegionItem {
+  id: number
+  name: string
+  createdAt: string
+  studentCount: number
+  pengawasCount: number
+}
 
 export interface StudentStatusItem {
   id: number
@@ -61,6 +76,7 @@ interface AdminKontrolStatusViewProps {
   students: StudentStatusItem[]
   pengawas: PengawasStatusItem[]
   wilayahList: string[]
+  regions?: RegionItem[]
 }
 
 type ModalTarget =
@@ -86,9 +102,10 @@ export function AdminKontrolStatusView({
   students,
   pengawas,
   wilayahList,
+  regions = [],
 }: AdminKontrolStatusViewProps) {
   // Tab Switcher state
-  const [activeTab, setActiveTab] = useState<"student" | "pengawas">("student")
+  const [activeTab, setActiveTab] = useState<"student" | "pengawas" | "wilayah">("student")
 
   // Student Filter state
   const [studentSearch, setStudentSearch] = useState("")
@@ -111,6 +128,142 @@ export function AdminKontrolStatusView({
   const [isPending, startTransition] = useTransition()
   const [actionError, setActionError] = useState<string | null>(null)
   const [actionSuccess, setActionSuccess] = useState<string | null>(null)
+
+  // Tambah Pengawas Modal State
+  const [showAddPengawasModal, setShowAddPengawasModal] = useState(false)
+  const [pengawasForm, setPengawasForm] = useState({
+    name: "",
+    username: "",
+    password: "hidupadikasuh",
+    wilayah: wilayahList[0] || "Pati",
+    noHp: "",
+  })
+  const [pengawasPending, startPengawasTransition] = useTransition()
+  const [pengawasFormError, setPengawasFormError] = useState<string | null>(null)
+
+  // Hapus Pengawas Nonaktif State
+  const [deletePengawasTarget, setDeletePengawasTarget] = useState<PengawasStatusItem | null>(null)
+  const [deletePengawasPending, startDeletePengawasTransition] = useTransition()
+
+  // Kelola Wilayah State
+  const [showAddRegionModal, setShowAddRegionModal] = useState(false)
+  const [regionFormName, setRegionFormName] = useState("")
+  const [regionPending, startRegionTransition] = useTransition()
+  const [regionFormError, setRegionFormError] = useState<string | null>(null)
+  const [deleteRegionTarget, setDeleteRegionTarget] = useState<RegionItem | null>(null)
+  const [regionSearch, setRegionSearch] = useState("")
+
+  const handleCreatePengawas = (e: React.FormEvent) => {
+    e.preventDefault()
+    setPengawasFormError(null)
+    if (!pengawasForm.name.trim()) {
+      setPengawasFormError("Nama lengkap pengawas wajib diisi.")
+      return
+    }
+    if (!pengawasForm.username.trim()) {
+      setPengawasFormError("Username pengawas wajib diisi.")
+      return
+    }
+    if (!pengawasForm.wilayah.trim()) {
+      setPengawasFormError("Wilayah penugasan wajib dipilih.")
+      return
+    }
+
+    startPengawasTransition(async () => {
+      const res = await createPengawasAction(pengawasForm)
+      if (res.success) {
+        setActionSuccess(`Akun pengawas "${pengawasForm.name}" berhasil ditambahkan!`)
+        setShowAddPengawasModal(false)
+        setPengawasForm({
+          name: "",
+          username: "",
+          password: "hidupadikasuh",
+          wilayah: wilayahList[0] || "Pati",
+          noHp: "",
+        })
+        setTimeout(() => setActionSuccess(null), 4000)
+      } else {
+        setPengawasFormError(res.error || "Gagal membuat akun pengawas.")
+      }
+    })
+  }
+
+  const handleDeletePengawas = () => {
+    if (!deletePengawasTarget) return
+    startDeletePengawasTransition(async () => {
+      const res = await deletePengawasAction(deletePengawasTarget.id)
+      if (res.success) {
+        setActionSuccess(`Akun pengawas "${deletePengawasTarget.name}" berhasil dihapus.`)
+        setDeletePengawasTarget(null)
+        setTimeout(() => setActionSuccess(null), 4000)
+      } else {
+        setActionError(res.error || "Gagal menghapus pengawas.")
+        setDeletePengawasTarget(null)
+        setTimeout(() => setActionError(null), 4000)
+      }
+    })
+  }
+
+  const handleCreateRegion = (e: React.FormEvent) => {
+    e.preventDefault()
+    setRegionFormError(null)
+    if (!regionFormName.trim()) {
+      setRegionFormError("Nama wilayah wajib diisi.")
+      return
+    }
+
+    startRegionTransition(async () => {
+      const res = await createRegionAction(regionFormName)
+      if (res.success) {
+        setActionSuccess(`Wilayah "${regionFormName.trim()}" berhasil ditambahkan!`)
+        setShowAddRegionModal(false)
+        setRegionFormName("")
+        setTimeout(() => setActionSuccess(null), 4000)
+      } else {
+        setRegionFormError(res.error || "Gagal menambahkan wilayah.")
+      }
+    })
+  }
+
+  const handleDeleteRegion = () => {
+    if (!deleteRegionTarget) return
+    startRegionTransition(async () => {
+      const res = await deleteRegionAction(deleteRegionTarget.id)
+      if (res.success) {
+        setActionSuccess(`Wilayah "${deleteRegionTarget.name}" berhasil dihapus.`)
+        setDeleteRegionTarget(null)
+        setTimeout(() => setActionSuccess(null), 4000)
+      } else {
+        setActionError(res.error || "Gagal menghapus wilayah.")
+        setDeleteRegionTarget(null)
+        setTimeout(() => setActionError(null), 4000)
+      }
+    })
+  }
+
+  // 0. STATISTIK & FILTER WILAYAH
+  const filteredRegions = useMemo(() => {
+    if (!regionSearch.trim()) return regions
+    return regions.filter((r) =>
+      r.name.toLowerCase().includes(regionSearch.toLowerCase().trim())
+    )
+  }, [regions, regionSearch])
+
+  const regionStats = useMemo(() => {
+    let terisi = 0
+    let kosong = 0
+    let totalAdikAsuh = 0
+    let totalPengawas = 0
+
+    regions.forEach((r) => {
+      if (r.studentCount > 0) terisi++
+      else kosong++
+      totalAdikAsuh += r.studentCount
+      totalPengawas += r.pengawasCount
+    })
+
+    return { terisi, kosong, totalAdikAsuh, totalPengawas }
+  }, [regions])
 
   // 1. STATISTIK ADIK ASUH
   const studentStats = useMemo(() => {
@@ -340,6 +493,26 @@ export function AdminKontrolStatusView({
               }`}
           >
             {pengawas.length}
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab("wilayah")}
+          className={`flex items-center gap-2 rounded-xl px-5 py-2.5 text-xs sm:text-sm font-bold transition cursor-pointer ${activeTab === "wilayah"
+            ? "bg-white text-orange-600 shadow-sm"
+            : "text-stone-600 hover:text-stone-900"
+            }`}
+        >
+          <MapPin className="size-4" />
+          <span>Kelola Wilayah</span>
+          <span
+            className={`rounded-full px-2 py-0.5 text-[10px] font-extrabold ${activeTab === "wilayah"
+              ? "bg-orange-100 text-orange-800"
+              : "bg-stone-300/80 text-stone-700"
+              }`}
+          >
+            {regions.length || wilayahList.length}
           </span>
         </button>
       </div>
@@ -1062,6 +1235,26 @@ export function AdminKontrolStatusView({
                   <option value="aktif">Aktif ({pengawasStats.aktif})</option>
                   <option value="nonaktif">Nonaktif ({pengawasStats.nonaktif})</option>
                 </select>
+
+                {/* Tombol Tambah Pengawas Baru */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPengawasForm({
+                      name: "",
+                      username: "",
+                      password: "hidupadikasuh",
+                      wilayah: wilayahList[0] || "Pati",
+                      noHp: "",
+                    })
+                    setPengawasFormError(null)
+                    setShowAddPengawasModal(true)
+                  }}
+                  className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 px-4 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md shadow-orange-500/20 active:scale-[0.98] transition cursor-pointer"
+                >
+                  <Plus className="size-4" />
+                  <span>Tambah Pengawas</span>
+                </button>
               </div>
             </div>
 
@@ -1192,6 +1385,18 @@ export function AdminKontrolStatusView({
                               >
                                 {isAktif ? "Aktif" : "Nonaktif"}
                               </span>
+
+                              {/* Tombol Hapus khusus pengawas nonaktif */}
+                              {!isAktif && (
+                                <button
+                                  type="button"
+                                  onClick={() => setDeletePengawasTarget(p)}
+                                  title="Hapus akun pengawas nonaktif ini"
+                                  className="inline-flex items-center justify-center size-7 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 transition cursor-pointer shrink-0 ml-1 shadow-2xs hover:shadow-xs active:scale-95"
+                                >
+                                  <Trash2 className="size-3.5" />
+                                </button>
+                              )}
                             </div>
                           </td>
                         </tr>
@@ -1237,6 +1442,238 @@ export function AdminKontrolStatusView({
                   Selanjutnya
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 4. KONTEN TAB 3: KELOLA WILAYAH OPERASIONAL ============================= */}
+      {/* ========================================================================= */}
+      {activeTab === "wilayah" && (
+        <div className="space-y-6">
+          {/* 3 Kartu Statistik Wilayah */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            {/* Kartu 1: Total Wilayah */}
+            <div className="relative overflow-hidden rounded-3xl border border-orange-100 bg-white p-6 shadow-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-wider text-black">
+                  Total Wilayah
+                </span>
+                <div className="flex size-10 items-center justify-center rounded-2xl bg-orange-50 text-orange-600">
+                  <MapPin className="size-5" />
+                </div>
+              </div>
+              <div className="mt-3">
+                <p className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight">
+                  {regions.length}{" "}
+                  <span className="text-sm font-bold text-stone-400">Wilayah</span>
+                </p>
+                <p className="mt-1 text-xs text-stone-500 font-medium">
+                  Cakupan jangkauan program beasiswa
+                </p>
+              </div>
+              <div className="mt-3 flex items-center gap-1.5 text-[11px] text-orange-700 font-semibold bg-orange-50/80 rounded-lg px-2.5 py-1 w-fit">
+                <CheckCircle2 className="size-3" />
+                <span>Terdaftar di Sistem</span>
+              </div>
+            </div>
+
+            {/* Kartu 2: Wilayah Aktif Terisi */}
+            <div className="relative overflow-hidden rounded-3xl border border-emerald-100 bg-white p-6 shadow-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-wider text-black">
+                  Wilayah Terisi Binaan
+                </span>
+                <div className="flex size-10 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600">
+                  <Users className="size-5" />
+                </div>
+              </div>
+              <div className="mt-3">
+                <p className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight">
+                  {regionStats.terisi}{" "}
+                  <span className="text-sm font-bold text-stone-400">Wilayah</span>
+                </p>
+                <p className="mt-1 text-xs text-stone-500 font-medium">
+                  Memiliki anak asuh aktif yang dibina
+                </p>
+              </div>
+              <div className="mt-3 flex items-center gap-1.5 text-[11px] text-emerald-700 font-semibold bg-emerald-50/80 rounded-lg px-2.5 py-1 w-fit">
+                <CheckCircle2 className="size-3" />
+                <span>{regionStats.totalAdikAsuh} Total Anak Asuh</span>
+              </div>
+            </div>
+
+            {/* Kartu 3: Total Pengawas Bertugas */}
+            <div className="relative overflow-hidden rounded-3xl border border-stone-200 bg-white p-6 shadow-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase tracking-wider text-black">
+                  Pengawas di Wilayah
+                </span>
+                <div className="flex size-10 items-center justify-center rounded-2xl bg-stone-100 text-stone-600">
+                  <ShieldCheck className="size-5" />
+                </div>
+              </div>
+              <div className="mt-3">
+                <p className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight">
+                  {regionStats.totalPengawas}{" "}
+                  <span className="text-sm font-bold text-stone-400">Pengawas</span>
+                </p>
+                <p className="mt-1 text-xs text-stone-500 font-medium">
+                  Mendampingi anak asuh di seluruh cabang
+                </p>
+              </div>
+              <div className="mt-3 flex items-center gap-1.5 text-[11px] text-stone-700 font-semibold bg-stone-100 rounded-lg px-2.5 py-1 w-fit">
+                <Building2 className="size-3" />
+                <span>Siap Diperluas</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Tabel Wilayah & Controls */}
+          <div className="rounded-3xl border border-stone-200/90 bg-white p-6 shadow-xs space-y-6">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              {/* Search Box */}
+              <div className="relative flex-1 max-w-md">
+                <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-stone-400" />
+                <input
+                  type="text"
+                  value={regionSearch}
+                  onChange={(e) => setRegionSearch(e.target.value)}
+                  placeholder="Cari nama wilayah operasional..."
+                  className="h-10.5 w-full rounded-2xl border border-stone-200 bg-stone-50/50 pl-10 pr-4 text-xs sm:text-sm text-stone-800 placeholder:text-stone-400 focus:border-orange-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition"
+                />
+                {regionSearch && (
+                  <button
+                    type="button"
+                    onClick={() => setRegionSearch("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600"
+                  >
+                    <X className="size-3.5" />
+                  </button>
+                )}
+              </div>
+
+              {/* Tombol Tambah Wilayah Baru */}
+              <button
+                type="button"
+                onClick={() => {
+                  setRegionFormName("")
+                  setRegionFormError(null)
+                  setShowAddRegionModal(true)
+                }}
+                className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 px-4 py-2.5 text-xs sm:text-sm font-bold text-white shadow-md shadow-orange-500/20 active:scale-[0.98] transition cursor-pointer shrink-0"
+              >
+                <Plus className="size-4" />
+                <span>Tambah Wilayah Baru</span>
+              </button>
+            </div>
+
+            {/* Table Content */}
+            <div className="overflow-x-auto rounded-2xl border border-stone-200">
+              <table className="w-full text-left text-xs sm:text-sm border-collapse border border-stone-200">
+                <thead className="bg-stone-50/80 border-b border-stone-200 text-black font-extrabold uppercase tracking-wider text-[11px]">
+                  <tr>
+                    <th className="py-3.5 px-4 text-center w-14 border-r border-stone-200">No</th>
+                    <th className="py-3.5 px-4 border-r border-stone-200">Nama Wilayah</th>
+                    <th className="py-3.5 px-4 border-r border-stone-200">Pengawas Bertugas</th>
+                    <th className="py-3.5 px-4 border-r border-stone-200">Adik Asuh Terdaftar</th>
+                    <th className="py-3.5 px-4 border-r border-stone-200">Status Wilayah</th>
+                    <th className="py-3.5 px-4 text-center">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-stone-200">
+                  {filteredRegions.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="py-12 text-center text-stone-400">
+                        <MapPin className="mx-auto size-8 text-stone-300 mb-2" />
+                        <p className="font-semibold text-stone-600">Tidak ada wilayah ditemukan</p>
+                        <p className="text-xs text-stone-400 mt-1">
+                          {regionSearch
+                            ? `Tidak ada hasil pencarian untuk "${regionSearch}".`
+                            : "Belum ada wilayah yang terdaftar."}
+                        </p>
+                      </td>
+                    </tr>
+                  ) : (
+                    filteredRegions.map((r, index) => {
+                      const isDeletable = r.pengawasCount === 0
+
+                      return (
+                        <tr key={r.id} className="hover:bg-orange-50/30 transition-colors">
+                          {/* No */}
+                          <td className="py-4 px-4 text-center font-bold text-stone-500 border-r border-stone-200">
+                            {index + 1}
+                          </td>
+
+                          {/* Nama Wilayah */}
+                          <td className="py-4 px-4 border-r border-stone-200">
+                            <div className="flex items-center gap-2.5">
+                              <div className="flex size-9 items-center justify-center rounded-xl bg-orange-100 text-orange-600 shrink-0">
+                                <MapPin className="size-4" />
+                              </div>
+                              <span className="font-extrabold text-stone-900 text-sm">
+                                {r.name}
+                              </span>
+                            </div>
+                          </td>
+
+                          {/* Pengawas Bertugas */}
+                          <td className="py-4 px-4 border-r border-stone-200">
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-stone-100 px-3 py-1 font-bold text-stone-700 text-xs">
+                              <ShieldCheck className="size-3.5 text-orange-500" />
+                              <span>{r.pengawasCount} Pengawas</span>
+                            </span>
+                          </td>
+
+                          {/* Adik Asuh Terdaftar */}
+                          <td className="py-4 px-4 border-r border-stone-200">
+                            <span className="inline-flex items-center gap-1.5 rounded-full bg-orange-50 px-3 py-1 font-bold text-orange-800 text-xs border border-orange-100">
+                              <Users className="size-3.5 text-orange-600" />
+                              <span>{r.studentCount} Anak Asuh</span>
+                            </span>
+                          </td>
+
+                          {/* Status Wilayah */}
+                          <td className="py-4 px-4 border-r border-stone-200">
+                            {r.studentCount > 0 ? (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-bold text-emerald-700 border border-emerald-200">
+                                <CheckCircle2 className="size-3" />
+                                <span>Terisi Binaan</span>
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-stone-100 px-2.5 py-0.5 text-[11px] font-bold text-stone-600 border border-stone-200">
+                                <span>Belum Ada Binaan</span>
+                              </span>
+                            )}
+                          </td>
+
+                          {/* Aksi Hapus */}
+                          <td className="py-4 px-4 text-center">
+                            {isDeletable ? (
+                              <button
+                                type="button"
+                                onClick={() => setDeleteRegionTarget(r)}
+                                className="inline-flex items-center gap-1 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 px-3 py-1.5 text-xs font-bold transition cursor-pointer"
+                              >
+                                <Trash2 className="size-3.5" />
+                                <span>Hapus</span>
+                              </button>
+                            ) : (
+                              <span
+                                title={`Wilayah ini masih memiliki ${r.pengawasCount} pengawas bertugas sehingga belum dapat dihapus.`}
+                                className="inline-flex items-center gap-1 rounded-xl bg-stone-50 px-3 py-1.5 text-[11px] font-semibold text-stone-400 border border-stone-200 cursor-not-allowed select-none"
+                              >
+                                Ada Pengawas
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      )
+                    })
+                  )}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -1479,6 +1916,385 @@ export function AdminKontrolStatusView({
           </div>
         )
       })()}
+
+      {/* ========================================================================= */}
+      {/* 6. MODAL TAMBAH PENGAWAS BARU =========================================== */}
+      {/* ========================================================================= */}
+      {showAddPengawasModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/60 backdrop-blur-xs animate-in fade-in">
+          <div
+            className="w-full max-w-lg overflow-hidden rounded-3xl bg-white shadow-2xl border border-stone-200 animate-in zoom-in-95"
+            role="dialog"
+            aria-modal="true"
+          >
+            <div className="flex items-center justify-between border-b border-stone-100 bg-gradient-to-r from-orange-500 to-amber-500 p-5 text-white">
+              <div className="flex items-center gap-3">
+                <div className="flex size-10 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-xs text-white">
+                  <ShieldCheck className="size-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-extrabold tracking-tight text-white">
+                    Tambah Pengawas Lapangan
+                  </h3>
+                  <p className="text-xs text-white/90">
+                    Daftarkan akun pengawas baru untuk pendampingan anak asuh
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowAddPengawasModal(false)}
+                className="rounded-full p-1.5 text-white/80 hover:bg-white/20 hover:text-white transition cursor-pointer"
+              >
+                <X className="size-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreatePengawas} className="p-6 space-y-4">
+              {pengawasFormError && (
+                <div className="rounded-xl bg-rose-50 border border-rose-200 p-3 text-xs text-rose-800 flex items-center gap-2">
+                  <AlertCircle className="size-4 text-rose-600 shrink-0" />
+                  <span>{pengawasFormError}</span>
+                </div>
+              )}
+
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-stone-700">Nama Lengkap Pengawas *</label>
+                <input
+                  type="text"
+                  required
+                  value={pengawasForm.name}
+                  onChange={(e) => setPengawasForm((p) => ({ ...p, name: e.target.value }))}
+                  placeholder="Contoh: Ibu Deasy atau Pak Kusnadi"
+                  className="h-10 w-full rounded-xl border border-stone-200 px-3.5 text-xs sm:text-sm text-stone-800 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-stone-700">Username Login *</label>
+                  <input
+                    type="text"
+                    required
+                    value={pengawasForm.username}
+                    onChange={(e) =>
+                      setPengawasForm((p) => ({
+                        ...p,
+                        username: e.target.value.toLowerCase().replace(/\s+/g, "-"),
+                      }))
+                    }
+                    placeholder="Contoh: sukabumi-deasy"
+                    className="h-10 w-full rounded-xl border border-stone-200 px-3.5 text-xs sm:text-sm font-mono text-stone-800 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+                  />
+                  <span className="text-[10px] text-stone-400">Gunakan huruf kecil & strip (-)</span>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-stone-700">Password Awal</label>
+                  <input
+                    type="text"
+                    value={pengawasForm.password}
+                    onChange={(e) => setPengawasForm((p) => ({ ...p, password: e.target.value }))}
+                    placeholder="Default: hidupadikasuh"
+                    className="h-10 w-full rounded-xl border border-stone-200 px-3.5 text-xs sm:text-sm font-mono text-stone-800 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+                  />
+                  <span className="text-[10px] text-stone-400">Default: hidupadikasuh</span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-stone-700">Wilayah Tugas *</label>
+                  <select
+                    required
+                    value={pengawasForm.wilayah}
+                    onChange={(e) => setPengawasForm((p) => ({ ...p, wilayah: e.target.value }))}
+                    className="h-10 w-full rounded-xl border border-stone-200 bg-white px-3 text-xs sm:text-sm font-bold text-stone-700 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+                  >
+                    {wilayahList.map((w) => (
+                      <option key={w} value={w}>
+                        Wilayah {w}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-xs font-bold text-stone-700">Nomor WhatsApp</label>
+                  <input
+                    type="tel"
+                    value={pengawasForm.noHp}
+                    onChange={(e) => setPengawasForm((p) => ({ ...p, noHp: e.target.value }))}
+                    placeholder="Contoh: 08123456789"
+                    className="h-10 w-full rounded-xl border border-stone-200 px-3.5 text-xs sm:text-sm text-stone-800 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-3 border-t border-stone-100 flex items-center justify-end gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => setShowAddPengawasModal(false)}
+                  disabled={pengawasPending}
+                  className="rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-xs font-bold text-stone-700 hover:bg-stone-50 transition cursor-pointer disabled:opacity-50"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  disabled={pengawasPending}
+                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-orange-500/20 active:scale-[0.98] transition cursor-pointer disabled:opacity-50"
+                >
+                  {pengawasPending ? (
+                    <>
+                      <Loader2 className="size-4 animate-spin" />
+                      <span>Menyimpan...</span>
+                    </>
+                  ) : (
+                    <span>Daftarkan Pengawas</span>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 7. MODAL TAMBAH WILAYAH BARU ============================================ */}
+      {/* ========================================================================= */}
+      {showAddRegionModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/60 backdrop-blur-xs animate-in fade-in">
+          <div
+            className="w-full max-w-md overflow-hidden rounded-3xl bg-white shadow-2xl border border-stone-200 animate-in zoom-in-95"
+            role="dialog"
+            aria-modal="true"
+          >
+            <div className="flex items-center justify-between border-b border-stone-100 bg-gradient-to-r from-orange-500 to-amber-500 p-5 text-white">
+              <div className="flex items-center gap-3">
+                <div className="flex size-10 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-xs text-white">
+                  <MapPin className="size-5" />
+                </div>
+                <div>
+                  <h3 className="text-base font-extrabold tracking-tight text-white">
+                    Tambah Wilayah Baru
+                  </h3>
+                  <p className="text-xs text-white/90">
+                    Perluas cakupan wilayah operasional beasiswa
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowAddRegionModal(false)}
+                className="rounded-full p-1.5 text-white/80 hover:bg-white/20 hover:text-white transition cursor-pointer"
+              >
+                <X className="size-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleCreateRegion} className="p-6 space-y-4">
+              {regionFormError && (
+                <div className="rounded-xl bg-rose-50 border border-rose-200 p-3 text-xs text-rose-800 flex items-center gap-2">
+                  <AlertCircle className="size-4 text-rose-600 shrink-0" />
+                  <span>{regionFormError}</span>
+                </div>
+              )}
+
+              <div className="space-y-1">
+                <label className="text-xs font-bold text-stone-700">Nama Wilayah Operasional *</label>
+                <input
+                  type="text"
+                  required
+                  value={regionFormName}
+                  onChange={(e) => setRegionFormName(e.target.value)}
+                  placeholder="Contoh: Semarang, Kudus, Solo, Yogyakarta"
+                  className="h-10 w-full rounded-xl border border-stone-200 px-3.5 text-xs sm:text-sm text-stone-800 focus:border-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-500/20"
+                />
+                <p className="text-[11px] text-stone-400 mt-1">
+                  Wilayah baru akan langsung muncul di form pendaftaran publik adik asuh dan filter admin.
+                </p>
+              </div>
+
+              <div className="pt-3 border-t border-stone-100 flex items-center justify-end gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => setShowAddRegionModal(false)}
+                  disabled={regionPending}
+                  className="rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-xs font-bold text-stone-700 hover:bg-stone-50 transition cursor-pointer disabled:opacity-50"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  disabled={regionPending}
+                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-orange-500/20 active:scale-[0.98] transition cursor-pointer disabled:opacity-50"
+                >
+                  {regionPending ? (
+                    <>
+                      <Loader2 className="size-4 animate-spin" />
+                      <span>Menyimpan...</span>
+                    </>
+                  ) : (
+                    <span>Tambahkan Wilayah</span>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 8. MODAL KONFIRMASI HAPUS WILAYAH ======================================= */}
+      {/* ========================================================================= */}
+      {deleteRegionTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/60 backdrop-blur-xs animate-in fade-in">
+          <div
+            className="w-full max-w-md overflow-hidden rounded-3xl bg-white shadow-2xl border border-stone-200 animate-in zoom-in-95"
+            role="dialog"
+            aria-modal="true"
+          >
+            <div className="p-6 border-b border-stone-100 bg-rose-50/70 flex items-start gap-3.5">
+              <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-rose-100 text-rose-600">
+                <Trash2 className="size-5" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-base font-extrabold text-stone-900">
+                  Hapus Wilayah &quot;{deleteRegionTarget.name}&quot;?
+                </h3>
+                <p className="text-xs text-stone-500 leading-relaxed">
+                  Tindakan ini akan menghapus wilayah dari daftar operasional yayasan.
+                </p>
+              </div>
+            </div>
+
+            <div className="p-6 space-y-4">
+              <p className="text-xs text-stone-600 leading-relaxed">
+                Wilayah ini saat ini <strong>tidak memiliki pengawas bertugas</strong> ({deleteRegionTarget.pengawasCount} pengawas) dan tercatat memiliki <strong>{deleteRegionTarget.studentCount} anak asuh</strong>.
+              </p>
+              <p className="text-xs text-stone-500 leading-relaxed">
+                Apakah Anda yakin ingin menghapus wilayah &quot;<strong>{deleteRegionTarget.name}</strong>&quot; dari daftar wilayah operasional yayasan?
+              </p>
+
+              <div className="pt-2 flex items-center justify-end gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => setDeleteRegionTarget(null)}
+                  disabled={regionPending}
+                  className="rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-xs font-bold text-stone-700 hover:bg-stone-50 transition cursor-pointer disabled:opacity-50"
+                >
+                  Batal
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDeleteRegion}
+                  disabled={regionPending}
+                  className="inline-flex items-center gap-2 rounded-xl bg-rose-600 hover:bg-rose-700 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-rose-600/20 active:scale-[0.98] transition cursor-pointer disabled:opacity-50"
+                >
+                  {regionPending ? (
+                    <>
+                      <Loader2 className="size-4 animate-spin" />
+                      <span>Menghapus...</span>
+                    </>
+                  ) : (
+                    <span>Ya, Hapus Wilayah</span>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 9. MODAL KONFIRMASI HAPUS PENGAWAS NONAKTIF ============================= */}
+      {/* ========================================================================= */}
+      {deletePengawasTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/60 backdrop-blur-xs animate-in fade-in">
+          <div
+            className="w-full max-w-md overflow-hidden rounded-3xl bg-white shadow-2xl border border-stone-200 animate-in zoom-in-95"
+            role="dialog"
+            aria-modal="true"
+          >
+            <div className="p-6 border-b border-stone-100 bg-rose-50/70 flex items-start gap-3.5">
+              <div className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-rose-100 text-rose-600">
+                <Trash2 className="size-5" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-base font-extrabold text-stone-900">
+                  Hapus Akun Pengawas Nonaktif?
+                </h3>
+                <p className="text-xs text-stone-500 leading-relaxed">
+                  Menghapus akun pengawas nonaktif secara permanen dari sistem.
+                </p>
+              </div>
+            </div>
+
+            <div className="p-6 space-y-4">
+              <div className="rounded-2xl bg-stone-50 p-3.5 border border-stone-200/80 space-y-1.5">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-stone-500 font-medium">Nama Pengawas:</span>
+                  <span className="font-bold text-stone-900">{deletePengawasTarget.name}</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-stone-500 font-medium">Username:</span>
+                  <span className="font-mono font-semibold text-stone-700">@{deletePengawasTarget.username}</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-stone-500 font-medium">Wilayah:</span>
+                  <span className="font-bold text-orange-800">Wilayah {deletePengawasTarget.wilayah}</span>
+                </div>
+                <div className="flex items-center justify-between text-xs">
+                  <span className="text-stone-500 font-medium">Adik Asuh Binaan:</span>
+                  <span className="font-bold text-stone-800">{deletePengawasTarget.totalBinaanCount} anak asuh</span>
+                </div>
+              </div>
+
+              {deletePengawasTarget.totalBinaanCount > 0 ? (
+                <div className="rounded-2xl bg-amber-50 border border-amber-200 p-3.5 flex items-start gap-2.5">
+                  <AlertTriangle className="size-4 text-amber-600 shrink-0 mt-0.5" />
+                  <p className="text-xs text-amber-800 leading-relaxed">
+                    Pengawas ini masih memiliki <strong>{deletePengawasTarget.totalBinaanCount} adik asuh binaan</strong>. 
+                    Silakan pindahkan adik asuh binaan ke pengawas lain sebelum menghapus akun ini.
+                  </p>
+                </div>
+              ) : (
+                <p className="text-xs text-stone-600 leading-relaxed">
+                  Akun pengawas ini berstatus <strong>nonaktif</strong> dan tidak memiliki adik asuh binaan. 
+                  Tindakan ini permanen dan tidak dapat dibatalkan.
+                </p>
+              )}
+
+              <div className="pt-2 flex items-center justify-end gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => setDeletePengawasTarget(null)}
+                  disabled={deletePengawasPending}
+                  className="rounded-xl border border-stone-200 bg-white px-4 py-2.5 text-xs font-bold text-stone-700 hover:bg-stone-50 transition cursor-pointer disabled:opacity-50"
+                >
+                  Batal
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDeletePengawas}
+                  disabled={deletePengawasPending || deletePengawasTarget.totalBinaanCount > 0}
+                  className="inline-flex items-center gap-2 rounded-xl bg-rose-600 hover:bg-rose-700 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-rose-600/20 active:scale-[0.98] transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {deletePengawasPending ? (
+                    <>
+                      <Loader2 className="size-4 animate-spin" />
+                      <span>Menghapus...</span>
+                    </>
+                  ) : (
+                    <span>Ya, Hapus Akun</span>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

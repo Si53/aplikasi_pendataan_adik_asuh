@@ -26,6 +26,7 @@ import {
   ChevronUp,
 } from "lucide-react"
 import { createPengawasDisbursementProofAction } from "@/app/actions/pengawas"
+import { getTarifForJenjang } from "@/lib/budget"
 
 export type AcademicUpdateItem = {
   id: number
@@ -56,6 +57,7 @@ export type StudentDetailFull = {
   alamatLengkap: string
   noHp: string
   schoolName: string
+  jenjang?: string | null
   gradeLevel: string
   programAkselerasi?: boolean
   nilaiAwal: string
@@ -102,6 +104,7 @@ interface PengawasStudentDetailTabsProps {
   student: StudentDetailFull
   pengawasName: string
   wilayah: string
+  scholarshipRates?: Record<string, number>
 }
 
 function formatNominal(val: string | number): string {
@@ -115,6 +118,7 @@ export function PengawasStudentDetailTabs({
   student,
   pengawasName,
   wilayah,
+  scholarshipRates,
 }: PengawasStudentDetailTabsProps) {
   const router = useRouter()
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -123,7 +127,10 @@ export function PengawasStudentDetailTabs({
   const [showFullBiodata, setShowFullBiodata] = useState(false)
 
   // Form states for Penyaluran
-  const [nominalRaw, setNominalRaw] = useState<string>("")
+  const defaultTarif = getTarifForJenjang(student.jenjang, student.gradeLevel, scholarshipRates)
+  const [nominalRaw, setNominalRaw] = useState<string>(() =>
+    defaultTarif > 0 ? String(defaultTarif) : ""
+  )
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [filePreviewUrl, setFilePreviewUrl] = useState<string | null>(null)
 
@@ -390,20 +397,18 @@ export function PengawasStudentDetailTabs({
         <button
           type="button"
           onClick={() => setActiveTab("akademik")}
-          className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-3 px-4 text-sm sm:text-base font-black transition-all cursor-pointer ${
-            activeTab === "akademik"
+          className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-3 px-4 text-sm sm:text-base font-black transition-all cursor-pointer ${activeTab === "akademik"
               ? "bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/25"
               : "text-muted-foreground hover:text-foreground hover:bg-orange-50/60"
-          }`}
+            }`}
         >
           <GraduationCap className="size-4 sm:size-5" />
           <span>Pemantauan Akademik</span>
           <span
-            className={`rounded-full px-2 py-0.5 text-xs font-bold ${
-              activeTab === "akademik"
+            className={`rounded-full px-2 py-0.5 text-xs font-bold ${activeTab === "akademik"
                 ? "bg-white/20 text-white"
                 : "bg-orange-100 text-orange-800"
-            }`}
+              }`}
           >
             {student.academicUpdates.length}
           </span>
@@ -412,20 +417,18 @@ export function PengawasStudentDetailTabs({
         <button
           type="button"
           onClick={() => setActiveTab("penyaluran")}
-          className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-3 px-4 text-sm sm:text-base font-black transition-all cursor-pointer ${
-            activeTab === "penyaluran"
+          className={`flex-1 flex items-center justify-center gap-2 rounded-xl py-3 px-4 text-sm sm:text-base font-black transition-all cursor-pointer ${activeTab === "penyaluran"
               ? "bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/25"
               : "text-muted-foreground hover:text-foreground hover:bg-orange-50/60"
-          }`}
+            }`}
         >
           <UploadCloud className="size-4 sm:size-5" />
           <span>Input Penyaluran Dana</span>
           <span
-            className={`rounded-full px-2 py-0.5 text-xs font-bold ${
-              activeTab === "penyaluran"
+            className={`rounded-full px-2 py-0.5 text-xs font-bold ${activeTab === "penyaluran"
                 ? "bg-white/20 text-white"
                 : "bg-orange-100 text-orange-800"
-            }`}
+              }`}
           >
             {student.disbursementHistory.length}
           </span>
@@ -740,9 +743,16 @@ export function PengawasStudentDetailTabs({
 
               {/* Input Nominal Format Rupiah Otomatis */}
               <div className="space-y-1.5">
-                <label className="text-sm sm:text-base font-bold text-foreground flex items-center gap-1">
-                  <Coins className="size-4 text-orange-500" />
-                  <span>Nominal Dana yang Diserahkan *</span>
+                <label className="text-sm sm:text-base font-bold text-foreground flex items-center justify-between">
+                  <span className="flex items-center gap-1">
+                    <Coins className="size-4 text-orange-500" />
+                    <span>Nominal Dana yang Diserahkan *</span>
+                  </span>
+                  {defaultTarif > 0 && (
+                    <span className="text-xs font-bold text-orange-800 bg-orange-100 px-2.5 py-0.5 rounded-md">
+                      Standar: Rp {defaultTarif.toLocaleString("id-ID")}
+                    </span>
+                  )}
                 </label>
                 <div className="relative">
                   <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-base font-bold text-orange-600">
@@ -756,7 +766,7 @@ export function PengawasStudentDetailTabs({
                       const raw = e.target.value.replace(/\D/g, "")
                       setNominalRaw(raw)
                     }}
-                    placeholder="Contoh: 500.000"
+                    placeholder={`Contoh: ${formatNominal(defaultTarif || 250000)}`}
                     className="w-full h-13 rounded-2xl border border-orange-200/80 bg-orange-50/30 pl-12 pr-4 text-lg font-bold text-foreground focus:border-orange-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition"
                     required
                   />

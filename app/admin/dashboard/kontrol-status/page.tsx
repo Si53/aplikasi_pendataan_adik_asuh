@@ -5,6 +5,7 @@ import {
   AdminKontrolStatusView,
   type StudentStatusItem,
   type PengawasStatusItem,
+  type RegionItem,
 } from "@/components/admin-kontrol-status-view"
 import { formatGradeWithJenjang } from "@/lib/academic"
 
@@ -16,8 +17,8 @@ export default async function KontrolStatusDashboardPage() {
     redirect("/admin/login")
   }
 
-  // 1. Fetch data Adik Asuh dan Pengawas Lapangan secara paralel
-  const [studentsRaw, pengawasRaw] = await Promise.all([
+  // 1. Fetch data Adik Asuh, Pengawas Lapangan, dan Wilayah secara paralel
+  const [studentsRaw, pengawasRaw, regionsRaw] = await Promise.all([
     prisma.student.findMany({
       include: {
         pengawas: {
@@ -40,6 +41,11 @@ export default async function KontrolStatusDashboardPage() {
           },
         },
       },
+      orderBy: {
+        name: "asc",
+      },
+    }),
+    prisma.region.findMany({
       orderBy: {
         name: "asc",
       },
@@ -71,11 +77,22 @@ export default async function KontrolStatusDashboardPage() {
     totalBinaanCount: p._count.students,
   }))
 
-  // 4. Ekstrak Daftar Wilayah Unik
+  // 4. Format Data Wilayah
+  const regions: RegionItem[] = regionsRaw.map((r) => {
+    const studentCount = studentsRaw.filter((s) => s.wilayah === r.name).length
+    const pengawasCount = pengawasRaw.filter((p) => p.wilayah === r.name).length
+    return {
+      id: r.id,
+      name: r.name,
+      createdAt: r.createdAt.toISOString(),
+      studentCount,
+      pengawasCount,
+    }
+  })
+
+  // 5. Ekstrak Daftar Wilayah Unik (Kombinasi Region Master & Data Eksisting)
   const wilayahSet = new Set<string>()
-  ;["Pati", "Jepara", "Ampel", "Wonosobo", "Sukabumi", "Bandung"].forEach((w) =>
-    wilayahSet.add(w)
-  )
+  regionsRaw.forEach((r) => wilayahSet.add(r.name))
   studentsRaw.forEach((s) => {
     if (s.wilayah) wilayahSet.add(s.wilayah)
   })
@@ -90,6 +107,7 @@ export default async function KontrolStatusDashboardPage() {
         students={students}
         pengawas={pengawas}
         wilayahList={wilayahList}
+        regions={regions}
       />
     </div>
   )

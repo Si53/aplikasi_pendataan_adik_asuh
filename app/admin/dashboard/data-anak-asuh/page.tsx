@@ -9,6 +9,7 @@ import {
 import { AdminStudentTable, StudentTableItem } from "@/components/admin-student-table"
 import { AdminDataHeaderActions } from "@/components/admin-data-header-actions"
 import { formatGradeWithJenjang } from "@/lib/academic"
+import { getRegionsList } from "@/lib/budget"
 
 export const dynamic = "force-dynamic"
 
@@ -68,10 +69,8 @@ export default async function DataAnakAsuhPage() {
     ])
 
   // 2. Extract Unique Wilayah List
-  const wilayahSet = new Set<string>()
-    ;["Pati", "Jepara", "Ampel", "Wonosobo", "Sukabumi", "Bandung"].forEach((w) =>
-      wilayahSet.add(w)
-    )
+  const masterRegions = await getRegionsList()
+  const wilayahSet = new Set<string>(masterRegions)
   studentsRaw.forEach((s) => {
     if (s.wilayah) wilayahSet.add(s.wilayah)
   })

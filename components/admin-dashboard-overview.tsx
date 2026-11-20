@@ -26,7 +26,7 @@ import {
   Coins,
 } from "lucide-react"
 
-import type { WilayahBudgetItem, BudgetOverviewData } from "@/lib/budget"
+import { TARIF_JENJANG, type WilayahBudgetItem, type BudgetOverviewData } from "@/lib/budget"
 export type { WilayahBudgetItem, BudgetOverviewData }
 
 export interface QuickAuditPendingItem {
@@ -62,6 +62,7 @@ interface AdminDashboardOverviewProps {
   }
   budgetOverview: BudgetOverviewData
   quickAuditItems: QuickAuditPendingItem[]
+  scholarshipRates?: Record<string, number>
 }
 
 function formatRupiah(amount: number): string {
@@ -73,7 +74,9 @@ export function AdminDashboardOverview({
   stats,
   budgetOverview,
   quickAuditItems,
+  scholarshipRates,
 }: AdminDashboardOverviewProps) {
+  const rates = scholarshipRates || TARIF_JENJANG
   const [exportNotice, setExportNotice] = useState(false)
   const [selectedWilayahDetail, setSelectedWilayahDetail] = useState<WilayahBudgetItem | null>(null)
 
@@ -359,6 +362,21 @@ export function AdminDashboardOverview({
                 <p className="text-xs text-stone-500 mt-0.5">
                   Estimasi kebutuhan alokasi dana beasiswa per bulan berdasarkan wilayah operasional
                 </p>
+                <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px] font-semibold text-stone-600">
+                  <span className="text-stone-400 font-medium">Standar per jenjang:</span>
+                  <span className="rounded-md bg-stone-100 px-2 py-0.5 text-stone-800">
+                    SD: Rp {(rates.SD ?? 250000).toLocaleString("id-ID")}
+                  </span>
+                  <span className="rounded-md bg-stone-100 px-2 py-0.5 text-stone-800">
+                    SMP: Rp {(rates.SMP ?? 300000).toLocaleString("id-ID")}
+                  </span>
+                  <span className="rounded-md bg-stone-100 px-2 py-0.5 text-stone-800">
+                    SMA/SMK: Rp {(rates.SMA ?? 400000).toLocaleString("id-ID")}
+                  </span>
+                  <span className="rounded-md bg-stone-100 px-2 py-0.5 text-stone-800">
+                    Kuliah: Rp {(rates.Kuliah ?? 500000).toLocaleString("id-ID")}
+                  </span>
+                </div>
               </div>
 
               <div className="text-left sm:text-right bg-orange-50/70 border border-orange-200/80 rounded-2xl px-4 py-2.5 shrink-0">
@@ -588,17 +606,16 @@ export function AdminDashboardOverview({
                           <td className="py-3 px-3.5 border-r border-stone-200">
                             <div className="flex items-center gap-1.5 flex-wrap">
                               <span
-                                className={`inline-flex items-center px-2 py-0.5 rounded-md font-bold text-[10px] ${
-                                  student.jenjang === "Kuliah"
+                                className={`inline-flex items-center px-2 py-0.5 rounded-md font-bold text-[10px] ${student.jenjang === "Kuliah"
                                     ? "bg-purple-100 text-purple-800"
                                     : student.jenjang === "SMA" || student.jenjang === "SMK"
-                                    ? "bg-blue-100 text-blue-800"
-                                    : student.jenjang === "SMP"
-                                    ? "bg-amber-100 text-amber-800"
-                                    : student.jenjang === "SD"
-                                    ? "bg-emerald-100 text-emerald-800"
-                                    : "bg-stone-100 text-stone-600"
-                                }`}
+                                      ? "bg-blue-100 text-blue-800"
+                                      : student.jenjang === "SMP"
+                                        ? "bg-amber-100 text-amber-800"
+                                        : student.jenjang === "SD"
+                                          ? "bg-emerald-100 text-emerald-800"
+                                          : "bg-stone-100 text-stone-600"
+                                  }`}
                               >
                                 {student.jenjang}
                               </span>
@@ -641,7 +658,7 @@ export function AdminDashboardOverview({
             {/* Modal Footer */}
             <div className="flex items-center justify-between p-4 sm:px-6 border-t border-stone-100 bg-stone-50/50">
               <span className="text-[11px] text-stone-500">
-                Tarif bulanan disesuaikan dengan ketentuan beasiswa per jenjang
+                Tarif resmi per jenjang: SD Rp {(rates.SD ?? 250000).toLocaleString("id-ID")} • SMP Rp {(rates.SMP ?? 300000).toLocaleString("id-ID")} • SMA/SMK Rp {(rates.SMA ?? 400000).toLocaleString("id-ID")} • Kuliah Rp {(rates.Kuliah ?? 500000).toLocaleString("id-ID")}
               </span>
               <button
                 type="button"

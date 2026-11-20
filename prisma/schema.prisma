@@ -227,3 +227,20 @@ model LoginAttempt {
   @@map("login_attempts")
 }
 
+model ScholarshipRate {
+  id        Int      @id @default(autoincrement())
+  jenjang   String   @unique // "SD", "SMP", "SMA", "SMK", "Kuliah"
+  nominal   Int
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("scholarship_rates")
+}
+
+model Region {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("regions")
+}
+

@@ -5,7 +5,11 @@ import {
   AdminDashboardOverview,
   type QuickAuditPendingItem,
 } from "@/components/admin-dashboard-overview"
-import { calculateBudgetOverview } from "@/lib/budget"
+import {
+  calculateBudgetOverview,
+  getScholarshipRatesMap,
+  getRegionsList,
+} from "@/lib/budget"
 
 export const dynamic = "force-dynamic"
 
@@ -24,6 +28,8 @@ export default async function AdminDashboardPage() {
     pendingAuditCount,
     pendingProofsRaw,
     allVerifiedDisbursementsRaw,
+    scholarshipRates,
+    regionsList,
   ] = await Promise.all([
     // Ambil seluruh siswa dengan update akademik terbaru
     prisma.student.findMany({
@@ -90,6 +96,10 @@ export default async function AdminDashboardPage() {
         },
       },
     }),
+
+    // Ambil konfigurasi tarif dan daftar wilayah aktif
+    getScholarshipRatesMap(),
+    getRegionsList(),
   ])
 
   // 2. Hitung 4 Kartu Statistik Utama
@@ -142,8 +152,12 @@ export default async function AdminDashboardPage() {
     }
   })
 
-  // 4. Hitung Kebutuhan Anggaran Beasiswa Berdasarkan Wilayah
-  const budgetOverview = calculateBudgetOverview(allStudentsRaw)
+  // 4. Hitung Kebutuhan Anggaran Beasiswa Berdasarkan Wilayah (dinamis dari tarif database)
+  const budgetOverview = calculateBudgetOverview(
+    allStudentsRaw,
+    scholarshipRates,
+    regionsList
+  )
 
   // 5. Format 3 Berkas Pending untuk Widget Audit Cepat
   const quickAuditItems: QuickAuditPendingItem[] = pendingProofsRaw.map((p) => ({
@@ -181,6 +195,7 @@ export default async function AdminDashboardPage() {
         }}
         budgetOverview={budgetOverview}
         quickAuditItems={quickAuditItems}
+        scholarshipRates={scholarshipRates}
       />
     </div>
   )
